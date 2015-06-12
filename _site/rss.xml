@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-        <title>Jekyll Bootstrap</title>
-        <description>Jekyll Bootstrap - Name Lastname</description>
+        <title>surf - Simulating Urban Flows</title>
+        <description>surf - Simulating Urban Flows - Nick Malleson</description>
         <link>http://username.github.io</link>
         <atom:link href="http://username.github.io/rss.xml" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Wed, 03 Jun 2015 17:10:40 +0100</lastBuildDate>
-        <pubDate>Wed, 03 Jun 2015 17:10:40 +0100</pubDate>
+        <lastBuildDate>Fri, 12 Jun 2015 16:45:23 +0100</lastBuildDate>
+        <pubDate>Fri, 12 Jun 2015 16:45:23 +0100</pubDate>
         <ttl>60</ttl>
 
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Jekyll Bootstrap</title>
+ <title>surf - Simulating Urban Flows</title>
  <link href="http://username.github.io/atom.xml" rel="self"/>
  <link href="http://username.github.io"/>
- <updated>2015-06-03T17:10:40+01:00</updated>
+ <updated>2015-06-12T16:45:23+01:00</updated>
  <id>http://username.github.io</id>
  <author>
-   <name>Name Lastname</name>
-   <email>blah@email.test</email>
+   <name>Nick Malleson</name>
+   <email>n.s.malleson@leeds.ac.uk</email>
  </author>
 
  

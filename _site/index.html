@@ -3,39 +3,29 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>Hello World!</title>
+    <title>surf - Simulating Urban Flows</title>
     
-    <meta name="author" content="Name Lastname">
+    <meta name="author" content="Nick Malleson">
 
     <!-- Enable responsive viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap styles -->
-    <link href="/assets/themes/bootstrap-3/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Optional theme -->
-    <link href="/assets/themes/bootstrap-3/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-    <!-- Sticky Footer -->
-    <link href="/assets/themes/bootstrap-3/bootstrap/css/bs-sticky-footer.css" rel="stylesheet">
-    
-    <!-- Custom styles -->
-    <link href="/assets/themes/bootstrap-3/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- Fav and touch icons -->
-    <!-- Update these with your own images
-      <link rel="shortcut icon" href="images/favicon.ico">
-      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-    -->
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
 
     <!-- atom & rss feed -->
     <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
@@ -44,22 +34,11 @@
   </head>
 
   <body>
-    <div id="wrap">
-      <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#jb-navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Jekyll Bootstrap</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="jb-navbar-collapse">
-          <ul class="nav navbar-nav">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/">surf - Simulating Urban Flows</a>
+          <ul class="nav">
             
             
             
@@ -118,52 +97,58 @@
 
 
           </ul>
-          <form class="navbar-form navbar-right" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
-        </div><!-- /.navbar-collapse -->
-      </nav>
+        </div>
+      </div>
+    </div>
 
-      <div class="container">
+    <div class="container-narrow">
+
+      <div class="content">
         
 <div class="page-header">
-  <h1>Hello World!  <small>Supporting tagline</small></h1>
+  <h1>surf - Simulating Urban Flows  <small>Understanding Urban Movements through Big Data and Social Simulation</small></h1>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
+<div class="row-fluid">
+  <div class="span12">
     
-<p>Read <a href="http://jekyllbootstrap.com/usage/jekyll-quick-start.html">Jekyll Quick Start</a></p>
+<p>This is the website for <a href="nickmalleson.co.uk/">Nick Malleson’s</a> <em>surf</em> research project, funded by <a href="http://www.esrc.ac.uk/funding-and-guidance/funding-opportunities/15938/future-research-leaders.aspx">ESRC Future Research Leaders</a> scheme. </p>
 
-<p>Complete usage and documentation available at: <a href="http://jekyllbootstrap.com">Jekyll Bootstrap</a></p>
+<h2 id="introduction">Introduction</h2>
 
-<h2 id="update-author-attributes">Update Author Attributes</h2>
+<p>The aim of this research is to fundamentally alter our understanding of daily urban movement patterns through a combination of ‘big data’ analysis and cutting-edge computer simulation. It will develop new methods to produce data that will help us to address key issues in crime and health.</p>
 
-<p>In <code>_config.yml</code> remember to specify your own data:</p>
+<h3 id="background">Background</h3>
 
-<pre><code>title : My Blog =)
+<p>A big data “revolution” is underway that has the potential to transform our understanding of daily urban dynamics and could have big impacts on the ways that scientists conduct social science research. Vast quantities of new data are being gathered about peoples’ daily actions from their use of social media, public transport systems and mobile telephones, to name a few. Data from these sources, although noisy, messy and biased are unprecedented in their scope, scale and resolution. </p>
 
-author :
-  name : Name Lastname
-  email : blah@email.test
-  github : username
-  twitter : username
-</code></pre>
+<h3 id="method">Method</h3>
 
-<p>The theme should reference these variables whenever needed.</p>
+<p>This research will first develop new geographical methods that can make sense of these data and derive information about peoples’ daily movements in space and time. It then proposes to develop a computer simulation of city-wide daily urban movements that will be calibrated automatically from streams of crowd-sourced data. </p>
 
-<h2 id="sample-posts">Sample Posts</h2>
+<figure>
+	<img src="figures/workplan.png" alt="The overall project workplan" style="width:80%;" />
+	<figcaption> The overall project workplan </figcaption>
+</figure>
 
-<p>This blog contains sample posts which help stage pages and blog data.
-When you don’t need the samples anymore just delete the <code>_posts/core-samples</code> folder.</p>
+<h3 id="outcomes">Outcomes</h3>
 
-<pre><code>$ rm -rf _posts/core-samples
-</code></pre>
+<p>This new model of urban movement will have the capacity to alter our understanding of key social phenomena that depend on where people are at different times of day, rather than simply where they live. It will use the simulation outputs to generate new estimates of where people are and apply these estimates to two empirical areas:</p>
 
-<p>Here’s a sample “posts list”.</p>
+<ol>
+  <li>
+    <p><strong>Crime</strong>. The research will re-analyse crime rates based on estimates of where groups of potential victims are, rather than simply where people live. This will then show us where crime is higher or lower than expected, given the number of people who are in the area at the time and might be victimised. This will have obvious impacts for crime reduction policies and the project will work with the police and crime-reduction experts to make the best use of the results.</p>
+  </li>
+  <li>
+    <p><strong>Health</strong>. The second project will calculate peoples’ exposure to air pollution based on where they actually spend their time, rather than where they live. Normally, peoples’ home location is used to estimate how susceptible they are to air pollution, but this ignores the fact that many people will be exposed whilst away from home (e.g. going to work, travelling to the shops, etc.). By more accurately estimating peoples’ exposure, this project could have substantial impacts on EU/UK air quality laws and lead to an overall improvement in national health.</p>
+  </li>
+</ol>
+
+<h3 id="summary">Summary</h3>
+
+<p>In summary, this project will make use of new ‘big’ data and advanced computer simulation to better understand how people move around cities. It will then apply this new knowledge to try to better understand rates of crime and to assess the impacts of air pollution on peoples’ health.</p>
+
+<h2 id="posts">Posts</h2>
 
 <ul class="posts">
   
@@ -171,39 +156,26 @@ When you don’t need the samples anymore just delete the <code>_posts/core-samp
   
 </ul>
 
-<h2 id="to-do">To-Do</h2>
-
-<p>This theme is still unfinished. If you’d like to be added as a contributor, <a href="http://github.com/plusjade/jekyll-bootstrap">please fork</a>!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.</p>
-
 
   </div>
 </div>
 
 
       </div>
-
-    </div>
-
-    <div id="footer">
-      <div class="container">
-        <p>&copy; 2015 Name Lastname
+      <hr>
+      <footer>
+        <p>&copy; 2015 Nick Malleson
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>
         </p>
-      </div>
+      </footer>
+
     </div>
 
     
 
 
 
-
-
-    <!-- Latest compiled and minified JavaScript, requires jQuery 1.x (2.x not supported in IE8) -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="/assets/themes/bootstrap-3/bootstrap/js/bootstrap.min.js"></script>
   </body>
 </html>
 
