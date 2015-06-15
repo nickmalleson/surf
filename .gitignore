@@ -1,2 +1,13 @@
-__other_themes
+.sass-cache/
+.jekyll-metadata
+_site/
+
+
+*.swp
+
+
+
+# mac crap:
+.DS_Store
+.Trashes
 

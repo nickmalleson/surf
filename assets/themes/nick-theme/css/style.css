@@ -1,3 +1,10 @@
+body {
+    font-size: 100%;
+}
+
+
+
+
 /* Custom container */
 .container-narrow {
   margin: 0 auto;

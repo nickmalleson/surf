@@ -1,0 +1,6 @@
+
+ - do the menu bar
+
+ - make case for support a one-page continuous one with its own header. Once I work out how to do
+   this I can make a special template for pages like that
+
