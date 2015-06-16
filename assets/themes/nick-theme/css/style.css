@@ -8,60 +8,54 @@ body {
     Adapted from http://designshack.net/articles/javascript/single-page-sliding-website-layout-fixed-nav/
 ************************************ */
 
-#topbar {
-  background: #4f4a41;
-  padding: 10px 0 10px 0;
-  text-align: center;
-  height: 36px;
-  overflow: hidden;
-  -webkit-transition: height 0.5s linear;
-  -moz-transition: height 0.5s linear;
-  transition: height 0.5s linear;
-}
-#topbar a {
-  color: #fff;
-  font-size:1.3em;
-  line-height: 1.25em;
-  text-decoration: none;
-  opacity: 0.5;
-  font-weight: bold;
-}
-#topbar a:hover {
-  opacity: 1;
-}
- 
+
 #stickynav {
-  display: block;
-  height: 35px;
-  width: 100%;
-  z-index: 9999;
+    /*
+    display: block;
+    height: 35px;*/
+    
+    width: 100%;
+    z-index: 9999;
+    
+    position: absolute;
+    top: 10em;
+    left: 5em;
+    /*width: 30em;
+    height: 20em;*/
 }
  
-#stickynav #nav { position: fixed; z-index: 9999; }
-#stickynav #nav li { display: inline; }
+#stickynav #nav { 
+    position: fixed; 
+    z-index: 9999; }
+
+#stickynav #nav li { 
+    /*display: inline;*/ 
+    list-style: none; /* Turn off bullet points */
+}
+/* Style for the individual list items (menu options) */
 #stickynav #nav li a {
   display: block;
-  float: left;
-  margin-right: 8px;
+  /*float: left;*/
+  /*margin-right: 8px;*/
   font-size: 1.0em;
   font-weight: bold;
   padding: 5px 7px;
-  background: #cce4c4;
+  background: #eee; /* Color of the background surrounding each list item*/
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
 #stickynav #nav li a:hover { 
   text-decoration: none;
-  background: #d8f0d0;
+  background: #ddd; /* list item background while hovering */
 }
 
 /** page structure **/
 #w {
   display: block;
-  width: 750px;
+  /*width: 750px;*/
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: 10px;
 }
  
 #content {
