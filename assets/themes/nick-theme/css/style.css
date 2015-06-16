@@ -1,9 +1,88 @@
+
 body {
     font-size: 100%;
 }
 
+/* ************************************
+    For continuous scrolling page
+    Adapted from http://designshack.net/articles/javascript/single-page-sliding-website-layout-fixed-nav/
+************************************ */
+
+#topbar {
+  background: #4f4a41;
+  padding: 10px 0 10px 0;
+  text-align: center;
+  height: 36px;
+  overflow: hidden;
+  -webkit-transition: height 0.5s linear;
+  -moz-transition: height 0.5s linear;
+  transition: height 0.5s linear;
+}
+#topbar a {
+  color: #fff;
+  font-size:1.3em;
+  line-height: 1.25em;
+  text-decoration: none;
+  opacity: 0.5;
+  font-weight: bold;
+}
+#topbar a:hover {
+  opacity: 1;
+}
+ 
+#stickynav {
+  display: block;
+  height: 35px;
+  width: 100%;
+  z-index: 9999;
+}
+ 
+#stickynav #nav { position: fixed; z-index: 9999; }
+#stickynav #nav li { display: inline; }
+#stickynav #nav li a {
+  display: block;
+  float: left;
+  margin-right: 8px;
+  font-size: 1.0em;
+  font-weight: bold;
+  padding: 5px 7px;
+  background: #cce4c4;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+#stickynav #nav li a:hover { 
+  text-decoration: none;
+  background: #d8f0d0;
+}
+
+/** page structure **/
+#w {
+  display: block;
+  width: 750px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+ 
+#content {
+  display: block;
+  width: 100%;
+  background: #fff;
+  padding: 25px 20px;
+  padding-bottom: 35px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
 
 
+
+
+
+
+/* ************************************
+    Jekyll Twitter theme defauls
+************************************ */
 
 /* Custom container */
 .container-narrow {
