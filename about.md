@@ -8,7 +8,9 @@ The _surf_ (Simulating Urban Flows) is funded by the <a href="http://www.esrc.ac
 
 <a href="http://nickmalleson.co.uk/"><img src="http://nickmalleson.co.uk/wp-content/uploads/2012/01/AAA3620_2.jpg" style="width:20%;float:right;"/></a>
 
-The principal investigator is [Nick Malleson](http://nickmalleson.co.uk/) a lecturer at the [School of Geography](http://geog.leeds.ac.uk/), [University of Leeds](http://www.leeds.ac.uk/).
+The principal investigator is [Nick Malleson](http://nickmalleson.co.uk/) a lecturer at the [School
+of Geography](http://geog.leeds.ac.uk/), [University of Leeds](http://www.leeds.ac.uk/). Contact
+details are available on his [university homepage](http://www.geog.leeds.ac.uk/people/n.malleson/).
 
 The main aim of the project is to see how we can use new forms of data that tell us about where groups of people are at different times of day. The project will then use this knowledge to look at:
 
