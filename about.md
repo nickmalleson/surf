@@ -19,3 +19,11 @@ The main aim of the project is to see how we can use new forms of data that tell
  2. where (and when) the impact of polluted air has the most damaging affects (i.e. times/places with high pollution _and_ lots of people exposed to it).
 
 For the latest news, see the <a href="archive.html">blog</a>.
+
+
+<ul class="posts">
+  {% for post in site.posts %}
+    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
+  {% endfor %}
+</ul>
+
