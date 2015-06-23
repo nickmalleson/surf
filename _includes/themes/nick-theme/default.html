@@ -44,7 +44,14 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container-narrow">
+                
+                <!-- Site title -->
                 <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
+                
+                <!-- UoL logo  -->
+                <a href="http://www.leeds.ac.uk/"><img class="UoL_Logo"src="figures/uol_logo.gif"/></a>
+                
+                <!-- Then links to the rest of the site -->
                 <ul class="nav">
                     <!-- The following goes through each page in the root directory and adds a link to the page. -->
                     <!--
@@ -66,7 +73,7 @@
                     <li  {% if page.url == thepage %} class="active" {% endif %}>
                         <a href="{{ BASE_PATH }}{{thepage}}" {% if page.url == thepage %} class="active" {% endif %}>
                         Documentation</a></li>
-                    
+
                     
                 </ul>
             </div>

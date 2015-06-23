@@ -9,5 +9,6 @@ _site/
 
 # mac crap:
 .DS_Store
+._.DS_Store
 .Trashes
 
