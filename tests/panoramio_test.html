@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+
+<head>
+    <title>Panoramio Test</title>
+    <meta name="description" content="This is a test of the Panarimo API." />
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/page.css" />
+    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1&amp;hl=en"></script>
+</head>
+
+<body>
+    <h1>Panoramio Test</h1>
+
+    <p>This page has an exmple of how to use the Panarimo API. The API allows you to search for and display pictures according to following criteria. This example uses the Javascript version of the API. There is an HTML frame version which is simpler but less configurable.</p>
+
+    <p>It follows the basic instructions <a href="http://www.panoramio.com/api/widget/api.html#js">here</a> The criteria for the search is simply the bounding box for Leeds (because I had this handy).</p>
+    
+    <!-- This DIV block determines where the photo should appear. You can set things like float, margin, border, etc. -->
+    <div id="wapiblock" style="margin: 10px 15px; box-shadow: 3px 3px 5px 6px #ccc"></div>
+    
+    <!-- Make the API request here: -->
+    <script>
+        var myRequest = {
+            //'tag': 'sea', // This could be a tag for the photos.
+            'rect': { // This is the bounding box (for Leeds in this case)
+                'sw': {
+                    'lat': 53.52,
+                    'lng': -2.17
+                },
+                'ne': {
+                    'lat': 53.9,
+                    'lng': -1.20
+                }
+            }
+        };
+
+        // Set some other options
+        var myOptions = {
+            'width': 600,
+            'height': 400
+        };
+        
+        // Make the request
+        var wapiblock = document.getElementById('wapiblock');
+        var widget = new panoramio.PhotoWidget(wapiblock, myRequest, myOptions);
+        widget.setPosition(0);
+        
+    </script>
+
+</body>
+
+</html>
+
