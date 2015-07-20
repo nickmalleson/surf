@@ -24,7 +24,7 @@ Your personal data that you have provided will not routinely be sent to other th
 
 Cookies are small text files that are placed on your device by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
 
-Our website [surf.leeds.ac.uk](surf.leeds.ac.uk) does not use any cookies.
+Our website [surf.leeds.ac.uk]http://(surf.leeds.ac.uk) does not use any cookies.
 
 ## 6. University Code of Practice
 
