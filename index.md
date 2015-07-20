@@ -3,7 +3,6 @@ layout: page
 title:  surf - Simulating Urban Flows
 tagline: Understanding Urban Movements through Big Data and Social Simulation
 ---
-{% include JB/setup %}
 
 This is the website for <a href="http://nickmalleson.co.uk/">Nick Malleson's</a> _surf_ research project, funded by <a href="http://www.esrc.ac.uk/funding-and-guidance/funding-opportunities/15938/future-research-leaders.aspx">ESRC Future Research Leaders</a> scheme. 
 
