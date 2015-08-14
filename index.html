@@ -1,0 +1,305 @@
+---
+layout: 
+title:  surf - Simulating Urban Flows
+tagline: Understanding Urban Movements through Big Data and Social Simulation
+---
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en" class="no-js">
+	<head>
+          <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+        <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+
+		<meta name="keywords" content="{{ site.keywords }}" />
+		<!-- Bootstrap -->
+		<script src="singlepage_js/modernizr.custom.js"></script>
+		<link href="singlepage_css/bootstrap.min.css" rel="stylesheet">
+		<link href="singlepage_css/animate.css" rel="stylesheet">
+		<link href="singlepage_css/styles.css" rel="stylesheet">
+		<link href="singlepage_css/queries.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+	</head>
+	<body>
+		<header>
+			<section class="hero">
+				<div class="texture-overlay"></div>
+				<div class="container">
+					<div class="row nav-wrapper">
+						<div class="col-md-6 col-sm-6 col-xs-6 text-left">
+							<a href="http://www.leeds.ac.uk/"><img src="figures/uol_logo.gif" alt="University of Leeds Logo"></a>
+						</div>
+					</div>
+					<div class="row hero-content">
+						<div class="col-md-12">
+							<h1 class="animated fadeInDown">{{ site.title }}</h1>
+                            <p class="animated fadeInDown">This is the website for <a href="http://nickmalleson.co.uk/">Nick Malleson's</a> _surf_ research project, funded by <a href="http://www.esrc.ac.uk/funding-and-guidance/funding-opportunities/15938/future-research-leaders.aspx">ESRC Future Research Leaders</a> scheme. 
+                            For the latest news, see the <a href="{{site.baseurl}}/blog.html">blog</a></p>
+                            
+                            <a class="use-btn animated fadeInUp"href="#intro">Learn more</a>
+                            <!-- <a class="learn-btn animated fadeInUp" href="{{ site.baseurl }}/documentation.html">Documentation</a> -->
+                            <a class="use-btn animated fadeInUp" href="{{ site.baseurl }}/blog.html">Blog</a>
+                            <a class="learn-btn animated fadeInUp" href="#contact" >Contact</a>
+                            <a class="learn-btn animated fadeInUp" href="{{site.baseurl}}/privacy.html">Privacy</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</header>
+        
+        
+        <!-- Intro Page -->
+        
+        <section class="showcase" id="intro">
+			<div class="showcase-wrap">
+				<div class="texture-overlay"></div>
+				    <div class="container">
+					   <div class="row">
+                           <div class="col-md-6">
+                               <h1>surf</h1>
+
+                                <h2 id="introduction">Introduction</h2>                        
+                                <p>The aim of this research is to fundamentally alter our understanding of daily urban movement patterns through a combination of ‘big data’ analysis and cutting-edge computer simulation. It will develop new methods to produce data that will help us to address key issues in crime and health.</p>
+
+                                <h2 id="background">Background</h2>
+                                <p>A big data “revolution” is underway that has the potential to transform our understanding of daily urban dynamics and could have big impacts on the ways that scientists conduct social science research. Vast quantities of new data are being gathered about peoples’ daily actions from their use of social media, public transport systems and mobile telephones, to name a few. Data from these sources, although noisy, messy and biased are unprecedented in their scope, scale and resolution. </p>
+
+                                <h2 id="method">Method</h2>
+                                <p>This research will first develop new geographical methods that can make sense of these data and derive information about peoples’ daily movements in space and time. It then proposes to develop a computer simulation of city-wide daily urban movements that will be calibrated automatically from streams of crowd-sourced data. </p>
+
+                            </div>
+                           
+                            <div class="col-md-6">
+                                <h2 id="outcomes">Outcomes</h2>
+                                <p>This new model of urban movement will have the capacity to alter our understanding of key social phenomena that depend on where people are at different times of day, rather than simply where they live. It will use the simulation outputs to generate new estimates of where people are and apply these estimates to two empirical areas:</p>
+                                <ul>
+                                    <li>
+                                        <p><strong>Crime</strong>. The research will re-analyse crime rates based on estimates of where groups of potential victims are, rather than simply where people live. This will then show us where crime is higher or lower than expected, given the number of people who are in the area at the time and might be victimised. This will have obvious impacts for crime reduction policies and the project will work with the police and crime-reduction experts to make the best use of the results.</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>Health</strong>. The second project will calculate peoples’ exposure to air pollution based on where they actually spend their time, rather than where they live. Normally, peoples’ home location is used to estimate how susceptible they are to air pollution, but this ignores the fact that many people will be exposed whilst away from home (e.g. going to work, travelling to the shops, etc.). By more accurately estimating peoples’ exposure, this project could have substantial impacts on EU/UK air quality laws and lead to an overall improvement in national health.</p>
+                                    </li>
+                                </ul>
+
+                                <h2 id="summary">Summary</h2>
+                                <p>In summary, this project will make use of new ‘big’ data and advanced computer simulation to better understand how people move around cities. It will then apply this new knowledge to try to better understand rates of crime and to assess the impacts of air pollution on peoples’ health.</p>
+                            </div>
+                        
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a class="use-btn animated fadeInUp" href="{{ site.baseurl }}/blog.html">Blog</a>
+                                    <a class="use-btn animated fadeInUp" href="#contact" >Contact</a>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+		</section>
+
+        
+        <!-- UNCOMMENT THIS LOT TO SEE DIFFERENT TEMPLATES -->
+        
+        <!-- 
+        <section class="showcase" id="cdrc">
+			<div class="showcase-wrap">
+				<div class="texture-overlay"></div>
+				<div class="container">
+					<div class="row">
+						<div class="col-md-6">
+                            <li>
+                                <img src="fig/cdrc.png"alt="CDRC Logo" style="width:80%; height:auto;">
+                            </li>
+						</div>
+						<div class="col-md-6">
+							<h1>Consumer Data Research Centre</h1>
+                            <p>The Consumer Data Research Centre (CDRC) is a Big Data initiative, bringing together world-class researchers at the University of Leeds, University College London, University of Liverpool and University of Oxford, to harness the potential on consumer-related data. </p>
+                            <p>The Centre seeks to open up consumer data resources and focuses on ways in which value can be extracted from new sources of data to benefit researchers in business, government and society at large.</p>
+                            <p>Further information can be found on the <a href="http://cdrc.ac.uk/">CDRC website.</a></p>
+							<a href="http://cdrc.ac.uk/" class="download-btn">More Information</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+        
+        
+
+
+
+        <section class="showcase" id="mrc">
+			<div class="showcase-wrap">
+				<div class="texture-overlay"></div>
+				<div class="container">
+					<div class="row">
+						<div class="col-md-6">
+                            <img src="fig/mrc.jpg"alt="MRC Logo" style="width:80%; height:auto;">
+                            <a href="http://medhealth.leeds.ac.uk/info/130/research" class="download-btn">Faculty of Medicine Health</a>
+                            <a href="http://www.fbs.leeds.ac.uk/research/" class="download-btn">Faculty of Biological Research Pages</a>
+                            
+						</div>
+						<div class="col-md-6">
+                            <h1>MRC Medical Bioinformatics Centre</h1>
+                            <p>The primary aim of the Centre is to create the infrastructure and culture to allow ground breaking medical bioinformatics research at the interface between the clinic and high volume molecular and phenotypic data sets. The Centre will collaborate with a wide range of partners including business organisations (e.g. IBM, TPP Ltd.) and health care providers at a national level (e.g. The Farr Institute, Cancer Research UK) and locally (e.g. Leeds NIHR, Leeds Teaching Hospitals Trust).</p>
+                            <a href="#mrc-more" class="download-btn">Learn More</a>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+        
+        <section class="features-list" id="mrc-more">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+                        
+						<div class="col-md-4 feature-1 wp2">
+							<div class="feature-content">
+								<h1>Cancer genomics and malignant melanoma</h1>
+								<p>This group lead the largest international consortia studying malignant melanoma, GenoMEL (genetic and lifestyle factors underlying risk) and BioGenoMEL (factors determining prognosis).</p> 
+							</div>
+						</div>
+						<div class="col-md-4 feature-2 wp2 delay-05s">
+							<div class="feature-content">
+								<h1>Genotype, phenotype and response to radiotherapy in rectal cancer</h1>
+								<p>This project will exploit advanced digital pathology and develop methods to expand the knowledge we derive from clinical trials.</p>
+							</div>
+						</div>
+						<div class="col-md-4 feature-3 wp2 delay-1s">
+							<div class="feature-content">
+								<h1>Inherited rare diseases</h1>
+								<p>The University of Leeds and NHS Clinical Genetics Service have collaborated to understand the molecular basis of autosomal recessive diseases in local ethnic communities</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+                        
+                        <div class="col-md-4 feature-1 wp2">
+							<div class="feature-content">
+								<h1>Proteomic Biomarkers</h1>
+								<p>Proteomic studies focussed on biomarker discovery are being undertaken in renal transplantation, acute kidney injury (AKI) and renal cancer, locally and through our involvement in national and international networks</p> 
+							</div>
+						</div>
+						<div class="col-md-4 feature-2 wp2 delay-05s">
+							<div class="feature-content">
+								<h1>Patient similarity searches in lymphoma treatment</h1>
+								<p>This project will link the large patient cohort in the HMDS database and tissue bank, with molecular data (somatic mutations, gene expression) and EPR information, using the Centre infrastructure</p>
+							</div>
+						</div>
+						<div class="col-md-4 feature-3 wp2 delay-1s">
+							<div class="feature-content">
+								<h1>Collaborative studies with national partners</h1>
+								<p>The Centre would look to undertake studies to assist collaborators including the HSCIC and PHE. With CPRD, we will explore joint working with TPP to bring many more GP practices into national databases</p>
+							</div>
+						</div>
+                        
+                        <div class="col-md-12 feature-1 wp2 delay-1s">
+							<h1>Enhancing the value of the MRC-funded rheumatoid arthritis stratified medicine and RA-MAP consortia through linkage to complex datasets</h1>
+                            <p>We will exploit and extend the complex data sets available by developing robust algorithms for the interrogation of primary care and pathology e-records, allowing the integration of contextual data into the statistical analyses to reflect real-world patients, environmental exposures and clinical challenges.</p> 
+						</div>
+                        
+					</div>
+				</div>
+			</div>
+		</section>
+        
+        -->
+        
+        
+        
+        <!-- Contact -->
+        
+        <section class="features-list" id="contact">
+								
+			<div class="container">
+                
+				<div class="row">
+					<div class="col-md-12">
+                        
+                        <div class="col-md-12 feature-1 wp2">
+							<h1>Contact and more information</h1>
+						</div>
+
+                    
+						<div class="col-md-4 feature-1 wp2">
+							<div class="feature-icon">
+								<i class="fa fa-desktop"></i>
+							</div>
+							<div class="feature-content">
+								<h1>Nick Malleson</h1>
+								<p>Principle Investigator</p>
+                                <a href="mailto:n.s.malleson@leeds.ac.uk">n.s.malleson@leeds.ac.uk</a>
+                                <p>(0) 113 343 5248</p>
+							</div>
+						</div>
+                        
+						
+						<div class="col-md-4 feature-2 wp2 delay-05s">
+							<div class="feature-icon">
+								<i class="fa fa-flash"></i>
+							</div>
+							<div class="feature-content">
+								<h1>University Home Page</h1>
+								
+								<a href="http://www.geog.leeds.ac.uk/people/n.malleson">School of Geography</a>
+							</div>
+						</div>
+						<div class="col-md-4 feature-3 wp2 delay-1s">
+							<div class="feature-icon">
+								<i class="fa fa-heart"></i>
+							</div>
+							<div class="feature-content">
+								<h1>Personal Home Page</h1>
+								<a href="http://nickmalleson.co.uk/">nickmalleson.co.uk/</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+        
+        
+
+        
+        
+		<footer>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-5">
+						<p>© Boxify 2015 - <a href="http://tympanus.net/codrops/licensing/">Licence</a> - Designed &amp; Developed by <a href="http://www.peterfinlan.com/">Peter Finlan</a></p>
+					</div>
+					<div class="col-md-7">
+						<ul class="footer-nav">
+                            <li><a href="{{ site.baseurl }}/blog.html">Blog</a></li>
+                            <li><a href="{{ site.baseurl }}/documentation.html">Documentation</a></li>
+                            <li><a href="{{ site.baseurl }}/about.html">About</a></li>
+                            <li><a href="{{site.baseurl}}/privacy.html">Privacy</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="singlepage_js/retina.js"></script>
+		<script src="singlepage_js/waypoints.min.js"></script>
+		<script src="singlepage_js/bootstrap.min.js"></script>
+		<script src="singlepage_js/min/scripts-min.js"></script>
+	</body>
+</html>
