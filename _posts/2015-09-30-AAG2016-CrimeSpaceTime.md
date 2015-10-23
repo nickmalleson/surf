@@ -2,8 +2,7 @@
 layout: no_header
 title: "Crime/fear in space and time"
 tagline: "Call for papers, AAG 2016.  San Francisco. 29th March – 2nd April"
-category : announce
-tags : [cfp conference]
+categories : [cfp, conference]
 ---
 
 ## **Call for papers:<br/>_Crime/fear in space and time_**
