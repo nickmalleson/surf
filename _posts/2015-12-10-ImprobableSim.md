@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "surf Simulation with SpatialOS"
+title: "Simulation with SpatialOS"
 tagline: "Building the first Agent-Based Model with Improbable's SpatialOS"
 category: announce
 tags : [research, agent-based modelling, simulation, improbable]
@@ -11,7 +11,7 @@ One of the main aims of the _surf_ project is to build an agent-based model of f
 <figure>
 <a href="https://en.wikipedia.org/wiki/Moore's_law"><img style="float:left; height:auto%; width:50%" src="https://upload.wikimedia.org/wikipedia/commons/0/00/Transistor_Count_and_Moore's_Law_-_2011.svg"></a>
 <figcaption>
-[Moore's law](https://en.wikipedia.org/wiki/Moore's_law): CPU speed has doubled approximately every two years. Source: [Wgsimon](https://commons.wikimedia.org/wiki/User:Wgsimon) ([CC-BY-SA](http://creativecommons.org/licenses/by-sa/3.0/))
+<a href="https://en.wikipedia.org/wiki/Moore's_law">Moore's law</a>: CPU speed has doubled approximately every two years. Source: <a href="https://commons.wikimedia.org/wiki/User:Wgsimon">Wgsimon</a> (<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)
 </figcaption>
 </figure>
 
@@ -24,7 +24,7 @@ Examples of entities that could be included in a SpatialOS model.
 </figcaption>
 </figure>
 
-For this reason, I recently spent a week working with [improbable](http://improbable.io/), a tech startup in London. Improbable are in the process of creating a simulation engine called [SpatialOS](http://improbable.io/learn-more). SpatialOS handles the distribution of a single model over a number of individual compute nodes, which makes it possible to make models that are larger than those that are able to run on a single computer. The software is still under development, but the intention is to run models in the cloud. So if a model needs 50 separate computers to run it, the system just asks a cloud provider for 50 computers. If it needs 10,000 it asks for that many. And the entire process should be invisible to the model developer.
+For this reason, I recently spent a week working with [improbable](http://improbable.io/), a tech startup in London. Improbable are in the process of creating a simulation engine called [SpatialOS](http://improbable.io/learn-more). SpatialOS handles the distribution of a single model over a number of individual compute nodes, which makes it possible to make models that are larger than those that are able to run on a single computer. The software is still under development, but the intention is to run models in the cloud. So if a model needs 50 separate computers to run it, the system just asks a cloud provider for 50 computers. If it needs 10,000, it asks for that many. And the entire process should be invisible to the model developer.
 
 The software is still under development, but it’s easy to use. After a couple of days I had learned the basics and was able to implement a simple agent-based model of people commuting in Leeds (see the video below). The model reads in information about the number of people who live in each Lower Super Output Area and where they commute to. It has a 24-hour clock and the individual agents go to work in the morning, coming home again in the afternoon. At the moment it only simulates 1,350 agents, but when the model is scaled-up on a larger computer system it should be possible to model to the 750,000 people in the city.
 
