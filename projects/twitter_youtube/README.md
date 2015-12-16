@@ -6,7 +6,7 @@ This is a simple little python program that reads in some tweets, expands short 
 
 ## Running
 
- 1. Download the [twitter_youtube.py](https://raw.githubusercontent.com/nickmalleson/surf/master/projects/twitter_youtube/twitter_youtube.py)
+ 1. Download the [twitter_youtube.py](https://raw.githubusercontent.com/nickmalleson/surf/master/projects/twitter_youtube/twitter_youtube.py) and save it somewhere.
  
  2. Prepare your data. The program expects to find a file called 'tweets.csv' in the same directory as the .py file. That file should be comma-separated and have the links to be followed in the first column. You can have other columns if you want, the program will ignore them. It should not have a header row at the top. See the example [tweets.csv](tweets.csv) file.
 
