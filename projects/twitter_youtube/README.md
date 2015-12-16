@@ -4,10 +4,6 @@
 
 This is a simple little python program that reads in some tweets, expands short URLs, and if they point to youtube it tries to find out what category the video was posted to.
 
-## Download
-
-You can download everything you need from here: [twitter_youtube.zip](./twitter_youtube.zip)
-
 ## Running
 
  1. Download the [twitter_youtube.py](./twitter_youtube.py) file and save it somewhere.
