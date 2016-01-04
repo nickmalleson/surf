@@ -37,3 +37,4 @@ An abstract should be no more than **250 words**.
  - [Nick Malleson](http://nickmalleson.co.uk/), School of Geography, University of Leeds
  - [Alex Singleton](http://www.alex-singleton.com/), School of Environmental Sciences, University of Liverpool
  - [Mark Birkin](http://www.geog.leeds.ac.uk/people/m.birkin), Director of the University of Leeds Institute for Data Analytics (LIDA)
+ - [Ed Manley](ed.manley@ucl.ac.uk), Centre for Advanced Spatial Analysis (CASA), UCL.
