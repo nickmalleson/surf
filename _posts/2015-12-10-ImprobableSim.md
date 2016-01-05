@@ -6,7 +6,7 @@ category: announce
 tags : [research, agent-based modelling, simulation, improbable]
 ---
 
-One of the main aims of the _surf_ project is to build an agent-based model of flows around a city. The earliest agent-based models (e.g. [Schelling's (1969) segregation model](http://www.jstor.org/stable/1823701#.Vmla3wxCeGM)) were run by hand which obviously limited their complexity. It would be realistically impossible to create a simulation of more than a handful of agents. 
+One of the main aims of the _surf_ project is to build an agent-based model of flows of people around a city. The earliest agent-based models (e.g. [Schelling's (1969) segregation model](http://www.jstor.org/stable/1823701#.Vmla3wxCeGM)) were run by hand which obviously limited their complexity. It would be realistically impossible to create a simulation of more than a handful of agents. 
 
 <figure style="float:left; height:auto%; width:50%;padding:5px; margin: 0px 10px 10px 0px; -webkit-box-shadow: 5px 5px 8px 0px rgba(0,0,0,0.75);
 -moz-box-shadow: 5px 5px 8px 0px rgba(0,0,0,0.75);
