@@ -26,7 +26,7 @@ An abstract should be no more than **250 words**.
 
 #### Organisers:
 
- - [Ed Manley](ed.manley@ucl.ac.uk), Centre for Advanced Spatial Analysis (CASA), UCL. - [Alison Heppenstall](A.J.Heppenstall@leeds.ac.uk), School of Geography, University of Leeds - [Andrew Evans](A.J.Evans@leeds.ac.uk), School of Geography, University of Leeds
+ - [Ed Manley](http://urbanmovements.co.uk/), Centre for Advanced Spatial Analysis (CASA), UCL. - [Alison Heppenstall](http://www.geog.leeds.ac.uk/people/a.heppenstall), School of Geography, University of Leeds - [Andrew Evans](http://www.geog.leeds.ac.uk/people/a.evans), School of Geography, University of Leeds
  - [Nick Malleson](http://nickmalleson.co.uk/), School of Geography, University of Leeds
 
 
