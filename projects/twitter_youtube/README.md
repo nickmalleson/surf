@@ -4,7 +4,28 @@
 
 This is a simple little python program that reads in some tweets, expands short URLs, and if they point to youtube it tries to find out what category the video was posted to.
 
+## Preparation
+
+You'll need to install python, if it isn't already installed. On a mac, the easiest way to do this is to use a package manager called [Homebrew](http://brew.sh/). Once you have homebrew, you can install python by typing the following at the Terminal:
+
+<pre><code>brew install python</code></pre>
+
+Google for how to install it on Windows. If you're using Linux, I'm sure you don't need any instructions :-)
+
+Also, you need to install a python library called 'Beautiful Soup'. This is the thing that reads the youtube webpages to try to find the video category. To install it on a Mac or Linux, try typing the following into the Terminal:
+
+<pre><code>sudo pip install beautifulsoup4</code></pre>
+
+And if that doesn't work, try:
+
+<pre><code>sudo easy_install beautifulsoup4</code></pre>
+
+If that doesn't work, or if you're using Windows, have a look at the install instructions on the [beautiful soup website](http://www.crummy.com/software/BeautifulSoup/#Download).
+
+
 ## Running
+
+Once Python and Beautiful Soup are ready, follow these instructions to run the program:
 
  1. Download the [twitter_youtube.py](https://raw.githubusercontent.com/nickmalleson/surf/master/projects/twitter_youtube/twitter_youtube.py) and save it somewhere.
  
