@@ -63,22 +63,40 @@ output = "" # PRepare a long list of results that will be written out to a file
 
 with open('tweets.csv', 'r') as inf:
 
+    count = 0
+
+    broken_urls = []
+
     for line in inf: # Iterate over every line in the file
+
+        count += 1
+
+        if (count % 100 == 0):
+            print ("Read line {}".format(count))
+    
+        
         total += 1
 
         cols = line.strip().split(',') # Split the line into separate columns
         url = cols[0].strip() # The url is in the first column
 
-        cat = get_category(url) # Call the get_category function to get the category
+        try:    
+          cat = get_category(url) # Call the get_category function to get the category
 
-        if cat == None: # I didn't find a category
-            output += ( line.strip() + "," + "-" + "\n" ) # Write out '-' to show that no category was found
+          if cat == None: # I didn't find a category
+              output += ( line.strip() + "," + "-" + "\n" ) # Write out '-' to show that no category was found
 
-        else: # I did find a category
-            successes += 1
-            output += ( line.strip() + "," + cat + "\n") 
+          else: # I did find a category
+              successes += 1
+              output += ( line.strip() + "," + cat + "\n")
+              
+        except IOError:
+            broken_urls.append(url)
+            print("I couldnt' retrieve the URL: {}".format(url) )
 
 print ("Finished! I found {} / {} pages that had a category".format(successes, total) )
+
+print ("I also found {} broken urls. They are {}".format(len(broken_urls), broken_urls) )
 
 # Write out the results to a file called 'output.csv'
 
