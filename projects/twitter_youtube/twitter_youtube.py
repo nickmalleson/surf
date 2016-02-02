@@ -58,8 +58,6 @@ def get_category(url):
 successes = 0 # Count the number of successful categories retrieved
 total = 0 # Count the total number of urls checked
 
-output = "" # PRepare a long list of results that will be written out to a file
-
 # Read a csv file with tweets in it
 try:
 	with open('tweets.csv', 'r') as inf:
@@ -84,13 +82,15 @@ try:
 			try:    
 				cat = get_category(url) # Call the get_category function to get the category
 
-				if cat == None: # I didn't find a category
-					output += ( line.strip() + "," + "-" + "\n" ) # Write out '-' to show that no category was found
+				with open('output.csv', 'a') as outf:
 
-				else: # I did find a category
-					successes += 1
-					output += ( line.strip() + "," + cat + "\n")
-			  
+					if cat == None: # I didn't find a category
+						outf.write( line.strip() + "," + "-" + "\n" ) # Write out '-' to show that no category was found
+
+					else: # I did find a category
+						successes += 1
+						outf.write ( line.strip() + "," + cat + "\n")
+
 			except IOError:
 				broken_urls.append(url)
 				print("I couldnt' retrieve the URL: {}".format(url) )
@@ -104,10 +104,3 @@ except Exception as e: # Catch *everything* so that at least some output will be
 print ("Finished! I found {} / {} pages that had a category".format(successes, total) )
 
 print ("I also found {} broken urls. They are {}".format(len(broken_urls), broken_urls) )
-
-# Write out the results to a file called 'output.csv'
-
-with open('output.csv', 'w') as outf:
-    outf.write(output)
-
-
