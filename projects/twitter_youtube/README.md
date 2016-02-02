@@ -33,7 +33,9 @@ Once Python and Beautiful Soup are ready, follow these instructions to run the p
 
  3. Run the program simply by double-clicking on the twitter_youtube.py file that you downloaded. I think it needs python version 2 (3 is the latest one, but I've not tested it with version 3). You might need to install python first from [here](https://www.python.org/download/releases/2.7.2/). 
 
- 4. Have a look at the output: [output.csv](./output.csv). If it worked, this file will have all the original columns from tweets.csv with a new column added that stores the category.
+ 4. Have a look at the output: [output.csv](./output.csv). If it worked, this file will have all the original columns from tweets.csv with a new column added that stores the category. 
+
+**Important:** the file _appends_ new lines to the output. So if you have an old output.csv file there already and you re-run the program, it will add the new results to that existing file. To get completely new results you need to delete the output.csv file.
 
 ## Other Useful Things
 
