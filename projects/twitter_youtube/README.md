@@ -39,7 +39,7 @@ Once Python and Beautiful Soup are ready, follow these instructions to run the p
 
 ## Other Useful Things
 
-I've also written a little python script ([find_urls.py](./find_urls.py)) that goes through a csv file, looks for urls, and outputs only lines in the file that have a url in them. To run it do the following:
+I've also written a little python script ([find_urls.py](https://raw.githubusercontent.com/nickmalleson/surf/master/projects/twitter_youtube/find_urls.py)) that goes through a csv file, looks for urls, and outputs only lines in the file that have a url in them. To run it do the following:
 
 <pre><code>python find_urls.py infil.csv outfile.csv</code></pre>
 
