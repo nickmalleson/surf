@@ -21,6 +21,7 @@
 from bs4 import BeautifulSoup
 from urllib import urlopen
 import traceback # To print a traceback if there is an unexpected error
+import sys
 
 def get_category(url):
     """Assumes that the url points to youtube. Follows it and tries to find the categoty. Returns
