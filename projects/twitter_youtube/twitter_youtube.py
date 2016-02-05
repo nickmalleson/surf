@@ -38,14 +38,19 @@ def get_category(url):
     # FInd the category by: finding the header with 'Category', moving up one to the parent tag,
     # then finding the first li tag which has the link and actual category
     # (parent.li.a.contents[0]). See the html snipped at the top to see why this works.
+    
+    try:
 
-    for h in soup.find_all('h4'):
-        for content in h.contents:
-            if "Category" in content:
-                category = h.parent.li.a.contents[0].strip()
-                # This is the h4 tag that we're after.
-                print("\tI found the category:",category)
-                return category
+        for h in soup.find_all('h4'):
+            for content in h.contents:
+                if "Category" in content:
+                    category = h.parent.li.a.contents[0].strip()
+                    # This is the h4 tag that we're after.
+                    print("\tI found the category:",category)
+                    return category
+
+    except AttributeError as e:
+        print ("There was an error trying to get the category for the url {}. \n The error is '{}'".format(url, str(e)))
 
     print("\tI can't find a category, maybe not a youtube page?")
     return None
@@ -99,6 +104,8 @@ except Exception as e: # Catch *everything* so that at least some output will be
     print ("An unexpected error has been generated: {}".format(str(e)))
     print ("The traceback is:")
     print (traceback.format_exc())
+except: # For any other exception (including Keyboard interrupt etc)
+    print "FAIL! Unexpected error:", sys.exc_info()[0]
     
 
 print ("Finished! I found {} / {} pages that had a category".format(successes, total) )
