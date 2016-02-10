@@ -1,6 +1,6 @@
 ---
 layout: no_header
-title: "Urban Analytics"
+title: "RGS: Urban Analytics"
 tagline: "Call for papers, RGS-IBG 2016. London, 30 Aug - 2 Sep"
 category: announce
 tags : [cfp, conference]

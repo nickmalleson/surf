@@ -1,6 +1,6 @@
 ---
 layout: no_header
-title: "Urban Analytics"
+title: "AAG: Urban Analytics"
 tagline: "Call for papers, AAG 2016.  San Francisco. 29th March – 2nd April"
 category: announce
 tags : [cfp, conference]
