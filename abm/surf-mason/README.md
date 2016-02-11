@@ -15,7 +15,7 @@ Unless otherwise stated, the following commands assume you are in the <code>surf
  
  - Get some external libraries that MASON needs, store them in a new directory called <code>resources</code>, and extract the zip file  <pre>
 <code>mkdir resources
-wget -P resources/ https://cs.gmu.edu/~eclab/projects/mason/libraries.zip && unzip resources/libraries.zip </code>
+wget -P resources/ https://cs.gmu.edu/~eclab/projects/mason/libraries.zip && unzip -d resources/ resources/libraries.zip </code>
 </pre> 
 
  - Add those libraries to the CLASSPATH
@@ -32,9 +32,17 @@ or just:
 
 
  - Go into the directory that has the MASON source and build everything <pre><code>cd mason/mason/
+make 
 make jar</code></pre>
+If <code>make jar</code> doesn't work, you probably need to install [Java3D](https://java3d.java.net/binary-builds.html). To do this: 
 
- - While you're there, the docs might be useful as well: <code>make docs</code>
+   1. download for your system from [here](https://java3d.java.net/binary-builds.html)
+   2. Unzip the file
+   3. Go into the directory that it created and unzip the <code>j3d-jre.zip</code> file.
+   4. That will create a <code>lib/ext</code> that contains three files: <code>j3dcore.jar</code>, <code>j3dutils.jar</code>, and <code>vecmath.jar</code>. Copy those three files into the <code>surf-mason/resources/libraries</code> directory.
+   5. Then running <code>make jar</code> should work
+
+ - While you're making MASON, the docs might be useful as well: <code>make docs</code>
 
  - And because we'll need it later, add the MASON jar file to your path:
 <pre><code>export CLASSPATH=$CLASSPATH:$PWD/jar/mason.19.jar</code></pre>
@@ -53,7 +61,7 @@ First we need some more resources
  - The [Java Topology Suite](http://www.vividsolutions.com/jts/JTSHome.htm) 
 
   - Download and extract the files:
-<pre><code>wget -P resources/ http://www.vividsolutions.com/jts/bin/jts-1.8.0.zip && unzip -d resources/ resources/jts-1.8.0.zip </code></pre>
+<pre><code>wget -P resources/ http://www.vividsolutions.com/jts/bin/jts-1.8.0.zip && unzip -d resources/jts-1.8.0 resources/jts-1.8.0.zip </code></pre>
 
   - We'll add them to the CLASSPATH later.
 
@@ -68,20 +76,24 @@ First we need some more resources
 ${PWD}/resources/geotools/*:\
 ${PWD}/resources/jts-1.8.0/lib/*</code></pre>
 
- - You also need OGR from [http://gdal.org/](http://gdal.org/). That's platform specific, so go to the website and download it. 
+ - You might also need OGR from [http://gdal.org/](http://gdal.org/). That's platform specific, so go to the website and download it. I wouldn't bother with this step yet as it might not be a problem.
 
 Finally, GeoMason!
 
 Make sure you're in the <code>surf/abm/surf-mason/</code> directory. 
 
-Then download, extract, and build geomason and the demos
-<pre><code>wget http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/geomason.src.1.5.tgz
-tar -xzvf geomason.src.1.5.tgz
-rm geomason.src.1.5.tgz
-wget http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/geomason.demos.1.5.tgz
-tar -xvzf geomason.demos.1.5.tgz 
-rm geomason.demos.1.5.tgz 
-cd geomason-1.5
+First download and extract GeoMason
+<pre><code>wget http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/geomason.src.1.5.tgz && \
+tar -xzvf geomason.src.1.5.tgz && \
+rm geomason.src.1.5.tgz && \
+wget http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/geomason.demos.1.5.tgz && \
+tar -xvzf geomason.demos.1.5.tgz  && \
+rm geomason.demos.1.5.tgz
+</code></pre>
+
+Then build it:
+
+<pre><code>cd geomason-1.5
 make jar
 make demos
 export CLASSPATH=$CLASSPATH:./geomason.1.5.jar
@@ -110,7 +122,7 @@ The following clears the CLASSPATH and re-initialises it with everything it need
 export CLASSPATH=""
 export CLASSPATH=\
 ${PWD}/resources/libraries/*:\
-$PWD/mason/mason/jar/mason.19.jar:\
+${PWD}/mason/mason/jar/mason.19.jar:\
 ${PWD}/resources/geotools/*:\
 ${PWD}/resources/jts-1.8.0/lib/*:\
 ${PWD}/geomason-1.5/geomason.1.5.jar
