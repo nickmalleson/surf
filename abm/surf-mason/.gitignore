@@ -5,3 +5,4 @@ resources/
 # Ignore the MASON source, this can be cloned directly from git (again see README instructions)
 
 mason/
+geomason-1.5/
