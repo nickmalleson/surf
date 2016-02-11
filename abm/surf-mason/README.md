@@ -13,7 +13,10 @@ Unless otherwise stated, the following commands assume you are in the <code>surf
 
  - get the MASON source <pre><code>git clone https://github.com/eclab/mason.git</code></pre> This will make a new directory called <code>mason</code>.
  
- - Get some external libraries that MASON needs, store them in the resources directory, and extract the zip file  <pre><code>wget -P resources/ https://cs.gmu.edu/~eclab/projects/mason/libraries.zip && unzip resources/libraries.zip </code></pre> 
+ - Get some external libraries that MASON needs, store them in a new directory called <code>resources</code>, and extract the zip file  <pre>
+<code>mkdir resources
+wget -P resources/ https://cs.gmu.edu/~eclab/projects/mason/libraries.zip && unzip resources/libraries.zip </code>
+</pre> 
 
  - Add those libraries to the CLASSPATH 
 <pre><code>export CLASSPATH=$CLASSPATH:\
