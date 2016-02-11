@@ -1,0 +1,7 @@
+# Ignore all the resources, these need should be downloaded separately (instructions in surf-mason/README)
+
+resources/
+
+# Ignore the MASON source, this can be cloned directly from git (again see README instructions)
+
+mason/
