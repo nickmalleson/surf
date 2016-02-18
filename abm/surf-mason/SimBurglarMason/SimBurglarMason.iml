@@ -10,9 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="simburglar-libs" level="project" />
-    <orderEntry type="library" name="mason.19" level="project" />
-    <orderEntry type="library" name="geotools" level="project" />
-    <orderEntry type="library" name="surf-mason-libraries" level="project" />
-    <orderEntry type="library" name="geomason.1.5" level="project" />
+    <orderEntry type="library" name="geomason-full" level="project" />
   </component>
 </module>

@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="geomason-full">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/abm/surf-mason/geomason-1.5/geomason.1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/surf-mason/mason/mason/jar/mason.19.jar!/" />
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/resources/jts-1.8.0/lib" />
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/resources/libraries" />
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/resources/libraries" />
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/resources/geotools" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/resources/jts-1.8.0/src" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/resources/geotools" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/resources/jts-1.8.0/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/resources/libraries" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/resources/libraries" recursive="false" />
+  </library>
+</component>
