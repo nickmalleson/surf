@@ -4,5 +4,3 @@
 # Vim swap files
 *.swp
 
-# PyCharm directories
-.idea/
