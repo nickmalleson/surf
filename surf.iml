@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/abm/surf-mason/geomason-1.5" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="mason.19" level="project" />
+    <orderEntry type="library" name="libraries" level="project" />
+    <orderEntry type="library" name="geotools" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="geomason.1.5-jar" level="project" />
+  </component>
+</module>
