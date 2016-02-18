@@ -6,3 +6,6 @@ resources/
 
 mason/
 geomason-1.5/
+
+# Log files
+simburglarlog.txt*
