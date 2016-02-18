@@ -2,10 +2,9 @@
 
 resources/
 
-# Ignore the MASON source, this can be cloned directly from git (again see README instructions)
+# Ignore some of the MASON stuff
+mason/contrib
 
-mason/
-geomason-1.5/
 
 # Log files
 SimBurglarMason/simburglarlog*
