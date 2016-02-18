@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/dist" />
+    <output-test url="file://$MODULE_DIR$/../../../out/test/SimBurglarMason" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="simburglar-libs" level="project" />
+    <orderEntry type="library" name="mason.19" level="project" />
+    <orderEntry type="library" name="geotools" level="project" />
+    <orderEntry type="library" name="surf-mason-libraries" level="project" />
+    <orderEntry type="library" name="geomason.1.5" level="project" />
+  </component>
+</module>

@@ -1,0 +1,10 @@
+DEBUG main simburglar.SimBurglar - SimBurglar pre-initialisation called
+DEBUG main simburglar.SimBurglar - Number of agents: 100
+INFO main simburglar.SimBurglar - Reading buildings file: file:/Users/geonsm/research_not_syncd/git_projects/surf/abm/surf-mason/SimBurglarMason/resources/data/leeds/buildings.shp
+INFO main simburglar.SimBurglar - Reading roads file: file:/Users/geonsm/research_not_syncd/git_projects/surf/abm/surf-mason/SimBurglarMason/resources/data/leeds/roads.shp
+INFO main simburglar.SimBurglar - Finished reading data.
+DEBUG main simburglar.SimBurglar - Finished initialising model
+DEBUG AWT-EventQueue-0 simburglar.agents.Agent - Setting base move rate for all agents to 500.0
+INFO AWT-EventQueue-0 simburglar.SimBurglar - Creating agents of type class simburglar.agents.Burglar
+WARN MASON (SimBurglar) simburglar.GISFunctions - Increasing search radius to 616.2568022290022. This is very inefficient if it happens regularly.
+WARN MASON (SimBurglar) simburglar.agents.Agent - Current and destination junctions are same for agent Burglar 53
