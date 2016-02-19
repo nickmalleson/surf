@@ -2,6 +2,9 @@
 
 Here are the files etc. for the version of the surf ABM implemented in [MASON](https://cs.gmu.edu/~eclab/projects/mason/)
 
+## Using IDEA
+
+TODO: instructions about how to easily load this by cloning from git and using [IntelliJ IDEA](https://www.jetbrains.com/idea/) (IDE).
 
 ## Instructions to prepare external resources
 
@@ -51,6 +54,8 @@ If <code>make jar</code> doesn't work, you probably need to install [Java3D](htt
 To test that everything works, you can either use one of the scripts in the <code>mason/start/</code> directory, or just run: <pre><code>java -Xmx200M -jar jar/mason.19.jar sim.display.Console</code></pre> (from the <code>surf/abm/surf-mason/mason/mason/</code> directory).
 
 ### Getting GeoMason
+
+**NOTE: I have now included geomason and the required libraries in the main git repository, so no need to download separately. The stuff below has some useful notes about installing, but it isn't necessary any more.**
 
 Now get and install the [GeoMason](http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/) extension to provide support for GIS things.
 
