@@ -55,9 +55,7 @@ To test that everything works, you can either use one of the scripts in the <cod
 
 ### Getting GeoMason
 
-**NOTE: I have now included geomason and the required libraries in the main git repository, so no need to download separately. The stuff below has some useful notes about installing, but it isn't necessary any more.**
-
-Now get and install the [GeoMason](http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/) extension to provide support for GIS things.
+Now get and install the [GeoMason](http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/) extension to provide support for GIS things. _Note: I have now included geomason in the main repository, but you still need to get the following resources._
 
 Again these commands assume that you are in the <code>surf/abm/surf-mason/</code> directory.
 
@@ -84,6 +82,8 @@ ${PWD}/resources/jts-1.8.0/lib/*</code></pre>
  - You might also need OGR from [http://gdal.org/](http://gdal.org/). That's platform specific, so go to the website and download it. I wouldn't bother with this step yet as it might not be a problem.
 
 Finally, GeoMason!
+
+**This is now included in my repository, but here are some instructions anyway in case you want to download and build it.**
 
 Make sure you're in the <code>surf/abm/surf-mason/</code> directory. 
 
