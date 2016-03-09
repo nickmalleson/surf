@@ -9,7 +9,7 @@ ${PWD}/../mason/mason/jar/mason.19.jar:\
 ${PWD}/../resources/geotools/*:\
 ${PWD}/../resources/jts-1.8.0/lib/*:\
 ${PWD}/../geomason-1.5/geomason.1.5.jar:\
-${PWD}/build/classes/
+${PWD}/build/
 
 # Run java, passing all command line arguments
 java -server simburglar.SimBurglar "$@"

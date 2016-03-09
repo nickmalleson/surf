@@ -50,7 +50,7 @@ public class Agent implements Steppable, Serializable {
     protected double currentIndex = 0.0; // current location along line
     protected MasonGeometry destination = null; // The point that the agent is heading towards
     protected boolean atDestination = false;
-    // A list of roads that neeed to be followed to get to the destination
+    // A list of roads that need to be followed to get to the destination
     List<GeomPlanarGraphDirectedEdge> path = new ArrayList<GeomPlanarGraphDirectedEdge>();
     // useful for graph
     int indexOnPath = 0;
@@ -159,13 +159,13 @@ public class Agent implements Steppable, Serializable {
      * @param state The SimState
      * @param location The current location of the agent.
      * @param destination The destination
-     * @param burglar The burglar who is needs the path.
+     * @param agent The burglar who is needs the path.
      */
     protected static List<GeomPlanarGraphDirectedEdge> findNewAStarPath(
-            SimBurglar state, Agent burglar) throws RoutingException {
+            SimBurglar state, Agent agent) throws RoutingException {
 
 
-        MasonGeometry location = burglar.location, destination = burglar.destination;
+        MasonGeometry location = agent.location, destination = agent.destination;
 
         /* First, find the nearest junction to our current position. */
 
@@ -187,12 +187,12 @@ public class Agent implements Steppable, Serializable {
             MasonGeometry nearestJunction = GISFunctions.findNearestObject(destination, state.junctions, state);
             destinationJunction = state.network.findNode(nearestJunction.getGeometry().getCoordinate());
         }
-        assert destinationJunction != null : String.format("Could not find a junction for the destination %s for agent %s", destination, burglar.toString());
+        assert destinationJunction != null : String.format("Could not find a junction for the destination %s for agent %s", destination, agent.toString());
 
         if (currentJunction == destinationJunction) {
             // Bit of a hack, just add a single edge to the path, otherwise the algorithm breaks later.
             // This will make the agent do some odd routing but only happens rarely.
-            LOG.warn("Current and destination junctions are same for agent " + burglar.toString());
+            LOG.warn("Current and destination junctions are same for agent " + agent.toString());
             final GeomPlanarGraphDirectedEdge e = (GeomPlanarGraphDirectedEdge) currentJunction.getOutEdges().getEdges().get(0);
             return new ArrayList<GeomPlanarGraphDirectedEdge>() {
                 {
@@ -219,7 +219,7 @@ public class Agent implements Steppable, Serializable {
                 throw new RoutingException("Internal error: Could not find a path. Path is null");
             }
             else {
-                throw new RoutingException("Agent " + burglar.toString() + "(home " + burglar.getHomeID(state)
+                throw new RoutingException("Agent " + agent.toString() + "(home " + agent.getHomeID(state)
                         + ", destination " + state.buildingIDs.inverse().get(destination) + ")"
                         + " got an empty path between junctions " + currentJunction + " and " + destinationJunction
                         + ". Probably the network is disconnected.");

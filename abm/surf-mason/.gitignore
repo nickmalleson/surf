@@ -5,6 +5,8 @@
 # Ignore some of the MASON stuff
 /mason/contrib/
 
-
 # Log files
 SimBurglarMason/simburglarlog*
+
+# Built files
+SimBurglarMason/build/
