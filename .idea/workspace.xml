@@ -2,51 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/built-jar.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/.netbeans_automatic_build" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/.netbeans_update_resources" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/log4j.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/BuildingLabelPortrayal.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/FIELDS.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/GISFunctions.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/GlobalVars.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/SimBurglar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/SimBurglarWithUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/agents/AStar$AStarNodeWrapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/agents/AStar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/agents/Agent$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/agents/Agent.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/agents/Burglar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/build/classes/simburglar/exceptions/RoutingException.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/README.TXT" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/SimBurglarMason.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/log4j.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/BuildingLabelPortrayal.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/FIELDS.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/GISFunctions.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/GlobalVars.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/SimBurglar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/SimBurglarWithUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/agents/AStar$AStarNodeWrapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/agents/AStar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/agents/Agent$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/agents/Agent.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/agents/Burglar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/dist/simburglar/exceptions/RoutingException.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/GISFunctionsTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/GIS_FIELDS.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/GlobalVarsTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/SimBurglarTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/TestInit.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/test/simburglar/agents/BurglarTest.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/SimBurglarMason.iml" afterPath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/SimBurglarMason.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/resources/data/leeds-generalised/leeds-generalised.qgs" afterPath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/resources/data/leeds-generalised/leeds-generalised.qgs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/run.sh" afterPath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/run.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/agents/Agent.java" afterPath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/agents/Agent.java" />
     </list>
     <ignored path="surf.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,10 +36,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SimBurglar.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Hello.scala" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/hello/Hello.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.10489511">
+              <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimBurglar.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/SimBurglar.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.97902095">
+            <state vertical-scroll-proportion="0.0">
               <caret line="265" column="18" selection-start-line="265" selection-start-column="12" selection-end-line="265" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -109,17 +75,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="simburglar.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/simburglar.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Scala Object" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -142,6 +106,9 @@
         <option value="$PROJECT_DIR$/abm/surf-mason/geomason-1.5/sim/app/geo/sillypeds/SillyPeds.java" />
         <option value="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/simburglar.properties" />
         <option value="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/agents/Agent.java" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/TestInterface.java" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/Hello.scala" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/hello/Hello.scala" />
       </list>
     </option>
   </component>
@@ -243,6 +210,10 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hello" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -278,7 +249,7 @@
       <method />
     </configuration>
     <configuration default="false" name="Hello" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Hello" />
+      <option name="MAIN_CLASS_NAME" value="hello.Hello" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -544,7 +515,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32701895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -554,7 +525,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25922233" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18690476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18690476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -597,29 +568,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/SimBurglarWithUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="24" selection-start-line="85" selection-start-column="24" selection-end-line="85" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#4247#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#1341#1342#0" expanded="false" />
-            <element signature="e#1369#1370#0" expanded="false" />
-            <element signature="e#3923#3924#0" expanded="false" />
-            <element signature="e#3970#3971#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/simburglar.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/agents/Agent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1036,11 +984,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/SimBurglar.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.97902095">
+        <state vertical-scroll-proportion="0.0">
           <caret line="265" column="18" selection-start-line="265" selection-start-column="12" selection-end-line="265" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/hello/TestInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0927357">
+          <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/hello/Hello.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.10489511">
+          <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
