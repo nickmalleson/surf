@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="geomason.1.5">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" recursive="false" />
+  </library>
+</component>

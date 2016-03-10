@@ -10,5 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-sdk-2.11.7" level="application" />
+    <orderEntry type="library" name="geomason.1.5" level="project" />
+    <orderEntry type="library" name="mason" level="project" />
   </component>
 </module>
