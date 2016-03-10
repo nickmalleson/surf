@@ -1,3 +1,0 @@
-version: 13.5
-git revision: 2046ab12ba9f686048a384ed488eaf5fa457355b
-build date: 18-Dec-2015 14:38
