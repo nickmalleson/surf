@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="surf-abm-lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/abm/surf-abm/lib/log4j-1.2.17.jar!/" />
+      <root url="file://$PROJECT_DIR$/abm/surf-abm/lib/mason_libs" />
+      <root url="jar://$PROJECT_DIR$/abm/surf-abm/lib/jts-1.13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/abm/surf-abm/lib/log4j-1.2.17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/abm/surf-abm/lib/log4j-1.2.17-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/abm/surf-abm/lib/mason_libs" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-abm/lib/mason_libs" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-abm/lib/mason_libs" recursive="false" type="SOURCES" />
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="config">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/abm/resources/config/config/target/classes" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/abm/resources/config/config/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

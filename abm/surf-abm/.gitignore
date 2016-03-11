@@ -4,3 +4,6 @@ build/
 
 # Libs (temporarily?)
 lib/
+
+# Logs
+surfabm.log.txt
