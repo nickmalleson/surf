@@ -2,8 +2,8 @@
 # Built files
 build/
 
-# Libs (temporarily?)
-lib/
+# Some libs (temporarily?)
+lib/geotools
 
 # Logs
 surfabm.log.txt
