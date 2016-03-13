@@ -8,6 +8,8 @@ import com.typesafe.config.{ConfigFactory, Config}
 import org.apache.log4j.{RollingFileAppender, Appender, Logger}
 import sim.engine.SimState
 import sim.field.geo.GeomVectorField
+import sim.io.geo.ShapeFileImporter
+import sim.util.Bag
 import sim.util.geo.{MasonGeometry, GeomPlanarGraph}
 import com.vividsolutions.jts.geom.Envelope
 import surf.abm.agents.Agent
@@ -132,7 +134,7 @@ object SurfABM  {
 
     // Declare the fields from the shapefile that should be read in with the geometries
     Bag attributes = new Bag(Arrays.asList(new String[]{
-      FIELDS.BUILDINGS_ID.toString(), FIELDS.BUILDINGS_NAME.toString(), FIELDS.BUILDING_FLOORS.toString()
+      FIELDS.BUILDINGS_ID, FIELDS.BUILDINGS_NAME, FIELDS.BUILDING_FLOORS
     }));
     URL bldgURI = new File(dataDir.getAbsolutePath() + "/buildings.shp").toURI().toURL();
     LOG.info("Reading buildings file: " + bldgURI);

@@ -4,7 +4,9 @@
       <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
       <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5/docs/classdocs" />
+    </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5" />
     </SOURCES>
