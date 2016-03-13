@@ -6,4 +6,4 @@ build/
 lib/geotools
 
 # Logs
-surfabm.log.txt
+surfabm.log.txt*
