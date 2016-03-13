@@ -18,7 +18,6 @@ import scala.collection.JavaConversions._
 import scala.collection.immutable._
 
 
-
 /**
   * Main class for the surf agent-based model. This doesn't actually do very much,
   * almost all of the logic is in the companion singleton object
@@ -43,7 +42,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
         SurfABM.agents.addGeometry(a.location)
         schedule.scheduleRepeating(a)
       }
-      assert (SurfABM.numAgents == SurfABM.agents.getGeometries().size())
+      assert(SurfABM.numAgents == SurfABM.agents.getGeometries().size())
 
     }
     catch {
@@ -52,7 +51,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
         throw e
       }
     }
-    SurfABM.agents.setMBR(SurfABM.MBR)
+    SurfABM.agents.setMBR(SurfABM.mbr)
 
     // Ensure that the spatial index is made aware of the new agent
     // positions.  Scheduled to guaranteed to run after all agents moved.
@@ -96,97 +95,93 @@ object SurfABM {
   val WIDTH = conf.getInt("WIDTH");
   val HEIGHT = conf.getInt("HEIGHT");
 
-  // Spatial layers
-  val roads = new GeomVectorField(WIDTH, HEIGHT);
-  val buildings = new GeomVectorField(WIDTH, HEIGHT);
-  val agents = new GeomVectorField(WIDTH, HEIGHT);
+  // A list of all the agents
+  var agents = new GeomVectorField(WIDTH, HEIGHT);
 
 
-  // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
-  // easy selection of new waypoints for the agents.
-  val network = new GeomPlanarGraph()
-  val junctions = new GeomVectorField(WIDTH, HEIGHT) // nodes for intersections
+  // Spatial layers. One function to read them all
+  val (buildings, roads, network, junctions, mbr) = _readEnvironmentData
 
+  /**
+    * Read and configure the buildings, roads, networks and junctions.
+    * This is written as a function so that it can be tested elsewhere.
+    * @return
+    */
+  private def _readEnvironmentData: (GeomVectorField, GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope) = {
 
-  /* Read the GIS files into the relevant fields */
+    /* Read the GIS files into the relevant fields */
 
-  val dataDir = SurfABM.conf.getString("DataDir")
+    // Maintain a maximum bounding envelope for all layers
+    var MBR: Envelope = null // Minimum envelope surrounding whole world
 
-  // Start with buildings
+    // Directory where the data are stored
+    val dataDir = SurfABM.conf.getString("DataDir")
 
-  // Declare the fields from the shapefile that should be read in with the geometries
-  // GeoMason wants these to be a Bag
-  val attributes: Bag = new Bag(Iterable[String](
+    // Start with buildings
+    val buildings = new GeomVectorField(WIDTH, HEIGHT);
+
+    // Declare the fields from the shapefile that should be read in with the geometries
+    // GeoMason wants these to be a Bag
+    val attributes: Bag = new Bag(Iterable[String](
       FIELDS.BUILDINGS_ID.toString(), FIELDS.BUILDINGS_NAME.toString(), FIELDS.BUILDING_FLOORS.toString()
-  ))
-  // Read the shapefile (path relative from 'surf' directory)
-  val bldgURI = new File("data/"+dataDir + "/buildings.shp").toURI().toURL();
-  LOG.info("Reading buildings  from file: " + bldgURI + " ... ");
-  ShapeFileImporter.read(bldgURI, buildings, attributes);
+    ))
+    // Read the shapefile (path relative from 'surf' directory)
+    val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
+    LOG.info("Reading buildings  from file: " + bldgURI + " ... ");
+    ShapeFileImporter.read(bldgURI, buildings, attributes);
 
-  // Keep a link between the building IDs and their geometries (ID -> geometry)
-  // Use a for comprehension to create a temp array of (Int, MasonGeometry) then use that as input to a map
-  // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
-  // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
+    // Keep a link between the building IDs and their geometries (ID -> geometry)
+    // Use a for comprehension to create a temp array of (Int, MasonGeometry) then use that as input to a map
+    // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
+    // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
 
-  val tempArray : collection.immutable.Seq[(Int, MasonGeometry)] =
-    (
-      for  (o <- this.buildings.getGeometries() )
-      yield {
-        val g = o.asInstanceOf[MasonGeometry]
-        Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
-      }
-      ).to[collection.immutable.Seq]
-  val buildingsIDs : scala.collection.immutable.Map[Int,MasonGeometry] =
-    scala.collection.immutable.Map[Int,MasonGeometry](tempArray:_*) // Splat the array with :_*
+    val tempArray: collection.immutable.Seq[(Int, MasonGeometry)] =
+      (
+        for (o <- buildings.getGeometries())
+          yield {
+            val g = o.asInstanceOf[MasonGeometry]
+            Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
+          }
+        ).to[collection.immutable.Seq]
+    val buildingsIDs: scala.collection.immutable.Map[Int, MasonGeometry] =
+      scala.collection.immutable.Map[Int, MasonGeometry](tempArray: _*) // Splat the array with :_*
 
-  SurfABM.LOG.info(s"Have read ${buildingsIDs.size} buildings")
+    assert (buildings.getGeometries.size() == buildingsIDs.size)
+    SurfABM.LOG.info(s"\t ... read ${buildingsIDs.size} buildings")
 
-/* DELETE:
-  this.buildingIDs = HashBiMap.create(this.buildings.getGeometries().size());
-  for (Object o: this.buildings.getGeometries())
-  {
-    MasonGeometry g = (MasonGeometry) o;
-    this.buildingIDs.put(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString()), g);
+    // We want to save the MBR so that we can ensure that all GeomFields
+    // cover identical area.
+    MBR = buildings.getMBR() // Minimum envelope surrounding whole world
+
+
+    // Read roads
+    val roads = new GeomVectorField(WIDTH, HEIGHT);
+    val roadsURI = new File("data/" + dataDir + "/roads.shp").toURI().toURL()
+    LOG.info(s"Reading roads file: ${roadsURI} ...")
+    ShapeFileImporter.read(roadsURI, roads);
+    LOG.info(s"\t... read ${roads.getGeometries().size()} roads")
+    MBR.expandToInclude(roads.getMBR());
+    LOG.info("Finished reading data.");
+
+    // Now synchronize the MBR for all GeomFields to ensure they cover the same area
+    buildings.setMBR(MBR);
+    roads.setMBR(MBR);
+
+    // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
+    // easy selection of new waypoints for the agents.
+    val network = new GeomPlanarGraph()
+    val junctions = new GeomVectorField(WIDTH, HEIGHT) // nodes for intersections
+
+    network.createFromGeomField(roads)
+    //this.addIntersectionNodes(network.nodeIterator)
+
+    LOG.info("Finished initialising model")
+
+    // Return the layers
+    (buildings, roads, network, junctions, MBR)
+
   }
-  */
 
-  // We want to save the MBR so that we can ensure that all GeomFields
-  // cover identical area.
-  val MBR: Envelope = buildings.getMBR() // Minimum envelope surrounding whole world
-
-  /*
-
-
-
-
-          URL walkwaysURI = new File(dataDir.getAbsolutePath() + "/roads.shp").toURI().toURL();
-          LOG.info("Reading roads file: " + walkwaysURI);
-          ShapeFileImporter.read(walkwaysURI, roads);
-
-          ShapeFileImporter.read(walkwaysURI, roads);
-
-          this.MBR.expandToInclude(roads.getMBR());
-
-          LOG.info("Finished reading data.");
-
-          // Now synchronize the MBR for all GeomFields to ensure they cover the same area
-          buildings.setMBR(MBR);
-          roads.setMBR(MBR);
-          */
-
-  // Map to link ids to environment objects. Bi-directional so can get keys from values.
-  //val BiMap<Integer, MasonGeometry> buildingIDs;
-
-  network.createFromGeomField(roads)
-  //this.addIntersectionNodes(network.nodeIterator)
-
-  LOG.debug("Finished initialising model")
-
-
-  //  catch {
-  //    case e : Exception => LOG.error("Problem initialising the model", e);
-  //  }
 
   def apply(seed: Long): SurfABM = new SurfABM(seed) // Probably not necessary
 
@@ -195,14 +190,12 @@ object SurfABM {
   def main(args: Array[String]): Unit = {
 
     try {
-      LOG.info("An Info message");
-      LOG.debug("A debug message");
+      LOG.debug("Beginning do loop")
       SimState.doLoop(classOf[SurfABM], args);
+      LOG.debug("Finished do loop")
     }
     catch {
       case e: Exception => {
-        //SurfABM.LOG.error("Exception thrown in main loop", e)
-//        println("Exception thrown in main loop", e)
         SurfABM.LOG.error("Exception thrown in main loop", e)
         throw e
       }
