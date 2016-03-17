@@ -1,11 +1,11 @@
 package surf.abm
 
-import java.awt.Paint
+import java.awt.{Color, Paint}
 import javax.swing.JFrame
 
 import org.apache.log4j.Logger
-import sim.display.{GUIState, Display2D, Controller}
-import sim.portrayal.geo.GeomVectorFieldPortrayal
+import sim.display.{Console, GUIState, Display2D, Controller}
+import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
 import sim.portrayal.simple.LabelledPortrayal2D
 import sim.util.geo.MasonGeometry
@@ -15,19 +15,18 @@ import sim.util.geo.MasonGeometry
   * Created by nick on 16/03/16.
   */
 class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
-  private var display: Display2D = null
+
+  // The display has all the portrayals added to it. It is initialised in init()
+  private val display = new Display2D(SurfABM.WIDTH, SurfABM.HEIGHT, this)
+
   private var displayFrame: JFrame = null
   // Portrayals are used for visualising objects in fields
-  private var walkwaysPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
-  private var buildingPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
-  private var agentPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
-
-  XXXX HERE CORRECT SYNTAX OF FOLLOWING METHODS (COPY FROM JAVA)
+  private val walkwaysPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
+  private val buildingPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
+  private val agentPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
 
   override def init(controller : Controller ) : Unit = {
     super.init(controller);
-
-    display = new Display2D(SurfABM.WIDTH, SurfABM.HEIGHT, this);
 
     display.attach(walkwaysPortrayal, "Walkways", true);
     display.attach(buildingPortrayal, "Buildings", true);
@@ -42,20 +41,19 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
   override def start() : Unit = {
     super.start();
-    setupPortrayals();
-  }
+    //val world : SurfABM = super.state.asInstanceOf[SurfABM]
 
-  private void setupPortrayals() {
-    SimBurglar world = (SimBurglar) state;
-
-    walkwaysPortrayal.setField(world.roads);
+    //walkwaysPortrayal.setField(world.roads);
+    walkwaysPortrayal.setField(SurfABM.roads);
     walkwaysPortrayal.setPortrayalForAll(new GeomPortrayal(Color.CYAN, true));
 
-    buildingPortrayal.setField(world.buildings);
-    BuildingLabelPortrayal b = new BuildingLabelPortrayal(new GeomPortrayal(Color.DARK_GRAY, true), Color.BLUE);
+    //buildingPortrayal.setField(world.buildings);
+    buildingPortrayal.setField(SurfABM.buildings);
+    val b = new BuildingLabelPortrayal(new GeomPortrayal(Color.DARK_GRAY, true), Color.BLUE);
     buildingPortrayal.setPortrayalForAll(b);
 
-    agentPortrayal.setField(world.agents);
+    //agentPortrayal.setField(world.agents);
+    agentPortrayal.setField(SurfABM.agents);
     agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED, 10.0, true));
 
     display.reset();
@@ -64,40 +62,24 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     display.repaint();
   }
 
-  public static void main(String[] args) throws Exception {
+  def main(args: Array[String]): Unit = {
 
 
-    try {
-      SimBurglar.preInitialise();
-    }
-    catch (Exception e) {
-      LOG.error("Exception thrown during pre-initialisation", e);
-      return;
-    }
-
-    SimBurglarWithUI worldGUI = null;
 
     try {
-      worldGUI = new SimBurglarWithUI();
+      var worldGUI = new SurfABMWithUI()
 
+      val console = new Console(worldGUI)
+      console.setVisible(true)
     }
-    catch (ParseException ex) {
-      LOG.error("Error initialising model.", ex);
-    }
-    catch (MalformedURLException ex) {
-      LOG.error("Error initialising model.", ex);
-    }
-    catch (FileNotFoundException ex) {
-      LOG.error("Error initialising model.", ex);
+    catch {
+      case e: Exception => {
+        SurfABMWithUI.LOG.error("Exception while runnning model ", e)
+        throw e
+      }
     }
 
-    try {
-      Console console = new Console(worldGUI);
-      console.setVisible(true);
-    }
-    catch (Exception e) {
-      LOG.error("Error caught while running model.", e);
-    }
+
   } // main
 
 }
