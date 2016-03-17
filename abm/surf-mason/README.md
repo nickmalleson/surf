@@ -36,7 +36,8 @@ or just:
 
  - Go into the directory that has the MASON source and build everything <pre><code>cd mason/mason/
 make 
-make jar</code></pre>
+make jar
+make docs</code></pre>
 If <code>make jar</code> doesn't work, you probably need to install [Java3D](https://java3d.java.net/binary-builds.html). To do this: 
 
    1. download for your system from [here](https://java3d.java.net/binary-builds.html)

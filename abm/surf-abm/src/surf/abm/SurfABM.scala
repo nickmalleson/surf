@@ -20,8 +20,22 @@ import scala.collection.immutable._
 
 /**
   * Main class for the surf agent-based model. This doesn't actually do very much,
-  * almost all of the logic is in the companion singleton object
+  * almost all of the logic is in the companion singleton object.
+  *
+  * Use this class to run the model in headless model (without a GUI). E.g. to run
+  * for 5000 iterations, outputting the time each 1000 steps use:
+  * <pre><code>
+  *   scala surf.abm.SurfABM -for 5000 -time 1000
+  * </pre></code>
+  * To get more help options, do:
+  * <pre><code>
+  *   scala surf.abm.SurfABM -help
+  * </pre></code>
+  * Note that you need to set up the classpath for the above commands to work. See
+  * the file <code>run.sh</code> for an example.
+  *
   */
+@SerialVersionUID(1L)
 class SurfABM(seed: Long) extends SimState(seed) {
 
   override def start(): Unit = {
@@ -196,8 +210,8 @@ object SurfABM {
 
   }
 
-
-  def apply(seed: Long): SurfABM = new SurfABM(seed) // Probably not necessary
+  // Probably not necessary. This lets you do var a = SurfABM(seed) (no 'new')
+  def apply(seed: Long): SurfABM = new SurfABM(seed)
 
 
   /* Main application entry point */
