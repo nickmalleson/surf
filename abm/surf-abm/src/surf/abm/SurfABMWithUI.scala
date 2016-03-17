@@ -62,9 +62,13 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     display.repaint();
   }
 
+}
+/**
+  * Singleton helper class
+  */
+object SurfABMWithUI {
+  private val LOG: Logger = Logger.getLogger(this.getClass);
   def main(args: Array[String]): Unit = {
-
-
 
     try {
       var worldGUI = new SurfABMWithUI()
@@ -78,16 +82,7 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
         throw e
       }
     }
-
-
   } // main
-
-}
-/**
-  * Singleton helper class
-  */
-object SurfABMWithUI {
-  private val LOG: Logger = Logger.getLogger(this.getClass);
 }
 
 
@@ -118,6 +113,8 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
 } // BuldingLabelPortrayal class
 
 object BuildingLabelPortrayal {
-  private val LOG: Logger = Logger.getLogger(this.getClass);
+  private val LOG: Logger = Logger.getLogger(this.getClass)
+
+
 }
 
