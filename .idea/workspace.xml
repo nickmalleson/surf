@@ -33,8 +33,8 @@
           <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-3.4444444">
-                  <caret line="83" column="32" selection-start-line="83" selection-start-column="32" selection-end-line="83" selection-end-column="32" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="40" column="2" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
                   <folding>
                     <element signature="e#19#38#0" expanded="true" />
                   </folding>
@@ -57,8 +57,8 @@
           <file leaf-file-name="SurfABMWithUI.scala" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABMWithUI.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.39123377">
-                  <caret line="24" column="64" selection-start-line="24" selection-start-column="64" selection-end-line="24" selection-end-column="64" />
+                <state vertical-scroll-proportion="0.8279221">
+                  <caret line="44" column="22" selection-start-line="44" selection-start-column="22" selection-end-line="44" selection-end-column="22" />
                   <folding>
                     <element signature="e#18#39#0" expanded="true" />
                   </folding>
@@ -85,10 +85,9 @@
           <file leaf-file-name="SimBurglarWithUI.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/SimBurglarWithUI.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.61120546">
-                  <caret line="122" column="12" selection-start-line="122" selection-start-column="12" selection-end-line="122" selection-end-column="12" />
+                <state vertical-scroll-proportion="0.2801358">
+                  <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
                   <folding>
-                    <element signature="imports" expanded="true" />
                     <element signature="e#3923#3924#0" expanded="true" />
                     <element signature="e#3970#3971#0" expanded="true" />
                   </folding>
@@ -1141,16 +1140,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.4444444">
-          <caret line="83" column="32" selection-start-line="83" selection-start-column="32" selection-end-line="83" selection-end-column="32" />
-          <folding>
-            <element signature="e#19#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/FIELDS.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20967741">
@@ -1169,12 +1158,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="2" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
+          <folding>
+            <element signature="e#19#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/src/simburglar/SimBurglarWithUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61120546">
-          <caret line="122" column="12" selection-start-line="122" selection-start-column="12" selection-end-line="122" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.2801358">
+          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="e#3923#3924#0" expanded="true" />
             <element signature="e#3970#3971#0" expanded="true" />
           </folding>
@@ -1183,8 +1181,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABMWithUI.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39123377">
-          <caret line="24" column="64" selection-start-line="24" selection-start-column="64" selection-end-line="24" selection-end-column="64" />
+        <state vertical-scroll-proportion="0.8279221">
+          <caret line="44" column="22" selection-start-line="44" selection-start-column="22" selection-end-line="44" selection-end-column="22" />
           <folding>
             <element signature="e#18#39#0" expanded="true" />
           </folding>

@@ -4,7 +4,7 @@ import java.awt.Paint
 import javax.swing.JFrame
 
 import org.apache.log4j.Logger
-import sim.display.{GUIState, Display2D}
+import sim.display.{GUIState, Display2D, Controller}
 import sim.portrayal.geo.GeomVectorFieldPortrayal
 import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
 import sim.portrayal.simple.LabelledPortrayal2D
@@ -24,11 +24,10 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
   XXXX HERE CORRECT SYNTAX OF FOLLOWING METHODS (COPY FROM JAVA)
 
-  @Override
-  public void init(Controller controller) {
+  override def init(controller : Controller ) : Unit = {
     super.init(controller);
 
-    display = new Display2D(SimBurglar.WIDTH, SimBurglar.HEIGHT, this);
+    display = new Display2D(SurfABM.WIDTH, SurfABM.HEIGHT, this);
 
     display.attach(walkwaysPortrayal, "Walkways", true);
     display.attach(buildingPortrayal, "Buildings", true);
@@ -40,8 +39,8 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     displayFrame.setVisible(true);
   }
 
-  @Override
-  public void start() {
+
+  override def start() : Unit = {
     super.start();
     setupPortrayals();
   }
