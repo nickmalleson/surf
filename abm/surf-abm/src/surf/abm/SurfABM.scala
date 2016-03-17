@@ -96,7 +96,7 @@ object SurfABM {
   val HEIGHT = conf.getInt("HEIGHT");
 
   // A list of all the agents
-  var agents = new GeomVectorField(WIDTH, HEIGHT);
+  val agents = new GeomVectorField(WIDTH, HEIGHT);
 
 
   // Spatial layers. One function to read them all
@@ -173,9 +173,23 @@ object SurfABM {
     val junctions = new GeomVectorField(WIDTH, HEIGHT) // nodes for intersections
 
     network.createFromGeomField(roads)
+    // XXXX HERE - FIX addIntersaectionNode() code below:
     //this.addIntersectionNodes(network.nodeIterator)
+    GeometryFactory fact = new GeometryFactory();
+    Coordinate coord;
+    Point point;
+    int counter = 0;
 
-    LOG.info("Finished initialising model")
+    while (nodeIterator.hasNext()) {
+      Node node = (Node) nodeIterator.next();
+      coord = node.getCoordinate();
+      point = fact.createPoint(coord);
+
+      junctions.addGeometry(new MasonGeometry(point));
+      counter++;
+    }
+
+    LOG.info("Finished initialising model environment")
 
     // Return the layers
     (buildings, roads, network, junctions, MBR)
