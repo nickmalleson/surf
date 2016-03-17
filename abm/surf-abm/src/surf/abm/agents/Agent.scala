@@ -15,8 +15,6 @@ import surf.abm.SurfABM
   */
 class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializable {
 
-  // Initialise the logger
-  private val LOG: Logger = Logger.getLogger(this.getClass);
 
   // The location where the agent currently is. Begins at 'home'
   // It's protected, with a public accessor.
@@ -32,5 +30,9 @@ class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializa
 
   }
 
+}
 
+object Agent {
+  // Initialise the logger. NOTE: will have one logger per
+  private val LOG: Logger = Logger.getLogger(this.getClass);
 }
