@@ -5,10 +5,15 @@ import javax.swing.JFrame
 
 import org.apache.log4j.Logger
 import sim.display.{Console, GUIState, Display2D, Controller}
+import sim.engine.SimState
+import sim.portrayal.continuous.ContinuousPortrayal2D
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
 import sim.portrayal.simple.{OvalPortrayal2D, LabelledPortrayal2D}
 import sim.util.geo.MasonGeometry
+
+import scala.collection.JavaConversions._
+import scala.collection.immutable._
 
 /**
   * This class can be used to run the model with a GUI.
@@ -21,9 +26,10 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
   private var displayFrame: JFrame = null
   // Portrayals are used for visualising objects in fields
-  private val roadsPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
-  private val buildingPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
-  private val agentPortrayal: GeomVectorFieldPortrayal = new GeomVectorFieldPortrayal()
+  private val roadsPortrayal = new GeomVectorFieldPortrayal()
+  private val buildingPortrayal = new GeomVectorFieldPortrayal()
+  private val agentPortrayal = new GeomVectorFieldPortrayal() // For the agents (they're a circle)
+  //private val trailsPortrayal = new ContinuousPortrayal2D() // For trails behind agents
 
   override def init(controller : Controller ) : Unit = {
     super.init(controller);
@@ -40,6 +46,18 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
 
   override def start() : Unit = {
+
+    setupPortrayals()
+
+  }
+
+
+  override def load(state: SimState): Unit = {
+    super.load(state)
+    setupPortrayals()
+  }
+
+  private def setupPortrayals() : Unit = {
     super.start();
     //val world : SurfABM = super.state.asInstanceOf[SurfABM]
 
@@ -50,9 +68,24 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     buildingPortrayal.setPortrayalForAll(
       new BuildingLabelPortrayal(new GeomPortrayal(Color.BLUE, true), Color.BLACK))
 
+    // Give the agents a round oval to represent them.
     agentPortrayal.setField(SurfABM.agents)
-    //agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED, 10.0, true))
-    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
+    //agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
+    // Each agent should have a different, random colour:
+
+    // (An alternative way to loop through the agents:
+    //SurfABM.agents.getGeometries.zipWithIndex.foreach {
+    //  case(o, i) => println(s"Geometry $o is number $i")
+    //}
+    for ((o, i) <- SurfABM.agents.getGeometries.zipWithIndex) {
+      val colour =  new Color(
+        128 + guirandom.nextInt(128),
+        128 + guirandom.nextInt(128),
+        128 + guirandom.nextInt(128))
+      agentPortrayal.setPortrayalForObject(o, new OvalPortrayal2D(colour,10.0, true))
+      SurfABMWithUI.LOG.debug(s"Agent $i is color $colour")
+    }
+
 
     display.reset()
     display.setBackdrop(Color.WHITE)
@@ -86,6 +119,8 @@ object SurfABMWithUI {
 
 /**
   * A special portrayal for buildings that provides labels for the buildings in the GUI.
+  * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different
+  * Portrayals that are available.
   */
 @SerialVersionUID(1L)
 class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
@@ -104,7 +139,6 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
 
   }
 } // BuldingLabelPortrayal class
-
 object BuildingLabelPortrayal {
   private val LOG: Logger = Logger.getLogger(this.getClass)
 }
