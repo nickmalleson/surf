@@ -61,15 +61,15 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     super.start();
     //val world : SurfABM = super.state.asInstanceOf[SurfABM]
 
-    roadsPortrayal.setField(SurfABM.roads)
+    roadsPortrayal.setField(SurfABM.roadGeoms)
     roadsPortrayal.setPortrayalForAll(new GeomPortrayal(Color.GRAY, true));
 
-    buildingPortrayal.setField(SurfABM.buildings)
+    buildingPortrayal.setField(SurfABM.buildingGeoms)
     buildingPortrayal.setPortrayalForAll(
       new BuildingLabelPortrayal(new GeomPortrayal(Color.BLUE, true), Color.BLACK))
 
     // Give the agents a round oval to represent them.
-    agentPortrayal.setField(SurfABM.agents)
+    agentPortrayal.setField(SurfABM.agentGeoms)
     //agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
     // Each agent should have a different, random colour:
 
@@ -77,7 +77,7 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     //SurfABM.agents.getGeometries.zipWithIndex.foreach {
     //  case(o, i) => println(s"Geometry $o is number $i")
     //}
-    for ((o, i) <- SurfABM.agents.getGeometries.zipWithIndex) {
+    for ((o, i) <- SurfABM.agentGeoms.getGeometries.zipWithIndex) {
       val colour =  new Color(
         128 + guirandom.nextInt(128),
         128 + guirandom.nextInt(128),

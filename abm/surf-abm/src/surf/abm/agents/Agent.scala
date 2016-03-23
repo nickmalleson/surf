@@ -16,11 +16,16 @@ import surf.abm.SurfABM
   *             location is set to be <code>home</code>
   */
 @SerialVersionUID(1L)
-class Agent (state:SurfABM, home:MasonGeometry)
-  extends MasonGeometry with Steppable with Serializable {
+class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializable {
 
   // XXXX HERE - Agents are now MasonGeometry objects - need to adapt code below to deal with geometrys
-  // etc directly
+  // etc directly.
+  // Could write accessor methods to make sure that the location() method actually operates
+  // on the parent MasonGeometry location. I want to be able to separate the agent from
+  // the Goemetry.
+  // Actually maybe it's better to maintain a map of Geometry -> Agent ....
+  // Making the Agent a MasonGeometry makes it less flexible for (e.g.) exporting to an Improbable sim.
+  //
 
 
 

@@ -42,7 +42,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
   override def start(): Unit = {
     super.start
 
-    SurfABM.agents.clear
+    SurfABM.agentGeoms.clear
     try {
       // Find the class to use to create agents.
       val className: String = SurfABM.conf.getString("AgentType")
@@ -54,10 +54,25 @@ class SurfABM(seed: Long) extends SimState(seed) {
       for (i <- 0.until(SurfABM.numAgents)) {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(this, this.getRamdomBuilding())
-        SurfABM.agents.addGeometry(a)
+        SurfABM.agentGeoms.addGeometry(a.location)
         schedule.scheduleRepeating(a)
       }
-      assert(SurfABM.numAgents == SurfABM.agents.getGeometries().size())
+      assert(SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size())
+
+      // Now store the agents and their geometries in a map so we can get back to the
+      // agents from their geometry
+      SurfABM.agentGeomMap = Map()
+
+      val tempArray: collection.immutable.Seq[(Int, MasonGeometry)] =
+        (
+          for (o <- buildings.getGeometries())
+            yield {
+              val g = o.asInstanceOf[MasonGeometry]
+              Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
+            }
+          ).to[collection.immutable.Seq]
+      val b_ids: Map[Int, MasonGeometry] =
+        scala.collection.immutable.Map[Int, MasonGeometry](tempArray: _*)
 
     }
     catch {
@@ -66,11 +81,11 @@ class SurfABM(seed: Long) extends SimState(seed) {
         throw e
       }
     }
-    SurfABM.agents.setMBR(SurfABM.mbr)
+    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
 
     // Ensure that the spatial index is made aware of the new agent
     // positions.  Scheduled to guaranteed to run after all agents moved.
-    schedule.scheduleRepeating(SurfABM.agents.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+    schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
 
   }
 
@@ -79,7 +94,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   def getRamdomBuilding(): MasonGeometry = {
     // Get a random building
-    val o = SurfABM.buildings.getGeometries.get(this.random.nextInt(SurfABM.buildings.getGeometries().size()))
+    val o = SurfABM.buildingGeoms.getGeometries.get(this.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
     // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
     o match {
       case x: MasonGeometry => x
@@ -111,12 +126,15 @@ object SurfABM extends Serializable {
   val WIDTH = conf.getInt("WIDTH");
   val HEIGHT = conf.getInt("HEIGHT");
 
-  // A list of all the agents
-  val agents = new GeomVectorField(WIDTH, HEIGHT);
+  // A list of all the agent geometries
+  val agentGeoms = new GeomVectorField(WIDTH, HEIGHT);
+
+  // Keep a map of agents and their geometries. This is created after the agents have been created
+  var agentGeomMap : Map[MasonGeometry,Agent] = null
 
 
   // Spatial layers. One function to read them all
-  val (buildings, buildingIDs, roads, network, junctions, mbr) =
+  val (buildingGeoms, buildingIDs, roadGeoms, network, junctions, mbr) =
     _readEnvironmentData
 
     /**
