@@ -226,8 +226,13 @@ object SurfABM extends Serializable {
       assert(
         SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size() &&
         SurfABM.numAgents == agentArray.size &&
-        SurfABM.numAgents == SurfABM.agentGeomMap.size
+        SurfABM.numAgents == SurfABM.agentGeomMap.size,
+        s"Lengths of agent arrays differ. \n\t" +
+          s"numAgents: ${SurfABM.numAgents}\n\t" +
+          s"agentGeoms: ${SurfABM.agentGeoms}\n\t" +
+          s"agentGeomMap: ${SurfABM.agentGeomMap.size}"
       )
+
 
     }
     catch {

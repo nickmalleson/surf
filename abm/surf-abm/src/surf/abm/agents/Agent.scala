@@ -1,11 +1,14 @@
 package surf.abm.agents
 
 
+import java.awt.print.Book
+
 import com.vividsolutions.jts.geom.Coordinate
 import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
 import sim.util.geo.{PointMoveTo, MasonGeometry}
 import surf.abm.SurfABM
+import scala.math._
 
 /**
   * Main superclass for Agents
@@ -28,7 +31,7 @@ class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializa
   protected val moveRate : Double = Agent.baseMoveRate
 
   // Convenience for moving a point. Don't want to create this object each iteration.
-  val pmt : PointMoveTo = new PointMoveTo();
+  val pmt : PointMoveTo = new PointMoveTo()
 
   /**
     * In this basic implementation, the agents just do a random walk
@@ -41,17 +44,27 @@ class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializa
 
     // Do a random walk
     val current : Coordinate = this.location.getGeometry.getCoordinate
-    def r(n:Double) : Double =  { // Randomize the input number
-      n + (2 * this.state.random.nextInt(this.moveRate.asInstanceOf[Int]) ) -
-        this.moveRate // Take away move rate again to allow for negative movements
+    def r(n:Double) : Double =  { // Randomize the input number by +- the moveRate
+      n + ( ( this.state.random.nextDouble() * moveRate * 2 ) - moveRate )
     }
     val newCoord = new Coordinate( r(current.x), r(current.y) )
+    // Check that the new position is correct
+    assert( {
+      // Calculate the Euclidean distance moved, and check it is less than the
+      // maximum Eeuclidean distance given the moveRate
+      val dist = sqrt( pow(current.x-newCoord.x,2) + pow(current.y-newCoord.y,2) )
+      dist <= sqrt(pow(moveRate,2) + pow(moveRate,2) )
+    }, s"Agent has moved too far.\n\t" +
+        s"Move rate: ${moveRate}, dist: ${sqrt( pow(current.x-newCoord.x,2) + pow(current.y-newCoord.y,2) )},\n\t" +
+        s"Coordinates: ${current} - ${newCoord}."
+    )
     this.moveToCoordinate(newCoord)
 
   }
 
   /**
     * Move the agent to the given coordinate
+ *
     * @param c The Coordinate to move to
     * @return Unit
     */
