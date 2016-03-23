@@ -19,6 +19,11 @@ import surf.abm.SurfABM
 class Agent (state:SurfABM, home:MasonGeometry)
   extends MasonGeometry with Steppable with Serializable {
 
+  // XXXX HERE - Agents are now MasonGeometry objects - need to adapt code below to deal with geometrys
+  // etc directly
+
+
+
   // The location where the agent currently is. Begins at 'home'
   // It's protected, with a public accessor.
   protected var _location: MasonGeometry = home // (the underscore denotes protected)

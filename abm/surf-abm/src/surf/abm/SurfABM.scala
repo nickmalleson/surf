@@ -54,7 +54,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
       for (i <- 0.until(SurfABM.numAgents)) {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(this, this.getRamdomBuilding())
-        SurfABM.agents.addGeometry(a.location)
+        SurfABM.agents.addGeometry(a)
         schedule.scheduleRepeating(a)
       }
       assert(SurfABM.numAgents == SurfABM.agents.getGeometries().size())
