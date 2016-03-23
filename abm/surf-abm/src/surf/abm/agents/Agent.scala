@@ -65,7 +65,7 @@ class Agent (state:SurfABM, home:MasonGeometry)
 }
 
 @SerialVersionUID(1L)
-object Agent {
+object Agent extends Serializable {
   // Initialise the logger. NOTE: will have one logger per
   private val LOG: Logger = Logger.getLogger(this.getClass);
 

@@ -92,7 +92,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 // class surfABM
 
 @SerialVersionUID(1L)
-object SurfABM {
+object SurfABM extends Serializable {
 
   // Initialise the logger
   private val LOG: Logger = Logger.getLogger(SurfABM.getClass);
