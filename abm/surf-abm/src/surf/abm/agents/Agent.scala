@@ -15,7 +15,9 @@ import surf.abm.SurfABM
   *             where (e.g.) they live, but not necessarily. The agent's initial
   *             location is set to be <code>home</code>
   */
-class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializable {
+@SerialVersionUID(1L)
+class Agent (state:SurfABM, home:MasonGeometry)
+  extends MasonGeometry with Steppable with Serializable {
 
   // The location where the agent currently is. Begins at 'home'
   // It's protected, with a public accessor.
@@ -44,7 +46,7 @@ class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializa
       n + (2 * this.state.random.nextInt(this.moveRate.asInstanceOf[Int]) ) -
         this.moveRate // Take away move rate again to allow for negative movements
     }
-    val newCoord : Coordinate = new Coordinate(r(current.x), r(current.y) )
+    val newCoord = new Coordinate( r(current.x), r(current.y) )
     this.moveToCoordinate(newCoord)
 
   }
@@ -62,6 +64,7 @@ class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializa
 
 }
 
+@SerialVersionUID(1L)
 object Agent {
   // Initialise the logger. NOTE: will have one logger per
   private val LOG: Logger = Logger.getLogger(this.getClass);

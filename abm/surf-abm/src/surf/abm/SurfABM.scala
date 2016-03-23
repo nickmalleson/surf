@@ -91,6 +91,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
 // class surfABM
 
+@SerialVersionUID(1L)
 object SurfABM {
 
   // Initialise the logger
