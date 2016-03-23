@@ -1,15 +1,15 @@
 package surf.abm
 
-import java.awt.{Color, Paint}
+import java.awt.geom.Rectangle2D
+import java.awt.{Graphics2D, Color, Paint}
 import javax.swing.JFrame
 
 import org.apache.log4j.Logger
 import sim.display.{Console, GUIState, Display2D, Controller}
 import sim.engine.SimState
-import sim.portrayal.continuous.ContinuousPortrayal2D
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
-import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
-import sim.portrayal.simple.{OvalPortrayal2D, LabelledPortrayal2D}
+import sim.portrayal.{simple, DrawInfo2D, SimplePortrayal2D}
+import sim.portrayal.simple.{OvalPortrayal2D, RectanglePortrayal2D, LabelledPortrayal2D}
 import sim.util.geo.MasonGeometry
 
 import scala.collection.JavaConversions._
@@ -23,12 +23,11 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
   // The display has all the portrayals added to it. It is initialised in init()
   private val display = new Display2D(SurfABM.WIDTH, SurfABM.HEIGHT, this)
-
-  private var displayFrame: JFrame = null
   // Portrayals are used for visualising objects in fields
   private val roadsPortrayal = new GeomVectorFieldPortrayal()
   private val buildingPortrayal = new GeomVectorFieldPortrayal()
   private val agentPortrayal = new GeomVectorFieldPortrayal() // For the agents (they're a circle)
+  private var displayFrame: JFrame = null
   //private val trailsPortrayal = new ContinuousPortrayal2D() // For trails behind agents
 
   override def init(controller : Controller ) : Unit = {
@@ -46,19 +45,15 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
 
   override def start() : Unit = {
-
+    super.start()
     setupPortrayals()
 
-  }
-
-
-  override def load(state: SimState): Unit = {
-    super.load(state)
-    setupPortrayals()
   }
 
   private def setupPortrayals() : Unit = {
     super.start();
+
+    SurfABMWithUI.LOG.debug("Creating portrayals.")
     //val world : SurfABM = super.state.asInstanceOf[SurfABM]
 
     roadsPortrayal.setField(SurfABM.roadGeoms)
@@ -70,27 +65,71 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
     // Give the agents a round oval to represent them.
     agentPortrayal.setField(SurfABM.agentGeoms)
-    //agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
-    // Each agent should have a different, random colour:
 
-    // (An alternative way to loop through the agents:
-    //SurfABM.agents.getGeometries.zipWithIndex.foreach {
-    //  case(o, i) => println(s"Geometry $o is number $i")
-    //}
+    // Each agent should have a different, random colour.
+    // For some reason this doesn't work. I think there must be a bug in setPortrayalForObject when
+    // used with GeomPortrayal. :-( Instead just make them all red.
+    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
+
+
+    /* // This bit uses the setPortrayalForAgent:
     for ((o, i) <- SurfABM.agentGeoms.getGeometries.zipWithIndex) {
       val colour =  new Color(
-        128 + guirandom.nextInt(128),
-        128 + guirandom.nextInt(128),
-        128 + guirandom.nextInt(128))
-      agentPortrayal.setPortrayalForObject(o, new OvalPortrayal2D(colour,10.0, true))
+        128 - guirandom.nextInt(128),
+        128 - guirandom.nextInt(128),
+        128 - guirandom.nextInt(128))
+      agentPortrayal.setPortrayalForObject(o,
+        new GeomPortrayal(Color.GRAY, 5.0, true))
+        //new OvalPortrayal2D(colour,5.0, true))
       SurfABMWithUI.LOG.debug(s"Agent $i is color $colour")
     }
+    println(agentPortrayal.getPortrayalForObject(SurfABM.agentGeoms.getGeometries.get(2)))
+    */
+    /* // (An alternative way to loop through the agents:
+    SurfABM.agents.getGeometries.zipWithIndex.foreach {
+      case(o, i) => println(s"Geometry $o is number $i")
+    } */
+
+    /*
+    // This is how to give each agent a bespoke portrayal that is updated on each iteration (so
+    // in the example below the agents randomly change colour)
+    agentPortrayal.setPortrayalForAll(
+      new OvalPortrayal2D() {
+        override def draw(o: AnyRef, graphics: Graphics2D, info: DrawInfo2D) {
+          val draw: Rectangle2D.Double = info.draw
+          val width: Double = ( draw.width * scale + offset ) * 10
+          val height: Double = ( draw.height * scale + offset ) * 10
+
+          graphics.setPaint(paint)
+
+          val x: Int = (draw.x - width / 2.0).toInt
+          val y: Int = (draw.y - height / 2.0).toInt
+          val w: Int = (width).toInt
+          val h: Int = (height).toInt
+          val colour =  new Color(
+            128 - guirandom.nextInt(128),
+            128 - guirandom.nextInt(128),
+            128 - guirandom.nextInt(128))
+          graphics.setColor(colour)
+
+          // draw centered on the origin
+          graphics.fillOval(x, y, w, h)
+        }
+      } // new OvalPortrayal2D
+    ) // setPortrayalForAll
+    */
+
 
 
     display.reset()
     display.setBackdrop(Color.WHITE)
 
     display.repaint()
+  }
+
+  override def load(state: SimState): Unit = {
+    super.load(state)
+    setupPortrayals()
   }
 
 }
