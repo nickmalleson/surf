@@ -6,7 +6,7 @@ import java.lang.reflect.Constructor
 
 import com.typesafe.config.{ConfigFactory}
 import org.apache.log4j.{Logger}
-import sim.engine.SimState
+import sim.engine.{Schedule, SimState}
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.Bag
@@ -42,52 +42,11 @@ class SurfABM(seed: Long) extends SimState(seed) {
   override def start(): Unit = {
     super.start
 
-    SurfABM.agentGeoms.clear
-    try {
-      // Find the class to use to create agents.
-      val className: String = SurfABM.conf.getString("AgentType")
-      val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
-      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[MasonGeometry])
-
-      SurfABM.LOG.info(s"Creating ${SurfABM.numAgents} agents of type ${cls.toString}")
-
-      for (i <- 0.until(SurfABM.numAgents)) {
-        // Create a new a agent, passing the main model instance and a random new location
-        val a: Agent = c.newInstance(this, this.getRamdomBuilding())
-        SurfABM.agentGeoms.addGeometry(a.location)
-        schedule.scheduleRepeating(a)
-      }
-      assert(SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size())
-
-      // Now store the agents and their geometries in a map so we can get back to the
-      // agents from their geometry
-      SurfABM.agentGeomMap = Map()
-
-      val tempArray: collection.immutable.Seq[(Int, MasonGeometry)] =
-        (
-          for (o <- buildings.getGeometries())
-            yield {
-              val g = o.asInstanceOf[MasonGeometry]
-              Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
-            }
-          ).to[collection.immutable.Seq]
-      val b_ids: Map[Int, MasonGeometry] =
-        scala.collection.immutable.Map[Int, MasonGeometry](tempArray: _*)
-
-    }
-    catch {
-      case e: Exception => {
-        SurfABM.LOG.error("Exception while creating agents, cannot continue", e)
-        throw e
-      }
-    }
-    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
-
-    // Ensure that the spatial index is made aware of the new agent
-    // positions.  Scheduled to guaranteed to run after all agents moved.
-    schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+    SurfABM.createAgents(this)
 
   }
+
+
 
   override def finish(): Unit = super.finish()
 
@@ -235,6 +194,53 @@ object SurfABM extends Serializable {
         }
       }
 
+  }
+
+  def createAgents(state : SurfABM ) = {
+    SurfABM.agentGeoms.clear
+    try {
+      // Find the class to use to create agents.
+      val className: String = SurfABM.conf.getString("AgentType")
+      val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
+      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[MasonGeometry])
+
+      SurfABM.LOG.info(s"Creating ${SurfABM.numAgents} agents of type ${cls.toString}")
+
+      // Keep a list of the Agents and their Geometries. This will be turned into a Map shortly,
+      val agentArray = collection.mutable.ListBuffer.empty[(MasonGeometry,Agent)]
+
+      // Create the agents
+      for (i <- 0.until(SurfABM.numAgents)) {
+        // Create a new a agent, passing the main model instance and a random new location
+        val a: Agent = c.newInstance(state, state.getRamdomBuilding())
+        SurfABM.agentGeoms.addGeometry(a.location)
+        state.schedule.scheduleRepeating(a)
+        agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
+      }
+
+      // Now store the agents and their geometries in a map so we can get back to the
+      // agents from their geometry. This is necessary because most of the GeoMason containers
+      // only store the geometry, not the underlying agent.
+      SurfABM.agentGeomMap = Map[MasonGeometry,Agent](agentArray: _*)
+
+      assert(
+        SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size() &&
+        SurfABM.numAgents == agentArray.size &&
+        SurfABM.numAgents == SurfABM.agentGeomMap.size
+      )
+
+    }
+    catch {
+      case e: Exception => {
+        SurfABM.LOG.error("Exception while creating agents, cannot continue", e)
+        throw e
+      }
+    }
+    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
+
+    // Ensure that the spatial index is made aware of the new agent
+    // positions.  Scheduled to guaranteed to run after all agents moved.
+    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
   }
 
   // Probably not necessary. This lets you do var a = SurfABM(seed) (no 'new')
