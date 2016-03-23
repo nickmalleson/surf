@@ -17,6 +17,7 @@ import surf.abm.agents.Agent
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
+import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -41,25 +42,22 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   override def start(): Unit = {
     super.start
-
     SurfABM.createAgents(this)
-
   }
-
-
 
   override def finish(): Unit = super.finish()
 
-
-  def getRamdomBuilding(): MasonGeometry = {
+  def getRamdomBuilding(): SurfGeometry = {
     // Get a random building
     val o = SurfABM.buildingGeoms.getGeometries.get(this.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
     // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
     o match {
-      case x: MasonGeometry => x
+      case x: SurfGeometry => x
       case _ => throw new ClassCastException
     }
   }
+
+
 
 }
 
@@ -89,7 +87,7 @@ object SurfABM extends Serializable {
   val agentGeoms = new GeomVectorField(WIDTH, HEIGHT);
 
   // Keep a map of agents and their geometries. This is created after the agents have been created
-  var agentGeomMap : Map[MasonGeometry,Agent] = null
+  var agentGeomMap : Map[SurfGeometry,Agent] = null
 
 
   // Spatial layers. One function to read them all
@@ -102,7 +100,7 @@ object SurfABM extends Serializable {
       *
       * @return
       */
-    private def _readEnvironmentData: (GeomVectorField, Map[Int, MasonGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope) = {
+    private def _readEnvironmentData: (GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope) = {
 
       try {
         /* Read the GIS files into the relevant fields */
@@ -125,22 +123,35 @@ object SurfABM extends Serializable {
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
         ShapeFileImporter.read(bldgURI, buildings, attributes);
+        // Now cast all buildings from MasonGeometrys to SurfGeometrys
+        val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry]
+        for (o <- buildings.getGeometries()) {
+          val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
+          val s = SurfGeometry(g,null)
+          sgoms += s
+        }
+        buildings.clear()
+        for (s:SurfGeometry <- sgoms) {
+          buildings.addGeometry(s)
+        }
+        buildings.updateSpatialIndex()
+        println("Gometryies", buildings.getGeometries.size())
 
         // Keep a link between the building IDs and their geometries (ID -> geometry)
         // Use a for comprehension to create a temp array of (Int, MasonGeometry) then use that as input to a map
         // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
         // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
 
-        val tempArray: collection.immutable.Seq[(Int, MasonGeometry)] =
+        val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
           (
             for (o <- buildings.getGeometries())
               yield {
-                val g = o.asInstanceOf[MasonGeometry]
+                val g = o.asInstanceOf[SurfGeometry]
                 Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
               }
             ).to[collection.immutable.Seq]
-        val b_ids: Map[Int, MasonGeometry] =
-          scala.collection.immutable.Map[Int, MasonGeometry](tempArray: _*) // Splat the array with :_*
+        val b_ids: Map[Int, SurfGeometry] =
+          scala.collection.immutable.Map[Int, SurfGeometry](tempArray: _*) // Splat the array with :_*
 
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... read ${b_ids.size} buildings")
@@ -202,12 +213,12 @@ object SurfABM extends Serializable {
       // Find the class to use to create agents.
       val className: String = SurfABM.conf.getString("AgentType")
       val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
-      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[MasonGeometry])
+      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[SurfGeometry])
 
       SurfABM.LOG.info(s"Creating ${SurfABM.numAgents} agents of type ${cls.toString}")
 
       // Keep a list of the Agents and their Geometries. This will be turned into a Map shortly,
-      val agentArray = collection.mutable.ListBuffer.empty[(MasonGeometry,Agent)]
+      val agentArray = collection.mutable.ListBuffer.empty[(SurfGeometry,Agent)]
 
       // Create the agents
       for (i <- 0.until(SurfABM.numAgents)) {
@@ -221,7 +232,7 @@ object SurfABM extends Serializable {
       // Now store the agents and their geometries in a map so we can get back to the
       // agents from their geometry. This is necessary because most of the GeoMason containers
       // only store the geometry, not the underlying agent.
-      SurfABM.agentGeomMap = Map[MasonGeometry,Agent](agentArray: _*)
+      SurfABM.agentGeomMap = Map[SurfGeometry,Agent](agentArray: _*)
 
       assert(
         SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size() &&
