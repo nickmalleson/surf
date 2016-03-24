@@ -6,7 +6,8 @@ import java.awt.print.Book
 import com.vividsolutions.jts.geom.Coordinate
 import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
-import sim.util.geo.{PointMoveTo}
+import sim.util.geo.{MasonGeometry, PointMoveTo}
+import surf.abm.environment.Building
 import surf.abm.{SurfGeometry, SurfABM}
 import scala.math._
 
@@ -19,12 +20,12 @@ import scala.math._
   *             location is set to be <code>home</code>
   */
 @SerialVersionUID(1L)
-class Agent (state:SurfABM, home:SurfGeometry) extends Steppable with Serializable {
+class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppable with Serializable {
 
-  // The location where the agent currently is. Begins at 'home'
+  // The location where the agent currently is. Begins at 'home'.
   // It's protected, with a public accessor.
-  protected var _location: SurfGeometry = home // (the underscore denotes protected)
-  def location() : SurfGeometry = this._location // accessor to location
+  protected var _location: MasonGeometry = home // (the underscore denotes protected)
+  def location() : MasonGeometry = this._location // accessor to location
   //protected def location_=(g:MasonGeometry) { _location = g } // protected mutator
 
   // For these simple agents the move rate is all the same
@@ -59,6 +60,9 @@ class Agent (state:SurfABM, home:SurfGeometry) extends Steppable with Serializab
         s"Coordinates: ${current} - ${newCoord}."
     )
     this.moveToCoordinate(newCoord)
+
+    //println(SurfABM.agentGeoms.getGeometries().get(0).asInstanceOf[SurfGeometry].theObject)
+
 
   }
 
