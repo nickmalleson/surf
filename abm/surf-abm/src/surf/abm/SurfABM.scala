@@ -4,6 +4,8 @@ package surf.abm
 import java.io.File
 import java.lang.reflect.Constructor
 
+import _root_.surf.abm.agents.Agent
+import _root_.surf.abm.environment.Building
 import com.typesafe.config.{ConfigFactory}
 import org.apache.log4j.{Logger}
 import sim.engine.{Schedule, SimState}
@@ -13,12 +15,9 @@ import sim.util.Bag
 import sim.util.geo.{MasonGeometry, GeomPlanarGraph}
 import com.vividsolutions.jts.geom.{GeometryFactory, Envelope}
 import com.vividsolutions.jts.planargraph.Node
-import surf.abm.agents.Agent
-import surf.abm.environment.Building
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -47,18 +46,6 @@ class SurfABM(seed: Long) extends SimState(seed) {
   }
 
   override def finish(): Unit = super.finish()
-
-  def getRamdomBuilding(): SurfGeometry[Building] = {
-    // Get a random building
-    val o = SurfABM.buildingGeoms.getGeometries.get(this.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
-    // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
-    o match {
-      case x: SurfGeometry[Building @unchecked] => x
-      case _ => throw new ClassCastException
-    }
-  }
-
-
 
 
 }
@@ -229,7 +216,7 @@ object SurfABM extends Serializable {
       // Create the agents
       for (i <- 0.until(SurfABM.numAgents)) {
         // Create a new a agent, passing the main model instance and a random new location
-        val a: Agent = c.newInstance(state, state.getRamdomBuilding())
+        val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
 
         state.schedule.scheduleRepeating(a)
@@ -264,6 +251,22 @@ object SurfABM extends Serializable {
     // Ensure that the spatial index is made aware of the new agent
     // positions.  Scheduled to guaranteed to run after all agents moved.
     state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+  }
+
+  /**
+    * Find a building, chosen at random.
+    *
+    * @param state An instance of the SimState that is running the model
+    * @return
+    */
+  def getRandomBuilding(state: SimState): SurfGeometry[Building] = {
+    // Get a random building
+    val o = SurfABM.buildingGeoms.getGeometries.get(state.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
+    // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
+    o match {
+      case x: SurfGeometry[Building @unchecked] => x
+      case _ => throw new ClassCastException
+    }
   }
 
   // Probably not necessary. This lets you do var a = SurfABM(seed) (no 'new')

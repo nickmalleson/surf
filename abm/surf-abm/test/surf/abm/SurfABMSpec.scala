@@ -1,8 +1,8 @@
 package surf.abm
 
+import _root_.surf.abm.tests.UnitSpec
 import org.apache.log4j.Logger
 import sim.engine.SimState
-import surf.abm.tests.UnitSpec
 import scala.util.control.Breaks._
 
 /**
