@@ -1,4 +1,4 @@
-package surf.abm.exceptions;
+package surf.abm.exceptions
 
 /**
   * Thrown if there is a problem with agent routing.

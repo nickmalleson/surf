@@ -4,10 +4,10 @@ package surf.abm.agents
 import com.vividsolutions.jts.geom.{LineString, Coordinate}
 import com.vividsolutions.jts.linearref.LengthIndexedLine
 import com.vividsolutions.jts.planargraph.Node
-import sim.util.geo.{GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge, MasonGeometry, PointMoveTo}
+import sim.util.geo.{GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
-import surf.abm.{SurfGeometry, SurfABM}
+import surf.abm.{GISFunctions, SurfGeometry, SurfABM}
 
 /**
   * The base class for 'Urban' agents - i.e. those that can navigate a road network.
@@ -22,7 +22,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
   // A destination that the agent might be heading to.
   // This can be null, so wrap in Option() to make this explicit
-  protected var _destination: Option[SurfGeometry[_ <: Any]] = Option(null) // (Option tells us this could be null)
+  //protected var _destination: Option[SurfGeometry[_ <: Any]] = Option(null) // (Option tells us this could be null)
+  protected var _destination: Option[SurfGeometry[_]] = Option(null) // (Option tells us this could be null)
   def destination() = this._destination // Accessor to destination
   protected var _atDestination = false
   def atDestination() = this._atDestination
@@ -126,23 +127,29 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     */
   protected def findNewPath(): scala.collection.immutable.List[GeomPlanarGraphDirectedEdge] = {
 
+    // Check that we have a destination to head to:
+    val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
+      case Some(s) => s
+      case None => throw new RoutingException("Cannot findNewPath - destination is None")
+    }
+
     /* First, find the nearest junction to our current position. */
 
     var currentJunction: Node = SurfABM.network.findNode(location.getGeometry.getCoordinate)
 
     // Not exactly on a junction, find the nearest and move onto it
     if (currentJunction == null) {
-      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(location, SurfABM.junctions, state)
+      val nearestJunction: SurfGeometry = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
       currentJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
     //        assert currentJunction != null : "Could not find a junction for agent " + this.id + " at " + location;
     /* Now find the junction that is closest to the destination */
-    var destinationJunction: Node = SurfABM.network.findNode(destination.getGeometry.getCoordinate)
+    var destinationJunction: Node = SurfABM.network.findNode(dest.getGeometry().getCoordinate)
     if (destinationJunction == null) {
-      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(destination, state.junctions, state)
+      val nearestJunction: SurfGeometry = GISFunctions.findNearestObject(dest, SurfABM.junctions)
       destinationJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
-    assert(destinationJunction != null, String.format("Could not find a junction for the destination %s for agent %s", destination, agent.toString))
+    assert(destinationJunction != null, String.format("Could not find a junction for the destination %s for agent %s", destination, this.toString))
 
     if (currentJunction eq destinationJunction) {
       Agent.LOG.warn("Current and destination junctions are same for agent " + this.toString)
