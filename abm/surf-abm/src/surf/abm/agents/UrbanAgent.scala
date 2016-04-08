@@ -3,6 +3,7 @@ package surf.abm.agents
 
 import com.vividsolutions.jts.geom.{LineString, Coordinate}
 import com.vividsolutions.jts.linearref.LengthIndexedLine
+import com.vividsolutions.jts.planargraph.Node
 import sim.util.geo.{GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge, MasonGeometry, PointMoveTo}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
@@ -86,7 +87,6 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     *
     * @param residualMove the amount of distance the agent can still travel
     *                     this turn
-    *
     * @return True if the agent has reached the end of the path, false otherwise.
     */
   private def transitionToNextEdge(residualMove: Double): Boolean = {
@@ -123,13 +123,52 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   /**
     * Sets the <code>UrbanAgent</code>'s path - i.e. the roads that it must pass through
     * in order to reach its destination
-    *
-    * @param state
-    * @param urbanAgent
     */
-  protected def findNewPath(state:SurfABM, urbanAgent: UrbanAgent): Unit = {
+  protected def findNewPath(): scala.collection.immutable.List[GeomPlanarGraphDirectedEdge] = {
 
-    // TODO XXXX Implement this
+    /* First, find the nearest junction to our current position. */
+
+    var currentJunction: Node = SurfABM.network.findNode(location.getGeometry.getCoordinate)
+
+    // Not exactly on a junction, find the nearest and move onto it
+    if (currentJunction == null) {
+      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(location, SurfABM.junctions, state)
+      currentJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
+    }
+    //        assert currentJunction != null : "Could not find a junction for agent " + this.id + " at " + location;
+    /* Now find the junction that is closest to the destination */
+    var destinationJunction: Node = SurfABM.network.findNode(destination.getGeometry.getCoordinate)
+    if (destinationJunction == null) {
+      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(destination, state.junctions, state)
+      destinationJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
+    }
+    assert(destinationJunction != null, String.format("Could not find a junction for the destination %s for agent %s", destination, agent.toString))
+
+    if (currentJunction eq destinationJunction) {
+      Agent.LOG.warn("Current and destination junctions are same for agent " + this.toString)
+      val e: GeomPlanarGraphDirectedEdge = currentJunction.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge]
+      return new util.ArrayList[GeomPlanarGraphDirectedEdge]() {
+      }
+    }
+
+    //        assert currentJunction != destinationJunction : "Current and destination junctions are the same";
+    // find the appropriate A* path between them
+    val pathfinder: AStar = new AStar
+    val paths: util.List[GeomPlanarGraphDirectedEdge] = pathfinder.astarPath(currentJunction, destinationJunction)
+
+    // if the path works, lay it in
+    if (paths != null && paths.size > 0) {
+      return paths
+    }
+    else {
+      if (paths == null) {
+        throw new RoutingException("Internal error: Could not find a path. Path is null")
+      }
+      else {
+        throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
+      }
+    }
+
 
     // Also need to work out what the following did (in Agent.java step() method):
 //    val edge: GeomPlanarGraphEdge = path.get(0).getEdge.asInstanceOf[GeomPlanarGraphEdge]
