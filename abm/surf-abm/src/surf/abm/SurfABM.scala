@@ -60,8 +60,10 @@ object SurfABM extends Serializable {
 
   // ****** Initialise the model ******
 
-  // Initialise the configuration reader
-  val conf = ConfigFactory.load("surf-abm.conf")
+  // Get a configuration reader
+
+  // Get the configuration reader.
+  val conf = Util.config()
   // println("DATA DIR:",conf.getString("DataDir"))
 
   // Number of agents
@@ -178,9 +180,13 @@ object SurfABM extends Serializable {
         val fact = new GeometryFactory();
         // Now add the associated junctions to the junctions geometry.
         network.getNodes().foreach( x => {
-          junctions.addGeometry(new MasonGeometry(
-            fact.createPoint(x.asInstanceOf[Node].getCoordinate())))
-        } )
+          junctions.addGeometry(
+            SurfGeometry(
+              new MasonGeometry(fact.createPoint(x.asInstanceOf[Node].getCoordinate())),
+              x.asInstanceOf[Node]
+            )
+          )
+        } ) // foreach
 
 
         SurfABM.LOG.info("Finished creating network and junctions")

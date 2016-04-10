@@ -13,6 +13,11 @@ import surf.abm.environment.Building
   */
 @SerialVersionUID(1L)
 abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppable with Serializable {
+
+  // A unique id for each agent with a public accessor.
+  private val _id = Agent.uniqueID += 1
+  def id() = this._id
+
   // The location where the agent currently is. Begins at 'home'.
   // It's protected, with a public accessor.
   protected var _location: SurfGeometry[_ <: Any] = home
@@ -48,5 +53,7 @@ object Agent extends Serializable {
   /** The basic (walking) rate that agents move at. */
   val baseMoveRate = SurfABM.conf.getDouble("BaseMoveRate")
 
+  /** A unique ID that can be given to each agent */
+  var uniqueID = 0
 
 }

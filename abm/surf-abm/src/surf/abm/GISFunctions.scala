@@ -4,7 +4,6 @@ import _root_.surf.abm.exceptions.RoutingException
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.util.Bag
-import scala.util.control.Breaks._
 
 object GISFunctions {
 
@@ -16,12 +15,13 @@ object GISFunctions {
     * Find the nearest object to the given input coordinate.
     *
     */
-  def findNearestObject(centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry = {
+  def findNearestObject(centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry[_] = {
     var radius: Double = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
-    var closeObjects: Bag = null
-    var closest: SurfGeometry = null
+//    var closeObjects: Bag = null
+    var closest: SurfGeometry[_] = null
     while (radius < SurfABM.mbr.getArea) {
-      closeObjects = geom.getObjectsWithinDistance(centre, radius)
+      val bag : Bag = geom.getObjectsWithinDistance(centre, radius)
+      val closeObjects : List[_]  = Util.bagToList(bag)
       if (closeObjects.isEmpty) {
         GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR = GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR * 0.1
         radius = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
@@ -32,8 +32,8 @@ object GISFunctions {
         var dist = 0.0
         for (o <- closeObjects) {
           val sg = o match {
-            // Cast to a MasonGeometry
-            case x: SurfGeometry => x
+            // Cast to a SurfGeometryGeometry
+            case x: SurfGeometry[_] => x
             case _ => throw new ClassCastException
           }
           if (sg != centre) {

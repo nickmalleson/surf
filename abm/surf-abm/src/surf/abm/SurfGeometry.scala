@@ -11,7 +11,7 @@ import sim.util.geo.{AttributeValue, MasonGeometry}
   * Created by nick on 23/03/2016.
   *
   * @param masonGeom The underlying MasonGeometry for this SurfGeometry
-  * @param theObject The object associated with this SurgGeometry. E.g. an Agent.
+  * @param theObject The object associated with this SurfGeometry. E.g. an Agent or a Building.
   */
 @SerialVersionUID(1L)
 class SurfGeometry[T](val masonGeom:MasonGeometry, val theObject:T) extends

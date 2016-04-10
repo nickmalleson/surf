@@ -9,6 +9,8 @@ import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
 import surf.abm.{GISFunctions, SurfGeometry, SurfABM}
 
+import scala.collection.JavaConversions._ // TODO: this won't be necessary once I have re-written A* Path
+
 /**
   * The base class for 'Urban' agents - i.e. those that can navigate a road network.
   *
@@ -35,7 +37,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   private var currentIndex = 0.0
 
   // A list of roads that need to be followed to reach the destination
-  private var _path: scala.collection.immutable.List[GeomPlanarGraphDirectedEdge] = null
+  private var _path: List[GeomPlanarGraphDirectedEdge] = null
   def path(): List[GeomPlanarGraphDirectedEdge] = _path
 
   private var indexOnPath = 0
@@ -92,7 +94,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     */
   private def transitionToNextEdge(residualMove: Double): Boolean = {
     indexOnPath += pathDirection
-    if ((pathDirection > 0 && indexOnPath >= path.size) || (pathDirection < 0 && indexOnPath < 0)) {
+    if ((this.pathDirection > 0 && this.indexOnPath >= this.path.size) ||
+      (this.pathDirection < 0 && this.indexOnPath < 0)) {
 
       // (nasty way of checking that destination!=null before calling moveToCoordinate)
       this.destination() match { // Check that destination is not None
@@ -125,7 +128,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * Sets the <code>UrbanAgent</code>'s path - i.e. the roads that it must pass through
     * in order to reach its destination
     */
-  protected def findNewPath(): scala.collection.immutable.List[GeomPlanarGraphDirectedEdge] = {
+  protected def findNewPath(): List[GeomPlanarGraphDirectedEdge] = {
 
     // Check that we have a destination to head to:
     val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
@@ -139,29 +142,26 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     // Not exactly on a junction, find the nearest and move onto it
     if (currentJunction == null) {
-      val nearestJunction: SurfGeometry = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
+      val nearestJunction: SurfGeometry[_] = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
       currentJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
     //        assert currentJunction != null : "Could not find a junction for agent " + this.id + " at " + location;
     /* Now find the junction that is closest to the destination */
     var destinationJunction: Node = SurfABM.network.findNode(dest.getGeometry().getCoordinate)
     if (destinationJunction == null) {
-      val nearestJunction: SurfGeometry = GISFunctions.findNearestObject(dest, SurfABM.junctions)
+      val nearestJunction: SurfGeometry[_] = GISFunctions.findNearestObject(dest, SurfABM.junctions)
       destinationJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
     assert(destinationJunction != null, String.format("Could not find a junction for the destination %s for agent %s", destination, this.toString))
 
     if (currentJunction eq destinationJunction) {
       Agent.LOG.warn("Current and destination junctions are same for agent " + this.toString)
-      val e: GeomPlanarGraphDirectedEdge = currentJunction.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge]
-      return new util.ArrayList[GeomPlanarGraphDirectedEdge]() {
-      }
+      return List[GeomPlanarGraphDirectedEdge](currentJunction.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge])
     }
 
-    //        assert currentJunction != destinationJunction : "Current and destination junctions are the same";
     // find the appropriate A* path between them
     val pathfinder: AStar = new AStar
-    val paths: util.List[GeomPlanarGraphDirectedEdge] = pathfinder.astarPath(currentJunction, destinationJunction)
+    val paths: List[GeomPlanarGraphDirectedEdge] = List(pathfinder.astarPath(currentJunction, destinationJunction): _*) // (Splat the java list)
 
     // if the path works, lay it in
     if (paths != null && paths.size > 0) {
@@ -172,7 +172,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
         throw new RoutingException("Internal error: Could not find a path. Path is null")
       }
       else {
-        throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
+        //throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
+        throw new RoutingException("Agent " + this.toString + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
       }
     }
 
