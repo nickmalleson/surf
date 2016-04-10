@@ -5,3 +5,4 @@ package surf.abm.exceptions
   * @author Nick Malleson
   */
 case class RoutingException(message: String) extends Exception(message)
+

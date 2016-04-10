@@ -93,6 +93,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * @return True if the agent has reached the end of the path, false otherwise.
     */
   private def transitionToNextEdge(residualMove: Double): Boolean = {
+    assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
+
     indexOnPath += pathDirection
     if ((this.pathDirection > 0 && this.indexOnPath >= this.path.size) ||
       (this.pathDirection < 0 && this.indexOnPath < 0)) {
@@ -129,6 +131,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * in order to reach its destination
     */
   protected def findNewPath(): List[GeomPlanarGraphDirectedEdge] = {
+
+    // TODO HERE - find out why a proper path isn't being created and returned
 
     // Check that we have a destination to head to:
     val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
@@ -185,6 +189,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     //assert(!(segment == null && this.path.isEmpty), "Segment empty and paths null for agent " + this.toString + " whose home is " + getHomeID(state) + " and destination " + state.buildingIDs.inverse.get(this.destination))
 //    return
+
+    throw new RoutingException("Internal error, should not have got here")
 
   }
 
