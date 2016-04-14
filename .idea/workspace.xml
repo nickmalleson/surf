@@ -33,10 +33,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5516693">
+            <state vertical-scroll-proportion="0.0">
               <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
               <folding>
                 <element signature="e#19#38#0" expanded="true" />
@@ -45,11 +45,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SurfGeometry.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SurfGeometry.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfGeometry.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="72" column="39" selection-start-line="72" selection-start-column="39" selection-end-line="72" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.64228934">
+              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
               <folding>
                 <element signature="e#18#42#0" expanded="true" />
               </folding>
@@ -124,8 +124,8 @@
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/environment/Building.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/FIELDS.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/BUILDING_FIELDS.scala" />
-        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfGeometry.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfGeometry.scala" />
       </list>
     </option>
   </component>
@@ -1293,22 +1293,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfGeometry.scala">
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="72" column="39" selection-start-line="72" selection-start-column="39" selection-end-line="72" selection-end-column="39" />
+          <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
           <folding>
-            <element signature="e#18#42#0" expanded="true" />
+            <element signature="e#19#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfGeometry.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5516693">
-          <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.64228934">
+          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding>
-            <element signature="e#19#38#0" expanded="true" />
+            <element signature="e#18#42#0" expanded="true" />
           </folding>
         </state>
       </provider>

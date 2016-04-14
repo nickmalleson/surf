@@ -88,54 +88,6 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
 
   override def hashCode(): Int = masonGeom.hashCode()
 
-  // BELOW I TRIED REIMPLEMENTING equals() and hashCode(), but with hindsight I don't think they're necessary,
-  // the methods above should work
-
-  /**
-    * Check for equality.
-    *
-    * This is a basically a copy of the <code>MasonGeometry</code> method, but adapted so that it
-    * refers to the underlying MasonGeometry object properties properly.
-    *
-    * @return
-    */
-/*  override def equals(obj: scala.Any): Boolean = {
-    if (obj == null) {
-      return false
-    }
-    if (getClass.ne(obj.getClass)) {
-      return false
-    }
-
-    // Try to cast to a SurfGeometry and continue tests for equality
-    val other = obj match {
-      case x: SurfGeometry[T] => x // Cast successful
-      case _ => return false
-    }
-
-    if (this.getGeometry.ne(other.getGeometry) && (this.getGeometry == null || !(this.getGeometry == other.getGeometry))) {
-      return false
-    }
-
-    if (this.getAttributes.ne(other.getAttributes) && (this.getAttributes == null || !(this.getAttributes == other.getAttributes))) {
-      return false
-    }
-
-    return true
-  }*/
-
-  /**
-    * Overide and copy the <code>MasonGeometry</code> method, changing it so that it uses the
-    * underlying MasonGeomegry object properly.
-    *
-    * @return
-    */
-  /*override def hashCode(): Int = {
-    var hash: Int = 5
-    hash = 19 * hash + (if (this.getGeometry != null) this.getGeometry.hashCode else 0)
-    return hash
-  }*/
-
   override def getUserData: AnyRef = masonGeom.getUserData
 }
 
