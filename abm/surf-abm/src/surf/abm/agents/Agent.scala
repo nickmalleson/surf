@@ -28,7 +28,7 @@ abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppa
   protected val moveRate : Double = Agent.baseMoveRate
 
   // Convenience for moving a point. Don't want to create this object each iteration.
-  val pmt : PointMoveTo = new PointMoveTo()
+  // val pmt : PointMoveTo = new PointMoveTo()
 
   /**
     * Move the agent to the given coordinate
@@ -37,9 +37,14 @@ abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppa
     * @return Unit
     */
   def moveToCoordinate(c : Coordinate) : Unit = {
-    this.pmt.setCoordinate(c)
-    this.location.getGeometry().apply(this.pmt)
+    //this.pmt.setCoordinate(c)
+    //this.location.getGeometry().apply(this.pmt)
+    //this.location.geometry.geometryChanged()
+    val p = new PointMoveTo()
+    p.setCoordinate(c)
+    this.location.getGeometry().apply(p)
     this.location.geometry.geometryChanged()
+
   }
 
 }

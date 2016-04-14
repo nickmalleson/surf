@@ -5,7 +5,6 @@ import java.{lang, util}
 import com.vividsolutions.jts.geom.Geometry
 import org.apache.log4j.Logger
 import sim.util.geo.{AttributeValue, MasonGeometry}
-import surf.abm.environment.Building
 
 /**
   * An extension to <code>MasonGeometry</code> that keeps a record of the object used
@@ -17,11 +16,11 @@ import surf.abm.environment.Building
   */
 @SerialVersionUID(1L)
 class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
-  MasonGeometry(masonGeom.getGeometry) with Serializable {
+  MasonGeometry(masonGeom.getGeometry()) with Serializable {
 
   /* Auxilliary constructors replicating the behaviour of MasonGeometry.
    * I don't think they're necessary, I can't think of a situation when you
-    * wouldn't just use the primary one.*/
+    * wouldn't just use the primary SurfGeometry one.*/
 
   /* def this()
   {

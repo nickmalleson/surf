@@ -509,25 +509,25 @@ public class GeomVectorField extends GeomField
                 return g1;
             }
         }
-        
+
         return g;
     }
-    
+
 
 	 public void updateTree(Geometry g, com.vividsolutions.jts.geom.util.AffineTransformation at)
 	 {
 		MasonGeometry mg = new MasonGeometry(g);
-		if (spatialIndex.remove(g.getEnvelopeInternal(), mg)) { 
-			mg.geometry.apply(at); 
-			addGeometry(mg); 
+		if (spatialIndex.remove(g.getEnvelopeInternal(), mg)) {
+			mg.geometry.apply(at);
+			addGeometry(mg);
 		}
-		
-		
+
+
 		/* List<?> gList = spatialIndex.query(g.getEnvelopeInternal());
 		 for (int i=0; i < gList.size(); i++) {
-			 Geometry g1 = ((MasonGeometry)gList.get(i)).getGeometry(); 
-			 if (g1.equals(g)) { 
-				 g1.apply(at); 
+			 Geometry g1 = ((MasonGeometry)gList.get(i)).getGeometry();
+			 if (g1.equals(g)) {
+				 g1.apply(at);
 				 return;
 			 }
 		 } */
