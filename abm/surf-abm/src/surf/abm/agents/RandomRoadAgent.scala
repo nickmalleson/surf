@@ -34,6 +34,10 @@ class RandomRoadAgent(state:SurfABM, home:MasonGeometry) extends UrbanAgent(stat
         state.finish
       }
     }
+
+    println("%s,%s,%s".format(
+      this.location().getGeometry().getCoordinate().x, this.location().getGeometry().getCoordinate().y, state.schedule.getSteps())
+    )
   }
 
 }
