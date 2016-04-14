@@ -22,7 +22,8 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
    * I don't think they're necessary, I can't think of a situation when you
     * wouldn't just use the primary SurfGeometry one.*/
 
-  /* def this()
+  /*
+  def this()
   {
     this(null, null)
   }
@@ -30,8 +31,8 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
   def this( g : MasonGeometry)
   {
     this(g, null)
-  }*/
-
+  }
+*/
 
   /*
     Override all methods and call them on the underlying MasonGeometry object,

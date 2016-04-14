@@ -106,6 +106,7 @@ object SurfABM extends Serializable {
 
         // Start with buildings
         val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
+        val buildings = new GeomVectorField(WIDTH, HEIGHT);
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( (for (v <- BUILDING_FIELDS.values) yield v.toString()) ) // Add all of the fields
@@ -114,17 +115,14 @@ object SurfABM extends Serializable {
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
         ShapeFileImporter.read(bldgURI, tempBuildings, attributes);
+
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
-        val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
+        //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
         for (o <- tempBuildings.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
           val buildingID = g.getIntegerAttribute("ID")
           val building = Building(buildingID)
           val s = SurfGeometry(g,building)
-          sgoms += s
-        }
-        val buildings = new GeomVectorField(WIDTH, HEIGHT);
-        for (s:SurfGeometry[Building] <- sgoms) {
           buildings.addGeometry(s)
         }
         //buildings.updateSpatialIndex()
@@ -151,6 +149,7 @@ object SurfABM extends Serializable {
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... read ${b_ids.size} buildings")
         */
+
         // We want to save the MBR so that we can ensure that all GeomFields
         // cover identical area.
         MBR = buildings.getMBR() // Minimum envelope surrounding whole world
@@ -224,6 +223,7 @@ object SurfABM extends Serializable {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
+        //SurfABM.agentGeoms.addGeometry(new MasonGeometry(a.location().getGeometry()))
         state.schedule.scheduleRepeating(a)
         //agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
       }
