@@ -13,19 +13,23 @@ object GISFunctions {
 
   /**
     * Find the nearest object to the given input coordinate.
-    *
+    * The function will search within a given radius (<code>GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR</code>),
+    * gradually expanding the circle until it finds an object. It logs a WARNING each time the radius is
+    * increased.
     */
   def findNearestObject(centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry[_] = {
     var radius: Double = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
-//    var closeObjects: Bag = null
     var closest: SurfGeometry[_] = null
     while (radius < SurfABM.mbr.getArea) {
       val bag : Bag = geom.getObjectsWithinDistance(centre, radius)
       val closeObjects : List[_]  = Util.bagToList(bag)
       if (closeObjects.isEmpty) {
-        GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR = GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR * 0.1
+        val oldRadius = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
+        val oldDenominator = GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
+        GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR = GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR * 0.8
         radius = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
-        LOG.warn("Increasing search radius to " + radius + ". This is very inefficient if it happens regularly.")
+        LOG.warn("Increasing search radius from %s(%s) to %s(%s). This is very inefficient if it happens regularly.".format(
+          oldRadius, oldDenominator, radius, GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR))
       }
       else {
         var minDist = Double.MaxValue

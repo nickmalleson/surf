@@ -10,6 +10,7 @@ import sim.engine.SimState
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.{simple, DrawInfo2D, SimplePortrayal2D}
 import sim.portrayal.simple.{OvalPortrayal2D, RectanglePortrayal2D, LabelledPortrayal2D}
+import surf.abm.agents.Agent
 import surf.abm.environment.Building
 
 import scala.collection.JavaConversions._
@@ -65,11 +66,13 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
     // Give the agents a round oval to represent them.
     agentPortrayal.setField(SurfABM.agentGeoms)
+    //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
 
     // Each agent should have a different, random colour.
     // For some reason this doesn't work. I think there must be a bug in setPortrayalForObject when
     // used with GeomPortrayal. :-( Instead just make them all red.
-    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, 10.0, true))
+    //agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED,10.0,true))
+    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
 
 
     /* // This bit uses the setPortrayalForAgent:
@@ -89,37 +92,6 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     SurfABM.agents.getGeometries.zipWithIndex.foreach {
       case(o, i) => println(s"Geometry $o is number $i")
     } */
-
-    /*
-    // This is how to give each agent a bespoke portrayal that is updated on each iteration (so
-    // in the example below the agents randomly change colour)
-    agentPortrayal.setPortrayalForAll(
-      new OvalPortrayal2D() {
-        override def draw(o: AnyRef, graphics: Graphics2D, info: DrawInfo2D) {
-          val draw: Rectangle2D.Double = info.draw
-          val width: Double = ( draw.width * scale + offset ) * 10
-          val height: Double = ( draw.height * scale + offset ) * 10
-
-          graphics.setPaint(paint)
-
-          val x: Int = (draw.x - width / 2.0).toInt
-          val y: Int = (draw.y - height / 2.0).toInt
-          val w: Int = (width).toInt
-          val h: Int = (height).toInt
-          val colour =  new Color(
-            128 - guirandom.nextInt(128),
-            128 - guirandom.nextInt(128),
-            128 - guirandom.nextInt(128))
-          graphics.setColor(colour)
-
-          // draw centered on the origin
-          graphics.fillOval(x, y, w, h)
-        }
-      } // new OvalPortrayal2D
-    ) // setPortrayalForAll
-    */
-
-
 
     display.reset()
     display.setBackdrop(Color.WHITE)
@@ -169,10 +141,10 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
     // cast the object to a MasonGemoetry using pattern matching and return the
     // building name. Or return 'no name' if the object is not a building
     o match {
-      case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(FIELDS.BUILDINGS_NAME.toString)
+      case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(FIELDS.BUILDINGS_TOID.toString)
       case _ => {
         BuildingLabelPortrayal.LOG.warn("Cannot find a label for a building", new Exception())
-        "No Building Name" // no label to return, send "No Building Name" back
+        "No Building ID" // no label to return, send "No Building Name" back
       }
     }
 
@@ -182,3 +154,62 @@ object BuildingLabelPortrayal {
   private val LOG: Logger = Logger.getLogger(this.getClass)
 }
 
+
+/**
+  * A special portrayal for agents. They are displayed as circles, given a unique colour depending on their ID, and
+  * report their 'toString' method if inspected.
+  * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different
+  * Portrayals that are available.
+  */
+@SerialVersionUID(1L)
+class AgentLabelPortrayal()
+  extends LabelledPortrayal2D (null, null, null, true) {
+
+  /* A random colour for this agent */
+  val _colour = new Color(
+    128 - scala.util.Random.nextInt(128),
+    128 - scala.util.Random.nextInt(128),
+    128 - scala.util.Random.nextInt(128))
+
+  /**
+    * Configure a shape used to paint each agent. This is called by getChild() below.
+    */
+  val _child : SimplePortrayal2D = new OvalPortrayal2D() {
+    override def draw(o: AnyRef, graphics: Graphics2D, info: DrawInfo2D) {
+      val draw: Rectangle2D.Double = info.draw
+      val width: Double = ( draw.width * scale + offset ) * 10
+      val height: Double = ( draw.height * scale + offset ) * 10
+
+      graphics.setPaint(paint)
+
+      val x: Int = (draw.x - width / 2.0).toInt
+      val y: Int = (draw.y - height / 2.0).toInt
+      val w: Int = (width).toInt
+      val h: Int = (height).toInt
+
+      graphics.setColor(_colour)
+
+      // draw centered on the origin
+      graphics.fillOval(x, y, w, h)
+    }
+  } // new OvalPortrayal2D
+
+  override def getChild(o: Object): SimplePortrayal2D = this._child
+
+  // Could cast to an agent, as below, but I don't think this is necessary for just returning
+  // it's toString. Would need to cast to return something like the ID.
+  override def getLabel(o: AnyRef, info: DrawInfo2D): String = o.toString()
+    /* = {
+    o match {
+      case x: Agent => x.toString()
+      case _ => {
+        AgentLabelPortrayal.LOG.warn("Cannot correctly label an agent", new Exception())
+        "Unexpected type passed to getLabel" // no label to return, send "No Building Name" back
+      }
+    }
+  }*/
+
+}
+//object AgentLabelPortrayal {
+//  private val LOG: Logger = Logger.getLogger(this.getClass)
+//}

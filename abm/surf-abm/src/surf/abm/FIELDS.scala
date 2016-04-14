@@ -12,7 +12,7 @@ object FIELDS extends Enumeration {
 
   // Fields for GIS data files
   val BUILDINGS_ID = Value("ID")
-  val BUILDINGS_NAME = Value("NAME")
-  val BUILDING_FLOORS = Value("FLOORS")
+  val BUILDINGS_TYPE = Value("TYPE")
+  val BUILDINGS_TOID = Value("TOID")
 
 }

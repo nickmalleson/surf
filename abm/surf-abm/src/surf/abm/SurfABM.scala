@@ -110,7 +110,8 @@ object SurfABM extends Serializable {
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag(Iterable[String](
-          FIELDS.BUILDINGS_ID.toString(), FIELDS.BUILDINGS_NAME.toString(), FIELDS.BUILDING_FLOORS.toString()
+          FIELDS.BUILDINGS_TOID.toString
+          //(for (v <- FIELDS.values) yield v.toString()): _* // Add all fields, doesn't work
         ))
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();

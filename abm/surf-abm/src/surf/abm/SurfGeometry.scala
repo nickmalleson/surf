@@ -3,6 +3,7 @@ package surf.abm
 import java.{lang, util}
 
 import com.vividsolutions.jts.geom.Geometry
+import org.apache.log4j.Logger
 import sim.util.geo.{AttributeValue, MasonGeometry}
 
 /**
@@ -65,7 +66,17 @@ class SurfGeometry[T](val masonGeom:MasonGeometry, val theObject:T) extends
 
   override def propertiesProxy(): AnyRef = masonGeom.propertiesProxy()
 
-  override def getStringAttribute(name: String): String = masonGeom.getStringAttribute(name)
+  override def getStringAttribute(name: String): String = {
+    try {
+      masonGeom.getStringAttribute(name)
+    }
+    catch {
+      case e: NullPointerException => {
+        SurfGeometry.LOG.error("Could not find the attribute: '%s'".format(name), e)
+        throw e
+      }
+    }
+  }
 
   override def getIntegerAttribute(name: String): Integer = masonGeom.getIntegerAttribute(name)
 
@@ -81,4 +92,5 @@ class SurfGeometry[T](val masonGeom:MasonGeometry, val theObject:T) extends
 @SerialVersionUID(1L)
 object SurfGeometry extends Serializable {
   def apply[T](g:MasonGeometry, o:T): SurfGeometry[T] = new SurfGeometry[T](g,o)
+  private val LOG: Logger = Logger.getLogger(this.getClass);
 }

@@ -47,19 +47,30 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
   protected def moveAlongPath() : Unit = {
 
-    currentIndex += moveRate * linkDirection
+    this.currentIndex += ( moveRate * linkDirection )
 
     // check to see if the progress has taken the current index beyond its goal
     // given the direction of movement. If so, proceed to the next edge
-    if (linkDirection == 1 && currentIndex > endIndex) {
-      this._atDestination = transitionToNextEdge(currentIndex - endIndex)
+    if (this.linkDirection == 1 && this.currentIndex > this.endIndex) {
+      this._atDestination = transitionToNextEdge(this.currentIndex - this.endIndex)
     }
-    else if (linkDirection == -1 && currentIndex < startIndex) {
-      this._atDestination = transitionToNextEdge(startIndex - currentIndex)
+    else if (this.linkDirection == -1 && this.currentIndex < this.startIndex) {
+      this._atDestination = transitionToNextEdge(this.startIndex - this.currentIndex)
     }
-    val currentPos: Coordinate = segment.extractPoint(currentIndex)
-    moveToCoordinate(currentPos)
 
+    // In some cases, where the origin and destination are the same, the segment will be null here,
+    // as the agent has already reached their destination without actually creating a path.
+    // Check for this. If it is not the case, then just move along the path as normal.
+    if (this._atDestination) {
+      return
+    }
+    assert(this.segment != null, "Internal error, segment should not be null. Debug info:\n\t" +
+      "Agent: %s\n\tcurrentIndex:%s\n\tstartIndex:%s\n\tlinkDirection:%s\n\tatDestination?:%s\n\tpath:%s".format(
+        this,this.currentIndex,this.startIndex, this.linkDirection, this._atDestination, this._path))
+
+    val currentPos: Coordinate = this.segment.extractPoint(currentIndex)
+    this.moveToCoordinate(currentPos)
+    //println(currentPos.x+","+currentPos.y+","+this.state.schedule.getSteps)
   }
 
   /**
@@ -96,33 +107,43 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
 
     indexOnPath += pathDirection
+    // See if the agent has reached the end of the path. If so, reset the counters and return true.
     if ((this.pathDirection > 0 && this.indexOnPath >= this.path.size) ||
       (this.pathDirection < 0 && this.indexOnPath < 0)) {
 
       // (nasty way of checking that destination!=null before calling moveToCoordinate)
       this.destination() match { // Check that destination is not None
-        case Some(s) => this.moveToCoordinate(this.destination().get.getGeometry.getCoordinate())
+        case Some(_) => this.moveToCoordinate(this.destination().get.getGeometry.getCoordinate())
         case None => throw new RoutingException("Cannot transitiontoNextEdge - destination is None")
       }
 //      this.moveToCoordinate(this.destination.get.getGeometry.getCoordinate)
-      this.startIndex = 0.0
-      this.endIndex = 0.0
-      this.currentIndex = 0.0
+      this.startIndex = -1.0
+      this.endIndex = -1.0
+      this.currentIndex = -1.0
       this._destination = Option(null)
       this._path = null
-      this.indexOnPath = 0
+      this.indexOnPath = -1
       return true
     }
+
+    // move to the next edge in the path
     val edge: GeomPlanarGraphEdge = this.path()(indexOnPath).getEdge.asInstanceOf[GeomPlanarGraphEdge]
+    assert(edge != null)
     this.setupEdge(edge)
     val speed: Double = residualMove * linkDirection
     currentIndex += speed
+
+    // check to see if the progress has taken the current index beyond its goal
+    // given the direction of movement. If so, proceed to the next edge
     if (linkDirection == 1 && currentIndex > endIndex) {
       return transitionToNextEdge(currentIndex - endIndex)
     }
     else if (linkDirection == -1 && currentIndex < startIndex) {
       return transitionToNextEdge(startIndex - currentIndex)
     }
+
+    // If here then don't need to transition onto another edge and haven't
+    // reached the destination yet.
     return false
   }
 
@@ -130,9 +151,9 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * Sets the <code>UrbanAgent</code>'s path - i.e. the roads that it must pass through
     * in order to reach its destination
     */
-  protected def findNewPath(): List[GeomPlanarGraphDirectedEdge] = {
+  protected def findNewPath(): Unit = {
 
-    // TODO HERE - find out why a proper path isn't being created and returned
+    // TODO - break this method up and test it properly. (remember Sam's advice - each function should have simple, clear inputs and outputs
 
     // Check that we have a destination to head to:
     val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
@@ -149,6 +170,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       val nearestJunction: SurfGeometry[_] = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
       currentJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
+    assert(currentJunction != null, String.format("Could not find the current junction for agent %s", this.toString))
     //        assert currentJunction != null : "Could not find a junction for agent " + this.id + " at " + location;
     /* Now find the junction that is closest to the destination */
     var destinationJunction: Node = SurfABM.network.findNode(dest.getGeometry().getCoordinate)
@@ -160,7 +182,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     if (currentJunction eq destinationJunction) {
       Agent.LOG.warn("Current and destination junctions are same for agent " + this.toString)
-      return List[GeomPlanarGraphDirectedEdge](currentJunction.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge])
+      this._path = List[GeomPlanarGraphDirectedEdge](currentJunction.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge])
+      return
     }
 
     // find the appropriate A* path between them
@@ -169,7 +192,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     // if the path works, lay it in
     if (paths != null && paths.size > 0) {
-      return paths
+      this._path = paths
+      return
     }
     else {
       if (paths == null) {
@@ -177,18 +201,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       }
       else {
         //throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
-        throw new RoutingException("Agent " + this.toString + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
+        throw new RoutingException("Agent " + this.toString + " got an empty path between junctions " + currentJunction
+          + " and " + destinationJunction + ". The network is probably disconnected.")
       }
     }
-
-
-    // Also need to work out what the following did (in Agent.java step() method):
-//    val edge: GeomPlanarGraphEdge = path.get(0).getEdge.asInstanceOf[GeomPlanarGraphEdge]
-//    Agent.setupEdge(edge, this)
-//    Agent.moveToCoordinate(segment.extractPoint(currentIndex), this)
-
-    //assert(!(segment == null && this.path.isEmpty), "Segment empty and paths null for agent " + this.toString + " whose home is " + getHomeID(state) + " and destination " + state.buildingIDs.inverse.get(this.destination))
-//    return
 
     throw new RoutingException("Internal error, should not have got here")
 
