@@ -82,8 +82,7 @@ object SurfABM extends Serializable {
 
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, roadGeoms, network, junctions, mbr) =
-    _readEnvironmentData
+  val (buildingGeoms, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -91,7 +90,7 @@ object SurfABM extends Serializable {
       *
       * @return
       */
-    private def _readEnvironmentData
+    private def _readEnvironmentData()
     //: (GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
     = {
 
@@ -106,29 +105,29 @@ object SurfABM extends Serializable {
         SurfABM.LOG.info(s"Reading GIS data for the environment from ${dataDir}")
 
         // Start with buildings
-        val buildings = new GeomVectorField(WIDTH, HEIGHT);
+        val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
-        val attributes: Bag = new Bag(Iterable[String](
-          FIELDS.BUILDINGS_TOID.toString
-          //(for (v <- FIELDS.values) yield v.toString()): _* // Add all fields, doesn't work
-        ))
+        val attributes: Bag = new Bag( (for (v <- BUILDING_FIELDS.values) yield v.toString()) ) // Add all of the fields
+
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
-        ShapeFileImporter.read(bldgURI, buildings, attributes);
+        ShapeFileImporter.read(bldgURI, tempBuildings, attributes);
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
         val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
-        for (o <- buildings.getGeometries()) {
+        for (o <- tempBuildings.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
-          val s = SurfGeometry(g,Building())
+          val buildingID = g.getIntegerAttribute("ID")
+          val building = Building(buildingID)
+          val s = SurfGeometry(g,building)
           sgoms += s
         }
-        buildings.clear()
+        val buildings = new GeomVectorField(WIDTH, HEIGHT);
         for (s:SurfGeometry[Building] <- sgoms) {
           buildings.addGeometry(s)
         }
-        buildings.updateSpatialIndex()
+        //buildings.updateSpatialIndex()
         //println("Gometryies", buildings.getGeometries.size())
 
         // Keep a link between the building IDs and their geometries (ID -> geometry)
@@ -225,7 +224,6 @@ object SurfABM extends Serializable {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
-
         state.schedule.scheduleRepeating(a)
         //agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
       }

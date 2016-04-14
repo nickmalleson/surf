@@ -6,13 +6,12 @@ package surf.abm
   *
   * @author Nick Malleson
   */
-object FIELDS extends Enumeration {
+object BUILDING_FIELDS extends Enumeration {
 
   type FIELDS = Value
 
   // Fields for GIS data files
   val BUILDINGS_ID = Value("ID")
-  val BUILDINGS_TYPE = Value("TYPE")
   val BUILDINGS_TOID = Value("TOID")
 
 }

@@ -141,7 +141,7 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
     // cast the object to a MasonGemoetry using pattern matching and return the
     // building name. Or return 'no name' if the object is not a building
     o match {
-      case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(FIELDS.BUILDINGS_TOID.toString)
+      case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TOID.toString)
       case _ => {
         BuildingLabelPortrayal.LOG.warn("Cannot find a label for a building", new Exception())
         "No Building ID" // no label to return, send "No Building Name" back
