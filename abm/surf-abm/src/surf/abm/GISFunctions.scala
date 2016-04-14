@@ -4,6 +4,7 @@ import _root_.surf.abm.exceptions.RoutingException
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.util.Bag
+import sim.util.geo.MasonGeometry
 
 object GISFunctions {
 
@@ -17,9 +18,9 @@ object GISFunctions {
     * gradually expanding the circle until it finds an object. It logs a WARNING each time the radius is
     * increased.
     */
-  def findNearestObject(centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry[_] = {
+  def findNearestObject(centre: MasonGeometry, geom: GeomVectorField) : MasonGeometry = {
     var radius: Double = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
-    var closest: SurfGeometry[_] = null
+    var closest: MasonGeometry = null
     while (radius < SurfABM.mbr.getArea) {
       val bag : Bag = geom.getObjectsWithinDistance(centre, radius)
       val closeObjects : List[_]  = Util.bagToList(bag)
@@ -36,8 +37,8 @@ object GISFunctions {
         var dist = 0.0
         for (o <- closeObjects) {
           val sg = o match {
-            // Cast to a SurfGeometryGeometry
-            case x: SurfGeometry[_] => x
+            // Cast
+            case x: MasonGeometry => x
             case _ => throw new ClassCastException
           }
           if (sg != centre) {

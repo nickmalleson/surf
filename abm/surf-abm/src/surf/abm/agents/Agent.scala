@@ -4,7 +4,7 @@ import com.vividsolutions.jts.geom.Coordinate
 import org.apache.log4j.Logger
 import sim.engine.Steppable
 import sim.util.geo.{PointMoveTo, MasonGeometry}
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.{SurfABM}
 import surf.abm.environment.Building
 
 /**
@@ -12,14 +12,14 @@ import surf.abm.environment.Building
   * Created by geonsm on 08/04/2016.
   */
 @SerialVersionUID(1L)
-abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppable with Serializable {
+abstract class Agent (state:SurfABM, home:MasonGeometry) extends Steppable with Serializable {
 
   // A unique id for each agent with a public accessor.
   private val _id = Agent.uniqueID += 1
   def id() = this._id
 
   // The location where the agent currently is. Begins at 'home'. It is protected, with a public accessor.
-  protected var _location: SurfGeometry[_ <: Any] = home
+  protected var _location = home
   def location() = this._location // accessor to location
   //protected def location_=(g:MasonGeometry) { _location = g } // protected mutator
 

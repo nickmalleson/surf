@@ -105,7 +105,6 @@ object SurfABM extends Serializable {
         SurfABM.LOG.info(s"Reading GIS data for the environment from ${dataDir}")
 
         // Start with buildings
-        val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
         val buildings = new GeomVectorField(WIDTH, HEIGHT);
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
@@ -114,19 +113,7 @@ object SurfABM extends Serializable {
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
-        ShapeFileImporter.read(bldgURI, tempBuildings, attributes);
-
-        // Now cast all buildings from MasonGeometrys to SurfGeometrys
-        //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
-        for (o <- tempBuildings.getGeometries()) {
-          val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
-          val buildingID = g.getIntegerAttribute("ID")
-          val building = Building(buildingID)
-          val s = SurfGeometry(g,building)
-          buildings.addGeometry(s)
-        }
-        //buildings.updateSpatialIndex()
-        //println("Gometryies", buildings.getGeometries.size())
+        ShapeFileImporter.read(bldgURI, buildings, attributes);
 
         // Keep a link between the building IDs and their geometries (ID -> geometry)
         // NO LONGER NEEDED NOW THAT BUILDINGS ARE PART OF SURFGEOMETRY
@@ -180,11 +167,8 @@ object SurfABM extends Serializable {
         // Now add the associated junctions to the junctions geometry.
         network.getNodes().foreach( x => {
           junctions.addGeometry(
-            SurfGeometry(
-              new MasonGeometry(fact.createPoint(x.asInstanceOf[Node].getCoordinate())),
-              x.asInstanceOf[Node]
+              new MasonGeometry(fact.createPoint(x.asInstanceOf[Node].getCoordinate()))
             )
-          )
         } ) // foreach
 
 
@@ -211,7 +195,7 @@ object SurfABM extends Serializable {
       // Find the class to use to create agents.
       val className: String = SurfABM.conf.getString("AgentType")
       val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
-      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[SurfGeometry[Agent]])
+      val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[MasonGeometry])
 
       SurfABM.LOG.info(s"Creating ${SurfABM.numAgents} agents of type ${cls.toString}")
 
@@ -222,7 +206,7 @@ object SurfABM extends Serializable {
       for (i <- 0.until(SurfABM.numAgents)) {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
-        SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
+        SurfABM.agentGeoms.addGeometry(a.location)
         //SurfABM.agentGeoms.addGeometry(new MasonGeometry(a.location().getGeometry()))
         state.schedule.scheduleRepeating(a)
         //agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
@@ -264,12 +248,12 @@ object SurfABM extends Serializable {
     * @param state An instance of the SimState that is running the model
     * @return
     */
-  def getRandomBuilding(state: SimState): SurfGeometry[Building] = {
+  def getRandomBuilding(state: SimState): MasonGeometry = {
     // Get a random building
     val o = SurfABM.buildingGeoms.getGeometries.get(state.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
     // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
     o match {
-      case x: SurfGeometry[Building @unchecked] => x
+      case x: MasonGeometry => x
       case _ => throw new ClassCastException
     }
   }

@@ -4,10 +4,10 @@ package surf.abm.agents
 import com.vividsolutions.jts.geom.{LineString, Coordinate}
 import com.vividsolutions.jts.linearref.LengthIndexedLine
 import com.vividsolutions.jts.planargraph.Node
-import sim.util.geo.{GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge}
+import sim.util.geo.{MasonGeometry, GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
-import surf.abm.{GISFunctions, SurfGeometry, SurfABM}
+import surf.abm.{GISFunctions, SurfABM}
 
 import scala.collection.JavaConversions._ // TODO: this won't be necessary once I have re-written A* Path
 
@@ -20,12 +20,12 @@ import scala.collection.JavaConversions._ // TODO: this won't be necessary once 
   *             location is set to be <code>home</code>
   */
 @SerialVersionUID(1L)
-abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends Agent(state,home) with Serializable {
+abstract class UrbanAgent (state:SurfABM, home:MasonGeometry) extends Agent(state,home) with Serializable {
 
   // A destination that the agent might be heading to.
   // This can be null, so wrap in Option() to make this explicit
   //protected var _destination: Option[SurfGeometry[_ <: Any]] = Option(null) // (Option tells us this could be null)
-  protected var _destination: Option[SurfGeometry[_]] = Option(null) // (Option tells us this could be null)
+  protected var _destination: Option[MasonGeometry] = Option(null) // (Option tells us this could be null)
   def destination() = this._destination // Accessor to destination
   protected var _atDestination = false
   def atDestination() = this._atDestination
@@ -156,7 +156,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     // TODO - break this method up and test it properly. (remember Sam's advice - each function should have simple, clear inputs and outputs
 
     // Check that we have a destination to head to:
-    val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
+    val dest : MasonGeometry = this.destination() match { // Check that destination is not None
       case Some(s) => s
       case None => throw new RoutingException("Cannot findNewPath - destination is None")
     }
@@ -167,7 +167,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     // Not exactly on a junction, find the nearest and move onto it
     if (currentJunction == null) {
-      val nearestJunction: SurfGeometry[_] = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
+      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(this.location, SurfABM.junctions)
       currentJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
     assert(currentJunction != null, String.format("Could not find the current junction for agent %s", this.toString))
@@ -175,7 +175,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     /* Now find the junction that is closest to the destination */
     var destinationJunction: Node = SurfABM.network.findNode(dest.getGeometry().getCoordinate)
     if (destinationJunction == null) {
-      val nearestJunction: SurfGeometry[_] = GISFunctions.findNearestObject(dest, SurfABM.junctions)
+      val nearestJunction: MasonGeometry = GISFunctions.findNearestObject(dest, SurfABM.junctions)
       destinationJunction = SurfABM.network.findNode(nearestJunction.getGeometry.getCoordinate)
     }
     assert(destinationJunction != null, String.format("Could not find a junction for the destination %s for agent %s", destination, this.toString))

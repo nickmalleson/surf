@@ -1,8 +1,9 @@
 package surf.abm.agents
 
 import sim.engine.SimState
+import sim.util.geo.MasonGeometry
 import surf.abm.exceptions.RoutingException
-import surf.abm.{SurfGeometry, SurfABM}
+import surf.abm.{SurfABM}
 import surf.abm.environment.Building
 
 /**
@@ -11,7 +12,7 @@ import surf.abm.environment.Building
   * Created by geonsm on 08/04/2016.
   */
 @SerialVersionUID(1L)
-class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanAgent(state,home) with Serializable {
+class RandomRoadAgent(state:SurfABM, home:MasonGeometry) extends UrbanAgent(state,home) with Serializable {
 
 
 

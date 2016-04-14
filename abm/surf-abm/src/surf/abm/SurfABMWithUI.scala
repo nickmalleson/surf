@@ -10,6 +10,7 @@ import sim.engine.SimState
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.{simple, DrawInfo2D, SimplePortrayal2D}
 import sim.portrayal.simple.{OvalPortrayal2D, RectanglePortrayal2D, LabelledPortrayal2D}
+import sim.util.geo.MasonGeometry
 import surf.abm.agents.Agent
 import surf.abm.environment.Building
 
@@ -141,7 +142,7 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
     // cast the object to a MasonGemoetry using pattern matching and return the
     // building name. Or return 'no name' if the object is not a building
     o match {
-      case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TOID.toString)
+      case x: MasonGeometry => x.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TOID.toString)
       case _ => {
         BuildingLabelPortrayal.LOG.warn("Cannot find a label for a building", new Exception())
         "No Building ID" // no label to return, send "No Building Name" back

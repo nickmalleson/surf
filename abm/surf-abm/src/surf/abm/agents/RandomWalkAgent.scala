@@ -8,7 +8,7 @@ import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
 import sim.util.geo.{MasonGeometry, PointMoveTo}
 import surf.abm.environment.Building
-import surf.abm.{SurfGeometry, SurfABM}
+import surf.abm.{SurfABM}
 import scala.math._
 
 /**
@@ -21,7 +21,7 @@ import scala.math._
   *             location is set to be <code>home</code>
   */
 @SerialVersionUID(1L)
-class RandomWalkAgent(state:SurfABM, home:SurfGeometry[Building]) extends Agent(state,home) with Serializable {
+class RandomWalkAgent(state:SurfABM, home:MasonGeometry) extends Agent(state,home) with Serializable {
 
 
   /**
