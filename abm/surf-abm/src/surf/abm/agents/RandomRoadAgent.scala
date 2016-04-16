@@ -35,4 +35,6 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
     }
   }
 
+  override def toString() = "RandomRoadAgent %d".format(this.id())
+
 }

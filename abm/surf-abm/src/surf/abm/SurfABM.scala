@@ -5,7 +5,7 @@ import java.io.File
 import java.lang.reflect.Constructor
 
 import _root_.surf.abm.agents.Agent
-import _root_.surf.abm.environment.Building
+import surf.abm.environment.{Junction, Building}
 import com.typesafe.config.{ConfigFactory}
 import org.apache.log4j.{Logger}
 import sim.engine.{Schedule, SimState}
@@ -15,6 +15,7 @@ import sim.util.Bag
 import sim.util.geo.{MasonGeometry, GeomPlanarGraph}
 import com.vividsolutions.jts.geom.{GeometryFactory, Envelope}
 import com.vividsolutions.jts.planargraph.Node
+import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
@@ -179,10 +180,14 @@ object SurfABM extends Serializable {
         val fact = new GeometryFactory();
         // Now add the associated junctions to the junctions geometry.
         network.getNodes().foreach( x => {
+          val node = x match { // cast the object x to a Node
+            case y: Node => y
+            case _ => throw new ClassCastException
+          }
           junctions.addGeometry(
-            SurfGeometry(
-              new MasonGeometry(fact.createPoint(x.asInstanceOf[Node].getCoordinate())),
-              x.asInstanceOf[Node]
+            SurfGeometry[Junction](
+              new MasonGeometry(fact.createPoint(node.getCoordinate())),
+              Junction(node)
             )
           )
         } ) // foreach

@@ -1,7 +1,6 @@
-package surf.abm
+package surf.abm.surfutil
 
-import com.typesafe.config.ConfigFactory
-import com.typesafe.config.Config
+import com.typesafe.config.{Config, ConfigFactory}
 import sim.util.Bag
 
 import scala.collection.mutable.ArrayBuffer

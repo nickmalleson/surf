@@ -56,7 +56,7 @@ class RandomWalkAgent(state:SurfABM, home:SurfGeometry[Building]) extends Agent(
 
   }
 
-
+  override def toString() = "RandomWalkAgent %s".format(this.id())
 
 }
 

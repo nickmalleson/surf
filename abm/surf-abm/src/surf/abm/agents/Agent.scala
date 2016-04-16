@@ -15,11 +15,13 @@ import surf.abm.environment.Building
 abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppable with Serializable {
 
   // A unique id for each agent with a public accessor.
-  private val _id = Agent.uniqueID += 1
-  def id() = this._id
+  private val _id : Int = Agent.uniqueID()
+  def id() : Int = this._id
 
   // The location where the agent currently is. Begins at 'home'. It is protected, with a public accessor.
-  protected var _location: SurfGeometry[_ <: Any] = home
+  // Important to create a new MasonGeometry, not use the home geometry. Otherwise bad things happen!
+  protected var _location: SurfGeometry[_ <: Any] =
+    SurfGeometry(new MasonGeometry(this.home.getGeometry().getCentroid()), null)
   def location() = this._location // accessor to location
   //protected def location_=(g:MasonGeometry) { _location = g } // protected mutator
 
@@ -46,6 +48,8 @@ abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppa
 
   }
 
+  override def toString() = "Agent %s".format(this.id())
+
 }
 
 @SerialVersionUID(1L)
@@ -58,6 +62,10 @@ object Agent extends Serializable {
   val baseMoveRate = SurfABM.conf.getDouble("BaseMoveRate")
 
   /** A unique ID that can be given to each agent */
-  var uniqueID = 0
+  private var _uniqueID : Int= 0
+  private def uniqueID() : Int = {
+    _uniqueID+=1
+    _uniqueID
+  }
 
 }

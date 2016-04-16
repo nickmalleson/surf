@@ -4,6 +4,7 @@ import _root_.surf.abm.tests.UnitSpec
 import org.apache.log4j.Logger
 import sim.engine.SimState
 import com.typesafe.config.{ConfigValueFactory, Config}
+import surf.abm.surfutil.Util
 import scala.util.control.Breaks._
 
 /**
