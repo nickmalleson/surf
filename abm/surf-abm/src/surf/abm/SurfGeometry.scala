@@ -93,6 +93,7 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
 
 @SerialVersionUID(1L)
 object SurfGeometry extends Serializable {
+  def apply[T](g: MasonGeometry, o: T): SurfGeometry[T] = new SurfGeometry[T](g, o)
 
   private val LOG: Logger = Logger.getLogger(this.getClass);
 }
