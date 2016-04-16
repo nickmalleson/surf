@@ -20,7 +20,9 @@ class SurfABMSpec extends UnitSpec {
     SurfABM(1l) // This initialises a model but doesn't start it running
   }
 
+  //TODO Complete these tests
 
+/*
   it should "run with RandomWalkAgents for a while without errors" in {
 
     // TODO HERE - NEED TO 'reset' THE MODEL, i.e. de-initialise SurfABM so that the
@@ -47,6 +49,7 @@ class SurfABMSpec extends UnitSpec {
 
   }
 
+
   it should "throw an error if it can't instantiate the agent correctly" in {
 
     // TODO Indicate that an error is expected in this text
@@ -62,7 +65,7 @@ class SurfABMSpec extends UnitSpec {
 
   }
 
-
+*/
 
 
 
