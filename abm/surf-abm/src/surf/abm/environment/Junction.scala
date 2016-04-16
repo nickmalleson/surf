@@ -9,7 +9,7 @@ import com.vividsolutions.jts.planargraph.Node
   *
   * @param node A companion node, in the network, associated with this junction.
   */
-class Junction(node: Node) {
+case class Junction(node: Node) {
 
   // A unique id for each Junction with a public accessor.
   private val _id = Junction.uniqueID()
@@ -32,7 +32,5 @@ object Junction {
     * @param node The companion Node associated with this junction
     * @return
     */
-  def apply (node:Node) : Junction = {
-    new Junction(node)
-  }
+  //def apply (node:Node) : Junction = new Junction(node)
 }

@@ -57,7 +57,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 object SurfABM extends Serializable {
 
   // Initialise the logger
-  private val LOG: Logger = Logger.getLogger(SurfABM.getClass);
+  private val LOG: Logger = Logger.getLogger(this.getClass);
 
   // ****** Initialise the model ******
 
@@ -293,7 +293,7 @@ object SurfABM extends Serializable {
     }
     catch {
       case e: Exception => {
-        SurfABM.LOG.error("Exception thrown in main loop", e)
+        this.LOG.error("Exception thrown in main loop", e)
         throw e
       }
     }
