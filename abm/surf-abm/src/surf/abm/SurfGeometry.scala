@@ -15,7 +15,7 @@ import sim.util.geo.{AttributeValue, MasonGeometry}
   * @param theObject The object associated with this SurfGeometry. E.g. an Agent or a Building.
   */
 @SerialVersionUID(1L)
-case class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
+class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
   MasonGeometry(masonGeom.getGeometry()) with Serializable {
 
   /* Auxilliary constructors replicating the behaviour of MasonGeometry.
