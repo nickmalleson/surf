@@ -1,8 +1,9 @@
 package surf.abm.surfutil
 
 import java.io.{IOException, File}
+import java.util
 
-import com.vividsolutions.jts.planargraph.Node
+import com.vividsolutions.jts.planargraph.{Edge, Node}
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
@@ -83,28 +84,64 @@ case object CheckConnectedNetwork {
     return false
   }
 
+
   /**
-    * Recursively traverse a network
-    * @param current The current node in the traversal
-    * @param remainder The nodes that have yet to be visited
-    * @return True if all nodes have been visited (i.e. the network is connected)
+    * Traverse the graph using a breadth-first-search. Implementation of the pseudocode on
+    * <a href="https://en.wikipedia.org/wiki/Breadth-first_search">wikipedia</a>
+    * @param graph The graph
+    * @param root The node to begin searching from
+    * @return A Set of all nodes that can be reached from the root
     */
-  def traverse(current: Node, remainder: Set[Node]) : Boolean = {
+  def traverse(graph: GeomPlanarGraph, root:Node) : scala.collection.mutable.Set[Node] = {
+    val q = scala.collection.mutable.Queue.empty[Node]
+    val visited = scala.collection.mutable.Set.empty[Node]
 
-    // See if all have been visited
-    if (remainder.size == 0 ) {
-      return true
+    q.enqueue(root)
+    while (!q.isEmpty) {
+      val current : Node = q.dequeue()
+      visited+=current
+      val edgeIterator = current.getOutEdges().iterator()
+      while (edgeIterator.hasNext()) {
+        val n: Node = edgeIterator.next().asInstanceOf[Edge].getOppositeNode(current)
+        q.enqueue(n)
+      }
     }
-    // Remove the current node from the set of unvisited nodes
-    val remain = remainder - current
-
-    // Traverse over the remaining nodes
-    for ( n : Node <- current.getOutEdges()) {
-      traverse()
-    }
-    return traverse(remain.iterator.next(), remainder)
-
+    return visited
   }
+
+  /*
+/**
+* Recursively traverse a network
+*
+* @param current The current node in the traversal
+* @param visited The nodes that have already been visited
+* @param remainder The nodes that have yet to be visited
+* @return The set of all nodes that have been visited
+*/
+def traverse(current: Node, visited: Set[Node], remainder: Set[Node]) : Set[Node] = {
+
+// Remove the current node from the set of unvisited nodes and add it to visited
+val r = remainder - current
+var v = visited + current
+
+// See if all have been visited (i.e. the graph is connected)
+if (remainder.size == 0) {
+  return v
+}
+
+
+// Continue to traverse the children of this node (except those that have been traversed already),
+// Adding those that can be visited to our list
+for ( n : Node <- current.getOutEdges()) {
+  if (!v.contains(n)) {
+    v += traverse(n, v, r)
+  }
+
+}
+return v
+
+}8
+*/
 
 
 }

@@ -58,6 +58,13 @@ class CheckConnectedNetworkSpec extends UnitSpec {
 
   }
 
+  it should "return a set of three nodes that are not connected" in {
+
+    // XXXX Create a test graph
+
+    val disconnected = CheckConnectedNetwork.traverse(graph, root)
+
+  }
 
   it should "report find tha the leeds_disconnected file is disconnected" in {
     val field = CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
