@@ -70,29 +70,40 @@ case object CheckConnectedNetwork {
       network.getNodes().iterator().asInstanceOf[java.util.Iterator[Node]]
     val start : Node = it.next()
 
-    val connected = scala.collection.mutable.HashSet[Node](start)
+    //val connected = scala.collection.mutable.HashSet[Node](start)
+    val connected = Set[Node](start)
 
-    // XXXX COULD USE FOLLOWING TO REATE disconnected HASHSET from all nodes?
-
-    val a = ArrayBuffer[AnyRef]()
-    for(i <- 1 until bag.size()) {
-      a += bag.get(i)
-    }
-    return List(a:_*)
-
-    val disconnected = scala.collection.mutable.HashSet[Node](
-      network.getNodes(): _*
+    //val disconnected = scala.collection.mutable.HashSet[Node](
+    val disconnected = Set[Node](
+      network.getNodes().toArray().toSeq.asInstanceOf[Seq[Node]]: _*
     )
-    val dis
-    while (it.hasNext()) {
-      // XXXX HERE how to get a path to the next node
-      // THIS IS DIFFICULT. PROBABLY BETTER TO RECURSE USING getEdgesIn()
-      // and move each junction that we touch to the 'connected' list
-      start.
-      network.getNetwork().XXXX
-    }
+
+   // XXXX HERE - traverse ?
 
     return false
+  }
+
+  /**
+    * Recursively traverse a network
+    * @param current The current node in the traversal
+    * @param remainder The nodes that have yet to be visited
+    * @return True if all nodes have been visited (i.e. the network is connected)
+    */
+  def traverse(current: Node, remainder: Set[Node]) : Boolean = {
+
+    // See if all have been visited
+    if (remainder.size == 0 ) {
+      return true
+    }
+    // Remove the current node from the set of unvisited nodes
+    val remain = remainder - current
+
+    // Traverse over the remaining nodes
+    for ( n : Node <- current.getOutEdges()) {
+      traverse()
+    }
+    return traverse(remain.iterator.next(), remainder)
+
   }
 
 
