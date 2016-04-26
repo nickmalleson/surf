@@ -88,11 +88,10 @@ case object CheckConnectedNetwork {
   /**
     * Traverse the graph using a breadth-first-search. Implementation of the pseudocode on
     * <a href="https://en.wikipedia.org/wiki/Breadth-first_search">wikipedia</a>
-    * @param graph The graph
     * @param root The node to begin searching from
     * @return A Set of all nodes that can be reached from the root
     */
-  def traverse(graph: GeomPlanarGraph, root:Node) : scala.collection.mutable.Set[Node] = {
+  def traverse(root:Node) : scala.collection.mutable.Set[Node] = {
     val q = scala.collection.mutable.Queue.empty[Node]
     val visited = scala.collection.mutable.Set.empty[Node]
 

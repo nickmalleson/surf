@@ -2,8 +2,12 @@ package surf.abm.surfutil
 
 import java.io.{IOException, FileNotFoundException}
 
+import com.vividsolutions.jts.geom.Coordinate
+import com.vividsolutions.jts.geomgraph.DirectedEdge
+import com.vividsolutions.jts.planargraph.{Edge, Node}
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
+import sim.util.geo.GeomPlanarGraph
 import surf.abm.tests.UnitSpec
 
 /**
@@ -58,13 +62,18 @@ class CheckConnectedNetworkSpec extends UnitSpec {
 
   }
 
-  it should "return a set of three nodes that are not connected" in {
+  it should "return X nodes that are connected" in {
 
-    // XXXX Create a test graph
+    val network = CheckConnectedNetwork.createNetwork(
+      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+    )
+    val root = network.getNodes.iterator().next().asInstanceOf[Node]
+    val connected = CheckConnectedNetwork.traverse(root)
 
-    val disconnected = CheckConnectedNetwork.traverse(graph, root)
 
   }
+
+
 
   it should "report find tha the leeds_disconnected file is disconnected" in {
     val field = CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")

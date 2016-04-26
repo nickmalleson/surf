@@ -22,7 +22,6 @@ class SurfABMSpec extends UnitSpec {
 
   //TODO Complete these tests
 
-/*
   it should "run with RandomWalkAgents for a while without errors" in {
 
     // TODO HERE - NEED TO 'reset' THE MODEL, i.e. de-initialise SurfABM so that the
@@ -64,10 +63,6 @@ class SurfABMSpec extends UnitSpec {
 
 
   }
-
-*/
-
-
 
 
 
