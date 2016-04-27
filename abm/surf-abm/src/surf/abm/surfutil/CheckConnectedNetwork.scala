@@ -7,7 +7,7 @@ import com.vividsolutions.jts.planargraph.{Edge, Node}
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
-import sim.util.geo.GeomPlanarGraph
+import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraph}
 import surf.abm.SurfABM
 
 /**
@@ -58,7 +58,9 @@ case object CheckConnectedNetwork {
 
   /**
     * Checks whether the input disconnected.
- *
+    * Note: this function is very slow. A better way to check for a disconnected network is to use the
+    * 'disconnected islands' plugin for QGIS. It works in seconds.
+    *
     * @param network
     * @return True if disconnected, false otherwise
     */
@@ -71,40 +73,49 @@ case object CheckConnectedNetwork {
       network.getNodes().iterator().asInstanceOf[java.util.Iterator[Node]]
     val start : Node = it.next()
 
-    //val connected = scala.collection.mutable.HashSet[Node](start)
-    val connected = Set[Node](start)
+    val connected = traverse(start)
 
-    //val disconnected = scala.collection.mutable.HashSet[Node](
-    val disconnected = Set[Node](
-      network.getNodes().toArray().toSeq.asInstanceOf[Seq[Node]]: _*
-    )
-
-   // XXXX HERE - traverse ?
+    if (connected.size > 0) return true
 
     return false
+
+
+    // All other nodes are disconnected:
+    //val disconnected = Set[Node](
+    //  network.getNodes().toArray().toSeq.asInstanceOf[Seq[Node]]: _*
+    //)
+
   }
 
 
   /**
     * Traverse the graph using a breadth-first-search. Implementation of the pseudocode on
     * <a href="https://en.wikipedia.org/wiki/Breadth-first_search">wikipedia</a>
+    * I'm NOT SURE IF THIS ACTUALLY WORKS! I SUSPECT IT DOESN'T.
     * @param root The node to begin searching from
     * @return A Set of all nodes that can be reached from the root
     */
   def traverse(root:Node) : scala.collection.mutable.Set[Node] = {
     val q = scala.collection.mutable.Queue.empty[Node]
     val visited = scala.collection.mutable.Set.empty[Node]
+    CheckConnectedNetwork.LOG.info("Traversing road network, looking for disconnected edges")
 
     q.enqueue(root)
+    var counter = 0
     while (!q.isEmpty) {
       val current : Node = q.dequeue()
       visited+=current
       val edgeIterator = current.getOutEdges().iterator()
       while (edgeIterator.hasNext()) {
-        val n: Node = edgeIterator.next().asInstanceOf[Edge].getOppositeNode(current)
+        counter += 1
+        if (counter % 10000000 == 0) {
+          LOG.info("Analysed %d edges. (Queue size: %d)".format(counter, q.size))
+        }
+        val n: Node = edgeIterator.next().asInstanceOf[GeomPlanarGraphDirectedEdge].getEdge().getOppositeNode(current)
         q.enqueue(n)
       }
     }
+    LOG.info("Found %d connected nodes".format(visited.size))
     return visited
   }
 

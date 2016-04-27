@@ -219,3 +219,7 @@ java.lang.IllegalArgumentException: n must be positive, got: 0
 	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
 ERROR ScalaTest-run-running-CheckConnectedNetworkSpec surf.abm.surfutil.CheckConnectedNetwork$ - The program expects one command-line argument; an input roads shapefile.
 ERROR ScalaTest-run-running-CheckConnectedNetworkSpec surf.abm.surfutil.CheckConnectedNetwork$ - Usage: scala surf.abm.surfutil.CheckConnectedNetwork [roads_file.shp]
+ERROR main surf.abm.surfutil.CheckConnectedNetwork$ - The program expects one command-line argument; an input roads shapefile.
+ERROR main surf.abm.surfutil.CheckConnectedNetwork$ - Usage: scala surf.abm.surfutil.CheckConnectedNetwork [roads_file.shp]
+ERROR main surf.abm.surfutil.CheckConnectedNetwork$ - The program expects one command-line argument; an input roads shapefile.
+ERROR main surf.abm.surfutil.CheckConnectedNetwork$ - Usage: scala surf.abm.surfutil.CheckConnectedNetwork [roads_file.shp]

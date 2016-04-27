@@ -17,11 +17,12 @@ class CheckConnectedNetworkSpec extends UnitSpec {
 
   // Tests consist of a *subject*, a *verb* (either 'should', 'must', or 'can') and the rest of the sentence
 
-  "A CheckConnectedNetwork" should "throw an error if there are no command line arguments" in {
+  "A CheckConnectedNetwork".should("throw an error if there are no command line arguments").in ( {
+
     an [Exception] should be thrownBy {
       CheckConnectedNetwork.main(Array[String]())
     }
-  }
+  } )
 
   it should "throw an error if there are more than one line arguments" in {
     an [Exception] should be thrownBy {
@@ -62,27 +63,28 @@ class CheckConnectedNetworkSpec extends UnitSpec {
 
   }
 
-  it should "return X nodes that are connected" in {
+  /*
+  it should "return X nodes that are connected in the disconnected road file" in {
 
     val network = CheckConnectedNetwork.createNetwork(
       CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
     )
     val root = network.getNodes.iterator().next().asInstanceOf[Node]
     val connected = CheckConnectedNetwork.traverse(root)
-
+    connected.size should be (3)
 
   }
 
 
-
-  it should "report find tha the leeds_disconnected file is disconnected" in {
-    val field = CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
-    val network = CheckConnectedNetwork.createNetwork(field)
-    val disconnect = CheckConnectedNetwork.checkDisconnected(network)
-    disconnect should be (true)
+  it should "return no disconnected roads in the connected roads file" in {
+    val network = CheckConnectedNetwork.createNetwork(
+      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+    )
+    val root = network.getNodes.iterator().next().asInstanceOf[Node]
+    val connected = CheckConnectedNetwork.traverse(root)
+    connected.size should be (0)
   }
-
-
+*/
 
 }
 
