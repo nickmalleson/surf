@@ -18,7 +18,6 @@ import com.vividsolutions.jts.planargraph.Node
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
-import scala.collection.immutable._
 
 
 /**
@@ -52,6 +51,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 }
 
 // class surfABM
+
 
 @SerialVersionUID(1L)
 object SurfABM extends Serializable {
@@ -210,6 +210,12 @@ object SurfABM extends Serializable {
 
   }
 
+  /**
+    * Create agents. This needs to be called *after* the model has finished initialising.
+    *
+    * @param state
+    * @return
+    */
   def createAgents(state : SurfABM ) = {
     SurfABM.agentGeoms.clear
     try {
