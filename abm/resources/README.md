@@ -4,7 +4,20 @@ _These steps are no longer necessary as I have included mason, and it's third-pa
 
 ## Instructions to prepare external resources
 
-### 
+## Installing the `config` library
+
+I have now included the `config` lubrary with the main project, so there is no need for separate installation. This is how to install the [config](https://github.com/typesafehub/config) library (for reading configuration files).
+
+To get and build config you need the scala build tool (sbt). Then, from the root project directory (surf) do:
+
+```
+cd abm/resources/
+git clone https://github.com/typesafehub/config
+sbt
+ > compile
+```
+
+(Note: the last command is executed from within the scala build tool)
 
 ### Getting and Building MASON
 
