@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="mason">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/abm/surf-mason/mason/mason" />
+      <root url="file://$PROJECT_DIR$/abm/resources/mason/mason/build" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/abm/surf-mason/mason/mason/docs/classdocs" />
+      <root url="file://$PROJECT_DIR$/abm/resources/mason/mason/build/docs/classdocs" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/abm/surf-mason/mason/mason" />
+      <root url="file://$PROJECT_DIR$/abm/resources/mason/mason" />
     </SOURCES>
   </library>
 </component>

@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="simburglar-libs">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/lib" />
+      <root url="file://$PROJECT_DIR$/abm/SimBurglarMason/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/lib" />
+      <root url="file://$PROJECT_DIR$/abm/SimBurglarMason/lib" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/lib" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/SimBurglarMason/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/SimBurglarMason/lib" recursive="false" type="SOURCES" />
   </library>
 </component>

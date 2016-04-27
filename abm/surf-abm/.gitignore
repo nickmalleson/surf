@@ -1,9 +1,0 @@
-
-# Built files
-build/
-
-# Some libs (temporarily?)
-lib/geotools
-
-# Logs
-surfabm.log*

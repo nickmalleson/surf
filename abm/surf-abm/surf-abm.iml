@@ -8,14 +8,15 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
-    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="scala-sdk-2.11.7" level="application" />
-    <orderEntry type="library" name="geomason.1.5" level="project" />
-    <orderEntry type="library" name="mason" level="project" />
-    <orderEntry type="library" name="surf-abm-lib" level="project" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="config" level="project" />
+    <orderEntry type="library" name="surf-abm-lib" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.11.7" level="application" />
     <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="scala-sdk-2.11.6" level="application" />
+    <orderEntry type="library" name="mason" level="project" />
+    <orderEntry type="library" name="geomason" level="project" />
+    <orderEntry type="library" name="mason_resources" level="project" />
   </component>
 </module>

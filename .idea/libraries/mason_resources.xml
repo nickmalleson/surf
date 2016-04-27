@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="mason_resources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/jts-1.13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/jmf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/vecmath.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/jfreechart-1.0.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/portfolio.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/j3dutils.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/jcommon-1.0.21.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/itext-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/j3dcore.jar!/" />
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/bsh-2.0b4.jar!/" />
+      <root url="file://$PROJECT_DIR$/abm/resources/mason_resources/geotools" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/abm/resources/mason_resources/jts-1.13-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/abm/resources/mason_resources/geotools" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/abm/resources/mason_resources/geotools" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/abm/resources/mason_resources/geotools" recursive="false" type="SOURCES" />
+  </library>
+</component>

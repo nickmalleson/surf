@@ -1,0 +1,6 @@
+
+# All build directories
+build/
+
+# Logs
+surfabm.log*

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="jts-1.13">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/abm/surf-mason/resources/jts-1.13.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

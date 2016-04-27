@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/SimBurglarMason.iml" filepath="$PROJECT_DIR$/abm/surf-mason/SimBurglarMason/SimBurglarMason.iml" />
-      <module fileurl="file://$PROJECT_DIR$/abm/surf-mason/geomason-1.5/geomason-1.5.iml" filepath="$PROJECT_DIR$/abm/surf-mason/geomason-1.5/geomason-1.5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/abm/surf-mason/mason/mason/mason.iml" filepath="$PROJECT_DIR$/abm/surf-mason/mason/mason/mason.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abm/SimBurglarMason/SimBurglarMason.iml" filepath="$PROJECT_DIR$/abm/SimBurglarMason/SimBurglarMason.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abm/resources/mason/contrib/geomason/geomason.iml" filepath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/geomason.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abm/resources/mason/mason/mason.iml" filepath="$PROJECT_DIR$/abm/resources/mason/mason/mason.iml" />
       <module fileurl="file://$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" filepath="$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" />
     </modules>
   </component>
