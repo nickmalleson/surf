@@ -7,1241 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/CampusWorld.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/ColorWorld.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/SillyPeds.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/WaterWorld.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/campus.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/campusworldbroken.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/campusworldnormal.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/geomason.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/gridlockbroken.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/gridlocknormal.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/campusworldthumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.fix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.qix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.sbn" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.sbx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.fix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.qix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.sbn" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.sbx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.fix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.qix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.sbn" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.sbx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/colorworld.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.fix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.qix" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/areas.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/areas.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/areas.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/gridlock.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.sbn" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.sbx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/destruction.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/pop.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/relief1.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/reliefBAD.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/reliefBETTA.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/reliefOKBETTA.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/reliefSingle.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/roads1.asc.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/nearbyworld/nearbyworldthumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/networkworld/networkworldthumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/data/1991_wards_disolved_Project.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/data/1991_wards_disolved_Project.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/data/1991_wards_disolved_Project.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/schellingpolygon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/SpaceSchelling.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/data/DCreprojected.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/data/DCreprojected.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/data/DCreprojected.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/SickStudentsThumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.sbn" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.sbx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.shx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ElementarySchools.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ElementarySchools.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/HS_ATTENDANCE_AREAS.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/HS_ATTENDANCE_AREAS.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/HighSchools.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/HighSchools.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/MS_ATTENDANCE_AREAS.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/MS_ATTENDANCE_AREAS.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/MiddleSchools.dbf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/MiddleSchools.shp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/SillyPeds.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/data/first.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/SleuthWorld.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/SleuthWorldSmall.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/excluded.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/hillshade.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/landuse.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/reclass_slope.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/roads_0_1.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/data/urban.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/touchingworld/touchingthumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/TurkanaThumb.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/WaterWorld.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/data/elevation.txt.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/Java3D.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/SimulatorLayout.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/2DShapes.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/2DUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/3DUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/AboutButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/AdjustableTrailed.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Balls.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Balls2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BarChart0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BarChart1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BarChart2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BarChart3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BoxPlot.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/BubbleChart.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/CameraButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Celegans.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Chart.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Chart.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ChartExpanded.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ChartUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Cliques.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ColorCube.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ColorWell.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Console.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Console2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Console3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Console4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ConsoleButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ConsoleInspectors.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ConsoleInspectors2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ConsoleInspectors3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ContinuousUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ContinuousVsGrid.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Disclosure1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Disclosure2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/DiscretizationExample.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Display2D.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Display2DNew.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Display2DNew.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Display3D.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Display3D.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/DisplaysButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/DrawInfo2D.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/EngineUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/FileMenu.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Flockers.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/FlockersConsole.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/GUIUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/GridUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Groupable.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Histogram.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Inspect.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/InspectorUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/InspectorsButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Java3DLayout.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/LabelledCircledOriented.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/LabelledList.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/LayersButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/LightCycles.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MASONLayout.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MagnifyingGlassButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MeshPortrayal.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MeshPortrayalEdges.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MeshPortrayalImage.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MeshPortrayalVertices.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MiniHistogram.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ModelAndVisualization.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ModelButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/MovieButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/NetworkUML.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/NewSimulationPanel.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Newton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/NumberTextField.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OptionsButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationArrow.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationArrowFilled.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationCompass.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationCompassFilled.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationInvertedT.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationInvertedTFilled.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationKite.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationKiteFilled.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationLine.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationLineArrow.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationTriangle.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/OrientationTriangleFilled.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Particles3D.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/PauseButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/PieChart.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/PlayButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/RedrawField.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/RefreshRateButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Ring.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Robots.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ScaleField.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ScatterPlot.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Schoolyard.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Schoolyard1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Schoolyard2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Schoolyard3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Schoolyard4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/SchoolyardIcon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/StepButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/StopButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Students3D.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/SwarmGame.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Tabbable.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/TabbableAndGroupable.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/TilePortrayal.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/TilePortrayalEdges.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/TilePortrayalZero.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/TimeButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/Update.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ValueGridPortrayal3D.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ValueGridPortrayal3DEdges.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ValueGridPortrayal3DSmaller.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/WordWrap.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/ants.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/beacons.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/grids.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/hexabugs.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/manual.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display2D.graffle/QuickLook/Preview.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display2D.graffle/QuickLook/Thumbnail.tiff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display2D.graffle/image1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/QuickLook/Preview.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/QuickLook/Thumbnail.tiff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/image1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/image2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/image3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/image4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/radial.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/teapot.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/woims.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/chart.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-about.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-console.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-displays.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-inspectors.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-intro.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/console-model.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/display-3d.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/display-intro.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/heatbugs3d.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/heatbugs3dmesh.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/hexabugs.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/inspector-agent.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/inspector-heat.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/inspector-select.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/options.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/pop-up-inspector.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/starting.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/antsforage/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/cells.ace4.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/flockers/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/dragon.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/gosper.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/island.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/koch1.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/koch2.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/koch3.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/koch4.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/koch5.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/radicans.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/sierpinski.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree1.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree2.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree3.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree4.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree5.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/tree6.lss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/blinkyd.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/blinkyl.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/blinkyr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/blinkyu.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/clyded.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/clydel.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/clyder.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/clydeu.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/frightened.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/frightened2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/inkyd.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/inkyl.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/inkyr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/inkyu.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/maze0.pbm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/maze1.pbm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/pinkyd.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/pinkyl.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/pinkyr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/images/pinkyu.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/schelling/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/swarmgame/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/earthmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/jupitermap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/marsmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/mercurymap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/neptunemap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/plutomap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/saturnmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/sunmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/uranusmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/venusmap.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial13/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial14/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Camera.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/CameraPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/ClosedHand.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Layers.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/LayersPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/MovieOff.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/MovieOffPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/MovieOn.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/MovieOnPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/NotPlaying.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/NotRecording.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/NotStopped.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/OpenHand.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Options.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/OptionsPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/PauseOff.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/PauseOn.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Playing.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Recording.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Reload.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/ReloadPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/StepOff.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/StepOn.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Stopped.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Inspect.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/InspectPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Update.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/UpdatePressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/BellyButton.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/BellyButtonPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/LeftArrow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/LeftArrowPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/RightArrow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/RightArrowPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/CloseBox.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/CloseBoxPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/DownArrow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/DownArrowPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/UpArrow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/UpArrowPressed.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/geomason.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/CHANGES" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/docs/geomason.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/geomason.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/BuildingLabelPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/CampusWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/CampusWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/bldg.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/roads.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/data/walk_ways.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/campusworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/ColorWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/ColorWorldPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/ColorWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/CountingGeomWrapper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/data/pol.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/colorworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/AStar.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/Gridlock.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/GridlockWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/areas.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/areas.qpj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads.qpj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/data/roads_points_place.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/gridlock/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/AStar.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/Center.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/CentersPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/DestructionPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/HaitiFood.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/HaitiFoodWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/KnowledgePortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/Location.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/PeoplePortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/RoadsPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/RumorMill.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/Utilities.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_Clip.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/haiti/data/Haiti_all_roads_README.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/nearbyworld/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/nearbyworld/NearbyWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/nearbyworld/NearbyWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/nearbyworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/networkworld/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/networkworld/NetworkWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/networkworld/NetworkWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/networkworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/Person.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/PolySchelling.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/PolySchellingWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/Polygon.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/data/1991_wards_disolved_Project.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingpolygon/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/Person.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/SchellingGeometry.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/SchellingSpace.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/SchellingSpaceWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/Utils.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/data/DCreprojected.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/data/DCreprojected.qpj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/schellingspace/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/CatchmentPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/Household.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/School.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/SickStudentsModel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/SickStudentsModelWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/StatsTools.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/Status.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.prj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/data/ES_ATTENDANCE_AREAS.shp.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sickStudents/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/Entrance.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/Pedestrian.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/SillyPeds.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/SillyPedsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/Space.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/Tile.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sillypeds/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/Grower.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/SleuthPortrayals.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/SleuthWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/SleuthWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/Tile.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/sleuth/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/touchingworld/Mover.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/touchingworld/TouchingWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/touchingworld/TouchingWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/touchingworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/TurkanaSouthModel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/TurkanaSouthModelWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/Turkanian.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/1.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/10.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/100.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/101.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/102.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/103.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/104.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/105.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/106.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/107.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/108.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/109.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/11.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/110.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/111.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/112.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/113.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/114.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/115.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/116.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/117.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/118.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/119.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/12.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/120.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/121.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/122.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/123.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/124.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/125.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/126.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/127.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/128.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/129.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/13.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/130.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/131.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/132.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/133.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/134.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/135.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/136.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/137.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/138.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/139.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/14.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/140.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/141.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/142.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/143.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/144.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/15.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/16.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/17.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/18.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/19.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/2.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/20.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/21.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/22.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/23.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/24.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/25.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/26.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/27.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/28.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/29.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/3.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/30.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/31.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/32.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/33.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/34.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/35.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/36.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/37.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/38.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/39.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/4.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/40.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/41.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/42.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/43.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/44.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/45.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/46.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/47.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/48.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/49.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/5.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/50.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/51.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/52.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/53.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/54.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/55.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/56.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/57.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/58.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/59.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/6.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/60.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/61.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/62.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/63.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/64.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/65.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/66.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/67.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/68.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/69.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/7.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/70.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/71.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/72.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/73.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/74.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/75.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/76.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/77.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/78.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/79.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/8.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/80.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/81.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/82.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/83.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/84.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/85.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/86.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/87.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/88.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/89.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/9.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/90.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/91.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/92.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/93.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/94.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/95.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/96.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/97.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/98.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/99.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/ts_ndvi.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/data/tspop2007.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/turkana/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/Basin.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/Raindrop.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/WaterWorld.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/WaterWorldWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/app/geo/waterworld/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/field/geo/GeomField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/field/geo/GeomGridField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/field/geo/GeomVectorField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/ArcInfoASCGridExporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/ArcInfoASCGridImporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/GDALImporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/GeoToolsImporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/OGRImporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/ShapeFileExporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/io/geo/ShapeFileImporter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/portrayal/geo/GeomInfo2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/portrayal/geo/GeomPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/portrayal/geo/GeomVectorFieldPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/AttributeValue.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/GeomPlanarGraph.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/GeomPlanarGraphDirectedEdge.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/GeomPlanarGraphEdge.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/GeometryUtilities.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/MasonGeometry.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/sim/util/geo/PointMoveTo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/CHANGES" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/Java3D.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/SimulatorLayout.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/howto.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/manual.bib" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/manual.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/2DShapes.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display2D.graffle/data.plist" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/Display3D.graffle/data.plist" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/MASON.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/grids.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/manual/originalsources/radial.graffle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/notes.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/overview.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/docs/tutorial0/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/ec/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/ec/util/MersenneTwisterFast.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/ec/util/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/jar/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/mason.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/antsforage/Ant.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/antsforage/AntsForage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/antsforage/AntsForageWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/antsforage/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Asteroid.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Asteroids.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/AsteroidsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Bullet.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Element.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Fire.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Overlay.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/RateAdjuster.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Shard.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/Ship.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/asteroids/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/Ball.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/BallPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/Balls3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/Balls3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/Band.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/balls3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/Celegans.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/CelegansWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/Cell.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/CellPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/Cells.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/Synapse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/celegans/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/Crowd3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/CrowdSim.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/GullCG.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/crowd3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/CTOAgent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/CooperativeObservation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/CooperativeObservationWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/KMeansEngine.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/cto/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/flockers/Flocker.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/flockers/Flockers.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/flockers/FlockersWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/flockers/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/Diffuser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/HeatBug.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/HeatBugs.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/HeatBugsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/ThreadedDiffuser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs3d/HeatBugs3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/heatbugs3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/HexaBug.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/HexaBugs.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/HexaBugsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/HexaDiffuser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/ThreadedHexaDiffuser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/hexabugs/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/Ball.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/Bot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/Entity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/Keepaway.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/KeepawayWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/keepaway/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/ControlUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/Cycle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/LightCycles.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/LightCyclesWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lightcycles/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/ByteList.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/DrawUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/LSystem.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/LSystemData.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/LSystemDrawer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/LSystemWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/Rule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/RuleUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/Segment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/lsystem/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/Mav.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/MavDemo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/MavDemoWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/Region.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mav/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/Ball.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/MouseTrap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/MouseTraps.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/MouseTrapsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps3d/MouseTraps3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/mousetraps3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/CustomNode.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/EdgeInfo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/NetworkTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/NetworkTestWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/networktest/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Blinky.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Clyde.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Dot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Energizer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Ghost.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Inky.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/MazeCellPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Overlay.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Pac.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/PacMan.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/PacManWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/PacPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/Pinky.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pacman/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/Particle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/Particles3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/Particles3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/particles3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Booth.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Evaluatable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Griewangk.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/PSO.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/PSOWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Particle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Rastrigin.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/Rosenbrock.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Evaluatable3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Griewangk3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Neighborhood3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/PSO3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/PSO3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Particle3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Rastrigin3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/Rosenbrock3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/pso3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/schelling/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/schelling/Schelling.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/schelling/SchellingWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/schelling/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/ca.scm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/run1.scm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/run2.scm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/tutorial1.scm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/scheme/tutorial2.scm" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/swarmgame/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/swarmgame/SwarmGame.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/swarmgame/SwarmGameWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/swarmgame/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/CA.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/Tutorial1.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/Tutorial2.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/tutorial1.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial1and2/tutorial2.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/Particle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/Tutorial3.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/Tutorial3WithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial3/tutorial3.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/BigParticle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/BigParticleInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/Particle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/Tutorial4.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/Tutorial4WithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial4/tutorial4.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/Ball.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/Band.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/BandPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/Tutorial5.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/Tutorial5WithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial5/tutorial5.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/Body.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/README_MAPS" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/Tutorial6.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/Tutorial6WithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial6/tutorial6.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/Fly.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/Tutorial7.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/Tutorial7WithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/tutorial7/tutorial7.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/Agent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/Evil.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/Good.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/Human.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/VirusInfectionDemo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/VirusInfectionDemoWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/virus/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial01/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial02/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial02/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial03/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial03/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial04/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial04/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial04/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial05/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial05/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial05/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial06/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial06/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial06/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial07/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial07/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial07/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial08/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial08/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial08/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial09/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial09/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial09/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial10/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial10/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial10/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial11/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial11/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial11/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial12/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial12/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial12/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial13/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial13/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial13/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial13/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial14/Student.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial14/Students.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial14/StudentsWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/wcss/tutorial14/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/Obstacle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/Vector2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/Woim.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/WoimsDemo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/WoimsDemoWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/Obstacle3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/Vector3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/Woim3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/WoimsDemo3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/WoimsDemo3DWithUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/app/woims3d/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/ChartUtilities.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Console.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Controller.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Display2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/GUIState.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Manipulating2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/Prefs.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/RateAdjuster.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/SimApplet.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/SimApplet.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/SimpleController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display/simulation.classes" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display3d/CapturingCanvas3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display3d/Display3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display3d/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display3d/SelectionBehavior.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/display3d/ToolTipBehavior.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/AsynchronousSteppable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/MakesSimState.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/MethodStep.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/MultiStep.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/ParallelSequence.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/RandomSequence.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/Repeat.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/Schedule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/Sequence.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/SimState.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/Steppable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/Stoppable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/TentativeStep.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/engine/WeakStep.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/SparseField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/SparseField2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/SparseField3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/continuous/Continuous2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/continuous/Continuous3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/continuous/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/AbstractGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/AbstractGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/DenseGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/DenseGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/DoubleGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/DoubleGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/Grid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/Grid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/IntGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/IntGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/ObjectGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/ObjectGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/SparseGrid2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/grid/SparseGrid3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/network/Edge.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/network/Network.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/field/network/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/DrawInfo2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/FieldPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/FieldPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Fixed2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Inspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/LocationWrapper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Orientable2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Oriented2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Portrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Portrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Scalable2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/Scaled2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/SimpleInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/SimplePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/continuous/Continuous3DPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/continuous/ContinuousPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/continuous/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/DenseGrid3DPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/DenseGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/DrawPolicy.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/FastHexaObjectGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/FastHexaValueGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/FastObjectGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/FastValueGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/HexaDenseGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/HexaObjectGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/HexaSparseGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/HexaValueGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/ObjectGrid3DPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/ObjectGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/SparseGrid3DPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/SparseGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/grid/ValueGridPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/BarChartChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/BoxPlotChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/BubbleChartChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/ChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/Groupable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/GroupedInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/HistogramChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/PieChartChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/PropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/ProvidesInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/ScatterPlotChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StableDouble2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StableDouble3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StableInt2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StableInt3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StableLocation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/StreamingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/Tabbable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/TabbableAndGroupable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/TabbedInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/TimeSeriesChartingPropertyInspector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/inspector/propertyinspector.classes" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/network/EdgeDrawInfo2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/network/NetworkPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/network/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/network/SimpleEdgePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/network/SpatialNetwork2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/AbstractShapePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/AdjustablePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/CircledPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/FacetedPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/HexagonalPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/ImagePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/LabelledPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/MovablePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/OrientedPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/OvalPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/RectanglePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/ShapePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/TrailedPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/TransformedPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/ValuePortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal/simple/VectorPortrayal2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/FieldPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/Portrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/SimplePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/SparseFieldPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/continuous/ContinuousPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/continuous/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/ObjectGridPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/SparseGrid2DPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/SparseGridPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/ValueGrid2DPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/ValueGridPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/quad/MeshPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/quad/QuadPortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/quad/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/quad/TilePortrayal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/grid/quad/ValueGridCellInfo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/ArrowEdgePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/ConeEdgePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/CylinderEdgePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/NetworkPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/PrimitiveEdgePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/SimpleEdgePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/network/SpatialNetwork3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/Arrow.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/AxesPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/BranchGroupPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/CircledPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/ConePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/CubePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/CylinderPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/ImagePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/LabelledPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/LightPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/PrimitivePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/Shape3DPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/SharedPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/SpherePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/SwitchedPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/TransformedPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/ValuePortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/WireFrameBoxPortrayal3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/monkey.mtl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/monkey.obj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/palmtree.mtl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/palmtree.obj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/portrayal3d/simple/shapes/teapot.obj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Bag.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/CausedRuntimeException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/CollectionProperties.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Double2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Double3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/DoubleBag.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Heap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Indexed.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Int2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Int3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/IntBag.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Interval.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/LocationLog.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/MutableDouble.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/MutableDouble2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/MutableDouble3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/MutableInt2D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/MutableInt3D.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Propertied.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Properties.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Proxiable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/SimpleProperties.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/TableLoader.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/Valuable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/AbstractContinousDistribution.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/AbstractDiscreteDistribution.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/AbstractDistribution.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Arithmetic.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Beta.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Binomial.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/BreitWigner.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/BreitWignerMeanSquare.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/ChiSquare.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Constants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Distributions.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Empirical.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/EmpiricalWalker.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Exponential.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/ExponentialPower.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Fun.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Gamma.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/HyperGeometric.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Hyperbolic.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Logarithmic.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/NegativeBinomial.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Normal.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Poisson.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/PoissonSlow.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Polynomial.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Probability.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/StudentT.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Uniform.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/VonMises.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/distribution/Zeta.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/AbstractColorMap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/AbstractScrollable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/ColorMap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/ColorWell.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/CompositeColorMap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/DisclosurePanel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/HTMLBrowser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/LabelledList.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/MiniHistogram.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/MovieMaker.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/NumberTextField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/PropertyField.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/SimpleColorMap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/Utilities.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/gui/WordWrap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/MovieEncoder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/PDFEncoder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/PNGEncoder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BarChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BarChartSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BoxPlotGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BoxPlotSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BubbleChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/BubbleChartSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/ChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/DataCuller.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/HistogramGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/HistogramSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/MinGapDataCuller.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/PieChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/PieChartSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/ScatterPlotGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/ScatterPlotSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/SeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/TimeSeriesAttributes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/TimeSeriesChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/sim/util/media/chart/XYChartGenerator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/start/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/start/ignoreme.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/start/mason.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/start/mason.command" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/resources/mason/mason/start/mason.sh" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/geomason_1_5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/geomason_full.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jts_1_13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/jts-1.13-javadoc.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/jts-1.13-sources.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/jts-1.13.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/bsh-2.0b4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/itext-1.2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/j3dcore.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/j3dutils.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/jcommon-1.0.21.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/jfreechart-1.0.17.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/jmf.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/portfolio.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/lib/mason_libs/vecmath.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/src/hello/Hello.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/src/hello/HelloWorld.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/src/hello/TestInterface.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/mason.xml" afterPath="$PROJECT_DIR$/.idea/libraries/mason.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/simburglar_libs.xml" afterPath="$PROJECT_DIR$/.idea/libraries/simburglar_libs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/surf_abm_lib.xml" afterPath="$PROJECT_DIR$/.idea/libraries/surf_abm_lib.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/surfabm.log.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/config.xml" afterPath="$PROJECT_DIR$/.idea/libraries/config.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/README.md" afterPath="$PROJECT_DIR$/abm/surf-abm/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" afterPath="$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" />
     </list>
     <ignored path="surf.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1267,7 +35,7 @@
       <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5056">
+            <state vertical-scroll-proportion="0.26373628">
               <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
               <folding />
             </state>
@@ -1350,8 +118,8 @@
         <option value="$PROJECT_DIR$/abm/surf-abm/src/log4j.properties" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/surfutil/CheckConnectedNetwork.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/test/surf/abm/surfutil/CheckConnectedNetworkSpec.scala" />
-        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala" />
         <option value="$PROJECT_DIR$/abm/SimBurglarMason/src/simburglar/SimBurglar.java" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala" />
       </list>
     </option>
   </component>
@@ -1371,8 +139,8 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
+    <option name="width" value="2560" />
+    <option name="height" value="1440" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -1399,7 +167,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1420,13 +187,14 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/abm/resources/mason_resources/jts-1.8.0" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/abm/resources/config/src" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -1747,8 +515,8 @@
       <item index="4" class="java.lang.String" itemvalue="Application.GeoMason-NetworkWorld" />
       <item index="5" class="java.lang.String" itemvalue="Application.GeoMason-SillyPeds" />
       <item index="6" class="java.lang.String" itemvalue="Application.GeoMason-ColorWorldWithUI" />
-      <item index="7" class="java.lang.String" itemvalue="Scala Console.Scala Console" />
-      <item index="8" class="java.lang.String" itemvalue="ScalaTest.CheckConnectedNetwork in 'surf-abm'" />
+      <item index="7" class="java.lang.String" itemvalue="ScalaTest.CheckConnectedNetwork in 'surf-abm'" />
+      <item index="8" class="java.lang.String" itemvalue="Scala Console.Scala Console" />
       <item index="9" class="java.lang.String" itemvalue="ScalaTest.ScalaTests in 'surf-abm'" />
     </list>
     <recent_temporary>
@@ -1819,32 +587,32 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="2560" height="1440" extended-state="0" />
+    <editor active="false" />
     <layout>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33162743" sideWeight="0.27797619" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328635" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32948327" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32753327" sideWeight="0.47261906" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33162743" sideWeight="0.7220238" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32753327" sideWeight="0.45059523" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39806867" sideWeight="0.49361703" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33162743" sideWeight="0.27797619" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32023808" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" x="100" y="100" width="1480" height="850" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33162743" sideWeight="0.7220238" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3234391" sideWeight="0.4065476" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39806867" sideWeight="0.49361703" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1887,13 +655,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/GISFunctions.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1901,7 +674,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1909,7 +681,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1925,9 +696,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1943,9 +711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1961,9 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1971,9 +733,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1989,9 +748,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2175,7 +931,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3616">
           <caret line="200" column="32" selection-start-line="200" selection-start-column="28" selection-end-line="200" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2183,7 +938,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.264">
           <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2198,7 +952,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.096">
           <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2206,7 +959,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1264489">
           <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2214,7 +966,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18967333">
           <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2222,9 +973,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.11485775">
           <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-          <folding>
-            <element signature="e#18#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2232,13 +980,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36">
           <caret line="158" column="30" selection-start-line="158" selection-start-column="30" selection-end-line="158" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/SurfABM.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5056">
+        <state vertical-scroll-proportion="0.26373628">
           <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
           <folding />
         </state>
@@ -2262,7 +1009,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
-          <last-edited>scala-sdk-2.11.7</last-edited>
+          <last-edited>scala-sdk-2.11.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -2291,7 +1038,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -2310,7 +1056,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>config</last-edited>
+          <last-edited>mason</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
