@@ -121,7 +121,15 @@ object SurfABM extends Serializable {
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
         for (o <- tempBuildings.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
-          val buildingID = g.getIntegerAttribute("ID")
+          val buildingID = try {
+            g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString())
+          }
+          catch { case e: NullPointerException => {
+              LOG.error("Cannot find a field called '%s' in the buldings file. Does it have a colunm called '%s'?".
+                format(BUILDING_FIELDS.BUILDINGS_ID.toString(),BUILDING_FIELDS.BUILDINGS_ID.toString()), e)
+              throw e
+            }
+          }
           val building = Building(buildingID)
           val s = SurfGeometry(g,building)
           buildings.addGeometry(s)
