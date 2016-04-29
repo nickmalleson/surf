@@ -1,8 +1,7 @@
 # Resources for the ABMs
 
-_These steps are no longer necessary as I have included mason, and it's third-party libraries, in the project. But these are useful for reference_
+_This directory has all the third-party libraries required by the agent-based model. There are some notes below about how to get these libraries. The steps are no longer necessary as I have included all of the libraries in the main reporisoty. But these are useful for reference_
 
-## Instructions to prepare external resources
 
 ## Installing the `config` library
 
@@ -22,7 +21,7 @@ sbt
 
 Then copy the two required directories from the compiled project (`config/target/classes` and `config/src/) to `surf/abm/mason\_resources/config`
 
-### Getting and Building MASON
+## Getting and Building MASON
 
 
 It is necessary to download some stuff first and combile the MASON source. This should all really be in a Makefile, but I can't be bothered at the moment.
@@ -69,7 +68,7 @@ If <code>make jar</code> doesn't work, you probably need to install [Java3D](htt
 
 To test that everything works, you can either use one of the scripts in the <code>mason/start/</code> directory, or just run: <pre><code>java -Xmx200M -jar jar/mason.19.jar sim.display.Console</code></pre> (from the <code>surf/abm/resources/mason/mason/</code> directory).
 
-### Getting GeoMason
+## Getting GeoMason
 
 [GeoMason](http://cs.gmu.edu/~eclab/projects/mason/extensions/geomason/)  comes with the main mason download in the directory `abm/resources/mason/contrib/geomason/`. It is an extension to provide support for GIS things. This is how to get the third-party resources (now included in the main project)
 
