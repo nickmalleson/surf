@@ -116,6 +116,7 @@ object SurfABM extends Serializable {
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
         ShapeFileImporter.read(bldgURI, tempBuildings, attributes);
+        LOG.debug("...read %d buildings".format(tempBuildings.getGeometries.size))
 
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
@@ -211,7 +212,7 @@ object SurfABM extends Serializable {
       }
       catch {
         case e: Exception => {
-          SurfABM.LOG.error("Error while reading GIS data", e)
+          SurfABM.LOG.error("Error while reading GIS data: %s".format(e.toString), e)
           throw e
         }
       }

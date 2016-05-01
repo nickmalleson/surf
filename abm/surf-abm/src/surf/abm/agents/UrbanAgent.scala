@@ -198,7 +198,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
         //throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
         throw new RoutingException(
           ("Agent %s got an empty path between junctions\n\tCurrent: %s\n\tDestination: %s.\n\t" +
-            "The network is probably disconnected. Run ").format(
+            "The network is probably disconnected. Run disconnected-islands plugin in QGIS").format(
             this.toString, nearestJunctionToCurrent, nearestJunctionToDestination)
         )
       }
