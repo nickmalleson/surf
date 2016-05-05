@@ -1,7 +1,8 @@
 env JAVA_OPTS="-Xmx4G" \
-scala -cp ../surf-mason/mason/mason/:\
-../surf-mason/geomason-1.5/:\
+scala -cp ../resources/mason/mason/build/:\
+../resources/mason/contrib/geomason/build/:\
+../resources/mason_resources/*:\
 ./lib/*:\
 ./build/:\
-../resources/config/config/target/classes/\
+../resources/config/classes/\
  surf.abm.SurfABM "$@"
