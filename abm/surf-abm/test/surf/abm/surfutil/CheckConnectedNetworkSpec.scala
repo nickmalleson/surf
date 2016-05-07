@@ -37,19 +37,19 @@ class CheckConnectedNetworkSpec extends UnitSpec {
   }
 
   it should "return a GeomVectorField from a valid file" in {
-    val field = CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+    val field = CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     field.getClass() should be (new GeomVectorField(1,1).getClass())
 
 
   }
   it should "read more than 8614 roads from the leeds_disconnected file" in {
-    val field = CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+    val field = CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     field.getGeometries().size() should be (8614)
   }
 
   it should "return a network with 8614 edges" in {
     val network =CheckConnectedNetwork.createNetwork(
-      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+      CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     )
     network.getEdges().size() should be (8614)
 
@@ -57,17 +57,16 @@ class CheckConnectedNetworkSpec extends UnitSpec {
 
   it should "return a network with 6749 nodes" in {
     val network =CheckConnectedNetwork.createNetwork(
-      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+      CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     )
     network.getNodes().size() should be (6749)
 
   }
 
-  /*
-  it should "return X nodes that are connected in the disconnected road file" in {
+  ignore should "return X nodes that are connected in the disconnected road file" in {
 
     val network = CheckConnectedNetwork.createNetwork(
-      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+      CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     )
     val root = network.getNodes.iterator().next().asInstanceOf[Node]
     val connected = CheckConnectedNetwork.traverse(root)
@@ -76,15 +75,15 @@ class CheckConnectedNetworkSpec extends UnitSpec {
   }
 
 
-  it should "return no disconnected roads in the connected roads file" in {
+  ignore should "return no disconnected roads in the connected roads file" in {
     val network = CheckConnectedNetwork.createNetwork(
-      CheckConnectedNetwork.readRoadsFile("./data/leeds/roads_disconnected.shp")
+      CheckConnectedNetwork.readRoadsFile("./data/leeds-easel/roads_disconnected.shp")
     )
     val root = network.getNodes.iterator().next().asInstanceOf[Node]
     val connected = CheckConnectedNetwork.traverse(root)
     connected.size should be (0)
   }
-*/
+
 
 }
 

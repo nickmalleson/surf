@@ -3,8 +3,10 @@ package surf.abm
 import _root_.surf.abm.tests.UnitSpec
 import org.apache.log4j.Logger
 import sim.engine.SimState
-import com.typesafe.config.{ConfigValueFactory, Config}
+import com.typesafe.config.{Config, ConfigValueFactory}
+import org.scalatest.Ignore
 import surf.abm.surfutil.Util
+
 import scala.util.control.Breaks._
 
 /**
@@ -12,6 +14,7 @@ import scala.util.control.Breaks._
   * This uses FlatSpec structure: http://doc.scalatest.org/2.2.6/#org.scalatest.FlatSpec
   * Created by nick on 24/03/2016.
   */
+@Ignore
 class SurfABMSpec extends UnitSpec {
 
   // Tests consist of a *subject*, a *verb* (either 'should', 'must', or 'can') and the rest of the sentence
