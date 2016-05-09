@@ -6,7 +6,7 @@ import java.lang.reflect.Constructor
 
 import _root_.surf.abm.agents.Agent
 import surf.abm.environment.{Junction, Building}
-import com.typesafe.config.{ConfigFactory}
+import com.typesafe.config.{ConfigException, ConfigFactory}
 import org.apache.log4j.{Logger}
 import sim.engine.{Schedule, SimState}
 import sim.field.geo.GeomVectorField
@@ -42,7 +42,22 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   override def start(): Unit = {
     super.start
-    SurfABM.createAgents(this)
+
+    // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
+    // AgentType are created at random buildings
+    try {
+      val loader = SurfABM.conf.getString("AgentLoader")
+      // A loader has been specfied, work work out which function to call:
+      xxxx
+    }
+    catch {
+      case _ : ConfigException.Missing => { // If no loader has been specified
+        SurfABM.LOG.info("No agent loaded defined, use default")
+        SurfABM.createDefaultAgents(this)
+      }
+    }
+
+
   }
 
   override def finish(): Unit = super.finish()
@@ -222,11 +237,14 @@ object SurfABM extends Serializable {
 
   /**
     * Create agents. This needs to be called *after* the model has finished initialising.
+    * This is the default way to create them, using the agent type (AgentType) and number
+    * of agents (NumAgents) set in the configuration file. The agents are randomly assigned
+    * to buildings.
     *
     * @param state
     * @return
     */
-  def createAgents(state : SurfABM ) = {
+  def createDefaultAgents(state : SurfABM ) = {
     SurfABM.agentGeoms.clear
     try {
       // Find the class to use to create agents.
