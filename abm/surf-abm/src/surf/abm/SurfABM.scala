@@ -2,13 +2,13 @@ package surf.abm
 
 
 import java.io.File
-import java.lang.reflect.Constructor
+import java.lang.reflect.{Constructor, Method}
 
 import _root_.surf.abm.agents.Agent
 import surf.abm.environment.{Junction, Building}
-import com.typesafe.config.{ConfigException, ConfigFactory}
+import com.typesafe.config.{ConfigException}
 import org.apache.log4j.{Logger}
-import sim.engine.{Schedule, SimState}
+import sim.engine.{SimState}
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.Bag
@@ -40,28 +40,48 @@ import scala.collection.JavaConversions._
 @SerialVersionUID(1L)
 class SurfABM(seed: Long) extends SimState(seed) {
 
+  /**
+    * Start the simulation. This is called after the SurfABM object has been initialised, which prepares the
+    * environment etc. The main thing that this function does is decide how to load agents.
+    */
   override def start(): Unit = {
     super.start
 
     // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
     // AgentType are created at random buildings
     try {
-      val loader = SurfABM.conf.getString("AgentLoader")
-      // A loader has been specfied, work work out which function to call:
-      xxxx
+      val loader = SurfABM.conf.getString(SurfABM.ModelConfig+".AgentLoader")
+      // A loader has been specfied, work work out which function to call using Java reflection
+      // The loader definition should be of the form "Class::Method"
+      val split =  loader.split("::")
+      if (split.size != 2) {
+        throw new Exception(s"Invalid agent loader definition: $loader . The loader should be in the format Class.Method")
+      }
+      val classStr = split(0)
+      val methodStr = split(1)
+      SurfABM.LOG.info(s"Will attempt to load agents using method '${methodStr}' in class '{$classStr}'.")
+
+      // Call the method using Java reflection. (I looked at Scala reflection but it was absoultely incomprehensible!)
+      // https://stackoverflow.com/questions/160970/how-do-i-invoke-a-java-method-when-given-the-method-name-as-a-string
+      val cls : Class[_] = Class.forName(classStr)
+      val method : Method = cls.getMethod(methodStr, this.getClass) // Note: the method should receive one parameter: the model state
+      method.invoke(cls, this) // Invoke the method on the class, passing this (the model state) as the only parameter
+
     }
     catch {
       case _ : ConfigException.Missing => { // If no loader has been specified
-        SurfABM.LOG.info("No agent loaded defined, use default")
-        SurfABM.createDefaultAgents(this)
+        SurfABM.LOG.info("No agent loader defined, use default")
+        // Number of agents
+        val numAgents: Int = SurfABM.conf.getInt(SurfABM.ModelConfig+".NumAgents");
+        val agentClassName: String = SurfABM.conf.getString(SurfABM.ModelConfig+".AgentType")
+        SurfABM.LOG.info(s"Will create $numAgents agents of type $agentClassName using the default method.");
+        SurfABM.createDefaultAgents(this, numAgents, agentClassName)
       }
     }
-
 
   }
 
   override def finish(): Unit = super.finish()
-
 
 }
 
@@ -82,10 +102,6 @@ object SurfABM extends Serializable {
 
   // Find out which model configuration to use
   val ModelConfig = conf.getString("ModelConfig")
-
-  // Number of agents
-  val numAgents: Int = conf.getInt(ModelConfig+".NumAgents");
-  LOG.info(s"Will create $numAgents agents shortly");
 
   // Not sure why these are necessary. Probably just for initialisation
   val WIDTH = conf.getInt("WIDTH");
@@ -244,21 +260,20 @@ object SurfABM extends Serializable {
     * @param state
     * @return
     */
-  def createDefaultAgents(state : SurfABM ) = {
+  def createDefaultAgents(state : SurfABM, numAgents: Int, agentClassName: String) = {
     SurfABM.agentGeoms.clear
     try {
       // Find the class to use to create agents.
-      val className: String = SurfABM.conf.getString(ModelConfig+".AgentType")
-      val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
+      val cls: Class[Agent] = Class.forName(agentClassName).asInstanceOf[Class[Agent]]
       val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[SurfGeometry[Agent]])
 
-      SurfABM.LOG.info(s"Creating ${SurfABM.numAgents} agents of type ${cls.toString}")
+      SurfABM.LOG.info(s"Creating ${numAgents} agents of type ${cls.toString}")
 
       // Keep a list of the Agents and their Geometries. This will be turned into a Map shortly,
       //val agentArray = collection.mutable.ListBuffer.empty[(SurfGeometry[Agent],Agent)]
 
       // Create the agents
-      for (i <- 0.until(SurfABM.numAgents)) {
+      for (i <- 0.until(numAgents)) {
         // Create a new a agent, passing the main model instance and a random new location
         val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
@@ -273,11 +288,11 @@ object SurfABM extends Serializable {
       //SurfABM.agentGeomMap = Map[SurfGeometry,Agent](agentArray: _*)
 
       assert(
-        SurfABM.numAgents == SurfABM.agentGeoms.getGeometries().size()
+        numAgents == SurfABM.agentGeoms.getGeometries().size()
         //SurfABM.numAgents == agentArray.size &&
         //SurfABM.numAgents == SurfABM.agentGeomMap.size,
         , s"Lengths of agent arrays differ. \n\t" +
-          s"numAgents: ${SurfABM.numAgents}\n\t" +
+          s"numAgents: ${numAgents}\n\t" +
           s"agentGeoms: ${SurfABM.agentGeoms}\n\t"
           //s"agentGeomMap: ${SurfABM.agentGeomMap.size}"
       )
