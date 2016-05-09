@@ -1,10 +1,6 @@
 package surf.abm.agents.abbf
 
-import javax.measure.quantity.LuminousIntensity
-
-import org.apache.log4j.Logger
 import org.scalatest.{GivenWhenThen, Matchers}
-import surf.abm.surfutil.CheckConnectedNetwork
 import surf.abm.tests.UnitSpec
 
 /**

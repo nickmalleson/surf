@@ -13,14 +13,14 @@ import surf.abm.SurfGeometry
   * The following creates an activity that can be done between 9:30am and 5pm on the 1st of Jan 2015.
   *
   * {{{
-  import java.time.LocalDateTime
-  import sim.util.geo.MasonGeometry
-  import surf.abm.SurfGeometry
-  val t1 = LocalDateTime.of(2015, 1, 1, 9, 30)
-  val t2 = LocalDateTime.of(2015, 1, 1, 17, 0)
-  val location = SurfGeometry(new MasonGeometry(), null)
-  val activity = Activity(XX)
-  val place = Place(location, activity, Array( (t1, t2) ) ) )
+  *import java.time.LocalDateTime
+  *import sim.util.geo.MasonGeometry
+  *import surf.abm.SurfGeometry
+  *val t1 = LocalDateTime.of(2015, 1, 1, 9, 30)
+  *val t2 = LocalDateTime.of(2015, 1, 1, 17, 0)
+  *val location = SurfGeometry(new MasonGeometry(), null)
+  *val activity = Activity(XX)
+  *val place = Place(location, activity, Array( (t1, t2) ) ) )
   * }}}
   *
   *
@@ -31,15 +31,15 @@ import surf.abm.SurfGeometry
   *   val place = Place(location,activity,Place.makeOpeningTimes(9.5,17.0)
   * }}}
   *
-  * @param location The spatial location of this Place
-  * @param activity The [[surf.abm.agents.abbf.Activity]] that can be undertaken in this
-  *                 [[surf.abm.agents.abbf.Place]]
+  * @param location     The spatial location of this Place
+  * @param activity     The [[surf.abm.agents.abbf.FixedActivity]] that can be undertaken in this
+  *                     [[surf.abm.agents.abbf.Place]]
   * @param openingTimes A list of tuples with opening and closing times during which
-  *                      the activity can be undertaken
+  *                     the activity can be undertaken
   */
 class Place (
               val location:SurfGeometry[_],
-              val activity:Activity,
+              val activityType:ActivityType,
               val openingTimes: Array[(LocalDateTime, LocalDateTime)]) {
 
 
@@ -47,7 +47,7 @@ class Place (
 
 object Place {
 
-  def apply(location:SurfGeometry[_], activity:Activity, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
+  def apply(location:SurfGeometry[_], activity: FixedActivity, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
     new Place(location, activity, openingTimes)
 
   def YEAR = 2005
@@ -60,7 +60,7 @@ object Place {
     *
     * @param open Opening time. E.g. 09:30 = 9.5
     * @param closed Closing time. E.g. 17:00 = 17.0
-    * @return A tuple of [[java.time.LocalDateTime]] constructed fromt the opening and closing times.
+    * @return A tuple of [[java.time.LocalDateTime]] constructed from the opening and closing times.
     */
   def makeOpeningTimes(open:Double, closed:Double) : (LocalDateTime, LocalDateTime) = {
     val t1 = LocalDateTime.of(YEAR, MONTH, DAY, open.toInt, ((open - open.toInt)*60).toInt)
