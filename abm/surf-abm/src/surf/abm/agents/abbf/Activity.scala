@@ -1,6 +1,7 @@
 package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
+import scala.util.control.Breaks._
 
 /**
   * Represents activities that ([[surf.abm.agents]]) can do.
@@ -53,6 +54,8 @@ case class TimeProfile (val profile: Array[(Double,Double)] ) {
     */
   def calcIntensity (t:Double) : Double = {
 
+    val debug = false
+    if (debug) println(s"**** $t ****")
     // Cannot calculate intensities outside the range [0-24)
     if (t < 0 || t >= 24) {
       throw new IllegalArgumentException(s"Input time ($t) needs to be in the range [0-24)")
@@ -72,16 +75,25 @@ case class TimeProfile (val profile: Array[(Double,Double)] ) {
     // Find the two nearest time points, t0 and t1 and their indices i0 and 01
     var t0, t1 = -1d // time0 and time1
     var i0, i1 = -1d // intensity0 and intensity1
-    for ((time:Double,intensity:Double) <- this.times.zip(this.intensities)) {
-      if (t0 <= time) {
-        t0 = time
-        i0 = intensity
-      }
-      if (t1 >= t) {
-        t1 = time
-        i1 = intensity
+    breakable {
+      for ((time: Double, intensity: Double) <- this.times.zip(this.intensities)) {
+        if (debug) print(s"$t :: in loop beginning :: ($t0 $i0) ($t1 $i1) -- $time $intensity\t\t")
+        if (time <= t) {
+          // time point is before the current t0
+          t0 = time
+          i0 = intensity
+        }
+        if (time >= t) {
+          // time point is after current t0 (once we've found this then break out
+          t1 = time
+          i1 = intensity
+          if (debug)println(s"($t0 $i0) ($t1 $i1) -- $time $intensity") // print for info.
+          break
+        }
+        if (debug)println(s"($t0 $i0) ($t1 $i1) -- $time $intensity")
       }
     }
+
     assert(t0 != t1) // If this happens then t == t1 == t2 (i.e. the exact time exists in the list) and the earlier if() should have caught it
     if (t0 != -1d && t1 != -1d) {
       return interpolate(t, t0, i0, t1, i1)
@@ -93,12 +105,15 @@ case class TimeProfile (val profile: Array[(Double,Double)] ) {
     if (t0 == -1d) {
       t0 = this.times.last - 24 // Need to take 24 away to trick the interpolation
       i0 = this.intensities.last
+      if (debug)println(s"$t :: after special case1 :: $t0 $i0 -- $t1 $i1")
     }
     // Special case2: the last time occurs after midnight (wraps around)
     if (t1 == -1d) {
       t1 = this.times(0) + 24 // Add 24 to wrap around
       i1 = this.intensities(0)
+      if (debug)println(s"$t :: after special case2 :: $t0 $i0 -- $t1 $i1")
     }
+    if (debug) println(s"$t :: final:: $t $t0, $i0, $t1, $i1 ")
     return interpolate(t, t0, i0, t1, i1)
   }
 
@@ -113,12 +128,16 @@ case class TimeProfile (val profile: Array[(Double,Double)] ) {
     * @return
     */
   private def interpolate ( x:Double, x0:Double,y0:Double, x1:Double,y1:Double ) : Double = {
-    if (x1 > x0) {
-      return y0 + (y1-y0) * ( (x-x0) / (x1-x0))
-    }
-    else {
+
+    if ( ! ( (x > x0) && (x < x1)  ) )
+      throw new IllegalArgumentException(s"x ($x) must be between x0 and x1 ($x0 , $x1 )")
+
+    if (!(x1 > x0)) {
       throw new IllegalArgumentException(s"Second input ($x1) must be greater than first input ($x0)")
     }
+    val temp = y0 + ( (y1-y0) * ( (x-x0) / (x1-x0)) )
+    println(s"INTER: $x $x0 $y0 $x1 $y1 = $temp")
+    return y0 + ( (y1-y0) * ( (x-x0) / (x1-x0)) )
 
   }
 }
