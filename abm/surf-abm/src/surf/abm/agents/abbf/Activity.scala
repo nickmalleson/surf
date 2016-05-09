@@ -136,7 +136,7 @@ case class TimeProfile (val profile: Array[(Double,Double)] ) {
       throw new IllegalArgumentException(s"Second input ($x1) must be greater than first input ($x0)")
     }
     val temp = y0 + ( (y1-y0) * ( (x-x0) / (x1-x0)) )
-    println(s"INTER: $x $x0 $y0 $x1 $y1 = $temp")
+    //println(s"INTER: $x $x0 $y0 $x1 $y1 = $temp")
     return y0 + ( (y1-y0) * ( (x-x0) / (x1-x0)) )
 
   }

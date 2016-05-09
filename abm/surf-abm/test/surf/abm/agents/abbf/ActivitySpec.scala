@@ -117,10 +117,11 @@ class ActivitySpec extends UnitSpec with GivenWhenThen with Matchers {
   it should "interpolate correctly with varied intensities" in {
 
     val tp = TimeProfile(Array((5d, 0d), (10d, 8.0), (13d, 14.0), (15d, 10.0), (23d, 5.0)))
+    // print out the intensities, for checking
     //for (t <- Seq(1d, 10d, 10.5, 13d, 17d, 20d, 23.5)) {
-    //  val i = tp.calcIntensity(t)
+    // val i = tp.calcIntensity(t)
     //  println(s"XX t:$t  -  i:$i")
-   // }
+    //}
 
     tp.calcIntensity(1d) should be > 0d
     tp.calcIntensity(1d) should be < 5d
@@ -130,7 +131,7 @@ class ActivitySpec extends UnitSpec with GivenWhenThen with Matchers {
 
     tp.calcIntensity(10.5) should be > 8d
     tp.calcIntensity(10.5) should be < 14d
-    //tp.calcIntensity(10.5) should equal (XX)
+    tp.calcIntensity(10.5) should equal (9d)
 
     tp.calcIntensity(13d) should equal (14d)
 
@@ -139,11 +140,10 @@ class ActivitySpec extends UnitSpec with GivenWhenThen with Matchers {
 
     tp.calcIntensity(20d) should be < 10d
     tp.calcIntensity(20d) should be > 5d
-    //tp.calcIntensity(23d) should equal (XX)
+    tp.calcIntensity(20d) should equal (6.875)
 
     tp.calcIntensity(23.5) should be < 5d
     tp.calcIntensity(23.5) should be > 0d
-     // tp.calcIntensity(23) should equal (XX)
 
   }
 
