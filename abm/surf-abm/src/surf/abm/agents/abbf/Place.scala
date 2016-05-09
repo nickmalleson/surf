@@ -2,8 +2,8 @@ package surf.abm.agents.abbf
 
 import java.time.LocalDateTime
 
-import sim.util.geo.MasonGeometry
 import surf.abm.SurfGeometry
+import surf.abm.agents.abbf.ActivityTypes.ActivityType
 
 
 /**
@@ -32,23 +32,21 @@ import surf.abm.SurfGeometry
   * }}}
   *
   * @param location     The spatial location of this Place
-  * @param activity     The [[surf.abm.agents.abbf.FixedActivity]] that can be undertaken in this
-  *                     [[surf.abm.agents.abbf.Place]]
+  * @param activityType The type of activity that can be undertaken in this Place.
   * @param openingTimes A list of tuples with opening and closing times during which
-  *                     the activity can be undertaken
+  *                     the activity can be undertaken. This is empty if a place is open all the time (default)
   */
 class Place (
               val location:SurfGeometry[_],
               val activityType:ActivityType,
-              val openingTimes: Array[(LocalDateTime, LocalDateTime)]) {
-
+              val openingTimes: Array[(LocalDateTime, LocalDateTime)] = Array.empty[(LocalDateTime, LocalDateTime)] ) {
 
 }
 
 object Place {
 
-  def apply(location:SurfGeometry[_], activity: FixedActivity, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
-    new Place(location, activity, openingTimes)
+  def apply(location:SurfGeometry[_], activityType: ActivityType, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
+    new Place(location, activityType, openingTimes)
 
   def YEAR = 2005
   def MONTH = 1

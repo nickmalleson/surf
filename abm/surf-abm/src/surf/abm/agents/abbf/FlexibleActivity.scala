@@ -1,8 +1,14 @@
 package surf.abm.agents.abbf
 
+import surf.abm.agents.abbf.ActivityTypes.ActivityType
+
 /**
-  * Created by nick on 09/05/2016.
+  * Flexible activities are a type of activity that can be undertaken in any appropriate place (e.g. Shopping). They
+  * are not constrained to particular locations. See also [[surf.abm.agents.abbf.FixedActivity]].
+  *
+  * @param activityType
+  * @param timeProfile  (See [[surf.abm.agents.abbf.Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
   */
-class FlexibleActivity {
+class FlexibleActivity (val activityType: ActivityType, val timeProfile: TimeProfile) extends Activity {
 
 }

@@ -1,16 +1,17 @@
 package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
+import surf.abm.agents.abbf.ActivityTypes.ActivityType
+
 import scala.util.control.Breaks._
 
 /**
-  * Represents activities that ([[surf.abm.agents]]) can do.
+  * [[surf.abm.agents.abbf.FixedActivity]]s are identical to [[surf.abm.agents.abbf.FlexibleActivity]]s, except
+  * that they can only be undertaken in the designated place.
   *
-  * @param places      An array of [[surf.abm.agents.abbf.Place]]s where this activity can undertaken.
-  * @param timeProfile A definition of the times when this Activity is at its most <i>intense</i>.
-  *                    E.g. work activities might be the most intense between 9am-5pm. This has the
-  *                    affect of increasing/decreasing the agent's desire to undertake the activity
-  *                    depending on the time.
+  * @param activityType The type of this activity.
+  * @param place        The [[surf.abm.agents.abbf.Place]] where this activity can undertaken.
+  * @param timeProfile  (See [[surf.abm.agents.abbf.Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
   */
 class FixedActivity(val activityType: ActivityType, val timeProfile: TimeProfile, val place: Place) extends Activity {
 
