@@ -142,7 +142,7 @@ public class SimBurglar extends SimState {
      * @throws MalformedURLException
      * @throws FileNotFoundException
      */
-    private void readData() throws MalformedURLException, FileNotFoundException {
+    private void readData() throws MalformedURLException, FileNotFoundException, IOException, Exception {
 
         /* Read the GIS files into the relevant fields */
 
@@ -157,6 +157,7 @@ public class SimBurglar extends SimState {
         URL bldgURI = new File(dataDir.getAbsolutePath() + "/buildings.shp").toURI().toURL();
         LOG.info("Reading buildings file: " + bldgURI);
         ShapeFileImporter.read(bldgURI, buildings, attributes);
+
 
         // Put the building IDs in a hashtable
         this.buildingIDs = HashBiMap.create(this.buildings.getGeometries().size());
