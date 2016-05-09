@@ -59,7 +59,7 @@ object Agent extends Serializable {
   val LOG: Logger = Logger.getLogger(this.getClass);
 
   /** The basic (walking) rate that agents move at. */
-  val baseMoveRate = SurfABM.conf.getDouble("BaseMoveRate")
+  val baseMoveRate = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BaseMoveRate")
 
   /** A unique ID that can be given to each agent */
   private var _uniqueID : Int= 0

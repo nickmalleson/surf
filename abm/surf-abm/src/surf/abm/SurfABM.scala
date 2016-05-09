@@ -61,15 +61,16 @@ object SurfABM extends Serializable {
 
   // ****** Initialise the model ******
 
-  // Get a configuration reader
-
   // Get the configuration reader.
   val conf = Util.config()
   // println("DATA DIR:",conf.getString("DataDir"))
 
+  // Find out which model configuration to use
+  val ModelConfig = conf.getString("ModelConfig")
+
   // Number of agents
-  val numAgents: Int = conf.getInt("NumAgents");
-  LOG.info("Creating " + numAgents + " agents");
+  val numAgents: Int = conf.getInt(ModelConfig+".NumAgents");
+  LOG.info(s"Will create $numAgents agents shortly");
 
   // Not sure why these are necessary. Probably just for initialisation
   val WIDTH = conf.getInt("WIDTH");
@@ -102,7 +103,7 @@ object SurfABM extends Serializable {
         var MBR: Envelope = null // Minimum envelope surrounding whole world
 
         // Directory where the data are stored
-        val dataDir = SurfABM.conf.getString("DataDir")
+        val dataDir = SurfABM.conf.getString(ModelConfig+".DataDir")
         SurfABM.LOG.info(s"Reading GIS data for the environment from ${dataDir}")
 
         // Start with buildings
@@ -229,7 +230,7 @@ object SurfABM extends Serializable {
     SurfABM.agentGeoms.clear
     try {
       // Find the class to use to create agents.
-      val className: String = SurfABM.conf.getString("AgentType")
+      val className: String = SurfABM.conf.getString(ModelConfig+".AgentType")
       val cls: Class[Agent] = Class.forName(className).asInstanceOf[Class[Agent]]
       val c: Constructor[Agent] = cls.getConstructor(classOf[SurfABM], classOf[SurfGeometry[Agent]])
 
