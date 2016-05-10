@@ -312,6 +312,8 @@ object SurfABM extends Serializable {
     state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
   }
 
+
+
   /**
     * Find a building, chosen at random.
     *

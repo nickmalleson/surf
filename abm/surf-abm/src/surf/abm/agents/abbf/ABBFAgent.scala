@@ -36,3 +36,7 @@ class ABBFAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanAgent(s
   }
 
 }
+
+object ABBFAgent {
+  def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent = new ABBFAgent(state, home)
+}
