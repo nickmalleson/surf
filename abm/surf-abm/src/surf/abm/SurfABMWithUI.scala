@@ -52,7 +52,7 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
   }
 
   private def setupPortrayals() : Unit = {
-    super.start();
+    //super.start();
 
     SurfABMWithUI.LOG.debug("Creating portrayals.")
     //val world : SurfABM = super.state.asInstanceOf[SurfABM]

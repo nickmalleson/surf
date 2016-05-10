@@ -42,10 +42,14 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   /**
     * Start the simulation. This is called after the SurfABM object has been initialised, which prepares the
-    * environment etc. The main thing that this function does is decide how to load agents.
+    * environment etc. The main thing that this function does is initialise the clock and decide how to load agents.
     */
   override def start(): Unit = {
     super.start
+
+    // Initialise the clock. Currently using a default time period, but this could just as easily be defined
+    // by configuration parameters.
+    Clock.create(this)
 
     // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
     // AgentType are created at random buildings
@@ -107,6 +111,7 @@ object SurfABM extends Serializable {
   val WIDTH = conf.getInt("WIDTH");
   val HEIGHT = conf.getInt("HEIGHT");
 
+
   // A list of all the agent geometries
   val agentGeoms = new GeomVectorField(WIDTH, HEIGHT);
 
@@ -115,7 +120,7 @@ object SurfABM extends Serializable {
 
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -151,6 +156,7 @@ object SurfABM extends Serializable {
         LOG.debug("...read %d buildings".format(tempBuildings.getGeometries.size))
 
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
+        LOG.debug("Casting buildings to SurfGeometry objects")
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
         for (o <- tempBuildings.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
@@ -170,27 +176,26 @@ object SurfABM extends Serializable {
         //buildings.updateSpatialIndex()
         //println("Gometryies", buildings.getGeometries.size())
 
-        // Keep a link between the building IDs and their geometries (ID -> geometry)
-        // NO LONGER NEEDED NOW THAT BUILDINGS ARE PART OF SURFGEOMETRY
-        /*
-        // Use a for comprehension to create a temp array of (Int, MasonGeometry) then use that as input to a map
+        LOG.debug("Creating id -> buildings map")
+        // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
+        // Use a for comprehension to create a temp array of (Int, SurfGeometry) then use that as input to a map
         // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
         // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
 
-        val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
-          (
+       // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
+
+        val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
+          {
             for (o <- buildings.getGeometries())
               yield {
-                val g = o.asInstanceOf[SurfGeometry]
-                Int.unbox(g.getIntegerAttribute(FIELDS.BUILDINGS_ID.toString())) -> g
+                val g = o.asInstanceOf[SurfGeometry[Building]]
+                Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) -> g
               }
-            ).to[collection.immutable.Seq]
-        val b_ids: Map[Int, SurfGeometry] =
-          scala.collection.immutable.Map[Int, SurfGeometry](tempArray: _*) // Splat the array with :_*
+          }.to[collection.immutable.Seq]: _*) // Splat the array with :_*
 
         assert(buildings.getGeometries.size() == b_ids.size)
-        SurfABM.LOG.debug(s"\t ... read ${b_ids.size} buildings")
-        */
+        SurfABM.LOG.debug(s"\t ... finished creating map for ${b_ids.size} buildings")
+
 
         // We want to save the MBR so that we can ensure that all GeomFields
         // cover identical area.
@@ -240,7 +245,7 @@ object SurfABM extends Serializable {
         LOG.info("Finished initialising model environment")
 
         // Return the layers
-        (buildings, roads, network, junctions, MBR)
+        (buildings, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {
