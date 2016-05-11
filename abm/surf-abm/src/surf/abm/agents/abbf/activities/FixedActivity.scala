@@ -1,17 +1,16 @@
-package surf.abm.agents.abbf
+package surf.abm.agents.abbf.activities
 
 import org.apache.log4j.Logger
-import surf.abm.agents.abbf.ActivityTypes.ActivityType
-
-import scala.util.control.Breaks._
+import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
+import surf.abm.agents.abbf.{Place, TimeProfile}
 
 /**
-  * [[surf.abm.agents.abbf.FixedActivity]]s are identical to [[surf.abm.agents.abbf.FlexibleActivity]]s, except
+  * [[FixedActivity]]s are identical to [[FlexibleActivity]]s, except
   * that they can only be undertaken in the designated place.
   *
   * @param activityType The type of this activity.
   * @param place        The [[surf.abm.agents.abbf.Place]] where this activity can undertaken.
-  * @param timeProfile  (See [[surf.abm.agents.abbf.Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
+  * @param timeProfile  (See [[Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
   */
 class FixedActivity(val activityType: ActivityType, val timeProfile: TimeProfile, val place: Place) extends Activity {
 

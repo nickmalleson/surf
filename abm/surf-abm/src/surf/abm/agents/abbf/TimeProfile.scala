@@ -1,11 +1,12 @@
 package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
+import surf.abm.agents.abbf.activities.FixedActivity
 
 import scala.util.control.Breaks._
 
 /**
-  * Used to defines the importance/attractiveness of an [[surf.abm.agents.abbf.FixedActivity]] over time.
+  * Used to defines the importance/attractiveness of an [[FixedActivity]] over time.
   * Profiles are created by providing the importance at a number of points of time on a 24 hour clock.
   * If the importance at a different time is requested then the class interpolates between the two
   * nearest time points.

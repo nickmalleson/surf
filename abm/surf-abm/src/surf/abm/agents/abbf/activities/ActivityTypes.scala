@@ -1,4 +1,4 @@
-package surf.abm.agents.abbf
+package surf.abm.agents.abbf.activities
 
 /**
   * Used to distinguish between different types of activity

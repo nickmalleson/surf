@@ -3,7 +3,8 @@ package surf.abm.agents.abbf
 import java.time.LocalDateTime
 
 import surf.abm.SurfGeometry
-import surf.abm.agents.abbf.ActivityTypes.ActivityType
+import surf.abm.agents.abbf.activities.ActivityTypes
+import ActivityTypes.ActivityType
 
 
 /**
