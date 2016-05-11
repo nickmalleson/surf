@@ -38,7 +38,7 @@ import ActivityTypes.ActivityType
   *                     the activity can be undertaken. This is either null or an empty array if a place is open all the
   *                     time (default)
   */
-class Place (
+case class Place (
               val location:SurfGeometry[_],
               val activityType:ActivityType,
               val openingTimes: Array[(LocalDateTime, LocalDateTime)] = Array.empty[(LocalDateTime, LocalDateTime)] ) {
@@ -48,8 +48,8 @@ class Place (
 
 object Place {
 
-  def apply(location:SurfGeometry[_], activityType: ActivityType, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
-    new Place(location, activityType, openingTimes)
+  //def apply(location:SurfGeometry[_], activityType: ActivityType, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
+   // new Place(location, activityType, openingTimes)
 
   def YEAR = 2005
   def MONTH = 1

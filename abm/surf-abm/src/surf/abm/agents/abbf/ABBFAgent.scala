@@ -1,45 +1,29 @@
 package surf.abm.agents.abbf
 
-import java.time.LocalDateTime
-
 import sim.engine.SimState
-import surf.abm.agents.abbf.activities.ActivityTypes.{ActivityType, WORKING}
-import surf.abm.agents.abbf.activities.FixedActivity
+
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
 import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.agents.abbf.activities.Activity
 
 /**
-  * Created by nick on 09/05/2016.
+  *
+  * @param state A pointer to the main model instance (<code>SurfABM</code>)
+  * @param home The agent's home (starting location). Usually a <code>Building</code>
+  *             where (e.g.) they live, but not necessarily. The agent's initial
+  *             location is set to be <code>home</code>
+  * @param activities A map of the [[surf.abm.agents.abbf.activities.Activity]]s that are driving an agent, along
+  *                   with the current intensity of the activity.
   */
-class ABBFAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanAgent(state, home) {
+class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], val activities: Map[Activity,Double]) extends UrbanAgent(state, home) {
 
+ // Temporary variables while the agent just walks from home and back.
   var goingHome = false
   // Find where the agent works (specified temporarily in the config file)
   val workBuilding = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig+".WorkAddress"))
 
-  // Temporarily define the activities that this agent can do (later this will be done by reading data)
-
-  // WORKING
-
-  // Work place is a building in town
-  val workPlace = Place (
-    location = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig+".WorkAddress")),
-    activityType = WORKING,
-    openingTimes = null // Assume it's open all the time
-  )
-  // Work time profile is 0 before 6 and after 10, and 1 between 10-4
-  val workTimeProfile = TimeProfile(Array( (6d,0d), (10d,1d), (16d,1d), (22d,0d) ) )
-  val workActivity = new FixedActivity(
-    activityType = WORKING,
-    timeProfile = workTimeProfile,
-    place = workPlace )
-
-  // SHOPPING
-  XXX
-
-  // BEING AT HOME
 
   override def step(state: SimState): Unit = {
 
@@ -81,5 +65,6 @@ class ABBFAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanAgent(s
 }
 
 object ABBFAgent {
-  def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent = new ABBFAgent(state, home)
+  def apply(state: SurfABM, home: SurfGeometry[Building], activities: Map[Activity,Double]): ABBFAgent =
+    new ABBFAgent(state, home, activities)
 }
