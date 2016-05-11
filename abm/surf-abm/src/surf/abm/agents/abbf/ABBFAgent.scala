@@ -39,8 +39,6 @@ class ABBFAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanAgent(s
 
         }
 
-
-
       }
       assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
       this.moveAlongPath()
