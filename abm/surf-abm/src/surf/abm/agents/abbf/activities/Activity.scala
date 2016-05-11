@@ -1,11 +1,12 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.abbf.TimeProfile
+import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 
 
 /**
-  * [[Activity]] is the main trait for the different types of activity: [[FixedActivity]] and
-  * [[FlexibleActivity]]. Activites need a type ([[ActivityTypes]] and
+  * [[surf.abm.agents.abbf.activities.Activity]] is the main trait for the different types of activity: [[surf.abm.agents.abbf.activities.FixedActivity]] and
+  * [[surf.abm.agents.abbf.activities.FlexibleActivity]]. Activites need a type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) and
   * a [[surf.abm.agents.abbf.TimeProfile]] (that determines when they are their most intense).
   */
 trait Activity {

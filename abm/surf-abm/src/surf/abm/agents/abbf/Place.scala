@@ -29,18 +29,20 @@ import ActivityTypes.ActivityType
   * At the moment, the model doesn't simulate different days, so the companion object provides a convenience
   * method XX that will return a time period with a default day, month and year.
   * {{{
-  *   val place = Place(location,activity,Place.makeOpeningTimes(9.5,17.0)
+  *   val place = Place(location,activity,Place.makeOpeningTimes(9.5,17.0) )
   * }}}
   *
   * @param location     The spatial location of this Place
   * @param activityType The type of activity that can be undertaken in this Place.
   * @param openingTimes A list of tuples with opening and closing times during which
-  *                     the activity can be undertaken. This is empty if a place is open all the time (default)
+  *                     the activity can be undertaken. This is either null or an empty array if a place is open all the
+  *                     time (default)
   */
 class Place (
               val location:SurfGeometry[_],
               val activityType:ActivityType,
               val openingTimes: Array[(LocalDateTime, LocalDateTime)] = Array.empty[(LocalDateTime, LocalDateTime)] ) {
+
 
 }
 
