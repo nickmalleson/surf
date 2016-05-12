@@ -1,13 +1,12 @@
 package surf.abm.surfutil
 
-import java.io.{IOException, File}
-import java.util
+import java.io.{File, IOException}
 
-import com.vividsolutions.jts.planargraph.{Edge, Node}
+import com.vividsolutions.jts.planargraph.Node
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
-import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraph}
+import sim.util.geo.{GeomPlanarGraph, GeomPlanarGraphDirectedEdge}
 import surf.abm.SurfABM
 
 /**

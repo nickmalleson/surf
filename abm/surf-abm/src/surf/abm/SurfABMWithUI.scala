@@ -1,20 +1,16 @@
 package surf.abm
 
 import java.awt.geom.Rectangle2D
-import java.awt.{Graphics2D, Color, Paint}
+import java.awt.{Color, Graphics2D, Paint}
 import javax.swing.JFrame
 
 import org.apache.log4j.Logger
-import sim.display.{Console, GUIState, Display2D, Controller}
+import sim.display.{Console, Controller, Display2D, GUIState}
 import sim.engine.SimState
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
-import sim.portrayal.{simple, DrawInfo2D, SimplePortrayal2D}
-import sim.portrayal.simple.{OvalPortrayal2D, RectanglePortrayal2D, LabelledPortrayal2D}
-import surf.abm.agents.Agent
+import sim.portrayal.simple.{LabelledPortrayal2D, OvalPortrayal2D}
+import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
 import surf.abm.environment.Building
-
-import scala.collection.JavaConversions._
-import scala.collection.immutable._
 
 /**
   * This class can be used to run the model with a GUI.

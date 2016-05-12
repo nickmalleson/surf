@@ -1,10 +1,10 @@
 package surf.abm
 
 import _root_.surf.abm.tests.UnitSpec
+import com.typesafe.config.ConfigValueFactory
 import org.apache.log4j.Logger
-import sim.engine.SimState
-import com.typesafe.config.{Config, ConfigValueFactory}
 import org.scalatest.Ignore
+import sim.engine.SimState
 import surf.abm.surfutil.Util
 
 import scala.util.control.Breaks._

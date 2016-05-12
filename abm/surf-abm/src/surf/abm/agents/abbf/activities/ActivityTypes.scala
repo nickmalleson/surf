@@ -1,4 +1,4 @@
-package surf.abm.agents.abbf
+package surf.abm.agents.abbf.activities
 
 /**
   * Used to distinguish between different types of activity
@@ -16,6 +16,13 @@ object ActivityTypes {
   }
 
   case object WORKING extends ActivityType("Working")
+
   case object SHOPPING extends ActivityType("Shopping")
+
+  /**
+    * A default activity whose purpose is to encourage agents to go home if they've nothing else do do.
+    */
+  case object AT_HOME extends ActivityType("AtHome")
+
 }
 

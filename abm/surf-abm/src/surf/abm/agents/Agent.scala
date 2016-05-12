@@ -3,9 +3,9 @@ package surf.abm.agents
 import com.vividsolutions.jts.geom.Coordinate
 import org.apache.log4j.Logger
 import sim.engine.Steppable
-import sim.util.geo.{PointMoveTo, MasonGeometry}
-import surf.abm.{SurfABM, SurfGeometry}
+import sim.util.geo.{MasonGeometry, PointMoveTo}
 import surf.abm.environment.Building
+import surf.abm.{SurfABM, SurfGeometry}
 
 /**
   * Base class for all agents
