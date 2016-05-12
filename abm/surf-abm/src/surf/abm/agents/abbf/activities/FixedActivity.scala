@@ -1,6 +1,5 @@
 package surf.abm.agents.abbf.activities
 
-import org.apache.log4j.Logger
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 import surf.abm.agents.abbf.{Place, TimeProfile}
 

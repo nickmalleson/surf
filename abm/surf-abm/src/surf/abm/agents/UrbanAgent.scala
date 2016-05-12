@@ -1,13 +1,12 @@
 package surf.abm.agents
 
 
-import com.vividsolutions.jts.geom.{LineString, Coordinate}
+import com.vividsolutions.jts.geom.{Coordinate, LineString}
 import com.vividsolutions.jts.linearref.LengthIndexedLine
-import com.vividsolutions.jts.planargraph.Node
-import sim.util.geo.{GeomPlanarGraphEdge, GeomPlanarGraphDirectedEdge}
-import surf.abm.environment.{Junction, Building}
+import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
+import surf.abm.environment.{Building, Junction}
 import surf.abm.exceptions.RoutingException
-import surf.abm.{GISFunctions, SurfGeometry, SurfABM}
+import surf.abm.{GISFunctions, SurfABM, SurfGeometry}
 
 import scala.collection.JavaConversions._ // TODO: this won't be necessary once I have re-written A* Path
 

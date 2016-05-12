@@ -1,14 +1,11 @@
 package surf.abm.agents
 
 
-import java.awt.print.Book
-
 import com.vividsolutions.jts.geom.Coordinate
-import org.apache.log4j.Logger
-import sim.engine.{SimState, Steppable}
-import sim.util.geo.{MasonGeometry, PointMoveTo}
+import sim.engine.SimState
 import surf.abm.environment.Building
-import surf.abm.{SurfGeometry, SurfABM}
+import surf.abm.{SurfABM, SurfGeometry}
+
 import scala.math._
 
 /**

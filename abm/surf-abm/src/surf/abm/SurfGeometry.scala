@@ -83,17 +83,18 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
   override def getIntegerAttribute(name: String): Integer = masonGeom.getIntegerAttribute(name)
 
   /**
-    * Call the toString method of the underlying [[sim.util.geo.MasonGeometry]] or, if that casuses a NullPointerException,
-    * return 'Null Geometry'. The NullPointerException occurs if a SurfGeometry is created with a null MasonGeometry
-    * (i.e. one created using the <code>MasonGeometry()</code> constructor.
+    * Build a string containing the type of geometry plus the toString() method of the object that represents this
+    * SurfGeometry.
     */
   override def toString: String = {
+    s"SurfGeometry(${this.theObject.toString}, ${this.masonGeom.geometry.getGeometryType.toString})"
+    /*
     try {
       masonGeom.toString
     }
     catch {
       case e:NullPointerException => "Null Geometry"
-    }
+    }*/
   }
 
   override def equals(obj: scala.Any): Boolean = masonGeom.equals(obj)

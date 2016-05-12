@@ -5,16 +5,16 @@ import java.io.File
 import java.lang.reflect.{Constructor, Method}
 
 import _root_.surf.abm.agents.Agent
-import surf.abm.environment.{Junction, Building}
-import com.typesafe.config.{ConfigException}
-import org.apache.log4j.{Logger}
-import sim.engine.{SimState}
+import com.typesafe.config.ConfigException
+import com.vividsolutions.jts.geom.{Envelope, GeometryFactory}
+import com.vividsolutions.jts.planargraph.Node
+import org.apache.log4j.Logger
+import sim.engine.SimState
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.Bag
-import sim.util.geo.{MasonGeometry, GeomPlanarGraph}
-import com.vividsolutions.jts.geom.{GeometryFactory, Envelope}
-import com.vividsolutions.jts.planargraph.Node
+import sim.util.geo.{GeomPlanarGraph, MasonGeometry}
+import surf.abm.environment.{Building, Junction}
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
@@ -148,7 +148,6 @@ object SurfABM extends Serializable {
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( (for (v <- BUILDING_FIELDS.values) yield v.toString()) ) // Add all of the fields
-
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");

@@ -1,13 +1,10 @@
 package surf.abm.surfutil
 
-import java.io.{IOException, FileNotFoundException}
+import java.io.IOException
 
-import com.vividsolutions.jts.geom.Coordinate
-import com.vividsolutions.jts.geomgraph.DirectedEdge
-import com.vividsolutions.jts.planargraph.{Edge, Node}
+import com.vividsolutions.jts.planargraph.Node
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
-import sim.util.geo.GeomPlanarGraph
 import surf.abm.tests.UnitSpec
 
 /**

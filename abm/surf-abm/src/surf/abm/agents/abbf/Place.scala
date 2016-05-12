@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 import surf.abm.SurfGeometry
 import surf.abm.agents.abbf.activities.ActivityTypes
-import ActivityTypes.ActivityType
+import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 
 
 /**
@@ -68,5 +68,6 @@ object Place {
     val t2 = LocalDateTime.of(YEAR, MONTH, DAY, closed.toInt, ((closed - closed.toInt)*60).toInt)
     (t1,t2)
   }
+
 
 }

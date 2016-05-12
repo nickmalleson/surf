@@ -20,5 +20,21 @@ trait Activity {
     *
     */
   def timeProfile: TimeProfile
-}
 
+  /**
+    * Calculate the new intensity of this activity, given the current level, the time profile, and the background
+    * amount to increase it by (all intensities increase gradually over time..
+    *
+    * @param backgroundIncrease
+    * @param currentIntensity
+    * @return
+    */
+
+  def calcIntensity(backgroundIncrease: Double, currentIntensity: Double) : Double = {
+
+    2.0
+
+  }
+
+
+}
