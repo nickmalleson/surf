@@ -5,7 +5,7 @@ import surf.abm.agents.abbf.activities.Activity
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.{Clock, SurfABM, SurfGeometry}
 
 /**
   *
@@ -17,7 +17,7 @@ import surf.abm.{SurfABM, SurfGeometry}
   *                   with the current intensity of the activity. Private because it's a var and we don't
   *                   want other classes changing it later.
   */
-class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var activities: Map[Activity,Double]) extends UrbanAgent(state, home) {
+class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var activities: Set[Activity]) extends UrbanAgent(state, home) {
 
  // Temporary variables while the agent just walks from home and back.
   var goingHome = false
@@ -25,15 +25,45 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
   val workBuilding = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig+".WorkAddress"))
 
 
+  // XXXX FIX THE INCREMENT - I DON"T THINK IT ADDS UP TO 1.0 OVER THE WHOLE DAY
+
+
+  // AMount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
+  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
+  private val BACKGROUND_INCREASE = (1d/ticksPerDay)
+
+
   override def step(state: SimState): Unit = {
 
+    println("\n******\n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
+    this.activities.foreach( a => println(s"$a : ${a.tempGetBackgroundIntensity}" )); println("\n") // print activities
 
+
+    // OLD CODE TO MAKE MAPS OF ACTIVITY -> INTENSITY
     // Begin by increasing the intensities of all activities.
     // This way does it by making a new map using 'yield'
     // this.activities = for ( (activity, intensity) <- this.activities ) yield { activity -> intensity*1.1 }
     // This way uses map() (Note that m._X give you the X element of a tuple, so m._1 is key, m._2 is the value)
-    this.activities = this.activities.map(m => (m._1, m._1.calcIntensity(1.01, m._2)) )
+    //this.activities = this.activities.map(m => (m._1, m._1.calcIntensity(1.01, m._2)) )
+
+    // TODO: Maybe messing around with the activities should be done less frequently. Less computationally expensive and also stops frequent activity changes
+
+    // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
+
+    this.activities.foreach(a => a.incrementIntensity(BACKGROUND_INCREASE) )
+    this.activities.foreach( a => println(s"$a : ${a.tempGetBackgroundIntensity}" )); println("\n") // print activities
+
+    // Now find the most intense one, given the current time.
+    val highestActivity:Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
+
+    println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
+
+
+
+
+
+
 
     // TODO implement step!!
 
@@ -75,7 +105,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 }
 
 object ABBFAgent {
-  def apply(state: SurfABM, home: SurfGeometry[Building], activities: Map[Activity,Double]): ABBFAgent =
+  def apply(state: SurfABM, home: SurfGeometry[Building], activities: Set[Activity]): ABBFAgent =
     new ABBFAgent(state, home, activities)
 
 

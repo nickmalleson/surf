@@ -17,23 +17,26 @@ object Clock extends Steppable {
 
   private var clock : Clock = null // Clock is not defined until it has been created with create()
 
+  /**  The number of simulated minutes that elapse after each tick/iteration.  */
+  val minsPerTick: Int = SurfABM.conf.getInt(SurfABM.ModelConfig+".MinsPerTick")
+  if (minsPerTick < 1) {
+    throw new Exception(s"Minutes per tick must be 1 or greater (not $minsPerTick)")
+  }
+
   /**
     * Create a new clock. This should be called at the start of the simulation, and can only be called once.
     *
     * @param state The model state. Needed to schedule the clock.
     * @param startTime The initial time (i.e. the time when ticks=0).
-    * @param minsPerTick The number of simualted minutes that elapse after each tick.
     * @return
     */
-  def create (
-               state:SurfABM,
-               startTime: LocalDateTime = LocalDateTime.of(2011, 1, 1, 0, 0),
-               minsPerTick: Int = 60 ) {
+  def create ( state:SurfABM,
+               startTime: LocalDateTime = LocalDateTime.of(2011, 1, 1, 0, 0) ) {
 
     if (this.clock != null) {
       throw new Exception("Cannot create more than one Clock instance")
     }
-    this.clock = new Clock(startTime, minsPerTick)
+    this.clock = new Clock(startTime)
     state.schedule.scheduleRepeating(this)
     LOG.info(s"Simulation clock initialised to ${this.clock.currentTime}")
   }
@@ -43,11 +46,22 @@ object Clock extends Steppable {
     *
     * @return The current time object. It is immutable, so it doesn't matter if others manipulate it.
     */
-  def apply () : LocalDateTime = {
+  def getTime = {
+    check()
+    clock.currentTime
+  }
+
+  /**
+    * Convenience to find the current decimal hour
+    */
+  def currentHour : Double = {
+    this.clock.currentTime.getHour.toDouble + (this.clock.currentTime.getMinute.toDouble / 60d)
+  }
+
+  private def check() = {
     if (this.clock == null) {
       throw new Exception("There is no clock to get the time from. Have you called create() ?")
     }
-    clock.currentTime
   }
 
 
@@ -58,17 +72,16 @@ object Clock extends Steppable {
   override def step(state: SimState): Unit = {
     assert(this.clock!=null)
     // Increment the clock by x minutes. It is immutable, so need to create a copy
-    this.clock.currentTime = this.clock.currentTime.plusMinutes(this.clock.minsPerTick)
-    LOG.debug(s"Stepping clock. Time: ${apply().toString}")
+    this.clock.currentTime = this.clock.currentTime.plusMinutes(this.minsPerTick)
+    LOG.debug(s"Stepping clock. Time: ${this.clock.currentTime.toString}")
   }
 
   // underlying clock object
-  private class Clock (val startTime: LocalDateTime = LocalDateTime.of(2011, 1, 1, 0, 0),
-                       val minsPerTick: Int = 60 ) {
+  private class Clock (val startTime: LocalDateTime = LocalDateTime.of(2011, 1, 1, 0, 0) ) {
 
     var currentTime:LocalDateTime = startTime // Current time is initially the start time.
 
-    assert(minsPerTick > 0)
+
 
   }
 
