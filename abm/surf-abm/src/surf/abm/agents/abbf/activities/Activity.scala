@@ -10,6 +10,10 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   * Activites need a type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) and a [[surf.abm.agents.abbf.TimeProfile]]
   * that determines when they are their most intense.
   *
+  * Activities also have a <i>background intensity</i>. This is a base level of intensity that gradually increases
+  * over time, unless the agent is actually undertaking the activity in which case it increases. The <code>-=</code>
+  * and <code>+=</code> methods can be used to increase or decrease this background intensity.
+  *
   * @param activityType The type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) of this activity
   * @param timeProfile A definition of the times when this Activity is at its most <i>intense</i>.
   *  E.g. work activities might be the most intense between 9am-5pm. This has the
@@ -32,11 +36,17 @@ abstract case class Activity ( val activityType: ActivityType, val timeProfile: 
     *
     * @param d
     */
-  def incrementIntensity(d:Double) : Unit = {
+  def +=(d:Double) : Unit = {
     this._backgroundIntensity += d
   }
 
-  XXXX NEXT - DECIDE HOW TO DECREASE ACTIVITIES WHILE THEY'RE BEING UNDERTAKEN
+  /**
+    * Decrease the intensity of this activity, i.e. if the agent is doing something to satisfy it.
+    * @param d The amount to decrease the intensity by,
+    */
+  def -= (d:Double) : Unit = {
+    this._backgroundIntensity -= d
+  }
 
   /**
     * Calculate the current intensity of this activity, given the time.

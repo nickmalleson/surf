@@ -51,7 +51,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
-    this.activities.foreach(a => a.incrementIntensity(BACKGROUND_INCREASE) )
+    this.activities.foreach(a => a.+=(BACKGROUND_INCREASE) )
     this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); println("\n") // print activities
 
     // Now find the most intense one, given the current time.
@@ -60,6 +60,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
     println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
 
 
+    // XXXX HERE - fix problems with Fixed and FlexibleActivity. Then continue implementing the framework
 
 
 
