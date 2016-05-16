@@ -35,7 +35,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
   override def step(state: SimState): Unit = {
 
-    println("\n******\n")
+    println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
     this.activities.foreach( a => println(s"$a : ${a.tempGetBackgroundIntensity}" )); println("\n") // print activities
 
