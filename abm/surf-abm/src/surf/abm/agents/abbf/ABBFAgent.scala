@@ -37,7 +37,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
     println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
-    this.activities.foreach( a => println(s"$a : ${a.tempGetBackgroundIntensity}" )); println("\n") // print activities
+    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); println("\n") // print activities
 
 
     // OLD CODE TO MAKE MAPS OF ACTIVITY -> INTENSITY
@@ -52,7 +52,7 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
     this.activities.foreach(a => a.incrementIntensity(BACKGROUND_INCREASE) )
-    this.activities.foreach( a => println(s"$a : ${a.tempGetBackgroundIntensity}" )); println("\n") // print activities
+    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); println("\n") // print activities
 
     // Now find the most intense one, given the current time.
     val highestActivity:Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
