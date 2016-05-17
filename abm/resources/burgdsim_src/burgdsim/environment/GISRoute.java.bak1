@@ -1,0 +1,922 @@
+package environment;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+import javax.units.NonSI;
+import javax.units.SI;
+
+import org.apache.commons.lang.ArrayUtils;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.operation.distance.DistanceOp;
+
+import environment.buildings.Building;
+
+import repast.simphony.space.gis.Geography;
+import repast.simphony.space.graph.RepastEdge;
+import repast.simphony.space.graph.ShortestPath;
+
+import burgdsimreptmp.GlobalVars;
+import burgdsimreptmp.Outputter;
+import burglars.Burglar;
+
+/**
+ * Simple prototype moves agent directly towards their destination one unit at a time
+ * 
+ * @author Nick Malleson
+ *
+ */
+
+public class GISRoute extends Route implements Cacheable {
+	
+	// If the destination is not on a road segment we have to move to the closest road segment, then onto
+	// the destination.
+	private boolean destinationOnRoad;
+	private Coord finalDestination;
+	
+	// Cache every coordinate which forms a road so that Route.onRoad() is quicker. Also save the Road(s)
+	// they are part of, useful for the agent's awareness space (see getRoadFromCoordCache()).
+	private static Map<Coord, List<Road>> coordCache;
+	// Cache the nearest road Coordinate to every building for efficiency (agets usually/always need to get
+	// from the centroids of houses to/from the nearest road.
+	private static Map<Coord, Coord> nearestRoadCoordCache;
+	// Also store which road every building is closest to. This is used to efficiently add buildings to the
+	// agent's awareness space
+	private static Map<Road, List<Building>> buildingsOnRoadCache;
+	
+//	// Need access to the road geography
+//	private Geography<Road> roadGeography;
+	
+	// Keep a record of all roads passed so buildings aren't added to the cognitive map more than once
+	// by this Route.
+	private Map<Road, ?> passedRoads;
+	
+//	private GeometryFactory geomFac = new GeometryFactory();
+	
+	/**
+	 * Create a GISRoute which will head to the given coordinates (which correspond to the, optional,
+	 * destination building.
+	 * 
+	 * @param burglar The burglar who this Route is being created for
+	 * @param destination The coordinates they will move to
+	 * @param destinationBuilding The (optional) building the agent is travelling to, this is useful
+	 * for debugging (can find the building looking at original GIS data).
+	 * @param roadGeography The GIS projection associated with the ROAD_ENVIRONMENT. This is required
+	 * to get the geometries of the Roads. XXXX - would be nice not to have to use this, doesn't
+	 * fit with the idea of using Environments as wrappers for contexts and projections. Could store
+	 * the Road geometries in the Road objects themselves?
+	 */
+	public GISRoute(Burglar burglar, Coord destination, Building destinationBuilding, Geography<Road> roadGeography
+			//, SimphonyGISEnvironment<Junction,Junction> junctionEnv
+			) {
+		super(burglar, destination, destinationBuilding, roadGeography);
+		// XXXX - is it better to use a list or a map here? Need efficient contains() performance.
+		this.passedRoads = new HashMap<Road, Object>();
+		// NOTE: super() will call setRoute() now, before all these other assignments have been made!
+//		this.geomFac = new GeometryFactory();
+		GlobalVars.caches.add(this); // Required so the caches will be cleared if the sim is restarted
+		Outputter.debugln("GISRoute: new GISRoute created: "+burglar.toString()+" * "+destination.toString()+"("+
+				destinationBuilding.toString()+") using geography: "+roadGeography.getName(),
+				Outputter.DEBUG_TYPES.ROUTING);
+	}
+
+	/** A route is a list of Coordinates which describe the route to a destination restricted to a road 
+	 *  network. The algorithm consists of three major parts:
+	 *  <ol> 
+	 *  <li>Find out if the agent is on a road already, if not then move to the nearest road segment</li>
+	 *  <li>Get from the current location (probably mid-point on a road) to the nearest junction</li>
+	 *  <li>Travel to the junction which is closest to our destination (using Dijkstra's shortest path)</li> 
+	 *  <li>Get from the final junction to the road which is nearest to the destination<li>
+	 *  <li>Move from the road to the destination</li>
+	 *  </ol>
+	 * @throws Exception 
+	 */
+	protected List<Coord> setRoute() {
+		List<Coord> theRoute = new ArrayList<Coord>();
+		double time; 
+		time = System.currentTimeMillis();
+		Outputter.debugln("Planning route for: "+this.burglar.toString(), Outputter.DEBUG_TYPES.ROUTING);
+		if (atDestination()) {
+			Outputter.debugln("Already at destination, cannot create a route for "+this.burglar.toString(),
+					Outputter.DEBUG_TYPES.ROUTING);
+			return null;
+		}
+		Coord currentCoord = GlobalVars.BURGLAR_ENVIRONMENT.getCoords(burglar);
+		Coord destCoord = this.destination;
+		try{
+			/* ** See if the current position and the destination are on road segments. ** */
+			this.destinationOnRoad = true;
+			if (!coordOnRoad(currentCoord)) {
+				// Not on a road so the first coordinate to add to the route is the point on the closest road segment.
+//				Coord nearestRoadCoord = getNearestRoadCoord(currentCoord);
+				currentCoord = getNearestRoadCoord(currentCoord);
+				theRoute.add(currentCoord);
+//				System.out.println("ROUTE: Origin not on road, so currentCoord set to nearest road: "+currentCoord.toString());
+			}
+			if (!coordOnRoad(destCoord)) {
+				// Not on a road, so need to set the destination to be the closest point on a road, and set the
+				// destinationOnRoad boolean to false so we know to add the final dest coord at the end of the route
+//				Coord nearestRoadCoord = getNearestRoadCoord(destCoord);
+				this.destinationOnRoad = false;
+				this.finalDestination = destCoord; // this will be added to the route at the end of the alg.
+				destCoord = getNearestRoadCoord(destCoord);
+//				System.out.println("ROUTE: Destination not on road, so destination set to nearest road: "+finalDestination.toString());
+			}
+			
+
+			/* ** Find the nearest junction to our current position ** */ // XXXX: Bug: this does not necessarily find the junction closest to the destination, just the closest to the current agent's position (shouldn't cause problems because we use Dijkstra from the junction so the agent will just backtrack).
+			// Find the road that this coordinate is on
+			// EFFICIENCY: often the agent will be creating a new route from a building so will always find the same road, could use a cache 
+			Road currentRoad = EnvironmentFactory.findRoadAtCoordinates(currentCoord, roadGeography);
+			// Find which Junction is closest to us on the road.
+			Junction currentJunction = getNearestJunction(currentCoord, currentRoad);
+
+			/* ** Add the coordinates describing how to get to the nearest junction** */
+			List<Coord> temp = this.getCoordsAlongRoad(
+					currentCoord, 
+					GlobalVars.JUNCTION_ENVIRONMENT.getCoords(currentJunction), 
+					currentRoad, true);
+			theRoute.addAll(temp);
+
+			/* ** Find the junction which is nearest our destination ** */
+			// Find the road that this coordinate is on
+			Road destRoad = EnvironmentFactory.findRoadAtCoordinates(destCoord, roadGeography);
+			// Find which Junction connected to the edge is closest to the coordinate.
+			Junction destJunction = getNearestJunction(destCoord, destRoad);
+
+			/* ** Add the coordinates which describe how to get to the destination junction ** */
+			theRoute.addAll(getRouteBetweenJunctions(currentJunction, destJunction));
+
+			/* ** Add the coordinates describing how to get from the final junction to the destination ** */
+			theRoute.addAll(this.getCoordsAlongRoad(
+					GlobalVars.JUNCTION_ENVIRONMENT.getCoords(destJunction), destCoord, destRoad, false));
+
+			if (!destinationOnRoad) {
+				theRoute.add(finalDestination);
+			}
+
+	//		removeDuplicateCoordinates(theRoute); // If the algorithm was better no coordinates would have been duplicated
+			removePairs(theRoute); // If the algorithm was better no coordinates would have been duplicated
+			Outputter.debugln("GISRoute.setRoute() created route: ",
+					Outputter.DEBUG_TYPES.ROUTING);
+			for (Coord c:theRoute)
+				Outputter.debugln("\t"+c.toString(), Outputter.DEBUG_TYPES.ROUTING);	
+			return theRoute;
+		}catch (Exception e) {
+			Outputter.errorln("GISRoute: Problem creating route for "+this.burglar.toString()+" going from "+
+					currentCoord.toString()+" to "+this.destination.toString()+"("+
+					(this.destinationBuilding == null ? "" : this.destinationBuilding.toString())+").");
+			Outputter.errorln("Error type, message and stack trace: "+e.getClass().getName()+", "+e.getMessage());
+			for (StackTraceElement s:e.getStackTrace()) {
+				Outputter.errorln(s.toString());
+			}
+		}
+		Outputter.debugln("...Finished planning route ("+(System.currentTimeMillis()-time)+"ms)",
+				Outputter.DEBUG_TYPES.ROUTING);
+		return null;
+	}
+	
+	/**
+	 * Travel towards our destination, as far as we can go this turn.
+	 * <p> Also adds houses to the agent's cognitive environment. This is done by saving each coordinate
+	 * the person passes, creating a polygon with a radius given by the "cognitive_map_search_radius" and
+	 * adding all houses which touch the polygon.
+	 * <p> Note: the agent might move their position many times depending on how far they are allowed to move
+	 * each turn, this requires many calls to geometry.move(). This function could be improved (quite easily)
+	 * by working out where the agent's final destination will be, then calling move() just once. 
+	 * 
+	 * @param housesPassed If not null then the buildings which the agent passed during their travels this iteration
+	 * will be calculated and stored in this array. This can be useful if a burglar needs to know which houses it has just
+	 * passed and, therefore, which are possible victims. This isn't done by default because it's quite an
+	 * expensive operation (lots of geographic tests which must be carried out in each iteration). If the array is
+	 * null then the houses passed are not calculated.
+	 * @return null or the buildings passed during this iteration if housesPassed boolean is true
+	 */
+	public void travel() {
+		if (atDestination()) {
+			Outputter.debugln("GISRoute.travel(): Person "+this.burglar.toString()+" is at destination, not moving",
+					Outputter.DEBUG_TYPES.ROUTING);
+			return;
+		}
+		double time; // used for debugging
+		Outputter.debugln("GISRoute: Travelling (person "+this.burglar.toString()+")...",
+				Outputter.DEBUG_TYPES.ROUTING); time = System.currentTimeMillis();
+		// Store the roads the agent walks along (used to populate the awareness space)
+		List<Road> roadsPassed = new ArrayList<Road>();
+		double distTravelled = 0; // The distance travelled so far
+		Coord currentCoord = null;	// Current location
+		Coord target = null; 		// Target coordinate we're heading for (in route list)
+		boolean travelledMaxDist = false;	// True when travelled maximum dist this iteration
+//		System.out.println("\n**\n");
+		while (!travelledMaxDist && !atDestination() ) {
+			currentCoord = GlobalVars.BURGLAR_ENVIRONMENT.getCoords(this.burglar); // Current location
+//			Outputter.debugln("\nGISRoute.travel(). CurrentCoord: "+currentCoord.toString(),Outputter.DEBUG_TYPES.ROUTING);
+//			Outputter.debugln("Coord list: "+this.getRouteString(), Outputter.DEBUG_TYPES.ROUTING);
+//			cognitiveMapCoords.add(currentCoord);
+			target = getRoute(0);
+			// Record the road the agent is travelling (for awareness space)
+			List<Road> tempRoads = new ArrayList<Road>();
+			tempRoads = getRoadFromCoordCache(target);//Note: if an agent is at an intersection, all the roads connected to it will be added
+			if (tempRoads!=null) // Might be null if the agent has just moved from home onto a road, move to nearest point on road, not the nearest road vertex
+				roadsPassed.addAll(tempRoads); 
+			double distToTarget = distance(currentCoord, target);
+//			Outputter.debugln("GISRoute.travel(). DisttoTarget1: "+distToTarget+", "+target.toString(),
+//					Outputter.DEBUG_TYPES.ROUTING);
+			
+			// If we can get all the way to the next coords on the route then just go there
+			if (distTravelled+distToTarget < GlobalVars.GIS_PARAMS.travelPerTurn) {
+				distTravelled += distToTarget;
+				GlobalVars.BURGLAR_ENVIRONMENT.move(this.burglar, target);
+				Outputter.debugln("**Travel(): Moving to next coord on list"+target.toString(),
+						Outputter.DEBUG_TYPES.ROUTING);
+				this.removeFirstCoordFromRoute(); // XXXX improve by not moving here, wait until end then make one move
+//				cognitiveMapCoords.add(target);
+
+			} // if
+			else { // Otherwise move as far as we can towards the target along the road we're on
+				// Get the angle between the two points (current and target) (http://forum.java.sun.com/thread.jspa?threadID=438608&messageID=1973655)
+				double angle = angle(target, currentCoord)+Math.PI; // angle() returns range from -PI->PI, but moveByVector wants range 0->2PI				
+				// Move along the vector the maximum distance we're allowed this turn
+				double distToTravel = GlobalVars.GIS_PARAMS.travelPerTurn-distTravelled;
+				// Need to convert distance from long/lat degrees to meters
+				double distToTravelM = convertToMeters(distToTravel);
+				Outputter.debugln("*Travel(): Last move, moving "+distToTravel+" at angle "+angle+
+						"(next Coord is: "+this.getRoute(0).toString(), Outputter.DEBUG_TYPES.ROUTING);
+				GlobalVars.BURGLAR_ENVIRONMENT.moveByVector(this.burglar, distToTravelM, angle);
+				travelledMaxDist = true;
+			} // else			
+		} // while
+
+//		// Agent has finished moving, now just add all the buildings passed to their awareness space
+		for (Road r:roadsPassed) {
+			if (!passedRoads.containsKey(r)) { // Check if buildings on this road have already been added
+				List<Building> passedBuildings = getBuildingsOnRoad(r);
+				if (passedBuildings!=null) // There might not be any buildings close to the road
+					this.passedBuildings(passedBuildings);
+				passedRoads.put(r, null);
+			}
+		}
+
+		Outputter.debugln("...Finished Travelling("+(System.currentTimeMillis()-time)+"ms)",
+				Outputter.DEBUG_TYPES.ROUTING);
+	}
+	
+	/**
+	 * Find the nearest coordinate which is part of a Road. Returns the coordinate which is actually
+	 * the closest to the given coord, not just the corner of the segment which is closest. Useas the
+	 * DistanceOp class which finds the closest points between two geometries.
+	 * <p>
+	 * When first called, the function will populate the 'nearestRoadCoordCache' which calculates
+	 * where the closest road coordinate is to each building. The agents will commonly start journeys
+	 * from within buildings so this will improve efficiency.
+	 * @param coord The coordinate from which to find the nearest road coordinate
+	 * @return the nearest road coordinate
+	 */
+	private Coord getNearestRoadCoord(Coord coord) {
+		double time = System.currentTimeMillis();
+		if (nearestRoadCoordCache==null || nearestRoadCoordCache.size()==0) { // Create the cache of road coordiantes closest to each house
+			Outputter.debug("GISRoute.getNearestRoadCoord() first use, creating cache of all road " +
+					"coordinates which are closest to each house...",
+					Outputter.DEBUG_TYPES.ROUTING);
+			if (nearestRoadCoordCache==null) 
+				nearestRoadCoordCache = new HashMap<Coord, Coord>();
+			// Create a list of all roads and their geometries for use later
+			Map<Road, Geometry> allRoads = new HashMap<Road, Geometry>();
+			for (Road r:GlobalVars.ROAD_ENVIRONMENT.getAllObjects((Road.class))) {
+				allRoads.put(r, roadGeography.getGeometry(r));
+			}
+			// Iterate over every building and find the nearest road point
+			for (Building b:GlobalVars.BUILDING_ENVIRONMENT.getAllObjects(Building.class)) {
+				double minDist = Double.MAX_VALUE;
+				Coordinate houseCoord = b.getCoords().toCoordinate();
+				Coordinate nearestPoint = null;
+				// XXXX - IF CODE DOESN"T WORK CHECK THAT NEXT LINE CREATES POINT IN CORRECT LOCATION
+				GeometryFactory geomFac = new GeometryFactory();
+				Point houseCoordGeom = geomFac.createPoint(houseCoord);
+				for (Road r:allRoads.keySet()) { 
+					Geometry roadGeom = allRoads.get(r);
+					DistanceOp distOp = new DistanceOp(houseCoordGeom, roadGeom);
+					double thisDist = distOp.distance();
+					if (thisDist < minDist) {
+						minDist = thisDist;
+						// Two coordinates returned by closestPoints(), need to find the one which isn''t the coord parameter
+						for (Coordinate c:distOp.closestPoints()) {
+							if (!c.equals(houseCoord)) {
+								nearestPoint = c;
+								break;
+							}
+						}
+					} // if thisDist < minDist
+				} // for allRoads
+				nearestRoadCoordCache.put(new Coord(houseCoord), new Coord(nearestPoint));
+			}// for Houses
+		} // if nearestRoadCoordCache = null;
+		Outputter.debugln("...finished caching nearest roads.", Outputter.DEBUG_TYPES.ROUTING);
+	
+		Coord nearestCoord = nearestRoadCoordCache.get(coord);
+		if (nearestCoord!=null) {
+			Outputter.debugln("GetNearestCoords (using cache) - ("+
+					(System.currentTimeMillis()-time)+"ms)", Outputter.DEBUG_TYPES.ROUTING);
+			return nearestCoord;
+		}
+		// If get here then the coord is not in the cache, agent not starting their journey from a
+		// house, search for it manually
+//		Outputter.debugln("GISRoute.getNearestRoadCoord(): couldn't find coordinate in the cache, finding" +
+//				" the nearest road coordinate manually (inefficient). ", Outputter.DEBUG_TYPES.ROUTING);
+//		Outputter.errorln("GISRoute. Not done this bit of code yet, returning null instead. Something's about to go wrong!");
+//		return null;
+		// Search all roads in the vicinity, looking for the point which is nearest the person
+		double minDist = Double.MAX_VALUE;
+		//Road nearestRoad = null;
+		Coordinate nearestPoint = null;
+		GeometryFactory geomFac = new GeometryFactory();
+		Point coordGeom = geomFac.createPoint(coord.toCoordinate());
+		// XXXX - for efficiency, check if it's better just to search every road geometry, rather than finding out which are within a buffer first
+		for (Road road:roadGeography.getObjectsWithin(coordGeom.buffer(GlobalVars.GIS_PARAMS.XXXX_BUFFER).getEnvelopeInternal())) {
+			// XXXX: BUG: if an agent is on a really long road, the long road will not be found by getObjectsWithin because it is not within the buffer 
+			DistanceOp distOp = new DistanceOp(coordGeom, roadGeography.getGeometry(road));
+			double thisDist = distOp.distance();
+			if (thisDist < minDist) {
+				minDist = thisDist;
+				//nearestRoad = road;
+				// Two coordinates returned by closestPoints(), need to find the one which isn''t the coord parameter
+				for (Coordinate c:distOp.closestPoints()) {
+					if (!c.equals(coord)) {
+						nearestPoint = c;
+						break;
+					}
+				}
+			} // if thisDist < minDist
+		} // for nearRoads
+		Outputter.debugln("GetNearestCoords (not using cache) - ("+
+				(System.currentTimeMillis()-time)+"ms)", Outputter.DEBUG_TYPES.ROUTING);
+		return new Coord(nearestPoint);
+	}
+	
+	/**
+	 * Gets the nearest junction to the current coordinate on the road that the coordinate lies on.
+	 * 
+	 * @param coord The coordinate we are interested in
+	 * @param road The road which this coordinate is situated on
+	 * @return the Junction which is closest to the coordinate.
+	 */
+	private Junction getNearestJunction(Coord coord, Road road) {
+		double time = System.currentTimeMillis();
+		// Find the associated edge in road network
+		RepastEdge<Junction> edge;
+		Junction j1 = null;
+		Junction j2 = null;
+		edge = EnvironmentFactory.getEdgeFromID(road.getIdentifier());
+		// Find which Junction connected to the edge is closest to the coordinate.
+		j1 = edge.getSource();
+		j2 = edge.getTarget();
+		
+//		Geometry coordGeom = geomFac.createPoint(coord);
+//		Geometry geom1 = geomFac.createPoint(junctionGeography.getGeometry(j1).getCoordinate());
+//		Geometry geom2 = geomFac.createPoint(junctionGeography.getGeometry(j2).getCoordinate());
+		Coord c1 = j1.getCoords();
+		Coord c2 = j2.getCoords();
+		double dist1 = distance(c1, coord);
+		double dist2 = distance(c2, coord);
+//		DistanceOp dist1 = new DistanceOp(geom1, coordGeom);
+//		DistanceOp dist2 = new DistanceOp(geom2, coordGeom);
+		Outputter.debugln("getNearestJunction ("+(System.currentTimeMillis()-time)+"ms)",
+				Outputter.DEBUG_TYPES.ROUTING);
+		if (dist1 < dist2)
+			return j1;
+		else
+			return j2;
+	}
+	
+
+	/**
+	 * Returns the coordinates required to move an agent from their current position to the destination
+	 * along a given road. The algorithm to do this is as follows:
+	 * <ol><li>Starting from the destination coordinate, record each vertex and check inside the booundary of
+	 * each line segment until the destination point is found.</li>
+	 * <li>Return all but the last vertex, this is the route to the destination.</li></ol>
+	 * A boolean allows for two cases: heading towards a junction (the endpoint of the line) or heading away from the
+	 * endpoint of the line (this function can't be used to go to two midpoints on a line) 
+	 * 
+	 * @param currentCoord
+	 * @param destinationCoord
+	 * @param road
+	 * @param toJunction whether or not we're travelling towards or away from a Junction
+	 * @return
+	 * @throws Exception 
+	 */
+	private List<Coord> getCoordsAlongRoad(Coord currentCoord, Coord destinationCoord,
+			Road road, boolean toJunction) throws Exception {
+		double time = System.currentTimeMillis();
+		// NOTE: it is a bit confusing here because I use both Coord and Coordinate objects interchangeably
+		Coordinate[] roadCoords = roadGeography.getGeometry(road).getCoordinates();
+		ArrayList<Coordinate> routeCoords = new ArrayList<Coordinate>(roadCoords.length); // The list of coordinates to return
+		
+		// Check that the either the destination or current coordinate are actually part of the road
+		boolean currentCorrect = false, destinationCorrect= false;;
+		for (int i=0; i<roadCoords.length; i++) {
+
+			if (toJunction && destinationCoord.equals(roadCoords[i])) { // (It is OK to compare Coords and Coordinates, Coord.equals() checks if a Coordinate is passed) 
+				destinationCorrect = true;
+				break;
+			}
+			else if (!toJunction  && currentCoord.equals(roadCoords[i])) {
+				currentCorrect = true;
+				break;				
+			}
+		} // for
+		if (!(destinationCorrect || currentCorrect)) {
+			throw new Exception("Route: getCoordsAlongRoad: Error, "+ (destinationCorrect ? "destination" : "origin") +
+					" coordinate is not part of a road (person "+this.burglar.toString()+").\n" +
+					"\tOrigin: "+currentCoord.toString()+"\n"+
+					"\tDestination: "+destinationCoord.toString()+"( "+this.destinationBuilding.toString()+" )" );
+		}
+		// Might need to reverse the order of the road coordinates
+		if (toJunction && !roadCoords[roadCoords.length-1].equals(destinationCoord)) {
+			ArrayUtils.reverse(roadCoords); // If heading towards a junction, destination coordinate must be at end of road segment 
+		}
+		else if (!toJunction && !roadCoords[0].equals(currentCoord)){
+			ArrayUtils.reverse(roadCoords); // If heading away form junction, current coord must be at beginning of road segment
+		}
+		GeometryFactory geomFac = new GeometryFactory();
+		Point destinationPointGeom = geomFac.createPoint(destinationCoord.toCoordinate());
+		Point currentPointGeom = geomFac.createPoint(currentCoord.toCoordinate());
+		for (int i=0; i<roadCoords.length-1; i++ ) {
+			Coordinate[] segmentCoords = new Coordinate[]{roadCoords[i], roadCoords[i+1]};
+			LineString segment = geomFac.createLineString(segmentCoords);
+			// Draw a small buffer around the line segment and look for the coordinate within the buffer
+			Geometry buffer = segment.buffer(GlobalVars.GIS_PARAMS.XXXX_little_buffer);
+			if (!toJunction) {
+				// If heading away from a junction, keep adding road coords until we find the destination
+				routeCoords.add(roadCoords[i]);
+//				this.addToRoute(routeCoords, roadCoords[i]);
+				if (destinationPointGeom.within(buffer)) {
+					routeCoords.add(destinationCoord.toCoordinate());
+//					this.addToRoute(routeCoords, destinationCoord.toCoordinate());
+					Outputter.debugln("getCoordsAlongRoad(!toJunction) ("+(System.currentTimeMillis()-time)+"ms) " +
+							"added following coords: "+routeCoords.toString(),
+							Outputter.DEBUG_TYPES.ROUTING);
+					return Coord.buildCoordArray(routeCoords);
+				}
+			}
+			else if (toJunction) {
+				// If heading towards a junction: find the curent coord, add it to the route, then add all the remaining
+				// coords which make up the road segment
+				if (currentPointGeom.within(buffer)) {
+					routeCoords.add(destinationCoord.toCoordinate());
+//					this.addToRoute(routeCoords, destinationCoord.toCoordinate());
+					for (int j=i+1; j<roadCoords.length; j++) {
+						routeCoords.add(roadCoords[j]);
+					}
+					Outputter.debugln("getCoordsAlongRoad(toJunction) ("+(System.currentTimeMillis()-time)+"ms) " +
+							"added following coords: "+routeCoords.toString(),
+							Outputter.DEBUG_TYPES.ROUTING);
+//					for (Coordinate c:routeCoords) {
+//						Outputter.debug(c.toString(),
+//								Outputter.DEBUG_TYPES.ROUTING);	
+//					}
+					return Coord.buildCoordArray(routeCoords);	
+				}
+			}
+//			if (destinationPointGeom.within(buffer) ) {
+//				routeCoords.add(destinationCoord);
+//				break;
+//			}
+		} // for
+		// If we get here then the route hasn't been created
+		Outputter.errorln("Route: getCoordsAlongRoad: could not find destination coordinates " +
+				"along the road for this person. Heading "+(toJunction? "towards" : "away from")+" a junction. " +
+				"(Person: "+ this.burglar.toString()+")");
+		Outputter.errorln("Current coord:"+currentCoord.toString()+" destCoord: "+destinationCoord.toString());
+		Outputter.debugln("getCoordsAlongRoad ("+(System.currentTimeMillis()-time)+"ms)",
+				Outputter.DEBUG_TYPES.ROUTING);
+		return null;
+	}
+	
+	/**
+	 *  Returns all the coordinates that describe how to get between two junctions. 
+	 */
+	private List<Coord> getRouteBetweenJunctions (Junction currJunc, Junction destJunc) {
+		double time = System.currentTimeMillis();
+		// Get the edges that make up the shortest path
+		List<RepastEdge<Junction>> shortestPath = 
+			new ShortestPath<Junction>(EnvironmentFactory.getRoadNetwork()).getPath(currJunc, destJunc);
+		// Find the roads which are associated with these edges
+		ArrayList<Road> roadPath = new ArrayList<Road>();
+		for (RepastEdge<Junction> edge:shortestPath) {
+			String roadID = EnvironmentFactory.getIDFromEdge(edge);
+			Road road = EnvironmentFactory.findRoadWithID(roadID);
+			roadPath.add(road);
+		}
+		// Go through each road and get the coordinates of it's line segments, adding them to an array.
+		List<Coordinate> coordPath = new ArrayList<Coordinate>();
+		for (Road road:roadPath) {
+			Coordinate[] coords = roadGeography.
+				getGeometry(road).
+				getCoordinates();
+			// Make sure the coordinates of the road are added in the correcct order: check that the new road starts from
+			// the last point in our road array
+			if (coordPath.size()>1 && !coords[0].equals(coordPath.get(coordPath.size()-1))) {
+				ArrayUtils.reverse(coords);
+			}
+			for (Coordinate coord:coords) {
+				coordPath.add(coord);
+//				this.addToRoute(coordPath, coord);
+			} // for coord:coords
+		} // for road:roadPath
+		Outputter.debugln("getRouteBetweenJunctions ("+(System.currentTimeMillis()-time)+"ms) added following: "+
+				coordPath.toString(), Outputter.DEBUG_TYPES.ROUTING);
+		return Coord.buildCoordArray(coordPath);
+	}
+	
+//	/** 
+//	 * Checks that the given coordinate hasn't already been added to the last place in the route
+//	 * before adding it. This is used by functions getCoordsAlongRoad() and getRouteBetweenJunctions()
+//	 * becuase, otherwise, they will both add the same first and last coordinates.
+//	 * 
+//	 * @param c The coord which might be added to the list
+//	 * @param theList The list which the coord might be added to
+//	 */
+//	private void addToRoute(List<Coordinate> theList, Coordinate c) {
+//		if (theList.size()==0)
+//			theList.add(c);
+//		else if (!theList.get(theList.size()-1).equals(c))
+//			theList.add(c);
+//			
+//		return;
+//	}
+
+//	/**
+//	 * Find a random coordainte on a road.
+//	 * @return any road coordinate
+//	 */
+//	public Coordinate getRandomRoadCoordinate() {
+//		// Get a random road and find a point on it
+//		RoadContext roadContext = ContextCreator.getRoadContext();
+//		Road road = (Road) roadContext.getRandomObject();
+//		Geometry roadGeom = ContextCreator.getRoadGeography().getGeometry(road);
+//		Coordinate[] coords = roadGeom.getCoordinates();
+//		return coords[RandomHelper.nextIntFromTo(0,coords.length-1)];
+//	}
+	
+//	/**
+//	 * Find a random coordinate in a house.
+//	 * @return any house coordinate
+//	 */
+//	public Coordinate getRandomHouseCoordinate() {
+//		// Get a random road and find a point on it
+//		BuildingContext buildingContext = ContextCreator.getBuildingContext();
+//		House house= (House) buildingContext.getRandomObjects(House.class, 1);
+//		Geometry houseGeom = ContextCreator.getBuildingGeography().getGeometry(house);
+//		Coordinate[] coords = houseGeom.getCoordinates();
+//		return coords[RandomHelper.nextIntFromTo(0,coords.length-1)];
+//	}
+
+	
+//	// XXXX - only using this for testing
+//	public static Coordinate getRandomCoordinateStatic() {
+//		// Get a random road and find a point on it
+//		RoadContext roadContext = ContextCreator.getRoadContext();
+//		Road road = (Road) roadContext.getRandomObject();
+//		Geometry roadGeom = ContextCreator.getRoadGeography().getGeometry(road);
+//		Coordinate[] coords = roadGeom.getCoordinates();
+//		return coords[RandomHelper.nextIntFromTo(0,coords.length-1)];
+//	}
+	
+	/**
+	 * Determine whether or not the person associated with this Route is at their destination. Compares their
+	 * current coordinates to the destination coordinates (must be an exact match). 
+	 * @return True if the person is at their destination
+	 */
+	public boolean atDestination() {
+//		Outputter.debugln("GISRoute.atDestination() returning "+GlobalVars.BURGLAR_ENVIRONMENT.getCoords(this.burglar).equals(this.destination),
+//				Outputter.DEBUG_TYPES.ROUTING); 
+		return GlobalVars.BURGLAR_ENVIRONMENT.getCoords(this.burglar).equals(this.destination);
+	}
+	
+//	/* Overloaded function, takes the persons current position as a coordinate (useful when travelling because
+//	 * the person isn't actually moved until the end of the iteration */
+//	public boolean atDestination(Coordinate coord) {
+//		Geometry destGeom = geomFac.createPoint(person.getDestination());
+//		Geometry destBuffer = destGeom.buffer(0.00001); 
+//		Geometry currentPosition = geomFac.createPoint(coord);
+//		//Coordinate curr = offGeom.getCoordinate();
+//		if (currentPosition.within(destBuffer)) {
+//			System.out.println("Offender "+person.getID()+person.getName()+" at destination");
+//			return true;
+//		}
+//		else
+//			return false;
+//	}
+	
+//	/**
+//	 * Configures the big_ and little_buffer_distance parameters.<br>
+//	 * The little buffer is used in getCoordsAlongRoad() to search for a point which should be part of a
+//	 * road segment. It is configured by....<br>
+//	 * The big buffer is used by getNearestRoadCoord() to find the nearest road to a coordinate. It is
+//	 * set to the largest distance between every building and its nearest road. 
+//	 */
+//	public void configureRoadNetwork() {
+//		System.out.print("Route.ConfigureRoadNetwork(): Configuring buffers for the road network, this might take some time...");
+//		// Configure the big_buffer
+//		
+//		for (House h:ContextCreator.getHouseGeography().getAllObjects()) {
+//			Geometry g = ContextCreator.getHouseGeography().getGeometry(h);
+//			
+//		}
+//		
+//		
+//		// Configure the little_buffer
+//		
+//		System.out.println("Finished configuring buffers. \n\tsetting big buffer to: "+this.big_buffer_distance+
+//				" and little buffer to:"+ this.little_buffer_distance);
+//		
+//	}
+		
+//	/* Returns true if the two coordinates are almost identical. This is useful for comparing coordinates
+//	 * which are not *exactly* equal and so Coordinate.equals() cannot be used*/
+//	private boolean almostEqualCoords(Coordinate c1, Coordinate c2) {
+//		Parameters p = RunEnvironment.getInstance().getParameters();
+//		Geometry buffer = geomFac.createPoint(c1).buffer(((Double) p.getValue("bufferDist"))/1000);
+//		if (geomFac.createPoint(c2).within(buffer))
+//			return true;
+//		else
+//			return false;
+//	}
+	
+//	/* Displays all the coordinates which make up this route */
+//	private void displayRoute() {
+//		System.out.println("Displaying route for "+person.getName());
+//		// Remove any nodes from the context
+//		for (Person node:personContext.getObjects(DummyNode.class)){
+//			personContext.remove(node);
+//		}
+//		for (Person node:personContext.getObjects(DummyDestination.class)){
+//			personContext.remove(node);
+//		}
+//		DummyDestination dest = new DummyDestination(-1, person.getDestination());
+//		personContext.add(dest);
+//		try {
+//			personGeography.move(dest, geomFac.createPoint(dest.getCoord()));
+//		} catch (Exception e) {System.out.println("DEST EXCEPTION");}
+//		int counter = 0;
+//		for (Coordinate coord:route) {
+//			DummyNode node = new DummyNode(counter++, coord);
+//			personContext.add(node);
+//			Point point = geomFac.createPoint(coord);
+//			System.out.println(node.getRouteNumber()+"\t"+point.getCoordinate().toString());
+//			try {
+//				personGeography.move(node, point);
+//				
+//			} catch (Exception e) {
+//				System.out.println("\t\tEXCEPTION");
+//			}
+//		}		
+//	}
+	
+	/**
+	 * Removes any duplicate coordinates from the given route (coordinates which are the same
+	 * *and* next to each other in the list.
+	 * <p>
+	 * If my route-generating algorithm was better this would't be necessary.
+	 * @param coordList the list of coordinates which will have it's duplicates removed
+	 */
+	private static void removePairs(List<Coord> theRoute) {
+		if (theRoute.size()<1){// No coords to iterate over, probably something has gone wrong
+			Outputter.errorln("GISRoute.removeDuplicateCoordinates(): WARNING an empty list has been " +
+					"passed to this function, something has probably gone wrong");
+			return;
+		}
+		// Iterate over the list, only adding a coord to the temp list if it isn't the same as the one
+		// next to it
+//		System.out.println("\n\n");
+//		System.out.println(theRoute.toString());
+		List<Coord> tempList = new ArrayList<Coord>();
+		Coord c1, c2; int size = theRoute.size();
+		for (int i=0; i<size-1;i++) {
+			c1 = theRoute.get(i);
+			c2 = theRoute.get(i+1);
+//			System.out.println("c1: "+c1+" c2: "+c2);
+			if (!c1.equals(c2)) {
+				tempList.add(c1);
+//				System.out.println("added c1");
+			}
+			else {
+//				System.out.println("not added c1");
+			}
+		}
+		// Need to check that the last coord is not the same as the one before it, otherwise it won't be added
+		c1 = theRoute.get(size-2); c2 = theRoute.get(size-1); 
+		if (!c1.equals(c2)) {
+			tempList.add(c2);
+		}
+		theRoute = tempList;
+//		System.out.println(theRoute.toString());
+//		System.out.println("\n\n");
+		return;		
+	}
+	
+//	/**
+//	 * Removes any duplicate coordinates from the given route. Used by GISRoute.
+//	 * If my route-generating algorithm was better this would't be necessary.<p>
+//	 * Code adapted from here: http://docs.google.com/View?docid=ah9xr5g2vzfz_32gvtwfw
+//	 * 
+//	 * @param coordList the list of coordinates which will have it's duplicates removed
+//	 */
+//	private static void removeDuplicateCoordinates(List<Coord> theRoute) {
+//		System.out.println("\n\n\n INPUT: ");
+//		for (Coord c:theRoute) System.out.println(c);
+//		Map<Coord, ?> map = new LinkedHashMap<Coord, Object>();
+//		for (Coord c:theRoute) {
+//			if (!map.containsKey(c))
+//				map.put(c, null);
+//		}
+//		theRoute.clear();
+//		theRoute.addAll(map.keySet());
+//		System.out.println("\n\n\n OUTPUT: ");
+//		for (Coord c:theRoute) System.out.println(c);
+//		System.out.println("\n\n");
+//		return;
+////		/*Use a LinkedHashSet as a mean to remove the duplicate entries.
+////		 * The LinkedHashSet has two characteristics that fit for the job: 
+////		 * First, it retains the insertion order, which ensure the output's
+////		 * order is the same as the input's. Secondly, by being a set, it
+////		 * only accept each entries once; a LinkedHashSet ignores subsequent 
+////		 * insertion of the same entry.*/
+////		LinkedHashSet<Coord> set = new LinkedHashSet<Coord>(theRoute.size());
+////		for (Coord coord:theRoute)
+////			set.add(coord);
+////
+////		theRoute = new ArrayList<Coord>(set.size());
+////		for (Coord coord:set) {
+////			theRoute.add(coord);
+////		}
+//	}
+	
+	
+	/**
+	 * Converts a distance (passed as lat/log decimal degrees) to meters
+	 * @param dist The distance in decimal degrees
+	 * @return the equivalent distance in meters
+	 */
+	private static double convertToMeters(double dist) {
+		double distInMeters = NonSI.NAUTICAL_MILE.getConverterTo(SI.METER).convert(dist*60);
+//		System.out.println("To meters: "+dist+" - "+distInMeters);
+//		System.out.println(6378137.0*Math.PI*dist/180);
+		return distInMeters;
+	}
+	
+//	/**
+//	 * Converts a distance (passed as meters) to lat/log decimal degrees
+//	 * @param dist The distance in decimal degrees
+//	 * @return the equivalent distance in meters
+//	 */
+//	private static double convertFromMeters(double dist) {
+//		double distInDegrees = SI.METER.getConverterTo(NonSI.NAUTICAL_MILE).convert(dist)/(60.0);
+////		System.out.println("From meters: "+dist+" - "+distInDegrees);
+////		System.out.println((dist*180)/(6378137.0*Math.PI));
+//		return distInDegrees;
+//	}
+
+	
+	  /**
+	   * Returns the angle of the vector from p0 to p1. The angle will be between
+	   * -Pi and Pi. I got this directly from the JUMP program source.
+	   * @return the angle (in radians) that p0p1 makes with the positive x-axis.
+	   */
+	  public static double angle(Coordinate p0, Coordinate p1) {
+	      double dx = p1.x - p0.x;
+	      double dy = p1.y - p0.y;
+
+	      return Math.atan2(dy, dx);
+	  }
+
+	/**
+	 * The building which this Route is targeting
+	 * @return the destinationHouse
+	 */
+	public Building getDestinationBuilding() {
+		if (this.destinationBuilding==null) {
+			Outputter.errorln("GISRoute: getDestinationBuilding(), warning, no destination building has " +
+					"been set. This might be ok, the agent might be supposed to be heading to a coordinate " +
+					"not a particular building(?)");
+			return null;
+		}
+		return destinationBuilding;
+	}
+	
+	/**
+	 * The coordinate the route is targeting
+	 * @return the destination
+	 */
+	public Coord getDestination() {
+		return this.destination;
+	}
+	
+	// Maintain a cache of all coordinates which are part of a road segment. Store the coords and
+	// all the road(s) they are part of.
+	private List<Road> getRoadFromCoordCache(Coord coord) {
+		
+		populateCoordCache(); // Check the cache has been populated
+		return coordCache.get(coord);
+	}
+	/**
+	 * Test if a coordinate is part of a road segment.
+	 * @param coord The coordinate which we want to test
+	 * @return True if the coordinate is part of a road segment
+	 */
+	private boolean coordOnRoad(Coord coord) {
+		populateCoordCache(); // check the cache has been populated
+		return coordCache.containsKey(coord);
+	}
+	private void populateCoordCache() {
+		
+		if (coordCache==null) { // Fist check cache has been created
+			coordCache = new HashMap<Coord, List<Road>>();
+			Outputter.debugln("GISRoute.populateCoordCache called for first time, " +
+					"creating new cache of all Road coordinates...", Outputter.DEBUG_TYPES.ROUTING);
+		}
+		if (coordCache.size()==0) { // Now popualte it if it hasn't already been populated
+			Outputter.debugln("GISRoute.populateCoordCache: cache has ben emptied, " +
+					"creating new cache of all Road coordinates...", Outputter.DEBUG_TYPES.ROUTING);			
+
+			for (Road r:GlobalVars.ROAD_ENVIRONMENT.getAllObjects(Road.class)) {
+				for (Coordinate c:roadGeography.getGeometry(r).getCoordinates()) {
+					if (coordCache.containsKey(c)){
+						coordCache.get(c).add(r);
+					}
+					else {
+						List<Road> l = new ArrayList<Road>();
+						l.add(r);
+						coordCache.put(new Coord(c), l);
+					}
+				}
+			}
+			Outputter.debugln("... finished caching all road coordinates", Outputter.DEBUG_TYPES.ROUTING);			
+		}
+	}
+
+	private List<Building> getBuildingsOnRoad(Road road) {
+		if (buildingsOnRoadCache==null || buildingsOnRoadCache.size()==0) {
+			Outputter.debugln("GISRoute.getBuildingsOnRoad called for first time, " +
+					"creating cache of all roads and the buildings which are on them ...",
+					Outputter.DEBUG_TYPES.ROUTING);
+			if (buildingsOnRoadCache==null) 
+				buildingsOnRoadCache = new Hashtable<Road,List<Building>>();
+//			System.out.println("**XYZ**");
+			GeometryFactory geomFac = new GeometryFactory();
+			for (Building b:GlobalVars.BUILDING_ENVIRONMENT.getAllObjects(Building.class)) {
+				// Find the closest road to this building
+				Geometry buildingPoint = geomFac.createPoint(b.getCoords().toCoordinate());
+				double minDistance = Double.MAX_VALUE;
+				Road closestRoad = null;
+				double distance;
+				for (Road r:GlobalVars.ROAD_ENVIRONMENT.getAllObjects(Road.class)) {
+					distance = DistanceOp.distance(buildingPoint, roadGeography.getGeometry(r));
+					if (distance<minDistance) {
+						minDistance = distance;
+						closestRoad = r;
+					}
+				} // for roads
+				// Found the closest road, add the information to the buildingsOnRoadCache
+				
+				if (buildingsOnRoadCache.containsKey(closestRoad)) {
+//					System.out.println("Road '"+closestRoad.toString()+"' in cache, adding building "+b.toString());						
+					buildingsOnRoadCache.get(closestRoad).add(b);
+//					System.out.println("Buildings next to road :"+buildingsOnRoadCache.get(closestRoad).toString());
+				}
+				else {
+					List<Building> l = new ArrayList<Building>();
+					l.add(b);
+					buildingsOnRoadCache.put(closestRoad, l);
+//					System.out.println("Road "+closestRoad.toString()+" added to cache with building "+b.toString());
+				}
+			} // for buildings
+//			System.out.println("**XYZ**");
+		}
+		
+		int numRoads = buildingsOnRoadCache.keySet().size();
+		int numBuildings = 0; for (List<Building>l:buildingsOnRoadCache.values()) numBuildings+= l.size();
+		Outputter.debugln("... finished caching roads and buildings. Cached "+numRoads+" roads and "+
+				numBuildings+" buildings.", Outputter.DEBUG_TYPES.ROUTING);
+		return buildingsOnRoadCache.get(road);
+	}
+
+	public void clearCaches() {
+		if (coordCache!=null)
+			coordCache.clear();
+		if (nearestRoadCoordCache!=null)
+			nearestRoadCoordCache.clear();
+		if (buildingsOnRoadCache!=null)
+			buildingsOnRoadCache.clear();
+	}
+	
+
+}
