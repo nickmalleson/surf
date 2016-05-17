@@ -13,7 +13,10 @@ import surf.abm.agents.abbf.{Place, TimeProfile}
   * @param place        The [[surf.abm.agents.abbf.Place]] where this activity can undertaken.
   * @param timeProfile  (See [[surf.abm.agents.abbf.activities.Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
   */
-case class FixedActivity(val activityType: ActivityType, val timeProfile: TimeProfile, val place: Place) extends Activity {
+case class FixedActivity(override val activityType: ActivityType, override val timeProfile: TimeProfile, val place: Place)
+  extends Activity (activityType, timeProfile) {
+
+
 
 }
 

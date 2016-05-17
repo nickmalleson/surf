@@ -37,7 +37,6 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
     println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
-    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); println("\n") // print activities
 
 
     // OLD CODE TO MAKE MAPS OF ACTIVITY -> INTENSITY
@@ -51,8 +50,8 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
-    this.activities.foreach(a => a.+=(BACKGROUND_INCREASE) )
-    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); println("\n") // print activities
+    this.activities.foreach( a => { a += BACKGROUND_INCREASE } )
+    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
     // Now find the most intense one, given the current time.
     val highestActivity:Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
@@ -60,7 +59,10 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
     println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
 
 
-    // XXXX HERE - fix problems with Fixed and FlexibleActivity. Then continue implementing the framework
+    // XXXX HERE - continue implementing the framework. Next steps:
+    //   - implement performAction() function in each activity. I.e. controls the agent.
+    //   - Create some generic activities that other activities need to complete first, e.g. 'GoSomewhere'
+    //   - Create actionList s in each action that specifiy exactly how the action should be performed (e.g. GoSomewhere.doAction() -> Sleep.doAction() )
 
 
 

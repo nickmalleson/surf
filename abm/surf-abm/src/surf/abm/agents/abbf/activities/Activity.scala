@@ -10,9 +10,10 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   * Activites need a type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) and a [[surf.abm.agents.abbf.TimeProfile]]
   * that determines when they are their most intense.
   *
+  * <p>
   * Activities also have a <i>background intensity</i>. This is a base level of intensity that gradually increases
   * over time, unless the agent is actually undertaking the activity in which case it increases. The <code>-=</code>
-  * and <code>+=</code> methods can be used to increase or decrease this background intensity.
+  * and <code>+=</code> methods can be used to increase or decrease this background intensity.</p>
   *
   * @param activityType The type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) of this activity
   * @param timeProfile A definition of the times when this Activity is at its most <i>intense</i>.
@@ -21,7 +22,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   *  depending on the time.
   *
   */
-abstract case class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile) {
+abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile) {
 
   private var _backgroundIntensity = 0d // Private variable with public accessor
 
