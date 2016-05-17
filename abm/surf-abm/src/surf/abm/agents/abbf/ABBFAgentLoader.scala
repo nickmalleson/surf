@@ -45,7 +45,7 @@ object ABBFAgentLoader {
     // BEING AT HOME
     val atHomePlace = Place(home, AT_HOME, null)
     val atHomeActivity = FixedActivity(AT_HOME, TimeProfile(Array((0d, 0.5d))), atHomePlace)
-    atHomeActivity.incrementIntensity(0.5d)// Make this the most powerful activity to begin with.
+    atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with.
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
