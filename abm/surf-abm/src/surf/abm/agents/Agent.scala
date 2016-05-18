@@ -12,7 +12,7 @@ import surf.abm.{SurfABM, SurfGeometry}
   * Created by geonsm on 08/04/2016.
   */
 @SerialVersionUID(1L)
-abstract class Agent (state:SurfABM, home:SurfGeometry[Building]) extends Steppable with Serializable {
+abstract class Agent (val state:SurfABM, val home:SurfGeometry[Building]) extends Steppable with Serializable {
 
   // A unique id for each agent with a public accessor.
   private val _id : Int = Agent.uniqueID()

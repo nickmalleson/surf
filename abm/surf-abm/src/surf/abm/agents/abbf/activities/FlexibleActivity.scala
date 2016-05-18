@@ -1,5 +1,6 @@
 package surf.abm.agents.abbf.activities
 
+import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.TimeProfile
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 
@@ -12,16 +13,14 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   * @param activityType
   * @param timeProfile (See [[surf.abm.agents.abbf.activities.Activity]] for information about the
   *                    [[surf.abm.agents.abbf.TimeProfile]])
+  * @param agent        The agent who will perform this activity
   */
-case class FlexibleActivity (override val activityType: ActivityType, override val timeProfile: TimeProfile)
-  extends Activity(activityType, timeProfile) {
+abstract class FlexibleActivity (
+                              override val activityType: ActivityType,
+                              override val timeProfile: TimeProfile,
+                              override val agent: UrbanAgent)
+  extends Activity(activityType, timeProfile, agent)
+{
 
 }
 
-/*object FlexibleActivity {
-
-  def apply(activityType: ActivityType, timeProfile: TimeProfile) : FlexibleActivity = {
-    new FlexibleActivity(activityType, timeProfile)
-  }
-
-}*/

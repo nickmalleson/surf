@@ -1,5 +1,6 @@
 package surf.abm.agents.abbf.activities
 
+import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 import surf.abm.agents.abbf.{Place, TimeProfile}
 
@@ -11,20 +12,19 @@ import surf.abm.agents.abbf.{Place, TimeProfile}
   *
   * @param activityType The type of this activity.
   * @param place        The [[surf.abm.agents.abbf.Place]] where this activity can undertaken.
+  * @param agent        The agent who will perform this activity
   * @param timeProfile  (See [[surf.abm.agents.abbf.activities.Activity]] for information about the [[surf.abm.agents.abbf.TimeProfile]])
   */
-case class FixedActivity(override val activityType: ActivityType, override val timeProfile: TimeProfile, val place: Place)
-  extends Activity (activityType, timeProfile) {
+abstract class FixedActivity(
+                              override val activityType: ActivityType,
+                              override val timeProfile: TimeProfile,
+                              override val agent: UrbanAgent,
+                              val place: Place)
+  extends Activity (activityType, timeProfile, agent)
+{
 
 
 
 }
 
-/*object FixedActivity {
-  def apply (activityType: ActivityType, timeProfile: TimeProfile, place: Place) : FixedActivity = {
-    new FixedActivity(activityType, timeProfile, place)
-  }
-
-  private val LOG: Logger = Logger.getLogger(this.getClass)
-}*/
 

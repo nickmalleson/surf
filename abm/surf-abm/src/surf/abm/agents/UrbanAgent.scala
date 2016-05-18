@@ -43,33 +43,78 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   private var pathDirection = 1
   private var linkDirection = 1
 
+  /**
+    * Set a new destination for this agent
+    *
+    * @param dest
+    */
+  def newDestination(dest:Option[SurfGeometry[_]]) = {
+    this._destination = dest
+    this._atDestination = false
+    this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
+  }
 
-  protected def moveAlongPath() : Unit = {
 
-    this.currentIndex += ( moveRate * linkDirection )
+  /**
+    * Move the agent towards their destination
+    */
+  def moveAlongPath(): Unit = {
 
-    // check to see if the progress has taken the current index beyond its goal
-    // given the direction of movement. If so, proceed to the next edge
-    if (this.linkDirection == 1 && this.currentIndex > this.endIndex) {
-      this._atDestination = transitionToNextEdge(this.currentIndex - this.endIndex)
+    try {
+
+      // A path should have been created alreadyi
+      if (this.path == null) {
+        throw new Exception(s"The path shouldn't be null (for agent ${this.toString()}. Have you called newDestination() first?")
+      }
+
+      // Check that the agent has some destination to go to
+      this._destination match {
+
+        case Some(_) => {
+          // There is a destination
+
+          this.currentIndex += (moveRate * linkDirection)
+
+          // check to see if the progress has taken the current index beyond its goal
+          // given the direction of movement. If so, proceed to the next edge
+          if (this.linkDirection == 1 && this.currentIndex > this.endIndex) {
+            this._atDestination = transitionToNextEdge(this.currentIndex - this.endIndex)
+          }
+          else if (this.linkDirection == -1 && this.currentIndex < this.startIndex) {
+            this._atDestination = transitionToNextEdge(this.startIndex - this.currentIndex)
+          }
+
+          // In some cases, where the origin and destination are the same, the segment will be null here,
+          // as the agent has already reached their destination without actually creating a path.
+          // Check for this. If it is not the case, then just move along the path as normal.
+          if (this._atDestination) {
+            return
+          }
+          assert(this.segment != null, "Internal error, segment should not be null. Debug info:\n\t" +
+            "Agent: %s\n\tcurrentIndex:%d\n\tstartIndex:%d\n\tlinkDirection:%d\n\tatDestination?:%s\n\tpath:%s".format(
+              this, this.currentIndex, this.startIndex, this.linkDirection, this._atDestination, this._path))
+
+          val currentPos: Coordinate = this.segment.extractPoint(currentIndex)
+          this.moveToCoordinate(currentPos)
+          //println(currentPos.x+","+currentPos.y+","+this.state.schedule.getSteps)
+
+        }
+
+        // If no destination, then thrown an exception
+        case None => throw new Exception(s"Agent ${this.id()} cannot move along their path because no destination has been set")
+      }
+
+    } // try
+    catch {
+      case ex: RoutingException => {
+        Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
+      }
+      case ex: Exception => {
+        Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
+      }
+      case default => state.finish
     }
-    else if (this.linkDirection == -1 && this.currentIndex < this.startIndex) {
-      this._atDestination = transitionToNextEdge(this.startIndex - this.currentIndex)
-    }
 
-    // In some cases, where the origin and destination are the same, the segment will be null here,
-    // as the agent has already reached their destination without actually creating a path.
-    // Check for this. If it is not the case, then just move along the path as normal.
-    if (this._atDestination) {
-      return
-    }
-    assert(this.segment != null, "Internal error, segment should not be null. Debug info:\n\t" +
-      "Agent: %s\n\tcurrentIndex:%d\n\tstartIndex:%d\n\tlinkDirection:%d\n\tatDestination?:%s\n\tpath:%s".format(
-        this,this.currentIndex,this.startIndex, this.linkDirection, this._atDestination, this._path))
-
-    val currentPos: Coordinate = this.segment.extractPoint(currentIndex)
-    this.moveToCoordinate(currentPos)
-    //println(currentPos.x+","+currentPos.y+","+this.state.schedule.getSteps)
   }
 
   /**

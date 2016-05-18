@@ -17,18 +17,12 @@ import surf.abm.{Clock, SurfABM, SurfGeometry}
   *                   with the current intensity of the activity. Private because it's a var and we don't
   *                   want other classes changing it later.
   */
-class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var activities: Set[Activity]) extends UrbanAgent(state, home) {
-
- // Temporary variables while the agent just walks from home and back.
-  var goingHome = false
-  // Find where the agent works (specified temporarily in the config file)
-  val workBuilding = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig+".WorkAddress"))
+class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building], private var activities: Set[Activity])
+  extends UrbanAgent(state, home)
+{
 
 
-  // XXXX FIX THE INCREMENT - I DON"T THINK IT ADDS UP TO 1.0 OVER THE WHOLE DAY
-
-
-  // AMount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
+  // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
   private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
   private val BACKGROUND_INCREASE = (1d/ticksPerDay)
 
@@ -58,48 +52,15 @@ class ABBFAgent(val state:SurfABM, val home:SurfGeometry[Building], private var 
 
     println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
 
+    // Perform the action to satisfy that activity.
 
-    // XXXX HERE - continue implementing the framework. Next steps:
-    //   - implement performAction() function in each activity. I.e. controls the agent.
-    //   - Create some generic activities that other activities need to complete first, e.g. 'GoSomewhere'
-    //   - Create actionList s in each action that specifiy exactly how the action should be performed (e.g. GoSomewhere.doAction() -> Sleep.doAction() )
+    val satisfied = highestActivity.performActivity()
 
-
-
-
-
-    // TODO implement step!!
-
-    // Temporary code
-    try {
-      if (this.destination.isEmpty || this.atDestination) {
-
-        if (goingHome) {
-          Agent.LOG.debug("Agent "+ this.id.toString() + " has arrived home. Going to work")
-          goingHome = false
-          this._destination = Option(workBuilding)
-          this._atDestination = false
-          this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
-        }
-        else {
-          Agent.LOG.debug("Agent "+ this.id.toString() + " has arrived at work. Going home")
-          goingHome = true
-          this._destination = Option(this.home)
-          this._atDestination = false
-          this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
-
-        }
-
-      }
-      assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
-      this.moveAlongPath()
+    if (satisfied) {
+      // TODO: reduce the background intensity of the activity since it is being performed
     }
-    catch {
-      case ex: RoutingException => {
-        Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
-        state.finish
-      }
-    }
+
+
 
   }
 
