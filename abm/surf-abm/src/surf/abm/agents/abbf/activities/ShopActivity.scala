@@ -1,7 +1,7 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.{Place, TimeProfile}
+import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
 
 
@@ -11,7 +11,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
   */
 case class ShopActivity(
                      override val timeProfile: TimeProfile,
-                     override val agent: UrbanAgent)
+                     override val agent: ABBFAgent)
   extends FlexibleActivity(SHOPPING, timeProfile, agent) {
 
   /**

@@ -1,7 +1,7 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.{Place, TimeProfile}
+import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.WORKING
 
 /**
@@ -10,7 +10,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.WORKING
   */
 case class WorkActivity(
                     override val timeProfile: TimeProfile,
-                    override val agent: UrbanAgent,
+                    override val agent: ABBFAgent,
                     override val place: Place)
   extends FixedActivity (WORKING, timeProfile, agent, place)
 {

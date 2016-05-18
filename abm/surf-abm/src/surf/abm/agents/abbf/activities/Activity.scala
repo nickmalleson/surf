@@ -1,7 +1,7 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.TimeProfile
+import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 
 
@@ -28,16 +28,10 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   *  E.g. work activities might be the most intense between 9am-5pm. This has the
   *  affect of increasing/decreasing the agent's desire to undertake the activity
   *  depending on the time.
-  * @param a The agent who will be performing this activity. Note that this is actually defined as a function
-  *          that returns an agent. This is so that Activities can be instantiated before the agent whom they
-  *          refer to. (This is pretty neat, see
-  *          <a href="https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects">
-  *            Instantiating immutable paired objects</a> discussion.
+  * @param agent The agent who will be performing this activity.
   *
   */
-abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile, a: => UrbanAgent) {
-
-  lazy val agent =  a
+abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile, val agent: ABBFAgent) {
 
   private var _backgroundIntensity = 0d // Private variable with public accessor
 
@@ -56,7 +50,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * @return True if the agent has performed this activity, false if they have not (e.g. if they are still travelling
     *         to a particular destination).
     */
-  abstract def performActivity() : Boolean
+  def performActivity() : Boolean
 
   /**
     * Increase the background intensity

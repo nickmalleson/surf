@@ -2,7 +2,7 @@ package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
-import surf.abm.agents.abbf.{Place, TimeProfile}
+import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 
 /**
   * [[surf.abm.agents.abbf.activities.FixedActivity]]s are identical to [[surf.abm.agents.abbf.activities.FlexibleActivity]]s,
@@ -18,7 +18,7 @@ import surf.abm.agents.abbf.{Place, TimeProfile}
 abstract class FixedActivity(
                               override val activityType: ActivityType,
                               override val timeProfile: TimeProfile,
-                              override val agent: UrbanAgent,
+                              override val agent: ABBFAgent,
                               val place: Place)
   extends Activity (activityType, timeProfile, agent)
 {

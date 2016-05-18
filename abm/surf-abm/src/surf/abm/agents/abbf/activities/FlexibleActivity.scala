@@ -1,7 +1,7 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.TimeProfile
+import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 
 /**
@@ -18,7 +18,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 abstract class FlexibleActivity (
                               override val activityType: ActivityType,
                               override val timeProfile: TimeProfile,
-                              override val agent: UrbanAgent)
+                              override val agent: ABBFAgent)
   extends Activity(activityType, timeProfile, agent)
 {
 

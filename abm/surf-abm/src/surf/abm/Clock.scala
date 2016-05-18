@@ -33,6 +33,7 @@ object Clock extends Steppable {
   def create ( state:SurfABM,
                startTime: LocalDateTime = LocalDateTime.of(2011, 1, 1, 0, 0) ) {
 
+    LOG.info("Attempting to initialise simulation clock")
     if (this.clock != null) {
       throw new Exception("Cannot create more than one Clock instance")
     }

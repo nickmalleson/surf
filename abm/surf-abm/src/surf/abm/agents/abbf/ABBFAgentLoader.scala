@@ -21,15 +21,14 @@ object ABBFAgentLoader {
     */
   def createAgents(state: SurfABM) = {
 
-    // Define the activities that this agent can do (later this will be done by reading data)
-
-    // Note, the agents and activities are immutable and paired which means they have to be instantiated together.
-    // Therefore the links to agents in the Activity objects are lazy. I.e. activities are not actually
-    // instantiated until after the agent has been created.
+    // Instantiate the agent. We haven't defined the activities yet, but this is lazy so it doesn't matter.
+    // This is because  agents and activities are immutable and paired which means they have to be instantiated together.
     // See https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects
 
     val home = SurfABM.getRandomBuilding(state)
+    lazy val a: ABBFAgent = ABBFAgent(state, home)
 
+    // Next the activities that this agent can do (later this will be done by reading data)
 
     // WORKING
 
@@ -41,11 +40,11 @@ object ABBFAgentLoader {
     )
     // Work time profile is 0 before 6 and after 10, and 1 between 10-4
     val workTimeProfile = TimeProfile(Array((6d, 0d), (10d, 1d), (16d, 1d), (22d, 0d)))
-    lazy val workActivity = WorkActivity(timeProfile = workTimeProfile, agent=a, place = workPlace)
+    val workActivity = WorkActivity(timeProfile = workTimeProfile, agent=a, place = workPlace)
 
     // SHOPPING
     val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d))) // A constant, low intensity
-    lazy val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
+    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
 
 
     // BEING AT HOME
@@ -56,11 +55,12 @@ object ABBFAgentLoader {
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
 
-    // Finally instantiate the agent
+    // Finally tell the agent abount them
+    a.activities = activities
 
-    lazy val a: UrbanAgent = ABBFAgent(state, home, activities)
 
-    
+
+
     //    XXXX now - need to think about 1 - how the intensities change over time (presumably this code goes into ABBFAgent) and 2 - how the agent's behaviour is controlled by them (again probably in ABBFAgent)
 
 

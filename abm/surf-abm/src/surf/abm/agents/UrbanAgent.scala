@@ -112,7 +112,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       case ex: Exception => {
         Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
       }
-      case default => state.finish
+      state.finish
     }
 
   }

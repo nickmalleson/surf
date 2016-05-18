@@ -13,14 +13,15 @@ import surf.abm.{Clock, SurfABM, SurfGeometry}
   * @param home The agent's home (starting location). Usually a <code>Building</code>
   *             where (e.g.) they live, but not necessarily. The agent's initial
   *             location is set to be <code>home</code>
-  * @param activities A map of the [[surf.abm.agents.abbf.activities.Activity]]s that are driving an agent, along
-  *                   with the current intensity of the activity. Private because it's a var and we don't
-  *                   want other classes changing it later.
   */
-class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building], private var activities: Set[Activity])
+class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building])
   extends UrbanAgent(state, home)
 {
 
+  /**
+    * A set of of the [[surf.abm.agents.abbf.activities.Activity]]s that are driving an agent
+    */
+  var activities = Set.empty[Activity]
 
   // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
   private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
@@ -68,9 +69,10 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
 }
 
+
 object ABBFAgent {
-  def apply(state: SurfABM, home: SurfGeometry[Building], activities: Set[Activity]): ABBFAgent =
-    new ABBFAgent(state, home, activities)
+  def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent =
+    new ABBFAgent(state, home )
 
 
 
