@@ -4,7 +4,7 @@ package surf.abm.agents
 import com.vividsolutions.jts.geom.Coordinate
 import sim.engine.SimState
 import surf.abm.environment.Building
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.main.{SurfABM, SurfGeometry}
 
 import scala.math._
 

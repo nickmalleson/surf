@@ -1,5 +1,4 @@
-package surf.abm
-
+package surf.abm.main
 
 import java.io.File
 import java.lang.reflect.{Constructor, Method}
@@ -27,11 +26,11 @@ import scala.collection.JavaConversions._
   * Use this class to run the model in headless model (without a GUI). E.g. to run
   * for 5000 iterations, outputting the time each 1000 steps use:
   * <pre><code>
-  *   scala surf.abm.SurfABM -for 5000 -time 1000
+  *   scala surf.abm.main.SurfABM -for 5000 -time 1000
   * </pre></code>
   * To get more help options, do:
   * <pre><code>
-  *   scala surf.abm.SurfABM -help
+  *   scala surf.abm.main.SurfABM -help
   * </pre></code>
   * Note that you need to set up the classpath for the above commands to work. See
   * the file <code>run.sh</code> for an example.

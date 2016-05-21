@@ -1,4 +1,4 @@
-package surf.abm
+package surf.abm.main
 
 import java.awt.geom.Rectangle2D
 import java.awt.{Color, Graphics2D, Paint}

@@ -6,7 +6,7 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine
 import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
 import surf.abm.environment.{Building, Junction}
 import surf.abm.exceptions.RoutingException
-import surf.abm.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 
 import scala.collection.JavaConversions._ // TODO: this won't be necessary once I have re-written A* Path
 

@@ -4,18 +4,19 @@ import org.apache.log4j.Logger
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.activities.ActivityTypes.{AT_HOME, SHOPPING, WORKING}
 import surf.abm.agents.abbf.activities._
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.main.{SurfABM, SurfGeometry}
+import surf.abm.main.{SurfGeometry}
 
 /**
   * The purpose of this loader is to create agents who behave according to the ABBF framework.
   * Assuming that the model has been configured to use the framework (see [[surf.abm.surf-abm.conf]]), then once
-  * the model has been initialised, [[surf.abm.SurfABM]] will call the
+  * the model has been initialised, [[SurfABM]] will call the
   * [[surf.abm.agents.abbf.ABBFAgentLoader.createAgents()]] method.
   */
 object ABBFAgentLoader {
 
   /**
-    * This method is called by [[surf.abm.SurfABM]] after initialisation when the model starts.
+    * This method is called by [[main.SurfABM]] after initialisation when the model starts.
     *
     * @param state The model state
     */
@@ -26,7 +27,7 @@ object ABBFAgentLoader {
     // See https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects
 
     val home = SurfABM.getRandomBuilding(state)
-    lazy val a: ABBFAgent = ABBFAgent(state, home)
+    val a: ABBFAgent = ABBFAgent(state, home)
 
     // Next the activities that this agent can do (later this will be done by reading data)
 

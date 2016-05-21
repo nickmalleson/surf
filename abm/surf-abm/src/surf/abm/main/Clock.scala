@@ -1,4 +1,4 @@
-package surf.abm
+package surf.abm.main
 
 import java.time.LocalDateTime
 
@@ -89,6 +89,3 @@ object Clock extends Steppable {
   private val LOG: Logger = Logger.getLogger(this.getClass);
 
 }
-
-
-

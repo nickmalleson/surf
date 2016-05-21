@@ -5,7 +5,7 @@ import surf.abm.agents.abbf.activities.Activity
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
-import surf.abm.{Clock, SurfABM, SurfGeometry}
+import surf.abm.main.{Clock, SurfABM, SurfGeometry}
 
 /**
   *

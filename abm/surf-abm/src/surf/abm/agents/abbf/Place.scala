@@ -2,9 +2,9 @@ package surf.abm.agents.abbf
 
 import java.time.LocalDateTime
 
-import surf.abm.SurfGeometry
 import surf.abm.agents.abbf.activities.ActivityTypes
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
+import surf.abm.main.SurfGeometry
 
 
 /**
@@ -16,7 +16,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   * {{{
   *import java.time.LocalDateTime
   *import sim.util.geo.MasonGeometry
-  *import surf.abm.SurfGeometry
+  *import surf.abm.main.SurfGeometry
   *val t1 = LocalDateTime.of(2015, 1, 1, 9, 30)
   *val t2 = LocalDateTime.of(2015, 1, 1, 17, 0)
   *val location = SurfGeometry(new MasonGeometry(), null)

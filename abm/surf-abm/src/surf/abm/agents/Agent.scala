@@ -5,7 +5,7 @@ import org.apache.log4j.Logger
 import sim.engine.Steppable
 import sim.util.geo.{MasonGeometry, PointMoveTo}
 import surf.abm.environment.Building
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.main.{SurfABM, SurfGeometry}
 
 /**
   * Base class for all agents

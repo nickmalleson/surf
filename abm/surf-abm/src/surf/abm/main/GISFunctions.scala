@@ -1,11 +1,14 @@
-package surf.abm
+package surf.abm.main
 
-import _root_.surf.abm.exceptions.RoutingException
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.util.Bag
+import surf.abm.exceptions.RoutingException
 import surf.abm.surfutil.Util
 
+/**
+  * Created by nick on 21/05/2016.
+  */
 object GISFunctions {
 
   private val LOG: Logger = Logger.getLogger(GISFunctions.getClass)

@@ -3,7 +3,7 @@ package surf.abm.agents
 import sim.engine.SimState
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
-import surf.abm.{SurfABM, SurfGeometry}
+import surf.abm.main.{SurfABM, SurfGeometry}
 
 /**
   * An agent who walks from one randomly chosen building to another

@@ -7,7 +7,7 @@ import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.geo.{GeomPlanarGraph, GeomPlanarGraphDirectedEdge}
-import surf.abm.SurfABM
+import surf.abm.main.SurfABM
 
 /**
   * Checks that the input road network is connected. If not, log a list of roads that are disconnected.

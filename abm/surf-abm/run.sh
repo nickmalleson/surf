@@ -5,4 +5,4 @@ scala -cp ../resources/mason/mason/build/:\
 ./lib/*:\
 ./build/:\
 ../resources/config/classes/\
- surf.abm.SurfABM "$@"
+ surf.abm.main.SurfABM "$@"

@@ -5,6 +5,7 @@ import com.typesafe.config.ConfigValueFactory
 import org.apache.log4j.Logger
 import org.scalatest.Ignore
 import sim.engine.SimState
+import surf.abm.main.SurfABM
 import surf.abm.surfutil.Util
 
 import scala.util.control.Breaks._

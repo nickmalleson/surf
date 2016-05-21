@@ -1,4 +1,4 @@
-package surf.abm
+package surf.abm.main
 
 /**
   * Place to record any String values that the model relies on, e.g. data column
