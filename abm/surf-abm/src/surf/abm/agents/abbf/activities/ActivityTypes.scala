@@ -6,7 +6,7 @@ package surf.abm.agents.abbf.activities
   * I'm not really sure about the difference between using sealed case objects or scala's inbuilt Enumeration
   * package to do this. See: http://underscore.io/blog/posts/2014/09/03/enumerations.html
   */
-object ActivityTypes {
+object ActivityTypes extends Serializable {
   sealed abstract class ActivityType ( val name : String ) {
 
     // Can define methods, etc. for all ActivityTypes here.
@@ -19,10 +19,7 @@ object ActivityTypes {
 
   case object SHOPPING extends ActivityType("Shopping")
 
-  /**
-    * A default activity whose purpose is to encourage agents to go home if they've nothing else do do.
-    */
-  case object AT_HOME extends ActivityType("AtHome")
+  case object SLEEPING extends ActivityType("Sleeping")
 
 }
 

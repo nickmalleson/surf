@@ -20,9 +20,10 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
     try {
       if (this.destination.isEmpty || this.atDestination) {
         Agent.LOG.debug("Agent "+ this.id.toString() + " is looking for a new destination")
-        this._destination = Option(SurfABM.getRandomBuilding(state))
-        this._atDestination = false
-        this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
+        this.newDestination(Option(SurfABM.getRandomBuilding(state)))
+        //this._destination = Option(SurfABM.getRandomBuilding(state))
+        //this._atDestination = false
+        //this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
       }
       assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
       this.moveAlongPath()

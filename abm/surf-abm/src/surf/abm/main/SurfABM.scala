@@ -50,6 +50,9 @@ class SurfABM(seed: Long) extends SimState(seed) {
     // by configuration parameters.
     Clock.create(this)
 
+    // Create the outputter that is in charge of writing out results etc.
+    OutputFactory(this)
+
     // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
     // AgentType are created at random buildings
     try {
@@ -86,9 +89,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   override def finish(): Unit = super.finish()
 
-}
-
-// class surfABM
+} // class surfABM
 
 
 @SerialVersionUID(1L)
@@ -116,7 +117,6 @@ object SurfABM extends Serializable {
 
   // Keep a map of agents and their geometries. This is created after the agents have been created
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
-
 
   // Spatial layers. One function to read them all
   val (buildingGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
@@ -252,7 +252,7 @@ object SurfABM extends Serializable {
         }
       }
 
-  }
+   } // _readEnvironmentData()
 
   /**
     * Create agents. This needs to be called *after* the model has finished initialising.
@@ -263,7 +263,7 @@ object SurfABM extends Serializable {
     * @param state
     * @return
     */
-  def createDefaultAgents(state : SurfABM, numAgents: Int, agentClassName: String) = {
+  private def createDefaultAgents(state : SurfABM, numAgents: Int, agentClassName: String) = {
     SurfABM.agentGeoms.clear
     try {
       // Find the class to use to create agents.
@@ -300,6 +300,11 @@ object SurfABM extends Serializable {
           //s"agentGeomMap: ${SurfABM.agentGeomMap.size}"
       )
 
+      SurfABM.agentGeoms.setMBR(SurfABM.mbr)
+
+      // Ensure that the spatial index is made aware of the new agent
+      // positions.  Scheduled to guaranteed to run after all agents moved.
+      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
 
     }
     catch {
@@ -308,11 +313,7 @@ object SurfABM extends Serializable {
         throw e
       }
     }
-    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
 
-    // Ensure that the spatial index is made aware of the new agent
-    // positions.  Scheduled to guaranteed to run after all agents moved.
-    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
   }
 
 
@@ -333,9 +334,8 @@ object SurfABM extends Serializable {
     }
   }
 
-  // Probably not necessary. This lets you do var a = SurfABM(seed) (no 'new')
-  def apply(seed: Long): SurfABM = new SurfABM(seed)
 
+  def apply(l:Long) = new SurfABM(l)
 
   /* Main application entry point */
   def main(args: Array[String]): Unit = {
@@ -353,4 +353,4 @@ object SurfABM extends Serializable {
     }
   }
 
-}
+} // surfabm object

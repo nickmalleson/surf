@@ -34,7 +34,7 @@ case class TimeProfile(val profile: Array[(Double, Double)]) {
   /**
     * Calculate the intensity at time t
     *
-    * @param t The time period to check. Must be in range [0,24)
+    * @param t The time period to check. Must be in range [0,24). TODO: Improve this so that it takes a time and date.
     * @return The intensity, calculates as the linear interpolation between the nearest time points.
     */
   def calcIntensity(t: Double): Double = {

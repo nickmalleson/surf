@@ -21,11 +21,23 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
   /**
     * A set of of the [[surf.abm.agents.abbf.activities.Activity]]s that are driving an agent
     */
-  var activities = Set.empty[Activity]
+  var activities : Set[ _ <: Activity] = Set.empty
 
   // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
   private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
   private val BACKGROUND_INCREASE = (1d/ticksPerDay)
+
+  /**
+    * The current activity that the agent is doing. Can be None.
+    */
+  var currentActivity : Option[Activity] = None
+
+  /**
+    * Work out which activity is the most intense at the moment.
+    * @return
+    */
+  def highestActivity(): Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
+
 
 
   override def step(state: SimState): Unit = {
@@ -49,7 +61,9 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
     // Now find the most intense one, given the current time.
-    val highestActivity:Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
+    val highestActivity:Activity = this.highestActivity()
+
+    this.currentActivity = Some(highestActivity) // Set the current activity - others might care about this.
 
     println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
 

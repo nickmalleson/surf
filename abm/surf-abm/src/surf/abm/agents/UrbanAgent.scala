@@ -24,9 +24,9 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   // A destination that the agent might be heading to.
   // This can be null, so wrap in Option() to make this explicit
   //protected var _destination: Option[SurfGeometry[_ <: Any]] = Option(null) // (Option tells us this could be null)
-  protected var _destination: Option[SurfGeometry[_]] = Option(null) // (Option tells us this could be null)
+  private var _destination: Option[SurfGeometry[_]] = Option(null) // (Option tells us this could be null)
   def destination() = this._destination // Accessor to destination
-  protected var _atDestination = false
+  private var _atDestination = false
   def atDestination() = this._atDestination
 
   // Used by agent to walk along line segment; assigned in setNewRoute()
@@ -123,7 +123,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * @param edge the GeomPlanarGraphEdge to traverse next
     *
     */
-  protected def setupEdge(edge: GeomPlanarGraphEdge) {
+  private def setupEdge(edge: GeomPlanarGraphEdge) {
     val line: LineString = edge.getLine
     this.segment = new LengthIndexedLine(line)
     this.startIndex = this.segment.getStartIndex
@@ -195,7 +195,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * Sets the <code>UrbanAgent</code>'s path - i.e. the roads that it must pass through
     * in order to reach its destination
     */
-  protected def findNewPath(): Unit = {
+  private def findNewPath(): Unit = {
 
     // TODO - break this method up and test it properly. (remember Sam's advice - each function should have simple, clear inputs and outputs
 

@@ -13,6 +13,7 @@ case class WorkActivity(
                     override val agent: ABBFAgent,
                     override val place: Place)
   extends FixedActivity (WORKING, timeProfile, agent, place)
+  with Serializable
 {
 
   /**

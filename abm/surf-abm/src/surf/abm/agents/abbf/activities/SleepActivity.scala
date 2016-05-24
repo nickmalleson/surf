@@ -3,18 +3,18 @@ package surf.abm.agents.abbf.activities
 import org.apache.commons.collections.functors.NullIsFalsePredicate
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
-import surf.abm.agents.abbf.activities.ActivityTypes.{AT_HOME, WORKING}
+import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING}
 import surf.abm.exceptions.RoutingException
 import surf.abm.main.SurfABM
 
 /**
-  * An activity of type [[surf.abm.agents.abbf.activities.ActivityTypes.AT_HOME]] that causes the agent to go home and
-  * hang around there.
+  * An activity of type [[surf.abm.agents.abbf.activities.ActivityTypes.SLEEPING]] that causes the agent to go home and
+  * sleep.
   */
-case class AtHomeActivity(
+case class SleepActivity(
                     override val timeProfile: TimeProfile,
                     override val agent: ABBFAgent)
-  extends FixedActivity (AT_HOME, timeProfile, agent, Place(agent.home, AT_HOME))
+  extends FixedActivity (SLEEPING, timeProfile, agent, Place(agent.home, SLEEPING))  with Serializable
 {
 
   // Temporary variables while the agent just walks from home and back.

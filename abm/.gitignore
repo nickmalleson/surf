@@ -2,5 +2,8 @@
 # All build directories
 build/
 
+# Model results
+surf-abm/out/*
+
 # Logs
 surfabm.log*

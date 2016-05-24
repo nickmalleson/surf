@@ -20,7 +20,7 @@ abstract class FixedActivity(
                               override val timeProfile: TimeProfile,
                               override val agent: ABBFAgent,
                               val place: Place)
-  extends Activity (activityType, timeProfile, agent)
+  extends Activity (activityType, timeProfile, agent)  with Serializable
 {
 
 

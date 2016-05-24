@@ -12,7 +12,8 @@ import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
 case class ShopActivity(
                      override val timeProfile: TimeProfile,
                      override val agent: ABBFAgent)
-  extends FlexibleActivity(SHOPPING, timeProfile, agent) {
+  extends FlexibleActivity(SHOPPING, timeProfile, agent)  with Serializable
+{
 
   /**
     * This makes the agent actually perform the activity.

@@ -31,7 +31,8 @@ import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
   * @param agent The agent who will be performing this activity.
   *
   */
-abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile, val agent: ABBFAgent) {
+abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeProfile, val agent: ABBFAgent)
+  extends Serializable {
 
   private var _backgroundIntensity = 0d // Private variable with public accessor
 

@@ -19,7 +19,7 @@ abstract class FlexibleActivity (
                               override val activityType: ActivityType,
                               override val timeProfile: TimeProfile,
                               override val agent: ABBFAgent)
-  extends Activity(activityType, timeProfile, agent)
+  extends Activity(activityType, timeProfile, agent) with Serializable
 {
 
 }

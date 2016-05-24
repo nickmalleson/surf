@@ -2,10 +2,10 @@ package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.activities.ActivityTypes.{AT_HOME, SHOPPING, WORKING}
+import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
 import surf.abm.main.{SurfABM, SurfGeometry}
-import surf.abm.main.{SurfGeometry}
+import surf.abm.main.SurfGeometry
 
 /**
   * The purpose of this loader is to create agents who behave according to the ABBF framework.
@@ -16,7 +16,7 @@ import surf.abm.main.{SurfGeometry}
 object ABBFAgentLoader {
 
   /**
-    * This method is called by [[main.SurfABM]] after initialisation when the model starts.
+    * This method is called by [[surf.abm.main.SurfABM]] after initialisation when the model starts.
     *
     * @param state The model state
     */
@@ -48,9 +48,10 @@ object ABBFAgentLoader {
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
 
 
-    // BEING AT HOME
-    val atHomePlace = Place(home, AT_HOME, null)
-    val atHomeActivity = AtHomeActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
+    // SLEEPING (high between 11pm and 6am)
+    val atHomePlace = Place(home, SLEEPING, null)
+    val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
+    //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with.
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
@@ -67,7 +68,7 @@ object ABBFAgentLoader {
 
     // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
 
-    SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
+    SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
     state.schedule.scheduleRepeating(a)
 
     SurfABM.agentGeoms.setMBR(SurfABM.mbr)

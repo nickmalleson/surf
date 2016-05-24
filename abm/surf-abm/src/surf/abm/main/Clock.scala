@@ -47,7 +47,7 @@ object Clock extends Steppable {
     *
     * @return The current time object. It is immutable, so it doesn't matter if others manipulate it.
     */
-  def getTime = {
+  def getTime () = {
     check()
     clock.currentTime
   }
@@ -55,8 +55,8 @@ object Clock extends Steppable {
   /**
     * Convenience to find the current decimal hour
     */
-  def currentHour : Double = {
-    this.clock.currentTime.getHour.toDouble + (this.clock.currentTime.getMinute.toDouble / 60d)
+  def currentHour() : Double = {
+    this.getTime().getHour.toDouble + (this.clock.currentTime.getMinute.toDouble / 60d)
   }
 
   private def check() = {

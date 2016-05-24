@@ -21,7 +21,7 @@ class SurfABMSpec extends UnitSpec {
   // Tests consist of a *subject*, a *verb* (either 'should', 'must', or 'can') and the rest of the sentence
 
   "A SurfABM" should "load without errors" in {
-    SurfABM(1l) // This initialises a model but doesn't start it running
+    new SurfABM(1l) // This initialises a model but doesn't start it running
   }
 
   //TODO Complete these tests
