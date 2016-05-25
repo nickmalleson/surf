@@ -25,8 +25,10 @@ object ABBFOutputter extends Steppable with Serializable {
 
     state.schedule.scheduleRepeating(this, Int.MinValue, 1)
 
+    xxxx schedule finish as well
+
     val AGENT_MAIN_HEADER = "Iterations, Time, Agent, Activity, x, y\n" // Main csv file; one line per agent
-    val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, WorkActivity, SleepActivity, GoHomeActivity, ShopActivity\n" // More detailed information about all activities
+    val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, Activity, Intensity\n" // More detailed information about all activities (multiple lines per agent)
 
     // Make a new directory for this model
     val dir = new File("./out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
@@ -45,7 +47,7 @@ object ABBFOutputter extends Steppable with Serializable {
   }
 
   /**
-    * This is scheduled to be called at every iteration and write out model info.
+    * This should be scheduled to be called at every iteration and write out model info.
     *
     * @param state
     */
@@ -54,7 +56,7 @@ object ABBFOutputter extends Steppable with Serializable {
     LOG.info("WRITING OUTPUT")
     val ticks = state.schedule.getTime()
     val time = Clock.getTime
-    for (i <- 0 to SurfABM.agentGeoms.getGeometries.size()) {
+    for (i <- 0 until SurfABM.agentGeoms.getGeometries().size()) {
       val agentGeom = SurfABM.agentGeoms.getGeometries.get(i).asInstanceOf[SurfGeometry[ABBFAgent]]
       val agent = agentGeom.theObject // The object that is represented by the SurfGeometry
       val coord = agent.location().geometry.getCoordinate // The agent's location
@@ -63,26 +65,36 @@ object ABBFOutputter extends Steppable with Serializable {
       // Write the main agent file
       this.agentMainBR.write(s"${ticks},${time},${agent.id()},${act},${coord.x},${coord.y},")
 
-      // Need the intensities of each activity to write the main file
-
-      var work, sleep, gohome, shop = -1d // The intensities
+      // Now write the intensities of each activity (one line per agent-activity)
       val hour = Clock.currentHour() // Need to know the time of day for the intensity
+      agent.activities.foreach(a =>
+        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.toString},${a.getIntensity(hour)}\n")
+      )
+      // Sanity check that each activity has been written (can get rid of this code later)
+      var work, sleep, shop = false // Check that each activity is set
       // Iterate over all Activities, find their intensity, and match them to the appropriate variable,
       agent.activities.foreach ( a => {
         a match {
-          case x:WorkActivity   => work  = x.getIntensity(Clock.currentHour)
-          case x:SleepActivity  => sleep = x.getIntensity(Clock.currentHour)
-          case x:SleepActivity => work  = x.getIntensity(Clock.currentHour)
-          case x:ShopActivity   => shop  = x.getIntensity(Clock.currentHour)
+          case x:WorkActivity   => work  = true
+          case x:SleepActivity  => sleep = true
+          case x:ShopActivity   => shop  = true
         } // match
       } ) // foreach
       // Each variable should have been set, or a MatchError should be thrown
-      assert(work != -1d && sleep != -1d && gohome != -1d && shop != -1d)
-    } // for geometries
+      assert( ! Array(work,sleep,shop).contains(false) )
 
+    } // for geometries (agents)
 
+    /**
+      * This should be scheduled to be called at the end of the model to write the output files
+      *
+      */
+    def finish() = {
+      LOG.info("Closing output files")
+      this.agentActivitiesBR.close()
+      this.agentMainBR.close()
+    }
 
-    //this.agentMainBR.write(s"${},${},${},${},${},${},")
 
   }
 
