@@ -30,7 +30,7 @@ print(paste("Setting working directory to most recent model of type",SCENARIO,":
 setwd(wd)
 
 
-#library(GISTools)
+library(GISTools)
 #library(rgeos)    # For things like gIntersects
 #library(rgdal)     # For reading shapefiles
 #library(raster)    # For creating regular grids
@@ -62,6 +62,7 @@ agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
 acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 ```
 
+Plot the intensities of the different activities.
 
 ```{r plotActivities}
 
@@ -73,19 +74,27 @@ i <- 1 # For colours
 for (activity in all.acts) {
   if (i==1) { # First plot
     plot(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, 
-         type='o', col=i, ylim=c(0,max(acts$Intensity)))
+         type='o', col=i, ylim=c(0,max(acts$Intensity)),
+         xlab = "Time", ylab="TotalIntensity")
   } else {
     points(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, type='o', col=i)
   }
   i <- i + 1
 }
 
-XXXX LEGEND
+legend("topleft", legend=all.acts, col=1:length(all.acts), lty=1, pch="o")
+
 ```
+
+
+Map the agent locations.
 
 ```{r plotAgentLocations }
 
+agents.coords = cbind(agents$x, agents$y)
+agents.spdf = SpatialPointsDataFrame(agents.coords, agents)
 
+plot(agents.spdf)
 
 ```
 
