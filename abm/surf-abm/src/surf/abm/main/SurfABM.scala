@@ -87,7 +87,11 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
   }
 
-  override def finish(): Unit = super.finish()
+  override def finish(): Unit = {
+    super.finish()
+    // Tell the outputter to finish (e.g. close output files).
+    OutputFactory(this).finish()
+  }
 
 } // class surfABM
 

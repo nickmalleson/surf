@@ -4,8 +4,8 @@ import java.io.{BufferedWriter, File, FileWriter}
 
 import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
-import surf.abm.agents.abbf.activities.{Activity, SleepActivity, ShopActivity, WorkActivity}
-import surf.abm.main.{Clock, OutputFactory, SurfABM, SurfGeometry}
+import surf.abm.agents.abbf.activities.{Activity, ShopActivity, SleepActivity, WorkActivity}
+import surf.abm.main._
 
 /**
   * An outputter written specifically for the ABBF agents. To use this, include the following in the configuation file:<br/>
@@ -15,17 +15,15 @@ import surf.abm.main.{Clock, OutputFactory, SurfABM, SurfGeometry}
   * <p>An outputter needs to implement the <code>apply(s:SurfABM)</code> method, which must initialise the output
   * and schedule a step method to be called each time output should be written. See the source for this class for an example.</p>
   */
-object ABBFOutputter extends Steppable with Serializable {
+object ABBFOutputter extends Outputter with Serializable {
 
   // BufferedWriters to write the output
   private var agentMainBR : BufferedWriter = null
   private var agentActivitiesBR : BufferedWriter = null
 
-  def apply(state: SurfABM) : Unit = {
+  def apply() : Outputter = {
 
-    state.schedule.scheduleRepeating(this, Int.MinValue, 1)
 
-    xxxx schedule finish as well
 
     val AGENT_MAIN_HEADER = "Iterations, Time, Agent, Activity, x, y\n" // Main csv file; one line per agent
     val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, Activity, Intensity\n" // More detailed information about all activities (multiple lines per agent)
@@ -43,6 +41,8 @@ object ABBFOutputter extends Steppable with Serializable {
     // Write the headers
     agentMainBR.write(AGENT_MAIN_HEADER)
     agentActivitiesBR.write(AGENT_ACTIVITY_HEADER)
+
+    return this
 
   }
 
@@ -85,17 +85,17 @@ object ABBFOutputter extends Steppable with Serializable {
 
     } // for geometries (agents)
 
-    /**
-      * This should be scheduled to be called at the end of the model to write the output files
-      *
-      */
-    def finish() = {
-      LOG.info("Closing output files")
-      this.agentActivitiesBR.close()
-      this.agentMainBR.close()
-    }
 
+  } // step()
 
+  /**
+    * This should be scheduled to be called at the end of the model to write the output files
+    *
+    */
+  def finish() : Unit  = {
+    LOG.info("Closing output files")
+    this.agentActivitiesBR.close()
+    this.agentMainBR.close()
   }
 
 
