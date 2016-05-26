@@ -50,20 +50,42 @@ setwd(wd)
 # Results anlysis of scenario `r SCENARIO`, run `r run`
 
 Read the data on the agent locations and the activities of the agents at each timestep
+
+
 ```{r readData}
 agents <- read.csv('agents.csv')
-activities <- read.csv('agent-activities.csv')
+acts <- read.csv('agent-activities.csv')
+
+# Make proper time columns. Text format is "2011-01-01T01:10"
+
+agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
+acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 ```
 
 
 ```{r plotActivities}
 
+# Find the activity with the highest intensity. That needs to be plotted first
+all.acts <- unique(activities$Activity)
 
+# Plot
+i <- 1 # For colours
+for (activity in all.acts) {
+  if (i==1) { # First plot
+    plot(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, 
+         type='o', col=i, ylim=c(0,max(acts$Intensity)))
+  } else {
+    points(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, type='o', col=i)
+  }
+  i <- i + 1
+}
+
+XXXX LEGEND
 ```
 
 ```{r plotAgentLocations }
 
-agent.locs <
+
 
 ```
 
