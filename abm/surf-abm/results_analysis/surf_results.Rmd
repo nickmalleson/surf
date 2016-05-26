@@ -1,0 +1,76 @@
+---
+title: "surf results analysis"
+author: "Nick Malleson"
+date: '`r format(Sys.time(), "%d %B, %Y (%H:%M)")`'
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
+
+SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
+# Find the most recent run of that scenario
+scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/out/",SCENARIO,"/",sep="")
+runs <- sort(list.files(scenarios.dir)) # All the different runs (directories)
+run <- tail(runs, n=1) # Most recent run/scenario
+wd <- paste(scenarios.dir, run, sep="") # The neww working directory
+print(paste("Setting working directory to most recent model of type",SCENARIO,":",wd))
+setwd(wd)
+
+
+#library(GISTools)
+#library(rgeos)    # For things like gIntersects
+#library(rgdal)     # For reading shapefiles
+#library(raster)    # For creating regular grids
+#library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+#library(classInt) # Jenks natural breaks
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+
+```
+
+# Results anlysis of scenario `r SCENARIO`, run `r run`
+
+Read the data on the agent locations and the activities of the agents at each timestep
+```{r readData}
+agents <- read.csv('agents.csv')
+activities <- read.csv('agent-activities.csv')
+```
+
+
+```{r plotActivities}
+
+
+```
+
+```{r plotAgentLocations }
+
+agent.locs <
+
+```
+
+
+
+
+
+
+
+

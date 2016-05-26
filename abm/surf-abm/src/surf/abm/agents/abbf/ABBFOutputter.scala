@@ -26,7 +26,7 @@ object ABBFOutputter extends Outputter with Serializable {
 
 
     val AGENT_MAIN_HEADER = "Iterations, Time, Agent, Activity, x, y\n" // Main csv file; one line per agent
-    val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, Activity, Intensity\n" // More detailed information about all activities (multiple lines per agent)
+    val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, Activity, Intensity, CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
 
     // Make a new directory for this model
     val dir = new File("./out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
@@ -60,15 +60,19 @@ object ABBFOutputter extends Outputter with Serializable {
       val agentGeom = SurfABM.agentGeoms.getGeometries.get(i).asInstanceOf[SurfGeometry[ABBFAgent]]
       val agent = agentGeom.theObject // The object that is represented by the SurfGeometry
       val coord = agent.location().geometry.getCoordinate // The agent's location
-      val act = agent.currentActivity.getClass().toString
+      val act = agent.currentActivity.getOrElse(None) // The current activity. An Option, so will either be Some[Activity] or None.
 
       // Write the main agent file
-      this.agentMainBR.write(s"${ticks},${time},${agent.id()},${act},${coord.x},${coord.y},")
+      this.agentMainBR.write(s"${ticks},${time},${agent.id()},${act.getClass.getSimpleName},${coord.x},${coord.y}\n")
 
       // Now write the intensities of each activity (one line per agent-activity)
       val hour = Clock.currentHour() // Need to know the time of day for the intensity
-      agent.activities.foreach(a =>
-        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.toString},${a.getIntensity(hour)}\n")
+      agent.activities.foreach(a => {
+        // Find the current activity, first checking that there is an activity (it can be empty)
+        val current = if (agent.currentActivity == None) 0 else { if (agent.currentActivity.get.getClass == a.getClass) 1 else 0 }
+        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.getIntensity(hour)},$current\n")
+      }
+
       )
       // Sanity check that each activity has been written (can get rid of this code later)
       var work, sleep, shop = false // Check that each activity is set

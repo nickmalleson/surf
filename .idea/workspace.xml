@@ -6,13 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Outputter.scala" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/OutputFactory.scala" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala" />
-    </list>
+    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="" />
     <ignored path="surf.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,7 +32,7 @@
       <file leaf-file-name="ABBFAgent.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="540">
               <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding>
                 <element signature="e#30#56#0" expanded="true" />
@@ -62,8 +56,8 @@
       <file leaf-file-name="ABBFOutputter.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="574">
-              <caret line="98" column="3" selection-start-line="98" selection-start-column="3" selection-end-line="98" selection-end-column="3" />
+            <state relative-caret-position="289">
+              <caret line="58" column="66" selection-start-line="58" selection-start-column="66" selection-end-line="58" selection-end-column="66" />
               <folding>
                 <element signature="e#30#79#0" expanded="true" />
               </folding>
@@ -74,7 +68,7 @@
       <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
+            <state relative-caret-position="1125">
               <caret line="91" column="62" selection-start-line="91" selection-start-column="62" selection-end-line="91" selection-end-column="62" />
               <folding>
                 <element signature="e#23#42#0" expanded="true" />
@@ -143,7 +137,6 @@
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/ShopActivity.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/FlexibleActivity.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/FixedActivity.scala" />
-        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/Activity.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Output.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/Outputter.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf-abm.conf" />
@@ -159,9 +152,10 @@
         <option value="$PROJECT_DIR$/abm/surf-abm/test/surf/abm/SurfABMSpec.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgentLoader.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala" />
-        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/OutputFactory.scala" />
         <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Outputter.scala" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/Activity.scala" />
+        <option value="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" />
       </list>
     </option>
   </component>
@@ -265,7 +259,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -570,6 +563,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="PackagesPane" />
     </panes>
@@ -1078,6 +1072,7 @@
       <workItem from="1464012767337" duration="7042000" />
       <workItem from="1464197824770" duration="1706000" />
       <workItem from="1464248999722" duration="1733000" />
+      <workItem from="1464272887159" duration="1535000" />
     </task>
     <task id="LOCAL-00001" summary="Created an IntelliJ IDEA project for surf">
       <created>1455802500252</created>
@@ -1129,7 +1124,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73339000" />
+    <option name="totallyTimeSpent" value="74874000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -1142,7 +1137,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32948327" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32602194" sideWeight="0.38690478" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502493" sideWeight="0.56964284" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32502493" sideWeight="0.43035713" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502493" sideWeight="0.43035713" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17083333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1195,7 +1190,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/BUILDING_FIELDS.scala" />
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/test/surf/abm/agents/abbf/ActivitySpec.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1382,13 +1376,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/Activity.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="77" column="94" selection-start-line="77" selection-start-column="94" selection-end-line="77" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Clock.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
@@ -1426,7 +1413,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="540">
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
             <element signature="e#30#56#0" expanded="true" />
@@ -1470,7 +1457,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="23" column="9" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1512,27 +1498,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/OutputFactory.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="26" column="19" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/OutputFactory.scala" />
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Outputter.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding>
-            <element signature="e#23#54#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
+        <state relative-caret-position="1125">
           <caret line="91" column="62" selection-start-line="91" selection-start-column="62" selection-end-line="91" selection-end-column="62" />
           <folding>
             <element signature="e#23#42#0" expanded="true" />
@@ -1540,10 +1516,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/Activity.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="79" column="1" selection-start-line="79" selection-start-column="1" selection-end-line="79" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/Cellar/scala/2.11.8/idea/lib/scala-library.jar!/scala/Option.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="98" column="3" selection-start-line="98" selection-start-column="3" selection-end-line="98" selection-end-column="3" />
+        <state relative-caret-position="289">
+          <caret line="58" column="66" selection-start-line="58" selection-start-column="66" selection-end-line="58" selection-end-column="66" />
           <folding>
             <element signature="e#30#79#0" expanded="true" />
           </folding>
