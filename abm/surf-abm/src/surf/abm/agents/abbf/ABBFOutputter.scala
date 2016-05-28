@@ -25,8 +25,8 @@ object ABBFOutputter extends Outputter with Serializable {
 
 
 
-    val AGENT_MAIN_HEADER = "Iterations, Time, Agent, Activity, x, y\n" // Main csv file; one line per agent
-    val AGENT_ACTIVITY_HEADER = "Iterations, Time, Agent, Activity, Intensity, CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
+    val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Activity,x,y\n" // Main csv file; one line per agent
+    val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
 
     // Make a new directory for this model
     val dir = new File("./out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
@@ -70,7 +70,7 @@ object ABBFOutputter extends Outputter with Serializable {
       agent.activities.foreach(a => {
         // Find the current activity, first checking that there is an activity (it can be empty)
         val current = if (agent.currentActivity == None) 0 else { if (agent.currentActivity.get.getClass == a.getClass) 1 else 0 }
-        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.getIntensity(hour)},$current\n")
+        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.intensity(hour)},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
       }
 
       )

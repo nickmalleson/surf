@@ -34,9 +34,10 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
   /**
     * Work out which activity is the most intense at the moment.
+ *
     * @return
     */
-  def highestActivity(): Activity = this.activities.maxBy( a => a.getIntensity(Clock.currentHour) )
+  def highestActivity(): Activity = this.activities.maxBy( a => a.intensity(Clock.currentHour) )
 
 
 
@@ -65,7 +66,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
     this.currentActivity = Some(highestActivity) // Set the current activity - others might care about this.
 
-    println(s"HIGHEST: $highestActivity : ${highestActivity.getIntensity(Clock.currentHour)}" )
+    println(s"HIGHEST: $highestActivity : ${highestActivity.intensity(Clock.currentHour)}" )
 
     // Perform the action to satisfy that activity.
 

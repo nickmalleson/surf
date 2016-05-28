@@ -40,7 +40,21 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * The current background intensity of the activity. I.e. the base amount that gradually increases until the
     * activity is undertaken.
     */
-  def backgroundIntensity: Double = _backgroundIntensity
+  def backgroundIntensity() = _backgroundIntensity
+
+  /**
+    * The current extra time-of-day intensity for this activity.
+    * @param currentTime Current decimal 24-hour of the day (e.g. 3.5 = 03:03)
+    */
+  def timeIntensity(currentTime: Double) = this.timeProfile.calcIntensity(currentTime)
+
+  /**
+    * Calculate the current total intensity of this activity, given the time. (I.e. background intensity plus
+    * time-specific intensity).
+    * @param currentTime
+    * @return
+    */
+  def intensity(currentTime: Double) = this._backgroundIntensity + this.timeProfile.calcIntensity(currentTime)
 
 
   /**
@@ -70,12 +84,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     this._backgroundIntensity -= d
   }
 
-  /**
-    * Calculate the current intensity of this activity, given the time.
-    * @param currentTime
-    * @return
-    */
-  def getIntensity(currentTime: Double) = this._backgroundIntensity + this.timeProfile.calcIntensity(currentTime)
+
 
 
 
