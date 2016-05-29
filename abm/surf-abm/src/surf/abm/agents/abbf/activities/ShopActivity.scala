@@ -24,4 +24,8 @@ case class ShopActivity(
   override def performActivity(): Boolean = {
     throw new NotImplementedError("Have not implemented Shopping activity yet")
   }
+
+  override def activityChanged(): Unit = {
+    throw new NotImplementedError("Have not implemented Shopping activity yet")
+  }
 }

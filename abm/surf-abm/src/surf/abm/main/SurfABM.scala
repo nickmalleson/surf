@@ -351,7 +351,7 @@ object SurfABM extends Serializable {
     }
     catch {
       case e: Exception => {
-        this.LOG.error("Exception thrown in main loop", e)
+        this.LOG.error("Exception thrown in main loop.", e)
         throw e
       }
     }

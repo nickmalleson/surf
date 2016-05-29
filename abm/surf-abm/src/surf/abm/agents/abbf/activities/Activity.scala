@@ -68,6 +68,14 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   def performActivity() : Boolean
 
   /**
+    * This method will be called if this Activity was being performed, but now a new one is in charge. This gives
+    * the Activity the opportunity to reset itself ready for the next time it is called. For example, in
+    * [[surf.abm.agents.abbf.activities.SleepActivity]], the activity want's to be told if it needs to re-initialise
+    * itself to avoid having to check lots of criteria (is the agent at home? are the travelling? etc) at every iteration.
+    */
+  def activityChanged() : Unit
+
+  /**
     * Increase the background intensity
     *
     * @param d

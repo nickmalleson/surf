@@ -102,6 +102,17 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
   override def hashCode(): Int = masonGeom.hashCode()
 
   override def getUserData: AnyRef = masonGeom.getUserData
+
+  /**
+    * Compares the centroids of the two underlying <code>Geometry</code> objects. No other attributes are compared,
+    * just the geometries. The intended use is to see if two SurfGeometries are located at the same place.
+    *
+    * @param obj
+    * @return True if the two centroids are the same, false otherwise
+    */
+  def ==(obj:SurfGeometry[_]) : Boolean = {
+    return this.geometry.getCentroid().equals(obj.geometry.getCentroid())
+  }
 }
 
 @SerialVersionUID(1L)

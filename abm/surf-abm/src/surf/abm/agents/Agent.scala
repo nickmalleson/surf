@@ -20,8 +20,7 @@ abstract class Agent (val state:SurfABM, val home:SurfGeometry[Building]) extend
 
   // The location where the agent currently is. Begins at 'home'. It is protected, with a public accessor.
   // Important to create a new MasonGeometry, not use the home geometry. Otherwise bad things happen!
-  protected var _location: SurfGeometry[_ <: Any] =
-    SurfGeometry(new MasonGeometry(this.home.getGeometry().getCentroid()), null)
+  protected var _location: SurfGeometry[_ <: Any] =  SurfGeometry(new MasonGeometry(this.home.getGeometry().getCentroid()), null)
   def location() = this._location // accessor to location
   //protected def location_=(g:MasonGeometry) { _location = g } // protected mutator
 

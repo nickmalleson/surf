@@ -26,6 +26,10 @@ case class WorkActivity(
     throw new NotImplementedError("Have not implemented Working activity yet")
   }
 
+  override def activityChanged(): Unit = {
+    throw new NotImplementedError("Have not implemented Working activity yet")
+  }
+
 
 
 }

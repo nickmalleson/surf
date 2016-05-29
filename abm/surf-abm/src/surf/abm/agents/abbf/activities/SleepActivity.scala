@@ -17,20 +17,79 @@ case class SleepActivity(
   extends FixedActivity (SLEEPING, timeProfile, agent, Place(agent.home, SLEEPING))  with Serializable
 {
 
-  // Temporary variables while the agent just walks from home and back.
+  // These variables define the different things that the agent could be doing. They could be Booleans, but I
+  // think I prefer them as case classes (they behave like Enums) because you can use pattern matching, so nicer
+  // syntax (although probably not simpler to read than the if/else way).
+  // Actually, the best way is probably with unique integers and a switch statement, but I'm leaving it as it is
+  // for now because it's an example of how scala can do enums. It's also a bit more powerful, as each class
+  // could have their own members. Another advantage beacuse the parent trait is 'sealed', the compiler checks
+  // that all alternatives must be exhaused. You can't have a match statement without all of the subclasses.
+  //private var sleeping = false // Actually at home and asleep?
+  //private var travellingHome = false // On the way home
+  //private var init = true // The activity has just been initialised
+  private sealed trait Action
+  private case class Sleeping() extends Action
+  private case class TravellingHome() extends Action
+  private case class Initialising() extends Action
+  private var currentAction : Action = Initialising()
+  //private val SLEEPING = 1
+  //private val TRAVELLING_HOME = 2
+  //private val INITIALISING = 3
+  //private var currentAction = INITIALISING
+
   private var goingHome = false
+
   // Find where the agent works (specified temporarily in the config file)
   val workBuilding = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig+".WorkAddress"))
 
   /**
-    * This makes the agent actually perform the activity.
+    * Cause the agent to go home (if necessary first) and then sleep (perform the activity).
     *
     * @return True if the agent has performed this activity, false if they have not (e.g. if they are still travelling
     *         to a particular destination).
     */
   override def performActivity(): Boolean = {
 
-    // Temporary code
+    // Determine what the currentAction is.
+    currentAction match {
+      case _ : Initialising => {
+        Agent.LOG.debug(s"Agent ${agent.id.toString()} is initialising SleepActivity")
+        // See if the agent is at home
+        if (this.agent.home.==(this.agent.location())) {
+          Agent.LOG.debug(s"Agent ${agent.id.toString()} is at home. Starting to sleep")
+          currentAction = Sleeping() // Next iteration the agent will start to sleep
+        }
+        else {
+          Agent.LOG.debug(s"Agent ${agent.id.toString()} is not at home. Travelling there.")
+          this.agent.newDestination(Option(this.agent.home))
+          currentAction = TravellingHome()
+        }
+      } // initialising
+
+      case _ : TravellingHome => {
+        if (this.agent.atDestination()) {
+          Agent.LOG.debug(s"Agent ${agent.id.toString()} has reached home. Starting to sleep.")
+          currentAction = Sleeping() // Next iteration the agent will start to sleep
+        }
+        else {
+          Agent.LOG.debug(s"Agent ${agent.id.toString()} is travelling home.")
+          agent.moveAlongPath()
+        }
+      } // TravellingHome
+
+      case _ : Sleeping => {
+        Agent.LOG.debug(s"Agent ${agent.id.toString()} is sleeping")
+        return true
+      }  // Sleeping
+
+    } // match
+
+    // If here then we can't be sleeping, because otherwise we would have returned true
+    return false
+
+    /* Useful (?) old code for moving randomly from home to another building
+
+
       if (agent.destination.isEmpty || agent.atDestination) {
 
         if (goingHome) {
@@ -48,11 +107,17 @@ case class SleepActivity(
       }
 
       agent.moveAlongPath()
+      */
 
-      // TODO: temporarily always returning true. This will need to be false if the agent is travelling, and true if they are at home.
-      return true
     }
 
-
-
+  /**
+    *  Reset the private members that dictate what state this activity is in
+    */
+  override def activityChanged(): Unit = {
+    //this.sleeping = false // Actually at home and asleep?
+    //this.travellingHome = false // On the way home
+    //this.init = true // The activity has just been initialised
+    this.currentAction = Initialising()
+  }
 }
