@@ -20,11 +20,6 @@ fontsize: 10pt
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
-
-
-
-
-
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")

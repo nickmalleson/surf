@@ -94,13 +94,33 @@ object ABBFOutputter extends Outputter with Serializable {
   } // step()
 
   /**
-    * This should be scheduled to be called at the end of the model to write the output files
+    * This should be scheduled to be called at the end of the model to write the output files and (maybe) spawn a
+    * knitr session to anayse them
+    *
     *
     */
   def finish() : Unit  = {
     LOG.info("Closing output files")
     this.agentActivitiesBR.close()
     this.agentMainBR.close()
+    // TODO start knitr to write html output.
+    try {
+      LOG.info("Attempting to execute R results analysis")
+      import sys.process._ // For executing an R script
+      val cmd : String = "R -e rmarkdown::render('results/surf_results.Rmd') " // The command to execute
+      val result : String = cmd !! // Run the commend
+
+      LOG.debug(s"Output from R: \n $result")
+
+    }
+    catch {
+      case e : Exception => LOG.error("Exceptoin running R results analysis", e)
+    }
+    finally {
+      LOG.info("Finished (attempting to) run R results analysis")
+    }
+
+
   }
 
 

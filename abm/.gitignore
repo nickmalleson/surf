@@ -4,6 +4,7 @@ build/
 
 # Model results
 surf-abm/results/out/*
+surf-abm/results/surf_results_files
 
 # Logs
 surfabm.log*
