@@ -53,7 +53,6 @@ object ABBFOutputter extends Outputter with Serializable {
     */
   def step(state: SimState): Unit = {
 
-    LOG.info("WRITING OUTPUT")
     val ticks = state.schedule.getTime()
     val time = Clock.getTime
     for (i <- 0 until SurfABM.agentGeoms.getGeometries().size()) {

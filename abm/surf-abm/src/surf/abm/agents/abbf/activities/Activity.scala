@@ -86,7 +86,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
 
   /**
     * Decrease the intensity of this activity, i.e. if the agent is doing something to satisfy it.
-    * @param d The amount to decrease the intensity by,
+    * @param d The amount to decrease the intensity by
     */
   def -= (d:Double) : Unit = {
     this._backgroundIntensity -= d

@@ -53,7 +53,10 @@ object ABBFAgentLoader {
     val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
     //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     //atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with
-    atHomeActivity.+=(10d)// Make this the most powerful activity for a while
+
+    // TESTING atHome and working, so make them much larger than shopping for now
+    workActivity += 10d
+    atHomeActivity += 10d
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )

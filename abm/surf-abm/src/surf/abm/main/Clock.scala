@@ -74,7 +74,7 @@ object Clock extends Steppable {
     assert(this.clock!=null)
     // Increment the clock by x minutes. It is immutable, so need to create a copy
     this.clock.currentTime = this.clock.currentTime.plusMinutes(this.minsPerTick)
-    LOG.debug(s"Stepping clock. Time: ${this.clock.currentTime.toString}")
+    //LOG.debug(s"Stepping clock. Time: ${this.clock.currentTime.toString}")
   }
 
   // underlying clock object

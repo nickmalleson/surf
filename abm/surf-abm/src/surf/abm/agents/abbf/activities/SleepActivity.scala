@@ -14,7 +14,12 @@ import surf.abm.main.SurfABM
 case class SleepActivity(
                     override val timeProfile: TimeProfile,
                     override val agent: ABBFAgent)
-  extends FixedActivity (SLEEPING, timeProfile, agent, Place(agent.home, SLEEPING))  with Serializable
+  extends FixedActivity (
+    activityType = SLEEPING,
+    timeProfile = timeProfile,
+    agent = agent,
+    place = Place(agent.home, SLEEPING))
+    with Serializable
 {
 
   // These variables define the different things that the agent could be doing. They could be Booleans, but I
@@ -55,13 +60,15 @@ case class SleepActivity(
       case _ : Initialising => {
         Agent.LOG.debug(s"Agent ${agent.id.toString()} is initialising SleepActivity")
         // See if the agent is at home
-        if (this.agent.home.==(this.agent.location())) {
+
+        //if (this.agent.home.==(this.agent.location())) {
+        if (this.place.location.equalLocation(this.agent.location())) {
           Agent.LOG.debug(s"Agent ${agent.id.toString()} is at home. Starting to sleep")
           currentAction = Sleeping() // Next iteration the agent will start to sleep
         }
         else {
           Agent.LOG.debug(s"Agent ${agent.id.toString()} is not at home. Travelling there.")
-          this.agent.newDestination(Option(this.agent.home))
+          this.agent.newDestination(Option(this.place.location))
           currentAction = TravellingHome()
         }
       } // initialising
@@ -112,7 +119,7 @@ case class SleepActivity(
     }
 
   /**
-    *  Reset the private members that dictate what state this activity is in
+    *  Reset the private members that control the state of this activity
     */
   override def activityChanged(): Unit = {
     //this.sleeping = false // Actually at home and asleep?

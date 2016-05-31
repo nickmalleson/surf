@@ -110,7 +110,7 @@ class SurfGeometry[T](val masonGeom: MasonGeometry, val theObject: T) extends
     * @param obj
     * @return True if the two centroids are the same, false otherwise
     */
-  def ==(obj:SurfGeometry[_]) : Boolean = {
+  def equalLocation(obj:SurfGeometry[_]) : Boolean = {
     return this.geometry.getCentroid().equals(obj.geometry.getCentroid())
   }
 }

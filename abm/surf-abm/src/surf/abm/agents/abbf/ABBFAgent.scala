@@ -24,6 +24,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
   var activities : Set[ _ <: Activity] = Set.empty
 
   // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
+  // TODO make this internal to each activity
   private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
   private val BACKGROUND_INCREASE = (1d/ticksPerDay)
 
@@ -64,6 +65,17 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Now find the most intense one, given the current time.
     val highestActivity:Activity = this.highestActivity()
 
+    // TODO set a None activity if none are sufficiently high
+
+    XXXX HERE
+
+    // See if the activity has changed (taking into account that there might not be a current activity)
+
+    if (currentActivity.isDefined) {
+
+    }
+    currentActivity.getOrElse()
+
     this.currentActivity = Some(highestActivity) // Set the current activity - others might care about this.
 
     println(s"HIGHEST: $highestActivity : ${highestActivity.intensity(Clock.currentHour)}" )
@@ -71,9 +83,8 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy that activity.
 
     val satisfied = highestActivity.performActivity()
-
     if (satisfied) {
-      // TODO: reduce the background intensity of the activity since it is being performed
+      highestActivity-=(BACKGROUND_INCREASE * 2) // (For now, decrease at twice the rate it increases.
     }
 
 
