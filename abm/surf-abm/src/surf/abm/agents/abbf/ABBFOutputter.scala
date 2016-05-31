@@ -69,7 +69,7 @@ object ABBFOutputter extends Outputter with Serializable {
       agent.activities.foreach(a => {
         // Find the current activity, first checking that there is an activity (it can be empty)
         val current = if (agent.currentActivity == None) 0 else { if (agent.currentActivity.get.getClass == a.getClass) 1 else 0 }
-        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.intensity(hour)},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
+        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.intensity()},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
       }
 
       )

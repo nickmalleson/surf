@@ -38,8 +38,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
  *
     * @return
     */
-  def highestActivity(): Activity = this.activities.maxBy( a => a.intensity(Clock.currentHour) )
-
+  def highestActivity(): Activity = this.activities.maxBy( a => a.intensity() )
 
 
   override def step(state: SimState): Unit = {
@@ -60,34 +59,35 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
     this.activities.foreach( a => { a += BACKGROUND_INCREASE } )
-    this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
+    //this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
     // Now find the most intense one, given the current time.
     val highestActivity:Activity = this.highestActivity()
+    println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
-    // TODO set a None activity if none are sufficiently high
-
-    XXXX HERE
+    // Is the highest activity high enough to take control?
+    if (highestActivity.intensity() < 0.2) {
+      // Tell the current activity (if there is one) that it's no longer in control.
+      this.currentActivity.foreach( a => a.activityChanged() ) // Note: the for loop only iterates if an Activity has been defined (nice!)
+      //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged()
+      this.currentActivity = None
+      Agent.LOG.info(s"Agent ${this.id.toString()} is not doing any activity")
+      return
+    }
 
     // See if the activity has changed (taking into account that there might not be a current activity)
-
-    if (currentActivity.isDefined) {
-
+    if (highestActivity!=this.currentActivity.getOrElse(None)) {
+      //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged() // Tell the activity that it is no longer in charge
+      this.currentActivity.foreach( a => a.activityChanged())
+      this.currentActivity = Some(highestActivity) // Set the new current activity
     }
-    currentActivity.getOrElse()
 
-    this.currentActivity = Some(highestActivity) // Set the current activity - others might care about this.
 
-    println(s"HIGHEST: $highestActivity : ${highestActivity.intensity(Clock.currentHour)}" )
-
-    // Perform the action to satisfy that activity.
-
+    // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
       highestActivity-=(BACKGROUND_INCREASE * 2) // (For now, decrease at twice the rate it increases.
     }
-
-
 
   }
 

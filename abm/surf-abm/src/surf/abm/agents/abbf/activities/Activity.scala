@@ -3,6 +3,7 @@ package surf.abm.agents.abbf.activities
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
+import surf.abm.main.Clock
 
 
 /**
@@ -49,12 +50,11 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   def timeIntensity(currentTime: Double) = this.timeProfile.calcIntensity(currentTime)
 
   /**
-    * Calculate the current total intensity of this activity, given the time. (I.e. background intensity plus
+    * Calculate the current total intensity of this activity at the current time. (I.e. background intensity plus
     * time-specific intensity).
-    * @param currentTime
     * @return
     */
-  def intensity(currentTime: Double) = this._backgroundIntensity + this.timeProfile.calcIntensity(currentTime)
+  def intensity() = this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour())
 
 
   /**

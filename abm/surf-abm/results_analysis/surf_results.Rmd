@@ -62,9 +62,39 @@ agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
 acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 ```
 
-Plot the intensities of the different activities.
 
-```{r plotActivities}
+Plot just the overall intensities of the different activities.
+
+```{r plotOverallActivity}
+
+# Find the activity with the highest overall intensity. That needs to be plotted first
+all.acts <- unique(acts$Activity)
+
+# Plot
+par(mfrow=c(1,1))
+i <- 1 # For colours
+for (activity in all.acts) {
+  if (i==1) { # First plot
+    # Plot overall intensity
+    plot(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, 
+         type='o', col=i, ylim=c(0,max(acts$Intensity)), pch=1,
+         xlab = "Time", ylab="TotalIntensity")
+  } else { # Now for the remaining activities
+    points(acts[acts$Activity==activity,]$date, acts[acts$Activity==activity,]$Intensity, type='o', col=i )
+  }
+  i <- i + 1 # increment the colour counter (one colour per activity)
+  j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
+}
+
+legend("topleft", legend=all.acts, col=1:length(all.acts), lty=1, pch="o")
+
+
+```
+
+
+Plot all the intensities of the different activities in one chart.
+
+```{r plotActivitiesInOne}
 
 # Find the activity with the highest overall intensity. That needs to be plotted first
 all.acts <- unique(acts$Activity)
@@ -97,9 +127,7 @@ legend("topright", legend=c('Overall','Background','Time'), col=1, lty=1, pch=1:
 
 Plot the intensities of the different activities, but on different plots.
 
-Plot the intensities of the different activities.
-
-```{r plotActivities}
+```{r plotActivitiesMultiplePlots}
 
 # Find the activity with the highest overall intensity. That needs to be plotted first
 all.acts <- unique(acts$Activity)
