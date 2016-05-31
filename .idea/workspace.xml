@@ -6,14 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/abm/surf-abm/results_analysis/surf_results.Rmd" afterPath="$PROJECT_DIR$/abm/surf-abm/results/surf_results.Rmd" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/abm/surf-abm/results_analysis/surf_results.html" afterPath="$PROJECT_DIR$/abm/surf-abm/results/surf_results.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgentLoader.scala" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgentLoader.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" afterPath="$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFOutputter.scala" />
-    </list>
+    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="" />
     <ignored path="surf.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -949,7 +942,7 @@
       <workItem from="1464683115578" duration="304000" />
       <workItem from="1464683550968" duration="11000" />
       <workItem from="1464691550202" duration="2305000" />
-      <workItem from="1464704560355" duration="1024000" />
+      <workItem from="1464704560355" duration="1260000" />
     </task>
     <task id="LOCAL-00001" summary="Created an IntelliJ IDEA project for surf">
       <created>1455802500252</created>
@@ -1001,7 +994,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85964000" />
+    <option name="totallyTimeSpent" value="86200000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -1013,7 +1006,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328635" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32948327" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32602194" sideWeight="0.38690478" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32502493" sideWeight="0.67261904" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502493" sideWeight="0.67261904" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32447955" sideWeight="0.43035713" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17023809" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />

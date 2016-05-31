@@ -20,14 +20,20 @@ fontsize: 10pt
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
+
+
+
+
+
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
 # Find the most recent run of that scenario
-#scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/out/",SCENARIO,"/",sep="")
-scenarios.dir <- paste("../out/",SCENARIO,"/",sep="")
-runs <- sort(list.files(scenarios.dir)) # All the different runs (directories)
+#scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
+scenario.dir <- paste("./out/",SCENARIO,"/",sep="") # This is the relative directory of the scenario 
+setwd("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/") # This is only required when running directly in R(Studio)
+runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
-wd <- paste(scenarios.dir, run, "/", sep="") # The new working directory
-#print(paste("Setting working directory to most recent model of type",SCENARIO,":",wd))
+wd <- paste(scenario.dir, run, "/", sep="") # The new working directory
+print(paste("Using working directory of most recent model of type",SCENARIO,":",wd))
 #setwd(wd)
 
 
