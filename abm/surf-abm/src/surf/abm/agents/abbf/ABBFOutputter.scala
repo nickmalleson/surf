@@ -29,7 +29,7 @@ object ABBFOutputter extends Outputter with Serializable {
     val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
 
     // Make a new directory for this model
-    val dir = new File("./out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
+    val dir = new File("./results/out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
     dir.mkdirs()
     LOG.info(s"Initialising ABBFOutputter and writing results to: $dir")
 
@@ -71,11 +71,12 @@ object ABBFOutputter extends Outputter with Serializable {
         val current = if (agent.currentActivity == None) 0 else { if (agent.currentActivity.get.getClass == a.getClass) 1 else 0 }
         this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.intensity()},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
       }
-
       )
+
       // Sanity check that each activity has been written (can get rid of this code later)
+      /*
       var work, sleep, shop = false // Check that each activity is set
-      // Iterate over all Activities, find their intensity, and match them to the appropriate variable,
+      // Iterate over all Activitiesdnd match them to the appropriate variable,
       agent.activities.foreach ( a => {
         a match {
           case x:WorkActivity   => work  = true
@@ -85,6 +86,7 @@ object ABBFOutputter extends Outputter with Serializable {
       } ) // foreach
       // Each variable should have been set, or a MatchError should be thrown
       assert( ! Array(work,sleep,shop).contains(false) )
+      */
 
     } // for geometries (agents)
 

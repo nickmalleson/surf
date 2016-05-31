@@ -86,7 +86,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      highestActivity-=(BACKGROUND_INCREASE * 2) // (For now, decrease at twice the rate it increases.
+      highestActivity-=(BACKGROUND_INCREASE * 5) // (For now, decrease at more than the rate it increases.
     }
 
   }

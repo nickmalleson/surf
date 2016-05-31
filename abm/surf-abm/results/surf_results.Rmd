@@ -22,12 +22,13 @@ fontsize: 10pt
 
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
 # Find the most recent run of that scenario
-scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/out/",SCENARIO,"/",sep="")
+#scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/out/",SCENARIO,"/",sep="")
+scenarios.dir <- paste("../out/",SCENARIO,"/",sep="")
 runs <- sort(list.files(scenarios.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
-wd <- paste(scenarios.dir, run, sep="") # The neww working directory
-print(paste("Setting working directory to most recent model of type",SCENARIO,":",wd))
-setwd(wd)
+wd <- paste(scenarios.dir, run, "/", sep="") # The new working directory
+#print(paste("Setting working directory to most recent model of type",SCENARIO,":",wd))
+#setwd(wd)
 
 
 library(GISTools)
@@ -53,8 +54,8 @@ Read the data on the agent locations and the activities of the agents at each ti
 
 
 ```{r readData}
-agents <- read.csv('agents.csv')
-acts <- read.csv('agent-activities.csv')
+agents <- read.csv(paste(wd,'agents.csv',sep=""))
+acts <- read.csv(paste(wd,'agent-activities.csv',sep=""))
 
 # Make proper time columns. Text format is "2011-01-01T01:10"
 
