@@ -108,9 +108,12 @@ object ABBFOutputter extends Outputter with Serializable {
       LOG.info("Attempting to execute R results analysis")
       import sys.process._ // For executing an R script
       val cmd : String = "R -e rmarkdown::render('results/surf_results.Rmd') " // The command to execute
-      val result : String = cmd !! // Run the commend
+      val result : String = cmd !! // Run the command
 
       LOG.debug(s"Output from R: \n $result")
+
+      // Try to 'open' the results file (this only works on macs I think)
+      "open results/surf_results.html" !
 
     }
     catch {
