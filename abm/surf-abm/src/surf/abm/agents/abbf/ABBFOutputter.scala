@@ -101,8 +101,9 @@ object ABBFOutputter extends Outputter with Serializable {
     LOG.info("Closing output files")
     this.agentActivitiesBR.close()
     this.agentMainBR.close()
-    // TODO start knitr to write html output.
-    try {
+    // Start knitr and generate the output file
+    // TODO this should generate outputs in the same directory as the results, not the same directory as the script
+    /*try {
       LOG.info("Attempting to execute R results analysis")
       import sys.process._ // For executing an R script
       val cmd : String = "R -e rmarkdown::render('results/surf_results.Rmd') " // The command to execute
@@ -119,7 +120,7 @@ object ABBFOutputter extends Outputter with Serializable {
     }
     finally {
       LOG.info("Finished (attempting to) run R results analysis")
-    }
+    }*/
 
 
   }

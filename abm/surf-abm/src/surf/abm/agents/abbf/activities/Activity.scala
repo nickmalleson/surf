@@ -76,7 +76,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   def activityChanged() : Unit
 
   /**
-    * Increase the background intensity
+    * Increase the background intensity. This usually happens at every iteration
     *
     * @param d
     */
@@ -87,9 +87,15 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   /**
     * Decrease the intensity of this activity, i.e. if the agent is doing something to satisfy it.
     * @param d The amount to decrease the intensity by
+    * @throws IllegalArgumentException if this call attempts to take the total intensity
+    * (i.e. background + time component ) below 0
+    *
     */
   def -= (d:Double) : Unit = {
     this._backgroundIntensity -= d
+    if (this.intensity() < 0) {
+      throw new IllegalArgumentException(s"Overall intenity of activity ${this.toString} for agent ${this.agent.toString()} has dropped below 0")
+    }
   }
 
 

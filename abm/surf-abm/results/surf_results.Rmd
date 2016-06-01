@@ -21,7 +21,7 @@ fontsize: 10pt
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
-AGENT_ID <- 508 # The ID of the agent to analyse (graphs of all agents can be difficult to undersatnd.)
+AGENT_ID <- 824 # The ID of the agent to analyse (graphs of all agents can be difficult to undersatnd.)
 
 
 # Find the most recent run of that scenario
@@ -41,7 +41,7 @@ library(GISTools)
 #library(raster)    # For creating regular grids
 #library(plyr)     # For counting and aggregating
 #library(tmap)     # For thematic maps
-#library(classInt) # Jenks natural breaks
+library(classInt) # Jenks natural breaks
 #library(png)      # For loading pngs after they have been written
 #library(grid)     # so that they can be embedded in knitted documents
 #library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
@@ -49,6 +49,10 @@ library(GISTools)
 #library(MASS)     # For stepwise regression (stepAIC())
 #library(pander)   # For printing tables nicely
 #library(MVN)      # For testing for multivariate normality (MVN)
+library(RColorBrewer) # For making nice colour themes
+#library(rgl)       # For 3D space-time cube
+library(plot3D)    # For 3D space-time cube
+
 
 ```
 
@@ -127,9 +131,13 @@ for (activity in all.acts) {
       y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$TimeIntensity, 
       type='o', col=i, pch=3)
   } else { # Now for the remaining activities
-    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date,y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$Intensity, , type='o', col=i, pch=1)
-    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date, y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$BackgroundIntensity, type='o', col=i, pch=2)
-    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date, y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$Intensity, TimeIntensity, type='o', col=i, pch=3)
+    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date,
+           y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$Intensity, type='o', col=i, pch=1)
+    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date, 
+           y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$BackgroundIntensity, type='o', col=i, pch=2)
+    points(x=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$date, 
+           y=acts[which(acts$Activity==activity & acts$Agent==AGENT_ID),]$TimeIntensity, type='o', col=i, pch=3)
+    
   }
   i <- i + 1 # increment the colour counter (one colour per activity)
   j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
@@ -180,22 +188,34 @@ for (activity in all.acts) {
 
 
 
+Map the agent locations in 2D
 
-Map the agent locations.
+```{r plotAgentLocations.2D }
 
-```{r plotAgentLocations }
+# Data for the agent in question
+single.agent <- agents[agents$Agent==AGENT_ID,]
 
-#agents.coords = cbind(agents$x, agents$y)
-#agents.spdf = SpatialPointsDataFrame(agents.coords, agents)
+single.agent.coords = cbind(single.agent$x, single.agent$y)
+single.agent.spdf = SpatialPointsDataFrame(single.agent.coords, single.agent)
 
-#plot(agents.spdf)
+# Shading
+shades <- shading(
+    classIntervals(single.agent$Iterations, n = 8, style = 'kmeans')$brks,
+    cols=brewer.pal(9,'Reds')
+)
+
+choropleth(single.agent.spdf, single.agent.spdf$Time, shading = shades)
 
 ```
 
+Now in 3D
 
 
+```{r plotAgentLocations.3D }
 
+plot3D::points3D(x=single.agent$x, y=single.agent$y, z=single.agent$Iterations )
 
+```
 
 
 
