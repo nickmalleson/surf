@@ -96,8 +96,6 @@ object ABBFOutputter extends Outputter with Serializable {
   /**
     * This should be scheduled to be called at the end of the model to write the output files and (maybe) spawn a
     * knitr session to anayse them
-    *
-    *
     */
   def finish() : Unit  = {
     LOG.info("Closing output files")

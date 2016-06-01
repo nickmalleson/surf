@@ -15,6 +15,8 @@ import surf.abm.main.SurfGeometry
   */
 object ABBFAgentLoader {
 
+  val N = 1000 // The number of agents (temporary)
+
   /**
     * This method is called by [[surf.abm.main.SurfABM]] after initialisation when the model starts.
     *
@@ -22,60 +24,61 @@ object ABBFAgentLoader {
     */
   def createAgents(state: SurfABM) = {
 
-    // Instantiate the agent. We haven't defined the activities yet, but this is lazy so it doesn't matter.
-    // This is because  agents and activities are immutable and paired which means they have to be instantiated together.
-    // See https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects
+    for (i <- 0.until(N)) {
 
-    val home = SurfABM.getRandomBuilding(state)
-    val a: ABBFAgent = ABBFAgent(state, home)
+      // Instantiate the agent. We haven't defined the activities yet, but this is lazy so it doesn't matter.
+      // This is because  agents and activities are immutable and paired which means they have to be instantiated together.
+      // See https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects
 
-    // Next the activities that this agent can do (later this will be done by reading data)
+      val home = SurfABM.getRandomBuilding(state)
+      val a: ABBFAgent = ABBFAgent(state, home)
 
-    // WORKING
+      // Next the activities that this agent can do (later this will be done by reading data)
 
-    // Work place is a building in town
-    val workPlace = Place(
-      location = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig + ".WorkAddress")),
-      activityType = WORKING,
-      openingTimes = null // Assume it's open all the time
-    )
-    // Work time profile is 0 before 6 and after 10, and 1 between 10-4
-    val workTimeProfile = TimeProfile(Array((6d, 0d), (10d, 1d), (16d, 1d), (22d, 0d)))
-    val workActivity = WorkActivity(timeProfile = workTimeProfile, agent=a, place = workPlace)
+      // WORKING
 
-    // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d))) // A constant, low intensity
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
+      // Work place is a building in town
+      val workPlace = Place(
+        location = SurfABM.buildingIDGeomMap(SurfABM.conf.getInt(SurfABM.ModelConfig + ".WorkAddress")),
+        activityType = WORKING,
+        openingTimes = null // Assume it's open all the time
+      )
+      // Work time profile is 0 before 6 and after 10, and 1 between 10-4
+      val workTimeProfile = TimeProfile(Array((6d, 0d), (10d, 1d), (16d, 1d), (22d, 0d)))
+      val workActivity = WorkActivity(timeProfile = workTimeProfile, agent=a, place = workPlace)
 
-
-    // SLEEPING (high between 11pm and 6am)
-    val atHomePlace = Place(home, SLEEPING, null)
-    val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
-    //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
-    //atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with
-    
-
-    // Add these activities to the agent's activity list. At Home is the strongest initially.
-    // TODO ADD IN SHOPPING ACTIVITY
-    //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
-    val activities = Set[Activity](workActivity , atHomeActivity )
-
-    // Finally tell the agent abount them
-    a.activities = activities
+      // SHOPPING
+      val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d))) // A constant, low intensity
+      val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
 
 
+      // SLEEPING (high between 11pm and 6am)
+      val atHomePlace = Place(home, SLEEPING, null)
+      val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
+      //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
+      //atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with
 
 
-    //    XXXX now - need to think about 1 - how the intensities change over time (presumably this code goes into ABBFAgent) and 2 - how the agent's behaviour is controlled by them (again probably in ABBFAgent)
+      // Add these activities to the agent's activity list. At Home is the strongest initially.
+      // TODO ADD IN SHOPPING ACTIVITY
+      //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
+      val activities = Set[Activity](workActivity , atHomeActivity )
+
+      // Finally tell the agent abount them
+      a.activities = activities
 
 
-    // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
+      // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
 
-    SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
-    state.schedule.scheduleRepeating(a)
+      SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
+      state.schedule.scheduleRepeating(a)
 
-    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
-    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+      SurfABM.agentGeoms.setMBR(SurfABM.mbr)
+      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+
+    }
+
+
 
 
   }

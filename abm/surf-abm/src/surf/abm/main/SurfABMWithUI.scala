@@ -11,6 +11,7 @@ import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.simple.{LabelledPortrayal2D, OvalPortrayal2D}
 import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
 import surf.abm.environment.Building
+import surf.abm.agents.Agent
 
 /**
   * This class can be used to run the model with a GUI.
@@ -58,17 +59,29 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
     buildingPortrayal.setField(SurfABM.buildingGeoms)
     buildingPortrayal.setPortrayalForAll(
-      new BuildingLabelPortrayal(new GeomPortrayal(Color.BLUE, true), Color.BLACK))
+      new BuildingLabelPortrayal(
+        new GeomPortrayal(Color.BLUE, true), Color.BLACK
+      )
+    )
 
-    // Give the agents a round oval to represent them.
+    // Give the agents a round oval to represent them and a protrayal that returns their toString() method if they are clicked on..
     agentPortrayal.setField(SurfABM.agentGeoms)
+    agentPortrayal.setPortrayalForAll(
+      new AgentLabelPortrayal(
+        //new GeomPortrayal(Color.red, true), Color.BLACK
+        new OvalPortrayal2D(Color.RED,6.0),
+        Color.BLACK,
+        false // Only label when selected? Or all the time.
+      )
+    )
+
     //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
 
     // Each agent should have a different, random colour.
     // For some reason this doesn't work. I think there must be a bug in setPortrayalForObject when
     // used with GeomPortrayal. :-( Instead just make them all red.
     //agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED,10.0,true))
-    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
+    //agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
 
 
     /* // This bit uses the setPortrayalForAgent:
@@ -134,7 +147,7 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
   extends LabelledPortrayal2D (child, null, paint, true) {
 
   override def getLabel(o: AnyRef, info: DrawInfo2D): String = {
-    // cast the object to a MasonGemoetry using pattern matching and return the
+    // cast the object to a SurfGeometry using pattern matching and return the
     // building name. Or return 'no name' if the object is not a building
     o match {
       case x: SurfGeometry[Building @unchecked] => x.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TOID.toString)
@@ -150,15 +163,41 @@ object BuildingLabelPortrayal {
   private val LOG: Logger = Logger.getLogger(this.getClass)
 }
 
+/**
+  * A special portrayal for agents that provides labels for the buildings in the GUI.
+  * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different
+  * Portrayals that are available.
+  */
+@SerialVersionUID(1L)
+class AgentLabelPortrayal(child : SimplePortrayal2D, paint : Paint, onlyLabelWhenSelected: Boolean)
+  extends LabelledPortrayal2D (child, null, paint, onlyLabelWhenSelected) {
+
+  override def getLabel(o: AnyRef, info: DrawInfo2D): String = {
+    // cast the object to a SurfGeometry using pattern matching and return the
+    // agent's string. Or return 'no name' if the object is not a building
+    o match {
+      case x: SurfGeometry[Agent @unchecked] => x.theObject.id().toString
+//      case _ => {
+//        AgentLabelPortrayal.LOG.warn(s"Cannot call toString on the agent?", new Exception())
+//        "No ID" // no label to return, send "No Building Name" back
+//      }
+    } // match
+
+  }
+}
+object AgentLabelPortrayal {
+  private val LOG: Logger = Logger.getLogger(this.getClass)
+}
 
 /**
+  * DEPRICATED
   * A special portrayal for agents. They are displayed as circles, given a unique colour depending on their ID, and
   * report their 'toString' method if inspected.
   * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different
   * Portrayals that are available.
   */
 @SerialVersionUID(1L)
-class AgentLabelPortrayal()
+class AgentLabelPortrayal2()
   extends LabelledPortrayal2D (null, null, null, true) {
 
   /* A random colour for this agent */
@@ -206,6 +245,3 @@ class AgentLabelPortrayal()
   }*/
 
 }
-//object AgentLabelPortrayal {
-//  private val LOG: Logger = Logger.getLogger(this.getClass)
-//}
