@@ -18,6 +18,9 @@ output:
 fontsize: 10pt
 ---
 
+TODO: Look for visualisation ideas here: https://dantalus.github.io/ggplot2Slides/#1
+In particular - see if there is a nice way to visualise routine behaviours to check the model is working as expected.
+
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
