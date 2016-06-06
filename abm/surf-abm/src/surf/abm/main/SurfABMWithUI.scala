@@ -66,6 +66,8 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
     // Give the agents a round oval to represent them and a protrayal that returns their toString() method if they are clicked on..
     agentPortrayal.setField(SurfABM.agentGeoms)
+    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
+    /*
     agentPortrayal.setPortrayalForAll(
       new AgentLabelPortrayal(
         //new GeomPortrayal(Color.red, true), Color.BLACK
@@ -74,6 +76,7 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
         false // Only label when selected? Or all the time.
       )
     )
+    */
 
     //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
 
@@ -81,7 +84,6 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
     // For some reason this doesn't work. I think there must be a bug in setPortrayalForObject when
     // used with GeomPortrayal. :-( Instead just make them all red.
     //agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED,10.0,true))
-    //agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
 
 
     /* // This bit uses the setPortrayalForAgent:

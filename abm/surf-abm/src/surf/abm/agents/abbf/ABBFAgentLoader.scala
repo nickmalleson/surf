@@ -43,8 +43,10 @@ object ABBFAgentLoader {
         activityType = WORKING,
         openingTimes = null // Assume it's open all the time
       )
-      // Work time profile is 0 before 6 and after 10, and 1 between 10-4
-      val workTimeProfile = TimeProfile(Array((6d, 0d), (10d, 1d), (16d, 1d), (22d, 0d)))
+      // Work time profile is 0 before 6 and after 10, and 1 between 10-4 with a bit of randomness thrown in
+      val rnd = state.random.nextDouble()*4d // A random number between 0 and 2
+      val workTimeProfile = TimeProfile(Array((6d, 0d), (7d+rnd, 1d), (14d+rnd, 1d), (22d, 0d)))
+      //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
       val workActivity = WorkActivity(timeProfile = workTimeProfile, agent=a, place = workPlace)
 
       // SHOPPING
@@ -56,7 +58,7 @@ object ABBFAgentLoader {
       val atHomePlace = Place(home, SLEEPING, null)
       val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
       //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
-      //atHomeActivity.+=(0.5d)// Make this the most powerful activity to begin with
+      atHomeActivity.+=(0.1d*rnd)// Make this the most powerful activity to begin with, but a bit random
 
 
       // Add these activities to the agent's activity list. At Home is the strongest initially.

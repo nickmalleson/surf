@@ -24,7 +24,7 @@ In particular - see if there is a nice way to visualise routine behaviours to ch
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
-AGENT_ID <- 824 # The ID of the agent to analyse (graphs of all agents can be difficult to undersatnd.)
+AGENT_ID <- 2 # The ID of the agent to analyse (graphs of all agents can be difficult to undersatnd.)
 
 
 # Find the most recent run of that scenario

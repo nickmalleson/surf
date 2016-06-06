@@ -43,7 +43,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
   override def step(state: SimState): Unit = {
 
-    println(s"\n******  ${Clock.getTime.toString} ********* \n")
+    //println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
 
 
@@ -63,7 +63,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
     // Now find the most intense one, given the current time.
     val highestActivity:Activity = this.highestActivity()
-    println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
+    //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
     // Is the highest activity high enough to take control?
     if (highestActivity.intensity() < 0.2) {
@@ -71,7 +71,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       this.currentActivity.foreach( a => a.activityChanged() ) // Note: the for loop only iterates if an Activity has been defined (nice!)
       //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged()
       this.currentActivity = None
-      Agent.LOG.info(s"Agent ${this.id.toString()} is not doing any activity")
+      Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
       return
     }
 
@@ -80,6 +80,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged() // Tell the activity that it is no longer in charge
       this.currentActivity.foreach( a => a.activityChanged())
       this.currentActivity = Some(highestActivity) // Set the new current activity
+      Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
     }
 
 
