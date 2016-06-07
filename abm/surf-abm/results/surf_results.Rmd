@@ -230,7 +230,7 @@ for (id in agent.ids) {
       cols=brewer.pal(9,'Reds')
   )
   par(mfrow=c(1,2))
-  choropleth(single.agent.spdf, single.agent.spdf$Time, shading = shades)
+  choropleth(single.agent.spdf, single.agent.spdf$Time, shading = shades, main=paste("Agent",id))
   plot3D::points3D(x=single.agent$x, y=single.agent$y, z=single.agent$Iterations )
 }
 
