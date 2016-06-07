@@ -66,9 +66,8 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
     // Give the agents a round oval to represent them and a protrayal that returns their toString() method if they are clicked on..
     agentPortrayal.setField(SurfABM.agentGeoms)
-    agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0))
-    /*
-    agentPortrayal.setPortrayalForAll(
+    // agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0)) // Just the red oval
+    agentPortrayal.setPortrayalForAll( // use the agent portrayal to display their ID
       new AgentLabelPortrayal(
         //new GeomPortrayal(Color.red, true), Color.BLACK
         new OvalPortrayal2D(Color.RED,6.0),
@@ -76,7 +75,6 @@ class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
         false // Only label when selected? Or all the time.
       )
     )
-    */
 
     //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
 
