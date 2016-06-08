@@ -82,8 +82,6 @@ object Clock extends Steppable {
 
     var currentTime:LocalDateTime = startTime // Current time is initially the start time.
 
-
-
   }
 
   private val LOG: Logger = Logger.getLogger(this.getClass);

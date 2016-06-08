@@ -15,7 +15,7 @@ import surf.abm.main.SurfGeometry
   */
 object ABBFAgentLoader {
 
-  val N = 1000 // The number of agents (temporary)
+  val N = 100 // The number of agents (temporary)
 
   /**
     * This method is called by [[surf.abm.main.SurfABM]] after initialisation when the model starts.
@@ -26,9 +26,7 @@ object ABBFAgentLoader {
 
     for (i <- 0.until(N)) {
 
-      // Instantiate the agent. We haven't defined the activities yet, but this is lazy so it doesn't matter.
-      // This is because  agents and activities are immutable and paired which means they have to be instantiated together.
-      // See https://stackoverflow.com/questions/7507965/instantiating-immutable-paired-objects
+      // Instantiate the agent.
 
       val home = SurfABM.getRandomBuilding(state)
       val a: ABBFAgent = ABBFAgent(state, home)

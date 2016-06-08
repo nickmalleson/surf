@@ -24,8 +24,13 @@ abstract class Agent (val state:SurfABM, val home:SurfGeometry[Building]) extend
   def location() = this._location // accessor to location
   //protected def location_=(g:MasonGeometry) { _location = g } // protected mutator
 
-  // Set a default move rate
-  protected val moveRate : Double = Agent.baseMoveRate
+  /**
+    * The default (aka 'base') move rate. For the Agent super class, this is set to the
+    * 'BaseMoveRate' parameter. See [[surf.abm.agents.Agent._baseMoveRate]] for details. Be careful about changing
+    * this value as sub-classes will probably use it to work out what walking pace is, and hence other
+    * relative transport speeds. See an example in [[surf.abm.agents.abbf.ABBFAgent]].
+    */
+  protected def moveRate() : Double = Agent._baseMoveRate
 
   // Convenience for moving a point. Don't want to create this object each iteration.
   // val pmt : PointMoveTo = new PointMoveTo()
@@ -57,8 +62,12 @@ object Agent extends Serializable {
   // Initialise the logger. NOTE: will have one logger per Agent
   val LOG: Logger = Logger.getLogger(this.getClass);
 
-  /** The basic (walking) rate that agents move at. */
-  val baseMoveRate = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BaseMoveRate")
+  /**
+    * The basic (walking) rate that agents move at. It is by the 'BaseMoveRate' in the surf-abm.conf file.
+    * This is accessed by the [[surf.abm.agents.Agent.moveRate()]] function which
+    * can be overidden by agents who are able to move at different rates for whatever reason.
+    * */
+  private val _baseMoveRate = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BaseMoveRate")
 
   /** A unique ID that can be given to each agent */
   private var _uniqueID : Int= 0

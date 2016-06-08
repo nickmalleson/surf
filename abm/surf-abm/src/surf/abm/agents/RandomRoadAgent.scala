@@ -25,7 +25,7 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
         //this._atDestination = false
         //this.findNewPath() // Set the Agent's path variable (the roads it must pass through)
       }
-      assert(this.path != null, "The path shouldn't be null (for agent %s)".format(this.id))
+      assert(this.path() != null, "The path shouldn't be null (for agent %s)".format(this.id))
       this.moveAlongPath()
     }
     catch {

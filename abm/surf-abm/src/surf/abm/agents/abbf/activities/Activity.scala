@@ -99,6 +99,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   }
 
 
+  override def toString() : String = this.getClass.getSimpleName
 
 
 

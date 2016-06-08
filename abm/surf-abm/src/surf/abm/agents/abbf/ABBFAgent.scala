@@ -1,7 +1,8 @@
 package surf.abm.agents.abbf
 
 import sim.engine.SimState
-import surf.abm.agents.abbf.activities.Activity
+import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
+import surf.abm.agents.abbf.activities.{Activity, FixedActivity, SleepActivity, WorkActivity}
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
@@ -15,30 +16,35 @@ import surf.abm.main.{Clock, SurfABM, SurfGeometry}
   *             location is set to be <code>home</code>
   */
 class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building])
-  extends UrbanAgent(state, home)
-{
+  extends UrbanAgent(state, home) {
 
   /**
     * A set of of the [[surf.abm.agents.abbf.activities.Activity]]s that are driving an agent
     */
-  var activities : Set[ _ <: Activity] = Set.empty
+  var activities: Set[_ <: Activity] = Set.empty
 
   // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
   // TODO make this internal to each activity
-  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
-  private val BACKGROUND_INCREASE = (1d/ticksPerDay)
+  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble
+  // Minutes per day / ticks per minute = ticks per day
+  private val BACKGROUND_INCREASE = (1d / ticksPerDay)
 
   /**
     * The current activity that the agent is doing. Can be None.
     */
-  var currentActivity : Option[Activity] = None
+  var currentActivity: Option[_ <: Activity] = None
+
+  /**
+    * The previous activity that the agent was doing. Can be none.
+    */
+  var previousActivity: Option[_ <: Activity] = None
 
   /**
     * Work out which activity is the most intense at the moment.
- *
+    *
     * @return
     */
-  def highestActivity(): Activity = this.activities.maxBy( a => a.intensity() )
+  def highestActivity(): Activity = this.activities.maxBy(a => a.intensity())
 
 
   override def step(state: SimState): Unit = {
@@ -58,41 +64,101 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
-    this.activities.foreach( a => { a += BACKGROUND_INCREASE } )
+    this.activities.foreach(a => {
+      a += BACKGROUND_INCREASE
+    })
     //this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
     // Now find the most intense one, given the current time.
-    val highestActivity:Activity = this.highestActivity()
+    val highestActivity: Activity = this.highestActivity()
     //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
     // Is the highest activity high enough to take control?
-    if (highestActivity.intensity() < 0.2) {
-      // Tell the current activity (if there is one) that it's no longer in control.
-      this.currentActivity.foreach( a => a.activityChanged() ) // Note: the for loop only iterates if an Activity has been defined (nice!)
-      //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged()
-      this.currentActivity = None
-      Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
-      return
+    if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+      // If not, then make the current activity None
+      this.changeActivity(None)
+      //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
+      return // No point in continuing
     }
 
-    // See if the activity has changed (taking into account that there might not be a current activity)
-    if (highestActivity!=this.currentActivity.getOrElse(None)) {
-      //if (this.currentActivity.isDefined) this.currentActivity.get.activityChanged() // Tell the activity that it is no longer in charge
-      this.currentActivity.foreach( a => a.activityChanged())
-      this.currentActivity = Some(highestActivity) // Set the new current activity
-      Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
+    // See if the activity needs to change (taking into account that there might not be a current activity)
+    if (highestActivity != this.currentActivity.getOrElse(None)) {
+      this.changeActivity(Some(highestActivity))
+      //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
     }
-
 
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      highestActivity-=(BACKGROUND_INCREASE * 5) // (For now, decrease at considerably less than the rate that it increases.
+      highestActivity -= (BACKGROUND_INCREASE * 5) // (For now, decrease at considerably less than the rate that it increases.
     }
 
   }
 
+  /**
+    * Perform the necessary things to make this agent change its activity.
+    *
+    * @param newActivity
+    */
+  private def changeActivity(newActivity: Option[Activity]): Unit = {
+    // Tell the current activity (if there is one) that it's no longer in control.
+    this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
+    this.previousActivity = this.currentActivity // Remember what the current activity was
+    this.currentActivity = newActivity
+    Agent.LOG.debug(s"Agent ${this.id.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
+  }
 
+  /**
+    * The rate that agents can move is heterogeneous. At the moment, this is calculated such that if the agent is going
+    * to or from work then journey will take about 30 mins. If they are doing anything else then the default rate is used
+    * See [[surf.abm.agents.Agent.moveRate()]]. (That default rates is set by the BaseMoveRate parameter which is
+    * defined in surf-abm.conf).
+    */
+  override def moveRate(): Double = {
+
+    val act  = this.currentActivity.getOrElse(
+      throw new Exception("Internal error - ABBFAgent.moveRate() has been called, but the agent doesn't have an activity")
+    )
+    // Is the agent travelling to work now? (If the agent has no activity then throw an exception this shouldn't have been called)
+    if (act.isInstanceOf[WorkActivity])
+      return _commuterMoveRate(act.asInstanceOf[WorkActivity])
+
+    // Alternatively, are they going home from work ?
+    // TODO poor assumption: if they are going home to sleep then they must be coming from work
+    if (act.isInstanceOf[SleepActivity])
+      return _commuterMoveRate(act.asInstanceOf[SleepActivity])
+    // Only set commuting rate if current activity is sleeping and previous is working. DOESN'T WORK BECAUSE SOMETIMES THEY HAVE A NONE ACTIVITY IN BETWEEN
+    //val prevAct  = this.currentActivity.getOrElse(None) // The previous activity
+    //if (act.isInstanceOf[SleepActivity] && prevAct.isInstanceOf[WorkActivity])
+     //    return _commuterMoveRate(prevAct.asInstanceOf[WorkActivity])
+
+    // If here then not commuting. Use the default move rate
+    return super.moveRate()
+  }
+
+  // Variable to remember the cached commuter move rate and a function to calculate it (once)
+  private var _cachedCommuterMoveRate: Double = -1d
+  private def _commuterMoveRate(act : FixedActivity) : Double = {
+    if (_cachedCommuterMoveRate == -1d) { // Need to work out what the commuting rate is for this agent
+      // Make a route from home to work
+      val path: List[GeomPlanarGraphDirectedEdge] = UrbanAgent.findNewPath(this.home, act.place.location)
+      // Calculate its length (at least between the junctions)
+      var length = 0d // The total length of their commute
+      path.foreach( length += _.getEdge.asInstanceOf[GeomPlanarGraphEdge].getLine.getLength)
+      // Calculate new move rate. If it is less than the default move rate, then just use that
+      val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
+      val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes
+      _cachedCommuterMoveRate = if (moveRate < super.moveRate()) super.moveRate() else moveRate
+      Agent.LOG.debug(s"commuterMoveRate: commute length for agent ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
+      /*println("*********")
+      println(length)
+      println(iterPer30Min)
+      println(super.moveRate())
+      println(_cachedCommuterMoveRate)*/
+    }
+
+    return _cachedCommuterMoveRate
+  }
 
 }
 
@@ -101,6 +167,15 @@ object ABBFAgent {
   def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent =
     new ABBFAgent(state, home )
 
+  /**
+    * The limit for an activity intensity being large enough to take control of the agent. Below this, the activity
+    * is not deemed intense enough.
+    */
+  private val HIGHEST_ACTIVITY_THRESHOLD = 0.2
 
+  /**
+    * The number of minutes that agents should spend commuting
+    */
+  private val COMMUTE_TIME_MINS = 30d
 
 }
