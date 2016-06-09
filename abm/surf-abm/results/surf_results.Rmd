@@ -73,16 +73,13 @@ acts <- read.csv(paste(wd,'agent-activities.csv',sep=""))
 
 agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
 acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
-```
 
+# Find all of the activities - useful throughout
+all.acts <- unique(agents$Activity)
+# Also find the active activities (i.e. all not including 'none', as None doesn't have any intensities)
+active.acts <- unique(acts$Activity)
 
-Plot just the overall intensities of the different activities for some agents.
-
-```{r plotOverallActivity}
-
-# Find the activity with the highest overall intensity. That needs to be plotted first
-all.acts <- unique(acts$Activity)
-
+# Select a few agents at random to plot
 agent.ids <- c() # The agents to plot
 
 if (AGENT_ID == -1) { # Plot a selection of agents chosen at random
@@ -92,13 +89,18 @@ if (AGENT_ID == -1) { # Plot a selection of agents chosen at random
   # Otherwise just plot the one agent
   agent.ids <- c(AGENT_ID)
 }
+```
 
+
+Plot just the overall intensities of the different activities for some agents.
+
+```{r plotOverallActivity}
 
 # Plot
 for (id in agent.ids) {
   par(mfrow=c(1,1))
   i <- 1 # For colours
-  for (activity in all.acts) {
+  for (activity in active.acts) {
     if (i==1) { # First plot
       # Plot overall intensity
       plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
@@ -117,7 +119,7 @@ for (id in agent.ids) {
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   }
   
-  legend("topleft", legend=all.acts, col=1:length(all.acts), lty=1, pch="o")
+  legend("topleft", legend=active.acts, col=1:length(active.acts), lty=1, pch="o")
 }
 
 ```
@@ -127,43 +129,40 @@ Plot all the intensities of the different activities in one chart.
 
 ```{r plotActivitiesInOne}
 
-# Find the activity with the highest overall intensity. That needs to be plotted first
-all.acts <- unique(acts$Activity)
-
 for (id in agent.ids) {
   # Plot
   i <- 1 # For colours
-  for (activity in all.acts) {
+  for (activity in active.acts) { # Find the activity with the highest overall intensity. That needs to be plotted first
     if (i==1) { # First plot
       # Plot overall intensity
       plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
            y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity,
-           type='o', col=i, ylim=c(0,max(acts$Intensity)), pch=1,
+           type='p', col=i, ylim=c(0,max(acts$Intensity)), pch=1,
            xlab = "Time", ylab="TotalIntensity", main=paste("Intensities for agent",id))
       # Backgruound intesity
       points(
         x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
         y=acts[which(acts$Activity==activity & acts$Agent==id),]$BackgroundIntensity, 
-        type='o', col=i, pch=2)
+        type='p', col=i, pch=2)
       # Time intensity
       points(
         x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
         y=acts[which(acts$Activity==activity & acts$Agent==id),]$TimeIntensity, 
-        type='o', col=i, pch=3)
+        type='p', col=i, pch=3)
     } else { # Now for the remaining activities
       points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
-             y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='o', col=i, pch=1)
+             y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='p', col=i, pch=1)
       points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date, 
-             y=acts[which(acts$Activity==activity & acts$Agent==id),]$BackgroundIntensity, type='o', col=i, pch=2)
+             y=acts[which(acts$Activity==activity & acts$Agent==id),]$BackgroundIntensity, type='p', col=i, pch=2)
       points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date, 
-             y=acts[which(acts$Activity==activity & acts$Agent==id),]$TimeIntensity, type='o', col=i, pch=3)
+             y=acts[which(acts$Activity==activity & acts$Agent==id),]$TimeIntensity, type='p', col=i, pch=3)
       
     }
     i <- i + 1 # increment the colour counter (one colour per activity)
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   } # for activities
   
-  legend("topleft", legend=all.acts, col=1:length(all.acts), lty=1, pch="o")
+  legend("topleft", legend=active.acts, col=1:length(active.acts), lty=1, pch="o")
   legend("topright", legend=c('Overall','Background','Time'), col=1, lty=1, pch=1:3)
 
 } # for agent ids
@@ -174,30 +173,27 @@ Plot the intensities of the different activities, but on different plots.
 
 ```{r plotActivitiesMultiplePlots}
 
-# Find the activity with the highest overall intensity. That needs to be plotted first
-all.acts <- unique(acts$Activity)
-
-par(mfrow=c(length(all.acts),1))
+par(mfrow=c(length(active.acts),1))
 
 for (id in agent.ids) {
 
   # Plot
   i <- 1 # For colours
-  for (activity in all.acts) {
+  for (activity in active.acts) { # Find the activity with the highest overall intensity. That needs to be plotted first
     # Plot overall intensity
     plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
          y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity,
-         type='o', col=i, ylim=c(0,max(acts$Intensity)), pch=1, xlab = "Time", ylab="Intensity", main=paste("Agent",id,activity) 
+         type='p', col=i, ylim=c(0,max(acts$Intensity)), pch=1, xlab = "Time", ylab="Intensity", main=paste("Agent",id,activity) 
          )
     # Backgruound intesity
     points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
            y=acts[which(acts$Activity==activity & acts$Agent==id),]$BackgroundIntensity,
-           type='o', col=i, pch=2
+           type='p', col=i, pch=2
            )
     # Time intensity
     points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
            y=acts[which(acts$Activity==activity & acts$Agent==id),]$TimeIntensity, 
-           type='o', col=i, pch=3
+           type='p', col=i, pch=3
            )
     legend("topright", legend=c('Overall','Background','Time'), col=1, lty=1, pch=1:3)
       
@@ -205,18 +201,27 @@ for (id in agent.ids) {
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   }
   
-  #legend("topleft", legend=all.acts, col=1:length(all.acts), lty=1, pch="o")
 } # for agent ids
 
 ```
 
 
 
-Map the agent locations in 2D and 3D
+Map the agent locations in 2D and 3D with some additional analysis
 
-```{r plotAgentLocations.2D }
+```{r plotAgentLocations.2D, fig.width=10, fig.height=10 }
+
+# TEMPORARILY PLOT ALL
+#agent.ids <- unique(acts$Agent)
+
+# Calculat euclidean distance
+euc.dist <- function(p1, p2) sqrt( ( p1[,1] - p2[,1] )**2 + ( p1[,2] - p2[,2] )**2 ) 
 
 for (id in agent.ids) {
+  
+  par(mfrow=c(2,2))
+  
+  # 2D & 3D PLOTS
 
   # Data for the agent in question
   single.agent <- agents[agents$Agent==id,]
@@ -224,14 +229,31 @@ for (id in agent.ids) {
   single.agent.coords = cbind(single.agent$x, single.agent$y)
   single.agent.spdf = SpatialPointsDataFrame(single.agent.coords, single.agent)
   
-  # Shading
+  # Shading for the time of each location (2D)
   shades <- shading(
       classIntervals(single.agent$Iterations, n = 8, style = 'kmeans')$brks,
       cols=brewer.pal(9,'Reds')
   )
-  par(mfrow=c(1,2))
+  
+  # Colour for the 3D plot, depends on activity. Need to add another column with activity as a number
+  act.colours <- data.frame("act"=as.character(all.acts), "colour" = seq(1:length(all.acts)))
+  # Now work out which colour goes with which activity
+  colours <- base::merge(x=single.agent, y=act.colours, by.x="Activity", by.y="act" , all.x=TRUE, all.y=FALSE)
+  colours <- colours[order(colours$Iteration),] # merge randomises the order; put it back
+  single.agent$colour <- colours$colour
+  
+    # Draw 2D and 3D plots
   choropleth(single.agent.spdf, single.agent.spdf$Time, shading = shades, main=paste("Agent",id))
-  plot3D::points3D(x=single.agent$x, y=single.agent$y, z=single.agent$Iterations )
+  plot3D::points3D(x=single.agent$x, y=single.agent$y, z=single.agent$Iterations, col=single.agent$colour)
+  legend("topleft",legend=act.colours$act, col=act.colours$col, pch='o', cex=1.0)
+  
+  # BOXPLOTS OF DISTANCES
+  # Look at the distances travelled by the agent in each iteration to find unusual jumps
+  # Two lists of points to calculate the distances between
+  points1 <- head(single.agent.coords, -1)  # Drop last row
+  points2 <- tail(single.agent.coords, -1) # Drop first row
+  dists <- euc.dist(points1, points2)
+  boxplot(dists)
 }
 
 ```

@@ -24,9 +24,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
   var activities: Set[_ <: Activity] = Set.empty
 
   // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
-  // TODO make this internal to each activity
-  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble
-  // Minutes per day / ticks per minute = ticks per day
+  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
   private val BACKGROUND_INCREASE = (1d / ticksPerDay)
 
   /**
@@ -90,7 +88,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      highestActivity -= (BACKGROUND_INCREASE * 5) // (For now, decrease at considerably less than the rate that it increases.
+      highestActivity -= (BACKGROUND_INCREASE * 2.5) // (For now, just decrease at a constant rate proportional to increase)
     }
 
   }
