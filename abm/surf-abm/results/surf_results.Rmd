@@ -25,7 +25,8 @@ In particular - see if there is a nice way to visualise routine behaviours to ch
 
 SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
-AGENT_ID <- -1
+#AGENT_ID <- -1
+AGENT_ID <- 528
 
 
 # Find the most recent run of that scenario
@@ -124,10 +125,53 @@ for (id in agent.ids) {
 
 ```
 
+Boxplots for the different intensities of different activities
+
+```{r activityBoxplots }
+
+par(mfrow=c(length(active.acts),1))
+
+for (id in agent.ids) {
+  for (act in active.acts) {
+    boxplot(acts[which(acts$Activity==activity & acts$Agent==id),]$act, main="act")
+  }
+}
+  
+  
+  # Plot
+  i <- 1 # For colours
+  for (activity in active.acts) { # Find the activity with the highest overall intensity. That needs to be plotted first
+    # Plot overall intensity
+    plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
+         y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity,
+         type='p', col=i, ylim=c(0,max(acts$Intensity)), pch=1, xlab = "Time", ylab="Intensity", main=paste("Agent",id,activity) 
+         )
+    # Backgruound intesity
+    points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
+           y=acts[which(acts$Activity==activity & acts$Agent==id),]$BackgroundIntensity,
+           type='p', col=i, pch=2
+           )
+    # Time intensity
+    points(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
+           y=acts[which(acts$Activity==activity & acts$Agent==id),]$TimeIntensity, 
+           type='p', col=i, pch=3
+           )
+    legend("topright", legend=c('Overall','Background','Time'), col=1, lty=1, pch=1:3)
+      
+    i <- i + 1 # increment the colour counter (one colour per activity)
+    j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
+  }
+  
+} # for agent ids
+
+```
+
 
 Plot all the intensities of the different activities in one chart.
 
 ```{r plotActivitiesInOne}
+
+par(mfrow=c(1,1))
 
 for (id in agent.ids) {
   # Plot
