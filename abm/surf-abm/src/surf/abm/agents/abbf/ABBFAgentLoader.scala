@@ -15,7 +15,7 @@ import surf.abm.main.SurfGeometry
   */
 object ABBFAgentLoader {
 
-  val N = 10 // The number of agents (temporary)
+  val N = 1000 // The number of agents (temporary)
 
   /**
     * This method is called by [[surf.abm.main.SurfABM]] after initialisation when the model starts.

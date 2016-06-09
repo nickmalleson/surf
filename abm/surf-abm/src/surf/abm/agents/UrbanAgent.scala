@@ -107,7 +107,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
         }
 
         // If no destination, then thrown an exception
-        case None => throw new Exception(s"Agent ${this.id()} cannot move along their path because no destination has been set")
+        case None => throw new Exception(s"${this.toString()} cannot move along their path because no destination has been set")
       }
 
     } // try
@@ -154,7 +154,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * @return True if the agent has reached the end of the path, false otherwise.
     */
   private def transitionToNextEdge(residualMove: Double): Boolean = {
-    assert(this._path != null, "The path shouldn't be null (for agent %d)".format(this.id))
+    assert(this._path != null, s"The path shouldn't be null ${this.toString()}")
 
     indexOnPath += pathDirection
     // See if the agent has reached the end of the path. If so, reset the counters and return true.

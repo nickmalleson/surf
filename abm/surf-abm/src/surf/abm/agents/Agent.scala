@@ -52,7 +52,7 @@ abstract class Agent (val state:SurfABM, val home:SurfGeometry[Building]) extend
 
   }
 
-  override def toString() = "Agent %s".format(this.id())
+  override def toString() = s"Agent [${this.id()}]"
 
 }
 

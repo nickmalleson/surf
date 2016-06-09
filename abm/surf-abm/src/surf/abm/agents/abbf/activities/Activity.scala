@@ -23,7 +23,6 @@ import surf.abm.main.Clock
   * can do this activity, then <code>performAction()</code> returns <code>true</code>, and the underlying
   * agent might choose to reduce the <code>backgroundIntensity</code> (with <code>-=()</code>.</p>
   *
-  *
   * @param activityType The type ([[surf.abm.agents.abbf.activities.ActivityTypes]]) of this activity
   * @param timeProfile A definition of the times when this Activity is at its most <i>intense</i>.
   *  E.g. work activities might be the most intense between 9am-5pm. This has the
@@ -38,13 +37,14 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   private var _backgroundIntensity = 0d // Private variable with public accessor
 
   /**
-    * The current background intensity of the activity. I.e. the base amount that gradually increases until the
+    * The current background intensity of the activity. I.e. the base amount that will gradually increase until the
     * activity is undertaken.
     */
   def backgroundIntensity() = _backgroundIntensity
 
   /**
     * The current extra time-of-day intensity for this activity.
+    *
     * @param currentTime Current decimal 24-hour of the day (e.g. 3.5 = 03:03)
     */
   def timeIntensity(currentTime: Double) = this.timeProfile.calcIntensity(currentTime)
@@ -52,9 +52,19 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   /**
     * Calculate the current total intensity of this activity at the current time. (I.e. background intensity plus
     * time-specific intensity).
+    *
     * @return
     */
   def intensity() = this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour())
+
+
+  /**
+    * Find out how much this activity has been reduced by in one 'sitting' (i.e. from when the agent most recently
+    * started satisfying the activity.
+    * <p>This is useful because it make it possible the agent from chaning activity too rapidly.</p>
+    */
+  def currentIntensityDecrease() = _currentIntensityDecrease
+  protected var _currentIntensityDecrease = 0d
 
 
   /**
@@ -86,15 +96,37 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
 
   /**
     * Decrease the intensity of this activity, i.e. if the agent is doing something to satisfy it.
+    *
     * @param d The amount to decrease the intensity by
+    * @param simulate Whether to simulate the increase but not actually apply it. If this is set to true, then no
+    *                 change is made to the background intensity. It will affect the return value of the function though.
+    * @return If 'simulate' is false (default), then always return true. Otherwise, return true if reducing the
+    *         background intensity will *not* reduce the overall intensity below 0. This should never happen because
+    *         why would an agent ever want to satisfy an activity if the overall intensity was 0? Otherwise return false
+    *         (i.e. it would have been fine to reduce the intensity).
     * @throws IllegalArgumentException if this call attempts to take the total intensity
-    * (i.e. background + time component ) below 0
+    * (i.e. background + time component ) below 0. That should never happen (why would the agent want to do that??). If
+    * 'simulate' is true then under those conditions no Exception is thrown and the function returns false.
     *
     */
-  def -= (d:Double) : Unit = {
-    this._backgroundIntensity -= d
-    if (this.intensity() < 0) {
-      throw new IllegalArgumentException(s"Overall intenity of activity ${this.toString} for agent ${this.agent.toString()} has dropped below 0")
+  def -= (d:Double, simulate:Boolean = false) : Boolean = {
+    if (!simulate) {
+      this._backgroundIntensity -= d
+      if (this.intensity() < 0) {
+        throw new IllegalArgumentException(s"Overall intenity of activity ${this.toString} for agent ${this.agent.toString()} has dropped below 0")
+      }
+      // Also remember how much the activity has gone
+      this._currentIntensityDecrease = this._currentIntensityDecrease + d
+      return true
+    }
+    else {
+      // Stupidity check - make sure that the intensity calculation here matches that in the intensity() function (I don't
+      // want to change the intensity() function and forget to chance the calculation here!)
+      assert (this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour()) == this.intensity())
+      if ( ( this._backgroundIntensity - d + this.timeProfile.calcIntensity(Clock.currentHour()) ) < 0 ) {
+        return false // Reducing the intensity would take the total intensity below zero
+      }
+      return true
     }
   }
 

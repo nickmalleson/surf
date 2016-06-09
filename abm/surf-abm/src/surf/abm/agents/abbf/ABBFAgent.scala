@@ -23,9 +23,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     */
   var activities: Set[_ <: Activity] = Set.empty
 
-  // Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
-  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
-  private val BACKGROUND_INCREASE = (1d / ticksPerDay)
+
 
   /**
     * The current activity that the agent is doing. Can be None.
@@ -63,32 +61,47 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
 
     this.activities.foreach(a => {
-      a += BACKGROUND_INCREASE
+      a += ABBFAgent.BACKGROUND_INCREASE
     })
     //this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
-    // Now find the most intense one, given the current time.
-    val highestActivity: Activity = this.highestActivity()
-    //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
-
-    // Is the highest activity high enough to take control?
-    if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
-      // If not, then make the current activity None
-      this.changeActivity(None)
-      //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
-      return // No point in continuing
+    // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
+    // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
+    // has only been working on the activity for a short while!)
+    if (
+      ( this.currentActivity.isDefined ) &&
+      ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE ) &&
+      ( this.currentActivity.get.-=(d=ABBFAgent.REDUCE_ACTIVITY, simulate=true) ) // Check that the intensity can be reduced
+      ) {
+      Agent.LOG.debug(s"Activity (${this.currentActivity.toString}) increase for ${this.toString()} = ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE}")
     }
+    else {
+      // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold. So now see if it should change.
 
-    // See if the activity needs to change (taking into account that there might not be a current activity)
-    if (highestActivity != this.currentActivity.getOrElse(None)) {
-      this.changeActivity(Some(highestActivity))
-      //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
+      // Now find the most intense one, given the current time.
+      val highestActivity: Activity = this.highestActivity()
+      //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
+
+      // Is the highest activity high enough to take control?
+      if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+        // If not, then make the current activity None
+        Agent.LOG.debug(s"${this.toString()}: Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
+        this.changeActivity(None)
+        //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
+        return // No point in continuing
+      }
+
+      // See if the activity needs to change (taking into account that there might not be a current activity)
+      if (highestActivity != this.currentActivity.getOrElse(None)) {
+        this.changeActivity(Some(highestActivity))
+        //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
+      }
+
     }
-
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      highestActivity -= (BACKGROUND_INCREASE * 2.5) // (For now, just decrease at a constant rate proportional to increase)
+      highestActivity -= (ABBFAgent.REDUCE_ACTIVITY) // (For now, just decrease at a constant rate proportional to increase)
     }
 
   }
@@ -103,7 +116,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
     this.previousActivity = this.currentActivity // Remember what the current activity was
     this.currentActivity = newActivity
-    Agent.LOG.debug(s"Agent ${this.id.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
+    Agent.LOG.debug(s"${this.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 
   /**
@@ -147,7 +160,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
       val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes
       _cachedCommuterMoveRate = if (moveRate < super.moveRate()) super.moveRate() else moveRate
-      Agent.LOG.debug(s"commuterMoveRate: commute length for agent ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
+      Agent.LOG.debug(s"commuterMoveRate: commute length for ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
       /*println("*********")
       println(length)
       println(iterPer30Min)
@@ -172,8 +185,31 @@ object ABBFAgent {
   private val HIGHEST_ACTIVITY_THRESHOLD = 0.2
 
   /**
+    * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
+    * This prevents the agents quickly switching from one activity to another
+    */
+  private val MINIMUM_INSTENSITY_DECREASE = 0.1
+
+  assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
+
+  /**
     * The number of minutes that agents should spend commuting
     */
   private val COMMUTE_TIME_MINS = 30d
+
+
+
+  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
+  /**
+    * Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
+    */
+  private val BACKGROUND_INCREASE = (1d / ticksPerDay)
+
+  /**
+    * Amount to reduce the intensity by if the agent is satisfying it
+    */
+  private val REDUCE_ACTIVITY = BACKGROUND_INCREASE * 2.5
+
+
 
 }
