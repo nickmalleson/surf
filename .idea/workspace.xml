@@ -32,21 +32,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ABBFAgent.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ABBFAgent.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="63" column="21" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="surf-abm.conf" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf-abm.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state relative-caret-position="336">
+              <caret line="86" column="47" selection-start-line="86" selection-start-column="47" selection-end-line="86" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -55,8 +45,20 @@
       <file leaf-file-name="Outputter.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Outputter.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="104" column="5" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+            <state relative-caret-position="426">
+              <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+              <folding>
+                <marker date="1465586896000" expanded="false" signature="30:169" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SurfABM.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -80,7 +82,7 @@
             <state relative-caret-position="1890">
               <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
               <folding>
-                <marker date="1465505092000" expanded="true" signature="4228:4271" ph="/**...*/" />
+                <marker date="1465586782000" expanded="true" signature="4228:4271" ph="/**...*/" />
               </folding>
             </state>
           </provider>
@@ -92,8 +94,8 @@
             <state relative-caret-position="207">
               <caret line="178" column="49" selection-start-line="178" selection-start-column="49" selection-end-line="178" selection-end-column="49" />
               <folding>
-                <marker date="1465311369000" expanded="false" signature="30:469" ph="..." />
-                <marker date="1465311369000" expanded="true" signature="2548:2862" ph="/.../" />
+                <marker date="1465586782000" expanded="false" signature="30:469" ph="..." />
+                <marker date="1465586782000" expanded="true" signature="2548:2862" ph="/.../" />
               </folding>
             </state>
           </provider>
@@ -115,7 +117,7 @@
             <state relative-caret-position="180">
               <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
               <folding>
-                <marker date="1465498967000" expanded="true" signature="3323:3329" ph="{...}" />
+                <marker date="1465586782000" expanded="true" signature="3323:3329" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -1060,7 +1062,7 @@
       <workItem from="1465393172803" duration="3990000" />
       <workItem from="1465400596012" duration="11626000" />
       <workItem from="1465481332146" duration="12247000" />
-      <workItem from="1465585139962" duration="1063000" />
+      <workItem from="1465585139962" duration="2026000" />
     </task>
     <task id="LOCAL-00001" summary="Created an IntelliJ IDEA project for surf">
       <created>1455802500252</created>
@@ -1112,19 +1114,19 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="130686000" />
+    <option name="totallyTimeSpent" value="131649000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1405" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30816832" sideWeight="0.37864769" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30816832" sideWeight="0.37010676" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328635" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32948327" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32602194" sideWeight="0.38690478" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30816832" sideWeight="0.6213523" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30816832" sideWeight="0.62989324" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32447955" sideWeight="0.43035713" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18647687" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1349,6 +1351,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="106" column="19" selection-start-line="106" selection-start-column="19" selection-end-line="106" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1381,14 +1384,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="12" column="30" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="85" column="4" selection-start-line="0" selection-start-column="0" selection-end-line="359" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1447,20 +1442,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="63" column="21" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/activities/Activity.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1890">
           <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
           <folding>
-            <marker date="1465505092000" expanded="true" signature="4228:4271" ph="/**...*/" />
+            <marker date="1465586782000" expanded="true" signature="4228:4271" ph="/**...*/" />
           </folding>
         </state>
       </provider>
@@ -1478,7 +1465,7 @@
         <state relative-caret-position="180">
           <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
           <folding>
-            <marker date="1465498967000" expanded="true" signature="3323:3329" ph="{...}" />
+            <marker date="1465586782000" expanded="true" signature="3323:3329" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1506,16 +1493,26 @@
         <state relative-caret-position="207">
           <caret line="178" column="49" selection-start-line="178" selection-start-column="49" selection-end-line="178" selection-end-column="49" />
           <folding>
-            <marker date="1465311369000" expanded="false" signature="30:469" ph="..." />
-            <marker date="1465311369000" expanded="true" signature="2548:2862" ph="/.../" />
+            <marker date="1465586782000" expanded="false" signature="30:469" ph="..." />
+            <marker date="1465586782000" expanded="true" signature="2548:2862" ph="/.../" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/Outputter.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="104" column="5" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+        <state relative-caret-position="426">
+          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+          <folding>
+            <marker date="1465586896000" expanded="false" signature="30:169" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1523,7 +1520,15 @@
     <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf-abm.conf">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/agents/abbf/ABBFAgent.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="86" column="47" selection-start-line="86" selection-start-column="47" selection-end-line="86" selection-end-column="47" />
           <folding />
         </state>
       </provider>

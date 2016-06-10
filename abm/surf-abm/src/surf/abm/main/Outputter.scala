@@ -77,13 +77,8 @@ object OutputFactory  {
       catch {
         case e: ConfigException.Missing => {
           // No outputter, create a default
-<<<<<<< HEAD
           this._outputter = DefaultOutputter()
           state.schedule.scheduleRepeating(this._outputter, Int.MinValue, 1)
-=======
-          //DefaultOutputter(state)
-          throw new NotImplementedError("Have not implemented the default outputter")
->>>>>>> 56453f689961f181a464198d6ca8e5c7b9c47243
         }
         case e: Exception => {
           // Some other exception with reflection
@@ -98,7 +93,6 @@ object OutputFactory  {
 
   private val LOG: Logger = Logger.getLogger(this.getClass);
 }
-<<<<<<< HEAD
 
 
 
@@ -139,5 +133,3 @@ object DefaultOutputter extends Outputter with Serializable {
 
   private val LOG: Logger = Logger.getLogger(this.getClass);
 }
-=======
->>>>>>> 56453f689961f181a464198d6ca8e5c7b9c47243
