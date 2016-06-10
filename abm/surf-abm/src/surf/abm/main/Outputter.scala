@@ -77,8 +77,8 @@ object OutputFactory  {
       catch {
         case e: ConfigException.Missing => {
           // No outputter, create a default
-          //DefaultOutputter(state)
-          throw new NotImplementedError("Have not implemented the default outputter")
+          this._outputter = DefaultOutputter()
+          state.schedule.scheduleRepeating(this._outputter, Int.MinValue, 1)
         }
         case e: Exception => {
           // Some other exception with reflection
@@ -90,6 +90,46 @@ object OutputFactory  {
     return this._outputter
 
   }
+
+  private val LOG: Logger = Logger.getLogger(this.getClass);
+}
+
+
+
+/**
+  * A default Outputter that writes basic information that all models will have in common.
+  */
+object DefaultOutputter extends Outputter with Serializable {
+  /**
+    * Initialise the outputter. E.g. Create output files etc.
+    *
+    * @return
+    */
+  override def apply(): Outputter = {
+
+    LOG.warn("DefaultOutputter has not been implemented")
+
+    return this
+  }
+
+  /**
+    * Will be called at the end of the simulation, e.g. to close files etc. Scheduled by [[surf.abm.main.SurfABM]].
+    */
+  override def finish(): Unit = {
+
+    LOG.warn("DefaultOutputter has not been implemented")
+  }
+
+  /**
+    * Will be called at each iteration (scheduled by [[surf.abm.main.OutputFactory]]).
+    *
+    * @param state
+    */
+  override def step(state: SimState): Unit = {
+
+    LOG.warn("DefaultOutputter has not been implemented")
+  }
+
 
   private val LOG: Logger = Logger.getLogger(this.getClass);
 }
