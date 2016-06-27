@@ -137,8 +137,8 @@ p.small{
 
 	font-style: normal;
 	background: rgba(255, 255, 255, 0.05);
-	box-shadow:1px 5px 5px 1px #aaaaaa;
-    
+	
+    box-shadow:1px 5px 5px 1px #aaaaaa;
     border-radius:15px;
 }
 
@@ -163,13 +163,17 @@ iframe, iframe.youtube-player, iframe.youtube-player-right, iframe.right, img, i
     float:centre;
     
     margin:10px 10px 10px 10px;
+    padding: 5px 5px 5px 5px;
     /*border:1px solid #BFBFBF;*/
-    box-shadow:1px 5px 5px 1px #aaaaaa;
+    /* box-shadow:1px 5px 5px 1px #aaaaaa;*/
     /*border-radius:15px;*/
 }
 
-img {
+/* Need to override a couple of reveal styles. Need the '.reveal section' before 'img' otherwise the 
+reveal styles are considered more specific*/
+.reveal section img {
     height:auto; /* Don't want fixed height in images, but do want everything else that is set above */
+    box-shadow: none;
 }
 
 iframe.right {
@@ -229,7 +233,7 @@ img.top {
 
 
 .reveal figcaption a {
-    color: yellow;
+/*    color: yellow;*/
 }
 
 
