@@ -38,11 +38,11 @@
                     <script type="text/template">
                     # Simulating Urban Flows ([surf](http://surf.leeds.ac.uk/))
                     
-                    ## ... and other research at SENSEable cities
+                    ## ... and other resaerch at SENSEable cities
 
                     Nick Malleson http://nickmalleson.co.uk/
                     
-                    Associate Professor in GISc
+                    Associate Professor in GIS
                     
                     [School of Geography](http://geog.leeds.ac.uk/), [University of Leeds](http://www.leeds.ac.uk/), UK
                     
@@ -61,9 +61,14 @@
                 <section id="me">
                     
                     <h2>Me</h2>
+                    <img class="right" data-src="../figures/city_centre_results.png" />
                     <p>BSc Computer Science</p>
                     <p>MSc Multidisciplinary Informatics</p>
                     <p>PhD (Computational) Geography</p>
+                    <p>Main interests:</p>
+                    <p class=l2>Agent-based modelling</p>
+                    <p class=l2>Crime analysis</p>
+                    <p class=l2>Insights into urban dynamics through 'big' data</p>                
                     
                 </section>
                 
@@ -71,7 +76,7 @@
                 <section data-background-image="../figures/abm_crime_twitter.jpg" id="interests">
                     
                     <div class="twocol">
-                        <h2 style="color:white; text-align:left;">Main Interests</h2>
+                        <h2 style="color:white">Main Interests</h2>
 
                         <p style="color:white">Agent-based modelling</p>
                         <p style="color:white">Crime analysis</p>
@@ -92,6 +97,10 @@
                     <p>Find out how you interrogate cities through ‘big’ data</p>
                     <p>Collaborate on a particular case study area?</p>
                     
+                    <p class=l2>Integrating data for a chosen city</p>
+                    <p class=l2>Build new data / insight into a bespoke ABM</p>
+                    
+                    
                 </section>
                 
                 <section id="crime-analysis-footfall">
@@ -103,7 +112,7 @@
                     </figure>
                     
                     
-                    <h2>Context: Crime Analysis</h2>
+                    <h2>Crime Analysis</h2>
                     <p>Good crime data, but poor understanding about population-at-risk</p>
                     <p>Need accurate, high-resolution footfall estimates</p>
                     <p>Applicable to other critical areas, e.g. pollution</p>
@@ -117,7 +126,7 @@
                     <p>Autonomous, interacting 'agents'</p>
                     <p>Model phenomena from the 'bottom-up'</p>
                     <p>Advantages:</p>
-                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
+                    <p class="l2">Modelling complexity, non-linerity, emergence</p>
                     <p class="l2">Natural description of a system</p>
                     <p class="l2">Bridge between verbal theories and mathematical models</p>
                     <p class="l2">History of the evolution of the system</p>
