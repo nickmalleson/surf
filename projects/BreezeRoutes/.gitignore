@@ -1,1 +1,2 @@
-.out
+# Ignore compiled files
+out/
