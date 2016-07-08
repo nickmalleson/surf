@@ -1,2 +1,4 @@
-# Ignore compiled files
-out/
+classes/
+out/*
+map-data/*
+traces/*
