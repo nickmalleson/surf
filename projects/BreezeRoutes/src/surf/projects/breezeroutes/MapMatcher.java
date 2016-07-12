@@ -34,7 +34,7 @@ public class MapMatcher {
 
 
     private static GraphHopper hopper;
-    private static  MapMatching mapMatching;
+    private static MapMatching mapMatching;
     private static GraphHopperStorage graph;
     private static MiniGraphUI ui; // For visualising the graph(s)
 
@@ -43,10 +43,11 @@ public class MapMatcher {
      * @param osmDataFile The file that contains the OSM data.
      * @param cacheDir The directory to use for cacheing the graph (generated from the OSM data)
      * @param tracesDir The directory to search for traces in (the input gpx files).
+     * @param writeMatchedPath Whether to write GPX files for each matched path
      */
-    public MapMatcher(String osmDataFile, String cacheDir, String tracesDir, boolean writeGPX ) throws Exception {
+    public MapMatcher(String osmDataFile, String cacheDir, String tracesDir, boolean writeMatchedPath ) throws Exception {
         init(osmDataFile, cacheDir);
-        run(tracesDir, writeGPX);
+        run(tracesDir, writeMatchedPath);
     }
 
     /**
@@ -72,8 +73,13 @@ public class MapMatcher {
         mapMatching = new MapMatching(graph, locationIndex, encoder);
     }
 
-
-    private static void run(String tracesDir, boolean writeGPX) throws IOException {
+    /**
+     * Run the map matcher.
+     * @param tracesDir The directory from which to read (and optionally write) the traces
+     * @param writeMatchedPath Whether or not to write each mathched path (as GPX).
+     * @throws IOException
+     */
+    private static void run(String tracesDir, boolean writeMatchedPath) throws IOException {
 
         File tracesDirectory = new File(tracesDir);
         if (!tracesDirectory.isDirectory()) {
@@ -84,13 +90,13 @@ public class MapMatcher {
         File[] allFiles = tracesDirectory.listFiles();
         for (int i = 0; i < allFiles.length; i++) {
             File file = allFiles[i];
-            if (file.isFile() && file.getName().endsWith(".gpx")) {
+            if (file.isFile() && file.getName().endsWith(".gpx") && !file.getName().endsWith("-matched.gpx")) {
 
                 System.out.println("Reading file ("+i+"): "+file);
                 Path p = match(file.getAbsolutePath());
 
 
-                if (writeGPX) {
+                if (writeMatchedPath) {
                     String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-matched.gpx";
                     System.out.println("Writing matched path to GPX: "+gpxout);
                     GPXFile.write(p, gpxout, hopper.getTranslationMap().get("en_us"));
@@ -101,6 +107,7 @@ public class MapMatcher {
         } // For all files
 
     }
+
 
     private static Path match(String inputGPXFile) {
         // do the actual matching, get the GPX entries from a file or via stream
