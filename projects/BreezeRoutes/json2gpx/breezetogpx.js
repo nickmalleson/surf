@@ -4,8 +4,13 @@
 //INDIR = "./";
 //OUTDIR = "./";
 
-INDIR  = "~/runkeeper/runkeeper-data/boston/breeze_geo/";
-OUTDIR = "~/runkeeper/breeze-gpx/";
+// On MIT server:
+//INDIR  = "~/runkeeper/runkeeper-data/boston/breeze_geo/";
+//OUTDIR = "~/runkeeper/breeze-gpx/";
+
+// On Nick's laptop:
+INDIR  = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/";
+OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/";
 
 // Use the togpx library to convert all geojson to gpx files.
 // https://github.com/tyrasd/togpx
@@ -31,8 +36,8 @@ options.featureCoordTimes = function(feature) {
         var time_sec = Math.round(parseFloat(times_secs[i]*1000)); // *1000 for miliseconds 
         var time = new Date(time_sec); // Convert to a Date with required format
         times_array.push(time);
-        console.log(i+" - "+time_sec +" - "+ time);
-        console.log(time.toISOString());
+        //console.log(i+" - "+time_sec +" - "+ time);
+        //console.log(time.toISOString());
     }
     return times_array;
 }
@@ -41,9 +46,9 @@ options.featureCoordTimes = function(feature) {
 // The function that reads the json file and writes a gpx file
 jsontogpx = function(filename, index) {
 
-    var gpx_filename = filename.substring(0, filename.length - 4)+"gpx";
+    var gpx_filename = filename.substring(0, filename.length - 7)+"gpx";
     // Get the data
-    var geojson_str = fs.readFileSync(filename , 'utf8'); // Use synchronous file read
+    var geojson_str = fs.readFileSync(INDIR + filename , 'utf8'); // Use synchronous file read
     console.log("Have read file "+index+": "+filename);
 
     // Turn it into a JSON object
@@ -70,15 +75,16 @@ fs.readdir( INDIR, function( err, files ) {
 
     // Iterate over each file, calling the jsontogpx function
     files.forEach( function(file, index) {
-        if (index > 10) { // Temporarily
-          return;
-        }
+        //if (index > 10) { // Temporarily
+        //  return;
+        //}
         // Check the file is a geojson
         if (file.substring(file.length - 8, file.length) == ".geojson") {
+            console.log(file);
             jsontogpx(file,index);
         }
         else {
-            console.log("Ignoring file ("+index+")"+file);
+            console.log("Ignoring file ("+index+"): "+file);
         }
 
     } ) ; // files.foreach

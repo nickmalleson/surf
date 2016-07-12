@@ -41,14 +41,15 @@ To run the script, copy the json files into the `json2gpx` folder and do:
 ./breezetogpx.js
 ```
 
-Or alternatively, leave the json files where they are and change the `INDIR` parameter (the input directory).
+Or alternatively, leave the json files where they are and change the `INDIR` and `OUTDIR` parameters (the input and output directories).
 
 Note that the times in the output GPX file will be wrong because I haven't bothered to try to adjust for the time zone. This should be an easy fix if it is important, the time zone is stored in an _offset_ field in the json.
 
-**XXXX Extend script to run over all files in a specified directory**
 
 ## 2. Map Matching with GraphHopper
 
 **The `BreezeRoutes` directory is the root of an IntelliJ IDEA project. So the easiest way edit or run the code is through IntelliJ IDEA. (There is a free version of the IDE.**
 
-The `surf.projects.breezeroutes.MapMatcher` class does most of the work. It looks for GPX files in the `traces` directory (the output files from step 1), matches them to the OSM network, and then XXXX (what to do with output?).
+The `surf.projects.breezeroutes.MapMatcher` class does most of the work. It looks for GPX files in the `traces` directory (or another directory if you change the parameter) (the output files from step 1), matches them to the OSM network, and then 
+
+XXXX (what to do with output?).
