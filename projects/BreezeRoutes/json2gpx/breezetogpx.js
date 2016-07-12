@@ -9,8 +9,10 @@
 //OUTDIR = "~/runkeeper/breeze-gpx/";
 
 // On Nick's laptop:
-INDIR  = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/";
-OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/";
+var INDIR  = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/";
+var OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/";
+
+var OVERWRITE = false; // Whether to override output gpx files
 
 // Use the togpx library to convert all geojson to gpx files.
 // https://github.com/tyrasd/togpx
@@ -47,6 +49,13 @@ options.featureCoordTimes = function(feature) {
 jsontogpx = function(filename, index) {
 
     var gpx_filename = filename.substring(0, filename.length - 7)+"gpx";
+
+    // See if the gox for this file has already been created
+    if (!OVERWRITE && fs.existsSync(OUTDIR+gpx_filename) ) {
+        console.log("Ignoring file ("+index+") that already has gpx output: "+filename);
+        return;
+    }
+
     // Get the data
     var geojson_str = fs.readFileSync(INDIR + filename , 'utf8'); // Use synchronous file read
     console.log("Have read file "+index+": "+filename);
