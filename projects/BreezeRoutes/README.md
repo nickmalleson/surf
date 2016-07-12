@@ -19,7 +19,9 @@ wget http://download.geofabrik.de/north-america/us/massachusetts-latest.osm.pbf
 
 All the required libraries are in the ./lib/ directory. 
 
-The main third-party libraries are [Graphhopper](https://github.com/graphhopper/graphhopper) (for routing) and [map-matching](https://github.com/graphhopper/map-matching) for building a route (list of OSM street segments) from the GPS data.
+The main third-party libraries are [Graphhopper](https://github.com/graphhopper/graphhopper) (for routing) and [map-matching](https://github.com/graphhopper/map-matching) for building a route (list of OSM street segments) from the GPS data. These have been imported with Maven.
+
+The `BreezeRoutes` folder is a project that can be openned in the IntelliJ IDEA IDE. To see specifically which Maven libraries have been downloaded, go through IntelliJ.
 
 ## 1. Preparing GPX files with json2gpx
 
@@ -31,13 +33,15 @@ features:properties:coordinateProperties:times
 
 So I've used the [togpx](https://github.com/tyrasd/togpx) library to convert the geojson files to GPX files. The only tricky thing is using a callback function that specifies where the times associated with each coordinate are in the json.
 
-For details see: `breezetogpx.js`. The script reads all `.json` files in a directory and writes out `.gpx` files to a specified directory.
+For details see: `./json2gpx/breezetogpx.js`. The script reads all `.json` files in its directory and writes out `.gpx` files in the same place.
 
-To run the script do:
+To run the script, copy the json files into the `json2gpx` folder and do:
 
 ```
-./breezetogpx.js <input directory> <output directory>
+./breezetogpx.js
 ```
+
+Note that the times in the output GPX file will be wrong because I haven't bothered to try to adjust for the time zone. This should be an easy fix if it is important, the time zone is stored in an _offset_ field in the json.
 
 **XXXX Extend script to run over all files in a specified directory**
 

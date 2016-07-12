@@ -9,3 +9,5 @@ features:properties:coordinateProperties:times
 ```
 
 and the library needs to be told (via an optional callback function) where to find them.
+
+See [../README.md](../README.md) for details about how to run the script.

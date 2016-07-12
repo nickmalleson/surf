@@ -55,7 +55,7 @@ public class MapMatcher {
 
     private static void match() {
         // do the actual matching, get the GPX entries from a file or via stream
-        List<GPXEntry> inputGPXEntries = new GPXFile().doImport("./traces/trace1.gpx").getEntries();
+        List<GPXEntry> inputGPXEntries = new GPXFile().doImport(TRACES_DIR+"/trace1.gpx").getEntries();
         MatchResult mr = mapMatching.doWork(inputGPXEntries);
         double dist = mr.getMatchLength();
         System.out.println("Finished matching. Length: "+dist);
