@@ -4,8 +4,8 @@
 //INDIR = "./";
 //OUTDIR = "./";
 
-INDIR  = "../runkeeper/runkeeper-data/boston/breeze_geo/";
-OUTDIR = "../runkeeper/breeze-gpx/";
+INDIR  = "~/runkeeper/runkeeper-data/boston/breeze_geo/";
+OUTDIR = "~/runkeeper/breeze-gpx/";
 
 // Use the togpx library to convert all geojson to gpx files.
 // https://github.com/tyrasd/togpx
@@ -41,7 +41,7 @@ options.featureCoordTimes = function(feature) {
 // The function that reads the json file and writes a gpx file
 jsontogpx = function(filename, index) {
 
-    var gpx_filename = OUTDIR + filename.substring(0, filename.length - 4)+"gpx";
+    var gpx_filename = filename.substring(0, filename.length - 4)+"gpx";
     // Get the data
     var geojson_str = fs.readFileSync(filename , 'utf8'); // Use synchronous file read
     console.log("Have read file "+index+": "+filename);
@@ -53,8 +53,8 @@ jsontogpx = function(filename, index) {
     // the timestamps for each point.
     var gpx_str = togpx(geojson_data, options);
 
-    fs.writeFileSync(gpx_filename, gpx_str);
-    console.log("Created GPX file: "+gpx_filename);
+    fs.writeFileSync(OUTDIR+gpx_filename, gpx_str);
+    console.log("Created GPX file: "+OUTDIR+gpx_filename);
 }
 
 /* ******************** PROGRAM ENTRY POINT ******************** */
