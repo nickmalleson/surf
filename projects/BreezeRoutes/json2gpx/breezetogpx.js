@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Parameter: the input directory
+INDIR = "./"
+
 // Use the togpx library to convert all geojson to gpx files.
 // https://github.com/tyrasd/togpx
 
@@ -54,7 +57,7 @@ jsontogpx = function(filename, index) {
 
 // Read all files in the directory (https://stackoverflow.com/questions/32511789/looping-through-files-in-a-folder-node-js)
 
-fs.readdir( "./", function( err, files ) {
+fs.readdir( INDIR, function( err, files ) {
 
     if( err ) {
         console.error( "Could not list the directory.", err );

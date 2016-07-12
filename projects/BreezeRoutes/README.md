@@ -41,6 +41,8 @@ To run the script, copy the json files into the `json2gpx` folder and do:
 ./breezetogpx.js
 ```
 
+Or alternatively, leave the json files where they are and change the `INDIR` parameter (the input directory).
+
 Note that the times in the output GPX file will be wrong because I haven't bothered to try to adjust for the time zone. This should be an easy fix if it is important, the time zone is stored in an _offset_ field in the json.
 
 **XXXX Extend script to run over all files in a specified directory**
