@@ -1,4 +1,4 @@
 classes/
-out/*
+cache/*
 map-data/*
 traces/*

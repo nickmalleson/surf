@@ -1,3 +1,0 @@
-# This allows git to track this directory, but ignore all the files in it.
-*
-!.gitignore

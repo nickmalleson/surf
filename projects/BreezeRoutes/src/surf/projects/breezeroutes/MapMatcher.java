@@ -7,9 +7,9 @@ import com.graphhopper.routing.util.CarFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.index.LocationIndexTree;
-import com.graphhopper.util.EdgeIteratorState;
-import com.graphhopper.util.GPXEntry;
-import com.graphhopper.util.PointList;
+import com.graphhopper.ui.MiniGraphUI;
+import com.graphhopper.util.*;
+
 
 import java.util.List;
 
@@ -20,18 +20,31 @@ import java.util.List;
  */
 public class MapMatcher {
 
+    /** The location of the input OSM pbf file */
+    private static String OSM_DATA_FILE = "./map-data/massachusetts-latest.osm.pbf";
+    /** The location to cache the graph after reading the OSM data (Graphhopper creates this on first run) */
+    private static String CACHE_DIR = "./cache/massachusetts";
+    /** The directory that contains the trace files */
+    private static String TRACES_DIR = "./traces";
+
+
+    private static GraphHopper hopper;
     private static  MapMatching mapMatching;
     private static GraphHopperStorage graph;
+    private static MiniGraphUI ui; // For visualising the graph(s)
 
     private static void init() {
         // import OpenStreetMap data
-        GraphHopper hopper = new GraphHopper();
-        hopper.setOSMFile("./map-data/massachusetts-latest.osm.pbf");
-        hopper.setGraphHopperLocation("./out/massachusetts");
+        hopper = new GraphHopper();
+        hopper.setOSMFile(OSM_DATA_FILE);
+        hopper.setGraphHopperLocation(CACHE_DIR);
         CarFlagEncoder encoder = new CarFlagEncoder();
         hopper.setEncodingManager(new EncodingManager(encoder));
         hopper.getCHFactoryDecorator().setEnabled(false);
         hopper.importOrLoad();
+
+        ui = new MiniGraphUI(hopper, true);
+
 
         // create MapMatching object, can and should be shared across threads
         graph = hopper.getGraphHopperStorage();
@@ -70,6 +83,9 @@ public class MapMatcher {
 
         }
 
+        GPXFile.write(path, "test.gpx", hopper.getTranslationMap().get("en_us"));
+
+        //ui.visualize();
 
         // XXXX THEN - need to take the start and end points and use GraphHopper to do a route
 

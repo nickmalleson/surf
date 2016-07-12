@@ -10,5 +10,6 @@
     <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="com.graphhopper:map-matching:0.7.0" level="project" />
     <orderEntry type="library" name="com.graphhopper:graphhopper:0.7.0" level="project" />
+    <orderEntry type="library" name="com.graphhopper:graphhopper-tools:0.7.0" level="project" />
   </component>
 </module>
