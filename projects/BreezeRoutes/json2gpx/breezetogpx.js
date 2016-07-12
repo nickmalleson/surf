@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-// Parameter: the input directory
-INDIR = "./"
+// Parameter: the input and output directories (with trailling slashes!)
+//INDIR = "./";
+//OUTDIR = "./";
+
+INDIR  = "../runkeeper/runkeeper-data/boston/breeze_geo/";
+OUTDIR = "../runkeeper/breeze-gpx/";
 
 // Use the togpx library to convert all geojson to gpx files.
 // https://github.com/tyrasd/togpx
@@ -37,7 +41,7 @@ options.featureCoordTimes = function(feature) {
 // The function that reads the json file and writes a gpx file
 jsontogpx = function(filename, index) {
 
-    var gpx_filename = filename.substring(0, filename.length - 4)+"gpx";
+    var gpx_filename = OUTDIR + filename.substring(0, filename.length - 4)+"gpx";
     // Get the data
     var geojson_str = fs.readFileSync(filename , 'utf8'); // Use synchronous file read
     console.log("Have read file "+index+": "+filename);
@@ -69,12 +73,12 @@ fs.readdir( INDIR, function( err, files ) {
         if (index > 10) { // Temporarily
           return;
         }
-        // Check the file is a json
-        if (file.substring(file.length - 5, file.length) == ".json") {
+        // Check the file is a geojson
+        if (file.substring(file.length - 8, file.length) == ".geojson") {
             jsontogpx(file,index);
         }
         else {
-            console.log("Ignoring file "+file);
+            console.log("Ignoring file ("+index+")"+file);
         }
 
     } ) ; // files.foreach
