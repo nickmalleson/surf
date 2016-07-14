@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
 // Parameter: the input and output directories (with trailling slashes!)
-//INDIR = "./";
-//OUTDIR = "./";
+
+// For testing: run on files in the pwd
+//var INDIR = "./";
+//var OUTDIR = "./";
 
 // On MIT server:
-//INDIR  = "~/runkeeper/runkeeper-data/boston/breeze_geo/";
-//OUTDIR = "~/runkeeper/breeze-gpx/";
+//var INDIR  = "~/runkeeper/runkeeper-data/boston/breeze_geo/";
+//var OUTDIR = "~/runkeeper/breeze-gpx/";
 
-// On Nick's laptop:
+// On Nick's laptop (server directories mounted):
 var INDIR  = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/";
 var OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/";
 
@@ -32,14 +34,22 @@ var togpx = require('togpx'); // togpx library does most of the work
 var options = new Object();
 options.featureCoordTimes = function(feature) {
     //console.log(feature) // Useful for debugging
+    
+    // First, find the time offset (in seconds)
+    // (No longer using offset - times are UTC)
+    //var offset = parseInt(feature.properties.utcOffset);
+    //console.log("\tOffset:"+offset);
+
+    // The times associated with each coordinate (in seconds since epoch)
     times_secs = feature.properties.coordinateProperties.times;
     var times_array = []; // to return
     for ( i=0; i<times_secs.length; i++) {
-        var time_sec = Math.round(parseFloat(times_secs[i]*1000)); // *1000 for miliseconds 
-        var time = new Date(time_sec); // Convert to a Date with required format
-        times_array.push(time);
-        //console.log(i+" - "+time_sec +" - "+ time);
-        //console.log(time.toISOString());
+        var time_sec = parseFloat(times_secs[i]); // The time in seconds
+        //var time_inc_offset = time_sec + offset; // Add or subtract the offset to make GMT  
+        var time_ms = Math.round(time_sec * 1000); // Make miliseconds and round to an integer to pass to Date
+        var time = new Date(time_ms); // Convert to a Date with required format
+        times_array.push(time.toISOString());
+        //console.log("****");console.log("\ttime_sec: "+time_sec);console.log("\ttime ms: "+time_ms);console.log("\ttime: " + time);console.log("\tISO string: "+time.toISOString());
     }
     return times_array;
 }
@@ -89,7 +99,6 @@ fs.readdir( INDIR, function( err, files ) {
         //}
         // Check the file is a geojson
         if (file.substring(file.length - 8, file.length) == ".geojson") {
-            console.log(file);
             jsontogpx(file,index);
         }
         else {
@@ -98,6 +107,7 @@ fs.readdir( INDIR, function( err, files ) {
 
     } ) ; // files.foreach
 
+    console.log("FINISHED");
 
 } ) ; // readdir 
 

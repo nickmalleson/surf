@@ -1,3 +1,6 @@
-# This allows git to track this directory, but ignore all the files in it.
+# This allows git to track this directory, but ignore most of the files in it (don't want to upload
+# traces)
 *
 !.gitignore
+!map_traces.Rmd
+

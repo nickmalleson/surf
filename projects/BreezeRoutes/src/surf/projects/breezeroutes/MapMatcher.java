@@ -1,20 +1,24 @@
 package surf.projects.breezeroutes;
 
+import com.graphhopper.GHRequest;
+import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
+import com.graphhopper.PathWrapper;
 import com.graphhopper.matching.*;
 import com.graphhopper.routing.Path;
-import com.graphhopper.routing.util.CarFlagEncoder;
+import com.graphhopper.routing.util.CarFlagEncoder; // No longer used. Foot encoder used instead.
+import com.graphhopper.routing.util.FootFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.index.LocationIndexTree;
 import com.graphhopper.ui.MiniGraphUI;
 import com.graphhopper.util.*;
-import org.apache.commons.io.FileUtils;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Do some map matching between GPX files and OSM roads.
@@ -30,13 +34,15 @@ public class MapMatcher {
     /** The directory that contains the input trace files */
     private static String TRACES_DIR = "./traces";
     /** Whether or not to write out the GPX traces after matching. These files contain the original gps points and path, as well as the matched route.*/
-    private static boolean WRITE_GPX = true;
+    private static boolean WRITE_MATCHED_PATH = true;
+    /** Whether or not to write out the GPX shortest path after matching. */
+    private static boolean WRITE_SHORTEST_PATH = true;
 
 
     private static GraphHopper hopper;
     private static MapMatching mapMatching;
     private static GraphHopperStorage graph;
-    private static MiniGraphUI ui; // For visualising the graph(s)
+    //private static MiniGraphUI ui; // For visualising the graph(s)
 
     /**
      * Do the matching.
@@ -45,9 +51,9 @@ public class MapMatcher {
      * @param tracesDir The directory to search for traces in (the input gpx files).
      * @param writeMatchedPath Whether to write GPX files for each matched path
      */
-    public MapMatcher(String osmDataFile, String cacheDir, String tracesDir, boolean writeMatchedPath ) throws Exception {
+    public MapMatcher(String osmDataFile, String cacheDir, String tracesDir, boolean writeMatchedPath, boolean writeShortestPath ) throws Exception {
         init(osmDataFile, cacheDir);
-        run(tracesDir, writeMatchedPath);
+        run(tracesDir, writeMatchedPath, writeShortestPath);
     }
 
     /**
@@ -58,12 +64,15 @@ public class MapMatcher {
         hopper = new GraphHopper();
         hopper.setOSMFile(osmDataFile);
         hopper.setGraphHopperLocation(cacheDir);
-        CarFlagEncoder encoder = new CarFlagEncoder();
+        // This Encoder specifies how the network should be navigated. If it is changes (i.e. from foot to car) then the
+        // cache needs to be deleted to force importOrLoad() to recalculate the graph.
+        //CarFlagEncoder Encoder = new CarFlagEncoder();
+        FootFlagEncoder encoder = new FootFlagEncoder();
         hopper.setEncodingManager(new EncodingManager(encoder));
         hopper.getCHFactoryDecorator().setEnabled(false);
         hopper.importOrLoad();
 
-        ui = new MiniGraphUI(hopper, true);
+        //ui = new MiniGraphUI(hopper, true);
 
 
         // create MapMatching object, can and should be shared across threads
@@ -79,7 +88,7 @@ public class MapMatcher {
      * @param writeMatchedPath Whether or not to write each mathched path (as GPX).
      * @throws IOException
      */
-    private static void run(String tracesDir, boolean writeMatchedPath) throws IOException {
+    private static void run(String tracesDir, boolean writeMatchedPath, boolean writeShortestPath) throws IOException, Exception {
 
         File tracesDirectory = new File(tracesDir);
         if (!tracesDirectory.isDirectory()) {
@@ -90,18 +99,44 @@ public class MapMatcher {
         File[] allFiles = tracesDirectory.listFiles();
         for (int i = 0; i < allFiles.length; i++) {
             File file = allFiles[i];
-            if (file.isFile() && file.getName().endsWith(".gpx") && !file.getName().endsWith("-matched.gpx")) {
+            if (file.isFile() && file.getName().endsWith(".gpx") &&
+                    !file.getName().endsWith("-matched.gpx") && // Ignore 'matched' and 'shortest' files - these
+                    !file.getName().endsWith("-shortest.gpx")   // are created by this program!
+                    ) {
 
                 System.out.println("Reading file ("+i+"): "+file);
-                Path p = match(file.getAbsolutePath());
 
+                // get the GPX entries from a file
+                List<GPXEntry> inputGPXEntries = new GPXFile().doImport(file.getAbsolutePath()).getEntries();
+
+                // Do the matching
+                Path matchedPath;
+                try {
+                    matchedPath = match(inputGPXEntries);
+                }
+                catch (java.lang.RuntimeException ex) {
+                    System.err.println("COuld not match file "+file.getName() + ". Message: "+ex.getMessage());
+                    // TODO do something about these errors - maybe move the files to make it easier to analyse them
+                    continue;
+                }
 
                 if (writeMatchedPath) {
                     String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-matched.gpx";
-                    System.out.println("Writing matched path to GPX: "+gpxout);
-                    GPXFile.write(p, gpxout, hopper.getTranslationMap().get("en_us"));
+                    System.out.println("\tWriting matched path to GPX: "+gpxout);
+                    GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
                 }
 
+                // Now find the shortest path.
+
+                // Find the shortest path
+/*
+                PathWrapper shortestPath = shortest(inputGPXEntries);
+                if (writeShortestPath) {
+                    String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-shortest.gpx";
+                    System.out.println("\tWriting shortest path to GPX: "+gpxout);
+                //    GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                }
+                */
 
             } // if isfile
         } // For all files
@@ -109,44 +144,52 @@ public class MapMatcher {
     }
 
 
-    private static Path match(String inputGPXFile) {
-        // do the actual matching, get the GPX entries from a file or via stream
-        List<GPXEntry> inputGPXEntries = new GPXFile().doImport(inputGPXFile).getEntries();
-
+    /**
+     * Take the input gpx entries (e.g. from <code>new GPXFile().doImport("a_file.gpx").getEntries()</code>) and match
+     * the route to an OSM path.
+     * @param inputGPXEntries
+     * @return The matched path.
+     */
+    private static Path match(List<GPXEntry> inputGPXEntries) {
         MatchResult mr = mapMatching.doWork(inputGPXEntries);
         double dist = mr.getMatchLength();
-        System.out.println("Finished matching. Length: "+dist);
-
-        /* XXXX HERE - At this point I can get:
-                - the path
-                - the points associated with it
-                - the edges
-          Next:
-                - Find a way to write out or map (with GraphHopper?) the path or edges (for validation)
-                - Use GraphHopper Routing in earnest to compare this route with the shortest
-         */
-
+        System.out.println("Finished matching. Length: " + dist);
         Path path = mapMatching.calcPath(mr);
-/*        System.out.println("PATH:"+path.toDetailsString());
-
-        PointList pl = path.calcPoints();
-        System.out.println("PointList: "+pl.toString());
-
-        List<EdgeIteratorState> edges = path.calcEdges();
-        for (EdgeIteratorState e:edges) {
-            System.out.println("\tEdgeID: "+e.getEdge());
-            System.out.println("\t\tEdgeIteratorState:" + e.toString());
-            System.out.println("\t\tWayGeometry: "+e.fetchWayGeometry(3).toString());
-
-        }
-*/
-       return path;
+        return path;
     }
+
+    /**
+     * Take the input gpx entries (e.g. from <code>new GPXFile().doImport("a_file.gpx").getEntries()</code>) and
+     * use GraphHopper to find a shortest path. See https://github.com/graphhopper/graphhopper/blob/master/docs/core/routing.md
+     */
+    private static PathWrapper shortest(List<GPXEntry> inputGPXEntries) throws Exception{
+
+        GHRequest req = new GHRequest(
+                inputGPXEntries.get(0).getLat(), // latFrom
+                inputGPXEntries.get(0).getLon(), // lonFrom
+                inputGPXEntries.get(inputGPXEntries.size()-1).getLat(), //latTo
+                inputGPXEntries.get(inputGPXEntries.size()-1).getLon()); //latFrom
+        req.setWeighting("fastest");
+        req.setVehicle("foot");
+        req.setLocale(Locale.US);
+        GHResponse rsp = hopper.route(req);
+
+        // first check for errors
+        if(rsp.hasErrors()) {
+            throw new Exception("Errors creating a shortest path "+rsp.getErrors().toString());
+        }
+
+        // use the best path, see the GHResponse class for more possibilities.
+        PathWrapper bestPath = rsp.getBest();
+        return bestPath;
+
+    }
+
 
 
     public static void main(String[] args ) throws Exception {
 
-        new MapMatcher(OSM_DATA_FILE, CACHE_DIR, TRACES_DIR, WRITE_GPX);
+        new MapMatcher(OSM_DATA_FILE, CACHE_DIR, TRACES_DIR, WRITE_MATCHED_PATH, WRITE_SHORTEST_PATH);
 
     }
 }
