@@ -35,7 +35,7 @@
                          data-background-image="http://surf.leeds.ac.uk/figures/cityscapes/chicago_bw.jpg">
                 -->
                     
-                <section data-markdown id="index">
+                <section class="title" data-markdown id="index">
                     
                     <script type="text/template">
                     # Simulating Urban Flows
@@ -52,22 +52,265 @@
                     
                     </script>
                 </section>
-                
-                <section data-background-image="https://www.corbettreport.com/wp-content/uploads/2016/06/brexit-800x500.jpg" id="brexit">
+
+                <section id="AboutNick">
                     
-                    <img class="fragment" style="width:60%" data-src="http://www.prmoment.com/images/cms/nigel.jpeg"/>
+                    <img class="right" style="position: relative;" data-src="../figures/Network%20server%20room_87108880.jpg" alt="computer room"/>
+                
+                    <h2>First: About me</h2>
+                    <p>Education</p>
+                    <p class="l2">BSc: Computer Science</p>
+                    <p class="l2">MSc: GeoInformatics</p>
+                    <p class="l2">PhD: (Computational) Human Geography</p>
+                    <p>Now: Associate Professor in Geographical Information Science</p>
+                    <p>Research Interests:</p>
+                    <p class="l2">Agent-Based Modelling</p>
+                    <p class="l2">Spatial analysis and simulation</p>
+                    <p class="l2">Crime patterns / environmental criminology</p>
+                    <p class="l2">Big data (particularly for social simulation)</p>
                 
                 </section>
-                                
-                                
-                <section id="me">
+                
+                <section id="MITVisit" data-background-image="../figures/leeds/great_hall.jpg">
+                </section>
+                
+                <section id="MITVisit2" data-background-image="../figures/mit.jpg">
+                        
+                    <div class="fragment fade-in" style="background-color:rgba(0,0,0,0.5)">
+                        
+                        <h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>
+
+                        <p style="color:white">3-year research fellowship, funded by ESRC (UK)</p>
+
+                        <p style="color:white">Build an agent-based simulation of daily urban dynamics</p>
+
+                        <p style="color:white">Calibrated using a combination of traditional sources (e.g. census) with dynamic, crowd-sourced data</p>
+
+                        <p style="color:white">Visiting SENSEable Cities Lab in MIT</p>
+                    </div>
+                </section>
+
+                <section id="Context-BigData">
+                    <h2>Context - Big Data &amp; Smart Cities</h2>
+                    <!-- <img data-src="../figures/big_data.jpg" /> -->
+                    <a href="http://www.sciencedaily.com/releases/2013/05/130522085217.htm">
+                        <img class="right" data-src="http://images.sciencedaily.com/2013/05/130522085217-large.jpg"
+                        alt="Image of big data globe (from Science Daily)." /></a>
                     
-                    <h2>Me</h2>
-                    <p>BSc Computer Science</p>
-                    <p>MSc Multidisciplinary Informatics</p>
-                    <p>PhD (Computational) Geography</p>
+                    <p>Explosion in data volume.</p>
+                    <p>'Datafication' of hitherto private thoughts/actions.</p>
+                    <p>Transformational impact on social sciences.</p>
+                    <p>Smart cities &amp; a new generation of models to understand cities</p>
+                    <p class="l2">A greater role for (e.g.) ABM</p>
+                </section>
+            
+                
+                <section id="WhatToDo1">
+                    <h2 >What to do with all that data?</h2>   
+                    <h3>&nbsp;</h3>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p class="l2">&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p class="l2">&nbsp;</p>
+                </section>
+                
+                <section id="WhatToDo2"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div style="background-color:rgba(250,250,250,0.8)">
+                        
+                        <h2 style="background-color:rgba(0.9,0.9,0.9,0.5)">
+                            What to do with all that data?</h2>
+                        
+                        <h3>Modelling the Ambient population</h3>
+                                                
+                        <p>Surprisingly poor data to quantify mobile populations </p>
+                        
+                        <p>Difficulties in designing policy</p>
+                        <p class="l2">E.g. urban renweal / regeneration</p>
+                        
+                        <p>Intellectual interest</p>
+                        <p class="l2">E.g. Equality, accessibility, mobility</p>
+                        
+                    </div>
+                </section>
+                
+                <section id="Ambient-Crime">
+                    <h2>The Ambient Population</h2>
+                    <h3>Crime Victims</h3>
+                    
+                    <p>What is the most appropriate denominator for crime rate calcluations?</p>
+                    <p class="l2">Residential population is the most common</p>
+                    <p class="l2">But not always appropriate</p>
+                    <p>Daily flows of people significantly impact crime</p>
+                    <p>Difficult to quantify hotspot severity without good population at risk estimates</p>
                     
                 </section>
+                
+                <section id="Ambient-Crime2">
+                    
+                    <figure >
+                        <figcaption>
+                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
+                        </figcaption>
+                        <img style="width:50%;" data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK.png" alt="Hotspot disappearing from the city centre"/>
+                    </figure>
+                </section>
+                
+
+                <section id="Ambient-Crime3">
+                    <figure class="two-left">
+                        <figcaption>
+                            Malleson, N., and  M. A. Andresen (2016) Exploring the impact of ambient population measures on London crime hotspots. <i>Journal of Criminal Justice</i> 46: 52-63
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/city_centre_results.png" alt="Hotspot shifting from the city centre in the evening"/>
+                    </figure>
+                    <figure class="two-right">
+                        <figcaption>
+                            Malleson, N. and M. A. Andresen (2015a) Spatio-temporal crime hotspots and the ambient population. <i>Crime Science</i> 4(10).
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/data_overview.png" alt="Different data sources used to measure the 'ambient' population - mobile phones, twitter, the census, pop247."/>
+                    </figure>
+                </section>
+                    
+                <section id="Abient-Pollution">
+                    <figure class="right">
+                        <img data-src="../figures/attribution/pollution.jpg" alt="Polluted city" />
+                        <figcaption>
+                            <p>Source: <a href="https://www.flickr.com/photos/thewildrover/">dreamingyakker</a> (<a href="https://creativecommons.org/licenses/by-nc-nd/2.0/">CC BY-NC-ND 2.0</a>).
+                            </p>
+                        </figcaption>
+                    </figure>
+                    <h2>The Ambient Population</h2>
+                    <h3>Impacts of Pollution</h3>
+                    <p>Largest cause of preventable deaths (WHO)</p>
+                    <p>Improved models of pollution generation and dispersial</p>
+                    <p>But still relatively weak estimates of the population-at-risk</p>
+                </section>
+                
+                <section id="Data-Twitter">
+                    <h2>Urban Flow Data</h2>
+                    <p>How to quantify the ambient population and urban flows?</p>
+                    <h3>Twitter</h3>
+                    <figure>
+                        <img src="../figures/paper_figures/example_activity_space1-forStanford-3D.png" alt="Example activity spaces derived from twitter messages"/>
+                        <figcaption>Malleson, N and M. Birkin. (2014) New Insights into Individual Activity Spaces using Crowd-Sourced Big Data. Paper presented at the 2014 <a href="http://www.scienceengineering.org/ase/conference/2014/bigdata/sanjose/website/">BigData conference,</a> Stanford, CA, USA, 27-31 May. [<a href="http://nickmalleson.co.uk/wp-content/uploads/2014/05/bigdata-stanford-final.pdf">paper (pdf)</a>][<a href="http://nickmalleson.co.uk/html/presentations/2014-05-BigData">slides (html)</a>].
+                        </figcaption>
+                    </figure>
+                </section>
+                
+                
+                <section id="Data-MobilePhones">
+                    <figure class="right">
+                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
+                        <img src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                    </figure>
+                    <h2>Urban Flow Data</h2>
+                    <p>How to quantify the ambient population and urban flows?</p>
+                    <h3>Mobile Communications</h3>
+                    <p>Large population coverage</p>
+                    <img class="left" data-src="../figures/paper_figures/census_mobile-correlation.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                    <p>Private, unknown methodology, privacy concerns, coarse resolution (?)</p>
+                </section>
+                
+                <section id="Data-Geo-Apps">
+                    <h2>Urban Flow Data</h2>
+                    <img class="right" data-src="../figures/traces.jpg" alt="Traces of movement from a smart-phone app" />
+                    <p>How to quantify the ambient population and urban flows?</p>
+                    <h3>Geo-Apps</h3>
+                    <p>Smart-phone apps that capture movement / location are becomming ubiquitous</p>
+                    <p>Great potential for understanding (some) urban dynamics</p>
+                </section>
+                
+                <!--<section id="Data-Geo-Apps2" data-background-video="../videos/Discover-Pokemon-in-the-Real-World-with-Pokemon-GO-.webm">
+                </section> -->
+                <section id="Data-Geo-Apps2" data-background-image="../figures/pokemon.jpg">
+                    
+                </section>
+                
+                
+                <section id="Data-Issues">
+                    <h2>Urban Flow Data</h2>
+                    <div id="columns">
+                        <div class="left column">
+                            <h3>Difficulties</h3>
+                            <p>Skewness</p>
+                            <p class="l2">Prolific users distort patterns</p>
+                            <p>Representation</p>
+                            <p class="l2">Online &amp; public &ne; offline &amp; private</p>
+                            <!-- <p class="l2">Device / service only used for certain purposes</p> -->
+                            <p>Spatial accuracy</p>
+                            <p>Bias</p>
+                            <p class="l2">Participation inequality and the digital divide</p>
+                            <p>Complicated!!</p>
+                            <p class="l2">Messy, and "too big for Excel"</p>
+                        </div>
+                        <div class="right column">
+                            <h3>Benefits</h3>
+                            <p>Volume</p>
+                            <p class="l2">Potential for large sub-samples</p>
+                            <p>Velocity</p>
+                            <p class="l2">Streaming / regularly updated</p>
+                            <p class="l2">Potential for dynamic models</p>
+                            <p>&nbsp;</p>
+                            <h3 class="fragment">Need to consolidate diverse sources</h3>
+                            <h3 class="fragment">Solution: Agent-Based Modelling ?</h3>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                <section id="XX">
+                    <h2>XX</h2>
+                    <p>XX</p>
+                </section>
+                
+                
+                
+                
+                
+                
+                
                 
                 
                 <section data-background-image="../figures/abm_crime_twitter.jpg" id="interests">
@@ -84,17 +327,7 @@
                         <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
                     </div>
                 </section>
-                
-                <section id="visit">
-                    
-                    <h2>Why visit SENSEable Cities?</h2>
-                    
-                    <img data-src="../figures/cityscapes/chicago_streets.jpg" style="width:30%; float:right" />
-                    <p>World leader in understanding cities through novel data analysis</p>
-                    <p>Find out how you interrogate cities through ‘big’ data</p>
-                    <p>Collaborate on a particular case study area?</p>
-                    
-                </section>
+
                 
                 <section id="crime-analysis-footfall">
                     
@@ -165,25 +398,25 @@
                 </section>
                 
 
-                
-                <section data-background-image="../figures/cityscapes/ny_night3.jpg" id="surf2">
+                <section data-background-image="../figures/cityscapes/ny_night3.jpg" id="surf">
                         
-                        <h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>
+                    <h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>
                         
-                        <div class="fragment fade-in" style="background-color:rgba(0,0,0,0.5)">
-                        
-                            <p style="color:white">3-year research fellowship, funded by ESRC (UK)</p>
+                    <div class="fragment fade-in" style="background-color:rgba(0,0,0,0.5)">
 
-                            <p style="color:white">Build an agent-based simulation of daily urban dynamics</p>
+                        <p style="color:white">3-year research fellowship, funded by ESRC (UK)</p>
 
-                            <p style="color:white">Calibrated using a combination of traditional sources (e.g. census) with dynamic, crowd-sourced data</p>
+                        <p style="color:white">Build an agent-based simulation of daily urban dynamics</p>
 
-                            <p style="color:white">New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
-                            
-                            <p><a href="surf.leeds.ac.uk">surf.leeds.ac.uk</a></p>  
+                        <p style="color:white">Calibrated using a combination of traditional sources (e.g. census) with dynamic, crowd-sourced data</p>
+
+                        <p style="color:white">New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
+
+                        <p>Visiting SENSEable Cities Lab in MIT</p>
                     </div>
                     
                 </section>
+
                 
                 <section id="method">
                     

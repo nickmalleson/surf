@@ -30,23 +30,14 @@ body {
  * HEADERS
  *********************************************/
 
-/* A few tweaks for h1 and h2*/
-.reveal h1 {
-    color: #444444;
-}
-.reveal h2 {
-    font-size: 42pt;
-    color: #444444;
-}
-
 
 /* Special headers for the title page (needs class 'title') */
-.title h1,
-.title h2,
-.title h3,
-.title h4,
-.title h5,
-.title h6 {
+.reveal .title h1,
+.reveal .title h2,
+.reveal .title h3,
+.reveal .title h4,
+.reveal .title h5,
+.reveal .title h6 {
     /* text-transform: uppercase; */
     text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -58,6 +49,22 @@ body {
     text-shadow: none;
     color: #999999;
 }
+
+/* A few tweaks for h1 and h2 (not in the title)*/
+.reveal h1 {
+    color: #444444;
+}
+.reveal h2 {
+    font-size: 42pt;
+    color: #444444;
+    text-align: left;
+}
+
+.reveal h3 {
+    text-align: left;
+}
+
+
 
 
 
@@ -113,8 +120,14 @@ p.small{
  font-size:70%;
 }
 
+/* For a reference in the slides */
+p.reference {
+    font-size:70%;
+    color: rgb(30,30,50);
+    background-color: rgba(255,255,255,1);
+}
 
-/* For reference slides (use <section id="references"> ... </div>*/
+/* For whole slides just with references (use <section id="references"> ... </div>*/
 #references {
     font-size:60%;
     -webkit-column-count: 2; /* Chrome, Safari, Opera */
@@ -195,21 +208,42 @@ iframe.youtube-player-right {
     float:right;
 }
 
+/* For aligning figures to the left or right of the slide */
 
 img.right, figure.right {
     float:right;
-    margin-left:50px;
-    /*padding-right: 2%; /* This stops the image box overlapping the figure box */ 
-    width: 35%;
-    height: auto;
-}
-img.left, figure.left {
-    float:left;
-    margin-left:50px;
+    margin-left:35px;
     /*padding-right: 2%; /* This stops the image box overlapping the figure box */ 
     width: 45%;
     height: auto;
 }
+
+img.left, figure.left {
+    float:left;
+    margin-right:35px;
+    /*padding-right: 2%; /* This stops the image box overlapping the figure box */ 
+    width: 45%;
+    height: auto;
+}
+
+/* Special case for when there are two images on the page, they can take up more space 
+and should be the same size. */
+
+img.two-right, figure.two-right{
+    float:right;
+    margin-left:1px;
+    width: 49%;
+    height: auto;
+}
+
+img.two-left, figure.two-left {
+    float:left;
+    margin-left:1px;
+    /*padding-right: 2%; /* This stops the image box overlapping the figure box */ 
+    width: 49%;
+    height: auto; 
+}
+
 
 /* This applies to images within figures (e.g. <figure class="right"> .... </figure> ) */
 .right img, .left img {
