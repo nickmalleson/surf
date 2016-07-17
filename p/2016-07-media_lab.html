@@ -52,8 +52,12 @@
                     
                     </script>
                 </section>
+                
+                                
+                
 
                 <section id="AboutNick">
+                    
                     
                     <img class="right" style="position: relative;" data-src="../figures/Network%20server%20room_87108880.jpg" alt="computer room"/>
                 
@@ -71,6 +75,18 @@
                 
                 </section>
                 
+                <!-- I like the background image, but a bit difficult to see
+                <section data-background-image="../figures/abm_crime_twitter.jpg" id="AboutNick2">
+                    <div style="background-color:rgba(0,0,0,0.5)">
+                    <p style="color:white;">Research Interests:</p>
+                    <p style="color:white;" class="l2">Agent-Based Modelling</p>
+                    <p style="color:white;" class="l2">Spatial analysis and simulation</p>
+                    <p style="color:white;" class="l2">Crime patterns / environmental criminology</p>
+                    <p style="color:white;" class="l2">Big data (particularly for social simulation)</p>
+                    </div>
+                </section>
+                -->
+                
                 <section id="MITVisit" data-background-image="../figures/leeds/great_hall.jpg">
                 </section>
                 
@@ -80,7 +96,7 @@
                         
                         <h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>
 
-                        <p style="color:white">3-year research fellowship, funded by ESRC (UK)</p>
+                        <p style="color:white">3-year research fellowship, funded by the ESRC (UK)</p>
 
                         <p style="color:white">Build an agent-based simulation of daily urban dynamics</p>
 
@@ -345,54 +361,47 @@
 
                 
                 
-                <section id="abm-big-data">
-                    <h3>Big Data, ABM, Smart Cities, Ambient Populations</h3>
-                    <p>XXXX HERE</p>
-                </section>
-                
-                <section id="XX">
-                    <h2>XX</h2>
-                    <p>XX</p>
-                </section>
-                
+                <section data-background-image="../figures/surf_workplan-v2.png" id="surf">
+                        
+                    <!--<h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>-->
+                        
+                    <div class="fragment fade-in" style="background-color:rgba(0,0,0,0.5)">
+                        
+                        <h3 style="color:white">Big Data, ABM, Smart Cities, Ambient Populations</h3>
 
-                
-                <section id="method">
-                    
-                    <h2>surf aims</h2>
-                    
-                    <!--<p>Create an agent-based simulation that is capable of modelling the individual movements of people in an urban environment as they undertake their daily routine activities (commuting, shopping, schooling, etc.)</p>-->
-                    
-                    <img data-src="../figures/workplan.png"/>
+                        <p style="color:white">A city-wide dynamic ABM, constantly re-calibrated to streaming data</p>
+                        
+                        <p style="color:white">New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
+
+                    </div>
                     
                 </section>
-
+                
                 
                 <section data-background-video="../videos/surf_simulation_1-540p.webm"
                          data-background-video-loop
                          id="abm-improbable-video2">
                     
-                    <h2 class="fragment" style="background-color:rgba(255,255,255,0.5)">surf ABM</h2>
-                    
-                    <div style="background-color:rgba(255,255,255,0.5)" class="fragment">
-                        <figure class="right">
-                            <a href="http://improbable.io/learn-more"><img data-src="http://improbable.io/wp-content/uploads/2015/11/1.png" /></a>
-                            <figcaption>
-                            Source: <a href="http://improbable.io/learn-more">http://improbable.io/learn-more</a>
-                            </figcaption>
+                    <div id="columns">
+                        
+                        <div class="left column" style="background-color:rgba(255,255,255,0.5)" >
+                            <p>Stuff in left column</p>
+                            <p><a href="https://github.com/nickmalleson/surf" >github.com/nickmalleson/surf</a></p>
+                        </div>
+                        
+                    <!--<a style="background-color:white;" href="http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html">http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html</a>-->
+
+                        
+                        <div class="right column"><p>Stuff in right column</p>
+                            <figure >
+                                <a href="http://improbable.io/learn-more"><img data-src="http://improbable.io/wp-content/uploads/2015/11/1.png" /></a>
+                                <figcaption>
+                                    Source: Improbable Spatial OS <a href="http://improbable.io/learn-more">http://improbable.io/learn-more</a>
+                                </figcaption>
                         </figure>
-                        <p>Simulate daily urban dynamics</p>
-                        <p>Shopping, commuting, education, etc.</p>
-                        <p>Better understand daily urban mobility patterns</p>
-                        <p>(Exploring the use of Improbable's <a href="https://improbable.io/learn-more">SpatialOS</a>)</p>                        
+                        
+                        </div>
                     </div>
-                    
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
-                    
-                    <a style="background-color:white;" href="http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html">http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html</a>
-                    
                 </section>
 
                 
@@ -403,7 +412,7 @@
                     <p class="l2">Preliminary example using an Ensemble Kalman Filter (EnKF)</p>
                     <p class="l2">Novel for ABM</p>
                     <figure>
-                        <img data-src="../figures/darsos-fig2a.png"/>
+                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
                         <figcaption>
                             Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
                         </figcaption>
@@ -441,51 +450,6 @@
                     <p>XX</p>
                 </section>
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                <section data-background-image="../figures/abm_crime_twitter.jpg" id="interests">
-                    
-                    <div class="twocol">
-                        <h2 style="color:white; text-align:left;">Main Interests</h2>
-
-                        <p style="color:white">Agent-based modelling</p>
-                        <p style="color:white">Crime analysis</p>
-                        <p style="color:white">Analysis of 'big' social data to learn about how cities work</p>
-
-                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    </div>
-                </section>
-
-
-
-                
-
-                <section data-background-image="../figures/cityscapes/ny_night3.jpg" id="surf">
-                        
-                    <h2 style="color:white; background-color:rgba(0,0,0,0.5)">Simulating Urban Flows</h2>
-                        
-                    <div class="fragment fade-in" style="background-color:rgba(0,0,0,0.5)">
-
-                        <p style="color:white">3-year research fellowship, funded by ESRC (UK)</p>
-
-                        <p style="color:white">Build an agent-based simulation of daily urban dynamics</p>
-
-                        <p style="color:white">Calibrated using a combination of traditional sources (e.g. census) with dynamic, crowd-sourced data</p>
-
-                        <p style="color:white">New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
-
-                        <p>Visiting SENSEable Cities Lab in MIT</p>
-                    </div>
-                    
-                </section>
 
                 
                 
@@ -507,7 +471,7 @@
                     <h5>For more information:</h5>
                     <h6>My website: <a href="http://nickmalleson.co.uk/">http://nickmalleson.co.uk/</a></h6>
                     <h6>Simulating Urban Flows: <a href="http://surf.leeds.ac.uk/">http://surf.leeds.ac.uk/</a></h6>    
-                    <h6>These slides: <a href="http://surf.leeds.ac.uk/p/senseable_pk.html">http://surf.leeds.ac.uk/p/senseable_pk.html</a></h6>
+                    <h6>These slides: <a href="http://surf.leeds.ac.uk/p/2016-07-media_lab.html">http://surf.leeds.ac.uk/p/2016-07-media_lab.html</a></h6>
                         
                 </section>
 
