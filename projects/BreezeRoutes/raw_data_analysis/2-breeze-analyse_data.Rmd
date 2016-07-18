@@ -50,7 +50,7 @@ Read the data. Also, the code below shows that there are few trips before 2014-0
 ```{r readDataAndPrepare }
 # Raw data
 INFILE <- 'breeze-simple-inf.csv'
-DIR <- './mitmount/runkeeper/'
+DIR <- '~/mapping/projects/runkeeper/mitmount/runkeeper/'
 d <- read.csv(paste(DIR,INFILE,sep=""))
 
 # Calculate the day that the trip started and remove the first few trips before 2014-07-22 because there are so few of them

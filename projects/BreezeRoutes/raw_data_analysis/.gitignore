@@ -1,3 +1,5 @@
 # Don't upload any data files!
 *.csv
+*.html
+
 Rdata/*
