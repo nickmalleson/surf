@@ -1,0 +1,4 @@
+# This allows git to track this directory, but ignore most of the files in it (don't want to upload
+# traces)
+*
+!.gitignore
