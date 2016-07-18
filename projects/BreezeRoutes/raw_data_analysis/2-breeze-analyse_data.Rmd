@@ -1,0 +1,698 @@
+---
+title: "Breeze Data Analysis"
+author: "Nick Malleson"
+date: "14 June 2016"
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
+setwd('~/mapping/projects/runkeeper/')
+
+library(GISTools)
+#library(rgeos)    # For things like gIntersects
+library(rgdal)     # For reading shapefiles
+library(raster)    # For creating regular grids or converting from SpatialPixelsDataFrame to raster
+library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+library(classInt) # Jenks natural breaks  
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+library(stats)     # For a-spatial aggregatiion (aggregate)
+library(ggplot2)   # For density scatter plot
+library(hexbin)    # For hexagonal density scatter plots in ggplot
+library(gridExtra) # To put two graphs next to each other in ggplot
+```
+
+Note: first extract useful information from the raw JSON files using `breeze-read_data.py`
+
+That output was saved as `breeze-simple.csv` and has information about the start, end, and timings of each trip.
+
+Read the data. Also, the code below shows that there are few trips before 2014-07-22 so remove those data beforing continuing.
+
+```{r readDataAndPrepare }
+# Raw data
+INFILE <- 'breeze-simple-inf.csv'
+DIR <- './mitmount/runkeeper/'
+d <- read.csv(paste(DIR,INFILE,sep=""))
+
+# Calculate the day that the trip started and remove the first few trips before 2014-07-22 because there are so few of them
+d$day <- cut(as.POSIXct(d$start_time, origin="1970-01-01"), breaks = "day") 
+
+trips.per.day.initial <- count(d, vars=c("day") )
+d <- subset(d, as.Date(d$day) > as.Date("2014-07-22") )
+d$day <- cut(as.POSIXct(d$start_time, origin="1970-01-01"), breaks = "day") # (recalculate the factors)
+trips.per.day.after <- count(d, vars=c("day") )
+
+par(mfrow=c(2,1))
+plot(trips.per.day.initial, main="Trips per day initially")
+plot(trips.per.day.after, main="Trips per day after removing")
+
+rm(trips.per.day.initial)
+rm(trips.per.day.after)
+
+# Make some useful time columns. 
+# These need to take a UTC Offset into account (they're not GMT). There is a messy workaround to do this by just adding the number of seconds in the offset: https://stackoverflow.com/questions/35302444/convert-character-and-utc-offset-to-posixct-in-r
+d$start_date <- as.POSIXct(d$start_time, origin="1970-01-01", tz="GMT") + d$utc_offset *3600
+d$end_date <-   as.POSIXct(d$end_time,   origin="1970-01-01", tz="GMT") + d$utc_offset *3600
+
+# Now break down by hour, day, etc.
+# First aggregate to the nearest hour, day, etc, keeping the full date. This allows for graphs over time
+d$date.hour <- cut(d$start_date, breaks = "hour")
+d$date.day <- cut(d$start_date, breaks = "day")
+d$date.week <- cut(d$start_date, breaks = "week")
+d$date.month <- cut(d$start_date, breaks = "month")
+d$date.year <- cut(d$start_date, breaks = "year")
+
+# Now work out the day and month, disregarding the actual date. Allows for aggregation.
+d$weekday <- weekdays(d$start_date, abbreviate = TRUE)
+d$month <- months(d$start_date, abbreviate = TRUE)
+d$hour <- as.POSIXlt(d$start_date)$hour # (https://stat.ethz.ch/pipermail/r-help/2010-September/254000.html)
+
+# Make an elapsed time in minutes (useful later)
+d$elapsedTimeMin = d$elapsedTime / 60
+
+# Make some point files
+make.startend.points <- function(data) {
+  start.points.latlon <- SpatialPointsDataFrame(cbind(data$start_x, data$start_y), data, proj4string = CRS("+init=epsg:4326"))
+  end.points.latlon <- SpatialPointsDataFrame(cbind(data$end_x, data$end_y), data, proj4string = CRS("+init=epsg:4326"))
+  # Reproject to a projected coordinate system used in MA    (https://www.arcgis.com/home/item.html?id=d075ba0b6b5e4d71b596e882493f7789)
+  spoints <- spTransform(start.points.latlon, CRS("+init=epsg:5070"))
+  epoints <- spTransform(end.points.latlon, CRS("+init=epsg:5070")) 
+  return (c(spoints, epoints))
+}
+p <- make.startend.points(d)
+start.points = p[[1]]
+end.points = p[[2]]
+
+```
+
+There are `r nrow(d)` trips in total.
+
+# User frequency
+
+```{r userFrequency}
+user.counts <- count(d, vars="userid")
+par(mfrow=c(1,1))
+hist(user.counts$freq, breaks="Scott")
+```
+
+# Temporal Analysis
+
+## Trip start times
+
+Graph the number of trips per day/week etc over time.
+
+```{r tripTimes, fig.width=10, fig.height=10}
+
+trips.per.hour <- count(d, vars=c("date.hour" ) ) 
+trips.per.day <- count(d, vars=c("date.day" ) ) 
+trips.per.week <- count(d, vars=c("date.week" ) ) 
+trips.per.month <- count(d, vars=c("date.month" ) ) 
+
+par(mfrow=c(2,2))
+plot(trips.per.hour)
+plot(trips.per.day)
+plot(trips.per.week)
+plot(trips.per.month)
+
+```
+
+
+## Trip durations
+
+Look at the disctibution of trip durations. Start by taking the end time from the start time
+
+```{r tripLengths, fig.height=8}
+
+par(mfrow=c(2,1))
+trip.lengths <- as.numeric( d$end_date - d$start_date )
+hist(trip.lengths, breaks="Scott", xlab="Duration (seconds)", main="Trip Durations (seconds)" )
+# Do mnutes with shorter axes - more readable
+hist( trip.lengths / 60 , breaks="Scott", xlab="Duration (minutes)", main="Trip Durations (minutes) (short axis)", xlim=c(-5,60) )
+
+```
+
+**NOTE**: there are `r length(trip.lengths[trip.lengths<0])` trip lengths that are negative. I'm going to ignore that for now.
+
+Now do the trip lengths by 'elapsed time' (this is one of the variables in the original data)
+
+```{r tripLengthsElapsedTime, fig.height=8 }
+par(mfrow=c(2,1) )
+#hist(d$elapsedTime, breaks="Scott", xlab="Length (seconds)", main="Elapsed Time (seconds)" )
+hist(d$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="Elapsed Time (minutes)" )
+hist(d$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="Elapsed Time (minutes) (short axis)", xlim=c(0,150) )
+```
+
+Compare those two time measures
+
+ - Trip lengths are calculated by taking the start and end dates away from each other
+ - Elapsed time is taken directly from the input data.
+ 
+I think that elapsed time is more reliable.
+
+```{r compareTripLengths}
+par(mfrow=c(1,1))
+plot(x=d$elapsedTime, y=trip.lengths, xlab="Elapsed Time (direct)", ylab="Trip lengths (duration) (calculated)", main="Elapsed time v.s. calculated trip durations")
+```
+
+## Trips per hour, day and month
+
+```{r journeysPerDayMonth, fig.height=8}
+
+days <- c( "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ) # Useful
+
+weekday.counts <- count(d, vars="weekday")
+weekday.counts <- weekday.counts[order(match(weekday.counts$weekday , days)),]
+month.counts <- count(d, vars="month")
+month.counts <- month.counts[order(match(month.counts$month , c( "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))),]
+hour.counts <- count(d, vars="hour")
+
+par(mfrow=c(3,1))
+
+plot(weekday.counts$freq, main="Trips per day", xaxt='n',ylim=c(0,max(weekday.counts$freq)))
+axis(1, at=1:nrow(weekday.counts), labels=weekday.counts$weekday)
+
+plot(month.counts$freq, main = "Trips per month", xaxt='n',ylim=c(0,max(month.counts$freq)))
+axis(1, at=1:nrow(month.counts), labels=month.counts$month)
+
+plot(hour.counts, main = "Trips per hour")
+
+```
+
+Note that there are no trips in May and June. Some of these were removed at the beginning because there were so few trips in those months that I have assumed the data were incomplete.
+
+## Trips per hour (in more detail)
+
+The trips per hour above are interesting, it looks like there are morning, afternoon, and evening peaks. See if these are consistent across all days of the week
+
+```{r tripsPerHourOverTheWeek, fig.height=8}
+
+par(mfrow=c(4,2))
+for (day in days) {
+  plot( 
+    count(d[d$weekday==day,], vars="hour"),
+    main=day, xlab="Hour of the day", ylab="Number of Trips"
+    )
+}
+
+```
+
+Great! It looks like there are differences between weekdays and weekends as you'd expect.
+
+# Spatial Analysis
+
+## Distance Travelled
+
+Compare the distances travelled (calculated by summing the distances between the coordinates in each trip) to the number of steps per trip (obtained directly from the data).
+
+```{r tripDistances, fig.height=8}
+par(mfrow=c(2,1))
+hist(d$distance, breaks="Scott", main="Trip Distances")
+hist(d$steps, breaks="Scott", main="Number of steps")
+
+```
+
+```{r tripDistancesScatter}
+par(mfrow=c(1,1))
+plot(x=d$distance, y=d$steps)
+
+```
+
+It doesn't look like those calculated distances are reliable.
+
+There are some very long trips -- defined for now as two standard deviations above the mean (x>`r mean(d$elapsedTimeMin)+2*sd(d$elapsedTimeMin)`). I have used `breeze-map_long_trips.py` to map these and save the relevant files for analysis in a GIS. These aren't necessarily problematic as most do seem to correlate with the number of steps (longer elapsed time, more steps).
+
+```{r longTrips }
+par(mfrow=c(1,1))
+boxplot(d$elapsedTimeMin, main="Elapsed Time")
+#d.normal <- subset(d, d$elapsedTimeMin < mean(d$elapsedTimeMin)+2*sd(d$elapsedTimeMin))
+#boxplot(d.normal$elapsedTimeMin)
+```
+
+```{r longTripsScatter1, fig.height=8}
+par(mfrow=c(2,1))
+plot(d$steps, d$elapsedTimeMin, main="Elapsed time v.s. steps")
+plot(d$steps, d$elapsedTimeMin, ylim=c(0,500), main="Elapsed time v.s. steps (short axis)")
+```
+
+A density scatter plot verifies this:
+
+```{r longTripsScatter2, fig.height=8}
+plot1 <- ggplot(d,aes(x=steps, y=elapsedTimeMin)) + stat_binhex()
+plot2 <- ggplot(d,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + ylim(0,500)
+grid.arrange(plot1, plot2, ncol=1, nrow=2)
+```
+
+In the future it would be worthwhile removing trips that have an unusual steps <-> elapsedTime relationship, but at this stage I don't think it's worth it.
+
+## Distance From Start
+
+Also look at how far away the destination of the trip is from the start of the trip. E.g. someone could do a very long, circular trip.
+
+```{r distanceFromStart }
+
+# Try to load the distances from a file. It will have been created with a filename similar to the input filename
+DISTANCES_FILE <- paste("Rdata/",'breeze-simple-inf.csv',"distances.Rdata", sep='')
+if (file.exists(DISTANCES_FILE)) {
+  print(paste("Loading distances from file", DISTANCES_FILE))
+  load(DISTANCES_FILE)
+} else {
+  print(paste("Calculating distances and saving to file", DISTANCES_FILE))
+  # This is annoying because spDists needs to be given each pair of points separately.
+  distance.from.start <- c()
+  #distance.from.start.lonlat <- c()
+  for (i in seq(1:nrow(start.points))) {
+    dist1 <- spDists(start.points[i,], end.points[i,])
+    #dist2 <- spDists(start.points.latlon[i,], end.points.latlon[i,])
+    distance.from.start <- c(distance.from.start,dist1)
+    #distance.from.start.lonlat <- c(distance.from.start.lonlat,dist2)
+  }
+  #save(distance.from.start, distance.from.start.lonlat, file=DISTANCES_FILE)
+  save(distance.from.start, file=DISTANCES_FILE)
+} # else
+
+par(mfrow=c(1,1))
+hist(distance.from.start, breaks="Scott", xlab="Distance (m)", main="Distance between start and end points (Albers)", xlim=c(0,10000))
+#hist(distance.from.start.lonlat, breaks="Scott", xlab="Distance (km)", main="Distance between start and end points (lonlat)", xlim=c(0,4))
+```
+
+Although there are some extremely long trips (see boxplot below) most of them are relatively short. `r round(length(distance.from.start[distance.from.start<500]) / length(distance.from.start) * 100)`% of the trips are less than 500 meters, which suggests that people are not recording their commute. 
+
+```{r distFromStart-boxplot}
+par(mfrow=c(1,1))
+boxplot(distance.from.start, ylab="Distance (m)", main="Distance between start and end points")
+```
+
+Compare the distance between origins and destinations to the total number of steps.
+
+```{r tripDistancesScatter2}
+par(mfrow=c(1,1))
+plot(x=distance.from.start, y=d$steps, main="Distance between start-end points and number of steps")
+```
+
+There is some weird stuff going on there! The filtering below will help though.
+
+## Data Cleaning - Filtering Purposeful Journeys
+
+Aim: To identify traces that are probably journeys from one place to another. Not, e.g., circular trips that are for exercise.
+
+### Filtering 1 - Origin-Destination Distance
+
+Filter out journeys for which the origin and destination are a sufficient distance appart.
+
+**Initially, set the distance threshold as 300m**. Justification: the median distance is approximately 300m (`r summary(distance.from.start)['Median']`). This is closer to 500m in real trip distance as the start and end points points within 100m of the final origin and destination in each trip have been removed as a form of anonymisation. 500m is a reasonable trip length.
+
+Distance summary statistics: `r summary(distance.from.start)`
+
+```{r filter1-od-distance }
+
+DISTANCE_THRESHOLD = 300
+
+par(mfrow=c(1,2))
+hist(distance.from.start, breaks="Scott", xlab="Distance (m)", main="Distance: start -> end points", xlim=c(0,10000))
+abline(v=DISTANCE_THRESHOLD, col="red")
+boxplot(distance.from.start, ylab="Distance (km)", main="Distance: start -> end points")
+abline(h=DISTANCE_THRESHOLD, col="red")
+
+# Filter
+d.f1 <- d[distance.from.start>DISTANCE_THRESHOLD,]
+
+# Now recalculate o-d points
+p <- make.startend.points(d.f1)
+start.points.f1 = p[[1]]
+end.points.f1 = p[[2]]
+
+```
+
+After filtering, there are `r nrow(d.f1)` trips remaining.
+
+### Filtering 2 - Short Elapsed Time
+
+Filter journeys that are too short to be really useful.
+
+Compare the distributions of trip lengths before and after filtering. It looks like filtering on distance has removed some of the very short (in elapsed time) trips (see summary statistics as well as charts).
+
+```{r filter2-elapsedTime1, fig.width=15, fig.height=10 }
+par(mfrow=c(2,3))
+h1 <- hist(d$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="Elapsed Time (minutes)" )
+h2 <- hist(d$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="(short axis)", xlim=c(0,150) )
+boxplot(d$elapsedTimeMin, ylab="Length (minutes)")
+
+hist(d.f1$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="After filtering short distances", ylim=c(0,max(h1$counts)) )
+hist(d.f1$elapsedTimeMin, h$breaks, xlab="Length (minutes)", main="(short axis)", xlim=c(0,150), ylim=c(0,max(h2$counts)) )
+boxplot(d.f1$elapsedTimeMin, ylab="Length (minutes)")
+
+summary(d$elapsedTimeMin)
+summary(d.f1$elapsedTimeMin)
+```
+
+**Set the minimum elapsed time threshold to be 13 minutes** (this is similar to the 1st quartile of: `r summary(d.f1$elapsedTimeMin)['1st Qu.']`).
+
+```{r filter2-elapsedTime2, fig.width=15 }
+
+ELAPSED_TIME_THRESHOLD <- 13
+
+d.f2 <- d.f1[d.f1$elapsedTimeMin > ELAPSED_TIME_THRESHOLD,]
+p <- make.startend.points(d.f2)
+start.points.f2 = p[[1]]
+end.points.f2 = p[[2]]
+```
+
+After filtering on the elapsed time, this leaves `r nrow(d.f2)` traces.
+
+
+### Filtering 3 - Too few steps
+
+Filter trips that have too few steps to be realistic. After filtering on the time threshold, it seems like many short-step trips have been removed. All of those below **500 steps** look like outliers so will be removed.
+
+```{r filter3-steps, fig.width=15}
+d.f3 <- d.f2[d.f2$steps>500,]
+p <- make.startend.points(d.f3)
+start.points.f3 = p[[1]]
+end.points.f3 = p[[2]]
+
+par(mfrow=c(1,2))
+plot(x=d.f2$steps, y=d.f2$elapsedTimeMin, xlim = c(0,2000), xlab="Steps", ylab="Elapsed time (min)", main="Elapsed time (min)")
+plot(x=d.f3$steps, y=d.f3$elapsedTimeMin, xlim = c(0,2000), xlab="Steps", ylab="Elapsed time (min)", main="After filtering short steps")
+
+```
+
+```{r filter3-steps2}
+
+plot1 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex()
+grid.arrange(plot1, ncol=1, nrow=1)
+#plot2 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + xlim(0,10000)
+#grid.arrange(plot1, plot2, ncol=1, nrow=2)
+```
+
+After filtering on the elapsed time, this leaves `r nrow(d.f3)` traces.
+
+
+### Filtering 4 - ToDo: unrealistic steps v.s. elapsed time
+
+_Consider looking at the relationship between steps ~ elapsedTime and removing outliers. E.g. can use [ltsReg](http://svitsrv25.epfl.ch/R-doc/library/robustbase/html/ltsReg.html) (although I don't know much about that).
+
+
+
+### Finished Filtering - Write Out Traces
+
+Write out the names of all the filtered traces so that other programs can begin to act on them.
+
+```{r writeFilteredTraces}
+
+outfile <- paste(DIR, substr(INFILE,1,nchar(INFILE)-4), "-filtered-traces.csv", sep="")
+print(paste("Writing filtered trace names to ", outfile))
+
+write.csv(d.f3,file=outfile)
+
+```
+
+
+
+## Origins and Destinations
+
+**_Not running any of this analysis below for now as I'm concentrating on the cleaning stuff (above)_**
+
+Lets map the densities of origins and destinations at different times to see if there are any noticable patterns.
+
+First though, we need baseline densities of origins and destinations to normalise against, because otherwise the areas with the largest number of observations obscure any underlying variation.
+
+```{r makeBaselineKDE, eval=FALSE }
+# Need a consistent boundary to limit the KDEs to (https://stackoverflow.com/questions/25606512/create-convex-hull-polygon-from-points-and-save-as-shapefile)
+bound <- chull(x=start.points@data$start_x, y=start.points@data$start_y)
+bound.coords <- start.points[c(bound, bound[1]), ]
+bound.poly <- SpatialPolygons(list(Polygons(list(Polygon(bound.coords)), ID=1)))
+
+# Configure the KDe parametrers. These should be constant
+kde.H <- 0.005
+kde.N <- 200
+
+# Get all origins and destinations during the week. Not interested in the weekend at the moment
+weekdays <- days[1:5] # 'Mon' -> 'Fri'
+wkday.o <- start.points[d$weekday %in% weekdays,] # Get the points for the appropriate day
+wkday.d <- end.points[d$weekday %in% weekdays,] # Get the points for the appropriate day
+
+wkday.o.kde <- kde.points( pts=wkday.o,  h=kde.H, n=kde.N, lims=bound.poly)
+wkday.d.kde <- kde.points( pts=wkday.d,  h=kde.H, n=kde.N, lims=bound.poly)
+
+# Write these out because they might be useful to look at in a GIS
+writeOGR(as(wkday.o.kde,"SpatialGridDataFrame"), dsn="./mitmount/runkeeper/gis_output", layer = "wkday_o_kde", driver = "ESRI Shapefile", overwrite_layer=TRUE)
+writeOGR(as(wkday.d.kde,"SpatialGridDataFrame"), dsn="./mitmount/runkeeper/gis_output", layer = "wkday_d_kde", driver = "ESRI Shapefile", overwrite_layer=TRUE)
+
+
+par(mfrow=c(1,2))
+level.plot(wkday.o.kde)
+level.plot(wkday.d.kde)
+
+```
+
+### Origins
+
+Begin by comparing the origins of trips in the morning (7-9am), daytime (11-1pm), and evening (4-7pm) during the week.
+
+First (sort of?) normalise the densitiies against the total number of origins/destinations by dividing by the total number of origins/destinations (calculated above). This does lead to some very large values though so all values above X are set to -1 .
+
+
+```{r mapOrigins, fig.height=12, fig.width=8 , eval=FALSE}
+
+# Need smaller margins for this big plot
+par(mfrow=c(length(weekdays),3))
+default.margins <- par('mar')
+par(mar = rep(2, 4))
+for (day in weekdays) {
+  t <- start.points[d$weekday==day,] # Get the points for the appropriate day
+  morn <- t[t$hour > 7 & t$hour < 9,]
+  lunch <- t[t$hour > 11 & t$hour < 13,]
+  aft <- t[t$hour > 16 & t$hour < 19,]
+  
+  # Plot KDE for each dataset. These are produced by dividing the points by the background densities and replacing
+  # large values with 0 (this catches divide by 0 problems)
+  count <- 1 # Jist for labelling the graphs (morning, lunch, afternoon)
+  for (i in c(morn, lunch, aft)) {
+    kde <- kde.points( pts=i,  h=kde.H, n=kde.N, lims=bound.poly)
+    kde@data$kde <- kde@data$kde / wkday.o.kde@data$kde
+    kde@data$kde <- ifelse(kde@data$kde > 5, -1, kde@data$kde) # Catch hugh values
+    plot(bound.poly, main=paste(day, ifelse(count==1, "Morn", ifelse(count==2, "Lunch", "Aft"))), axes=T)
+    level.plot(kde, add=T)
+    count <- count + 1
+  }
+  
+  #morn.kde <- kde.points( pts=morn,  h=kde.H, n=kde.N)
+  #morn.kde@data$kde <- morn.kde@data$kde / wkday.o.kde@data$kde
+  #morn.kde@data$kde <- ifelse(morn.kde@data$kde > 1, 0, morn.kde@data$kde)
+  #level.plot(morn.kde)
+  
+  #lunch.kde <- kde.points( pts=lunch,  h=kde.H, n=kde.N)
+  #lunch.kde@data$kde <- lunch.kde@data$kde / wkday.o.kde@data$kde
+  #lunch.kde@data$kde <- ifelse(lunch.kde@data$kde > 1, 0, lunch.kde@data$kde)
+  #level.plot(lunch.kde)
+  
+  #aft.kde <- kde.points( pts=aft,  h=kde.H, n=kde.N)
+  #aft.kde@data$kde <- aft.kde@data$kde / wkday.o.kde@data$kde
+  #aft.kde@data$kde <- ifelse(aft.kde@data$kde > 1, 0, aft.kde@data$kde)
+  #level.plot(aft.kde)
+
+  #plot(morn, main="Morning")
+  #plot(lunch, main="Lunch")
+  #plot(aft, main="Afternoon")
+}
+par(mar=default.margins)
+
+```
+
+Now map the raw densities for info (doesn't show anything useful).
+
+```{r mapOriginsNotNormalised, fig.height=12, fig.width=8, eval=FALSE }
+par(mfrow=c(length(weekdays),3))
+default.margins <- par('mar')
+par(mar = rep(2, 4))
+for (day in weekdays) {
+  t <- start.points[d$weekday==day,] # Get the points for the appropriate day
+  morn <- t[t$hour > 7 & t$hour < 9,]
+  lunch <- t[t$hour > 11 & t$hour < 13,]
+  aft <- t[t$hour > 16 & t$hour < 19,]
+  count <- 1 # Jist for labelling the graphs (morning, lunch, afternoon)
+  for (i in c(morn, lunch, aft)) {
+    kde <- kde.points( pts=i,  h=kde.H, n=kde.N, lims=bound.poly)
+    plot(bound.poly, main=paste(day, ifelse(count==1, "Morn", ifelse(count==2, "Lunch", "Aft"))), axes=T)
+    level.plot(kde, add=T)
+    count <- count + 1
+  }
+}
+par(mar=default.margins)
+```
+
+This is not conclusive. I think we probably aren't seeing regular trips in the data, rather we are just seeing more app usage at certain times (morning, lunch, afternoon).
+
+## O-D Matrices
+
+Create an Origin-Destination matrix. The code for creating the regular grid and aggregating is taken
+from: `spatialtest/r/expanding_cell.Rmd`
+
+```{r odmatrix-makegrid, eval=FALSE}
+
+# Divide the space into a grid
+
+# Make generic names for the two point files to be compatible with other code
+points1 <- start.points
+points2 <- end.points
+
+# Check that the projections are the same
+#if ( proj4string(points1) != proj4string(points2) ) {
+#  warning("The points1 and points2 projections are different, this will probably lead to catastrophic results!")
+#}
+
+# Might need a boundary (in case we skipped the KDE stuff where this was done earlier)
+#bound <- chull(x=points1@data$start_x, y=points1@data$start_y)
+all.points <- rbind(coordinates(points1),coordinates(points2))
+bound <- chull(all.points)
+
+bound.poly <- SpatialPolygons(
+  list(Polygons(list(Polygon(all.points[c(bound, bound[1]), ])), ID=1)), 
+  proj4string = CRS( proj4string(points1) 
+  ) )
+bb <- bbox(bound.poly)
+N <- 10 # The number of cells in a row (total will be N*N)
+  
+# Create the grids - adapted from Brunsdon & Comber (2015, p150)
+# Cell size is the total width divided by the number of cells to draw so far (i)
+cell.width <- (bb[1,2] - bb[1,1]) / N
+cell.height <- (bb[2,2] - bb[2,1]) / N
+#cell.areas <- (cell.width * cell.height) # Also remember the cell area for later
+
+# Calculate the centre of the bottom-right cell
+centre.x <- bb[1,1] + ( cell.width / 2 )
+centre.y <- bb[2,1] + ( cell.height / 2 )
+# Create a grid  
+grd <- GridTopology(
+    cellcentre.offset = c(centre.x, centre.y), # No offset, the grid will just cover all the points
+    cellsize = c(cell.width, cell.height),
+    cells.dim = c(N,N)
+  )
+
+# Convert the grid into a SpatialPolygonsDataFrame
+grd.spdf <- SpatialPolygonsDataFrame(
+    as.SpatialPolygons.GridTopology(grd),
+    data = data.frame(c(1:(N*N))),
+    match.ID = FALSE
+)
+#proj4string(grd.spdf) <- proj4string(points1)
+proj4string(grd.spdf) <- CRS(proj4string(points1))
+names(grd.spdf) <- "CellID" # Name the column
+
+par(mfrow=c(1,1))
+plot(points2, col="red")
+plot(points1, col="green", add=T)
+plot(grd.spdf, add=T)
+      
+```
+
+Now we have a grid, create the origin-destination matrix.
+
+**_Not doing this at the moment, it crashes R!_**.
+
+```{r odmatrix, cache=TRUE, eval=FALSE }
+
+MATRIX_FILE <- paste("Rdata/od-", INFILE ,"-.Rdata",sep="") # File name associated with the input data filename
+projection <- CRS(proj4string(points1))
+
+if (file.exists(MATRIX_FILE)) {
+  print(paste("Loading OD matrix from file:",MATRIX_FILE))
+  load(MATRIX_FILE)
+} else {
+  print("Creating new OD matrix:")
+  # Create an empty matrix
+  od <- matrix(0, N*N, N*N)
+  
+  # Iterate over each trace and increment the appropriate cell in the o-d matrix. This is going to take a very long time.
+  
+  for (i in seq(1,nrow(d)) ) { # (I know that loops are bad in R, but this isn't the bottleneck)
+  
+    if ( i %% 1000 == 0 ) {
+      print(paste("Record",i,"of",nrow(d)))
+    }
+    # Long version:
+    #origin.point <-      SpatialPoints( cbind(d[i,]$start_x, d[i,]$start_y ) )
+    #destination.point <- SpatialPoints( cbind(d[i,]$end_x,   d[i,]$end_y   ) )
+    #origin.cell <- over(origin.point, grd.spdf)
+    #destination.cell <- over(destination.point, grd.spdf)
+    ## Increment the appropriate cell. Note that rows should be origins
+    #od[destination.cell$CellID, origin.cell$CellID] = od[destination.cell$CellID, origin.cell$CellID] + 1
+    
+    # Short version, more efficient?
+    oid <- over(SpatialPoints( coordinates(points1), proj4string = projection ), grd.spdf)$CellID
+    did <- over(SpatialPoints( coordinates(points2), proj4string = projection ), grd.spdf)$CellID
+    od[did,oid] = od[did,oid] + 1
+    
+    # FYI: to check that over has worked by creating maps of the origin and destination points and their containing cells.
+    #par(ask=TRUE)
+    #plot(grd.spdf)
+    #plot(grd.spdf[grd.spdf$CellID==origin.cell$CellID,], col="blue", add=T)
+    #plot(grd.spdf[grd.spdf$CellID==destination.cell$CellID,], col="red", add=T)
+    #plot(origin.point, add=T)
+    #plot(destination.point, add=T)
+  } # for
+  print(paste("Saving new OD matrix to file:",MATRIX_FILE))
+  save(od, file=MATRIX_FILE)
+}
+
+```
+
+
+Now that we know how many origins and destinations
+
+ - Have re-run with data from a larger area, but it didn't make any difference.
+ - Think about whether these data can be used for the ABM calibration. Talk to Jon and Andy about it.
+ - Another idea - run the trajectories through a SOM just to see what happens.
+
+
+ - TODO: Run the expanding cell algorithm on the origin and destination data; might be interesting
+
+# OTHERS
+
+Some sort of probability distribution of origin/destination pairs for a randomly chosen trajectory.
+
+The probabilty of a trajectory turning left/right (if that can be made meaningful).
+
+
+# User profiles
+
+Generate profiles for each user that can be used to spawn agents
+
+## Calculate 'home'
+
+```{r calcHome, eval=FALSE}
+
+user <- "03fe8c39ca2865a737b5d12759046c8c" # A fairly prolific user for experimenting with
+
+for (uid in c(user) ){ # This will be for all users later
+  # Collate all points for the user (both start and end)
+  pts <- rbind(start.points[start.points$userid==uid,],end.points[end.points$userid==uid,])
+  kde <- kde.points(pts=pts, h=250, n=50) # 250m bandwidth and 100x100 grid
+  interval <- classIntervals(kde@data$kde, n = 8, style = 'kmeans')$brks
+  shades <- shading(interval)
+  level.plot(kde, shades)
+  choropleth(kde, v=kde@data$kde, shading = shades)
+  points(pts)
+}
+
+```
+

@@ -53,6 +53,8 @@ library(OpenStreetMap) # For plotting OSM basemaps
 
 Find all the 'matched' GPX files in the current directory and display them along with the original.
 
+The GPX files that were output from Map-Matcher (*-shortest.gpx and *-matched.gpx) have two sets of points: `tracks` and `routes`. It looks like tracks contain the whole matched route, whereas routes contain a smaller subset of points that would be useful in navigating (e.g. 'turn right here' etc.).
+
 I use `openmap()` to get the OSM basemap. This is pretty temperamental, it was basically trial and error to find the right combination of commands to make it plot the basemap _and_ points. It's weird that you need to calculate the bounding box around the points in one projection, then transform and use the new Mercator points, but still use the old bounding box! Anyway it just about works.
 
 By the way, the process to construct lines looks horrible but isn't too bad. The functions are:
@@ -66,36 +68,53 @@ From inside out it does:
  - `SpatialLines( ... )` - make it spatial
 
 
-```{r }
+```{r plotMatched, fig.width=15, fig.height=10}
 path <- "."
 setwd(path)
 file.names <- dir(path, pattern ="-matched.gpx")
 for(i in seq(length(file.names))){
   f <- file.names[i] # The 'matched' file (e.g. 'f531b5395-matched.gpx')
   f.orig <- paste(substr(f,1, nchar(f)-12),".gpx", sep="") # The orignal file (f531b5395.gpx)
+  f.short <- paste(substr(f,1, nchar(f)-12),"-shortest.gpx", sep="") # The shortest path
   print(paste("Reading file: ",f))
   # Read the GPX files
   matched <- readGPX(f,   metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
   orig <- readGPX(f.orig, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
+  short <- readGPX(f.short, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
   
   # Create SpatialPoints and SpatialLines objects for spatial analysis using lat/lon cooordinate system.
   # (See explanation about how to make SpatialLines in the explanation above).
-  #matched.track <- as.data.frame(matched$tracks)
-  #matched.sp.latlon <- SpatialPointsDataFrame(coords = cbind(matched.route$NA.lon, matched.route$NA.lat), 
-  #                                            data=matched.route, proj4string = CRS("+init=epsg:4326") )
-  matched.route <- as.data.frame(matched$routes)
-  matched.sp.latlon <- SpatialPointsDataFrame(coords = cbind(matched.route$NA.lon, matched.route$NA.lat), 
-                                              data=matched.route, proj4string = CRS("+init=epsg:4326") )
+  
+  # **** Matched files ****
+  
+  matched <- as.data.frame(matched$tracks)
+  matched.sp.latlon <- SpatialPointsDataFrame(coords = cbind(matched$GraphHopper.lon, matched$GraphHopper.lat), 
+                                              data=matched, proj4string = CRS("+init=epsg:4326") )
+  #matched <- as.data.frame(matched$routes)
+  #matched.sp.latlon <- SpatialPointsDataFrame(coords = cbind(matched$NA.lon, matched$NA.lat), 
+  #                                            data=matched, proj4string = CRS("+init=epsg:4326") )
   matched.sp.lines.latlon <- SpatialLines(list(Lines(
-    lapply(list(cbind(matched.route$NA.lon, matched.route$NA.lat)), Line), ID="a")),
+    lapply(list(cbind(matched$GraphHopper.lon, matched$GraphHopper.lat)), Line), ID="a")),
     proj4string = CRS("+init=epsg:4326"))
   
-  orig.track <- as.data.frame(orig$tracks)
-  orig.sp.latlon <- SpatialPointsDataFrame(coords = cbind(orig.track$lon, orig.track$lat), 
-                                           data=orig.track, proj4string = CRS("+init=epsg:4326") )
+  # **** Original files ****
+  
+  orig <- as.data.frame(orig$tracks)
+  orig.sp.latlon <- SpatialPointsDataFrame(coords = cbind(orig$lon, orig$lat), 
+                                           data=orig, proj4string = CRS("+init=epsg:4326") )
   orig.sp.lines.latlon <- SpatialLines(list(Lines(
-    lapply(list(cbind(orig.track$lon, orig.track$lat)), Line), ID="a")),
+    lapply(list(cbind(orig$lon, orig$lat)), Line), ID="a")),
     proj4string = CRS("+init=epsg:4326"))
+  
+  # **** Shortest files ****
+  
+  short <- as.data.frame(short$tracks)
+  short.sp.latlon <- SpatialPointsDataFrame(coords = cbind(short$GraphHopper.lon, short$GraphHopper.lat), 
+                                           data=short, proj4string = CRS("+init=epsg:4326") )
+  short.sp.lines.latlon <- SpatialLines(list(Lines(
+    lapply(list(cbind(short$GraphHopper.lon, short$GraphHopper.lat)), Line), ID="a")),
+    proj4string = CRS("+init=epsg:4326"))
+  
   
   # Get a bounding box for the whole dataset to make sure plots are big enough
   # Need to do this before projecting otherwise openmap() doesn't work (not sure why)
@@ -104,12 +123,18 @@ for(i in seq(length(file.names))){
   # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
   matched.sp.merc <- spTransform(matched.sp.latlon, CRS("+init=epsg:3857"))
   orig.sp.merc    <-   spTransform(orig.sp.latlon,    CRS("+init=epsg:3857"))
+  short.sp.merc <- spTransform(short.sp.latlon,    CRS("+init=epsg:3857"))
   matched.sp.lines.merc <- spTransform(matched.sp.lines.latlon, CRS("+init=epsg:3857"))
   orig.sp.lines.merc <- spTransform(orig.sp.lines.latlon, CRS("+init=epsg:3857"))
+  short.sp.lines.merc <- spTransform(short.sp.lines.latlon, CRS("+init=epsg:3857"))
   
   # Project the routes to aprojected coordinate system used in MA   (https://www.arcgis.com/home/item.html?id=d075ba0b6b5e4d71b596e882493f7789)
   #matched.sp.ma <- spTransform(matched.sp.latlon, CRS("+init=epsg:5070"))
   #orig.sp.ma <- spTransform(orig.sp.latlon, CRS("+init=epsg:5070"))
+  
+  # Get start/end points (good for visualising)
+  start = orig.sp.merc[1,]
+  end   = orig.sp.merc[nrow(orig.sp.merc),]
   
   # Get an OSM basemap (coordinates are upper-left and lower-right)
   basemap <- openmap(
@@ -117,17 +142,30 @@ for(i in seq(length(file.names))){
     lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
     type='osm', zoom=18)
   #plot(1,1,xlim=c(bb[1,1],bb[1,2]), ylim=c(bb[2,1],bb[2,2]))
+  
+  par(mfrow=c(1,2))
+  # Do the original route and match
   plot(basemap)
-  axis(1)
-  axis(2)
+  title(paste("Routes for ",f), cex=0.5 )
   plot(orig.sp.merc, col='blue', pch='.', cex=5, add=T)
   plot(orig.sp.lines.merc, col='blue', add=T, lwd=3)
   plot(matched.sp.merc, pch=20, col='black', add=T)
   plot(matched.sp.lines.merc, col='black', add=T, lwd=3)
+  # Start, end points
+  plot(start, col="green", pch='o', cex=3, add=T)
+  plot(end, col="red", pch='o', cex=5, add=T)
   
-  legend('topleft', legend = c('Original', 'Matched'), pch=c('.',20), col=c('blue','black'))
+  #legend('topleft', legend = c('Original', 'Matched'), pch=c('.',20), col=c('blue','black'))
   
-  }
+  # Do the shortest path
+  plot(basemap)
+  title("Shortest path", cex=0.5 )
+  plot(short.sp.lines.merc, col='black', lwd=2, add=T)
+  plot(short.sp.merc, col='black', pch='.', cex=5, add=T)
+  plot(start, col="green", pch='o', cex=3, add=T)
+  plot(end, col="red", pch='o', cex=5, add=T)
+  
+} # for
 
 
 ```

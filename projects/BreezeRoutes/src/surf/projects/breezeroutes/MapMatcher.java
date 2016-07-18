@@ -5,12 +5,11 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.matching.*;
-import com.graphhopper.routing.Path;
-import com.graphhopper.routing.util.CarFlagEncoder; // No longer used. Foot encoder used instead.
-import com.graphhopper.routing.util.FootFlagEncoder;
-import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.routing.*;
+import com.graphhopper.routing.util.*;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.index.LocationIndexTree;
+import com.graphhopper.storage.index.QueryResult;
 import com.graphhopper.ui.MiniGraphUI;
 import com.graphhopper.util.*;
 
@@ -42,6 +41,7 @@ public class MapMatcher {
     private static GraphHopper hopper;
     private static MapMatching mapMatching;
     private static GraphHopperStorage graph;
+    private static FlagEncoder encoder;
     //private static MiniGraphUI ui; // For visualising the graph(s)
 
     /**
@@ -67,7 +67,7 @@ public class MapMatcher {
         // This Encoder specifies how the network should be navigated. If it is changes (i.e. from foot to car) then the
         // cache needs to be deleted to force importOrLoad() to recalculate the graph.
         //CarFlagEncoder Encoder = new CarFlagEncoder();
-        FootFlagEncoder encoder = new FootFlagEncoder();
+        encoder = new FootFlagEncoder();
         hopper.setEncodingManager(new EncodingManager(encoder));
         hopper.getCHFactoryDecorator().setEnabled(false);
         hopper.importOrLoad();
@@ -77,9 +77,8 @@ public class MapMatcher {
 
         // create MapMatching object, can and should be shared across threads
         graph = hopper.getGraphHopperStorage();
-        LocationIndexMatch locationIndex = new LocationIndexMatch(graph,
-                (LocationIndexTree) hopper.getLocationIndex());
-        mapMatching = new MapMatching(graph, locationIndex, encoder);
+        LocationIndexMatch locationIndexMatch = new LocationIndexMatch(graph, (LocationIndexTree) hopper.getLocationIndex());
+        mapMatching = new MapMatching(graph, locationIndexMatch, encoder);
     }
 
     /**
@@ -115,7 +114,7 @@ public class MapMatcher {
                     matchedPath = match(inputGPXEntries);
                 }
                 catch (java.lang.RuntimeException ex) {
-                    System.err.println("COuld not match file "+file.getName() + ". Message: "+ex.getMessage());
+                    System.err.println("Could not match file "+file.getName() + ". Message: "+ex.getMessage());
                     // TODO do something about these errors - maybe move the files to make it easier to analyse them
                     continue;
                 }
@@ -129,14 +128,14 @@ public class MapMatcher {
                 // Now find the shortest path.
 
                 // Find the shortest path
-/*
-                PathWrapper shortestPath = shortest(inputGPXEntries);
+                Path shortestPath = shortest(inputGPXEntries);
+
                 if (writeShortestPath) {
                     String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-shortest.gpx";
                     System.out.println("\tWriting shortest path to GPX: "+gpxout);
-                //    GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                    GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
+
                 }
-                */
 
             } // if isfile
         } // For all files
@@ -162,18 +161,23 @@ public class MapMatcher {
      * Take the input gpx entries (e.g. from <code>new GPXFile().doImport("a_file.gpx").getEntries()</code>) and
      * use GraphHopper to find a shortest path. See https://github.com/graphhopper/graphhopper/blob/master/docs/core/routing.md
      */
-    private static PathWrapper shortest(List<GPXEntry> inputGPXEntries) throws Exception{
+    private static Path shortest(List<GPXEntry> inputGPXEntries) throws Exception{
 
-        GHRequest req = new GHRequest(
-                inputGPXEntries.get(0).getLat(), // latFrom
-                inputGPXEntries.get(0).getLon(), // lonFrom
-                inputGPXEntries.get(inputGPXEntries.size()-1).getLat(), //latTo
-                inputGPXEntries.get(inputGPXEntries.size()-1).getLon()); //latFrom
+        double fromLat = inputGPXEntries.get(0).getLat(); // latFrom
+        double fromLon = inputGPXEntries.get(0).getLon(); // lonFrom
+        double toLat = inputGPXEntries.get(inputGPXEntries.size()-1).getLat(); //latTo
+        double toLon = inputGPXEntries.get(inputGPXEntries.size()-1).getLon(); //latFrom
+
+
+        //This looks like a nicer way of doing the route, but returns a PathWrapper, not a Path, and I can't
+        // work out how to make a Path from a PathWrapper
+        /*
+        GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon)
         req.setWeighting("fastest");
         req.setVehicle("foot");
         req.setLocale(Locale.US);
-        GHResponse rsp = hopper.route(req);
 
+        GHResponse rsp = hopper.route(req);
         // first check for errors
         if(rsp.hasErrors()) {
             throw new Exception("Errors creating a shortest path "+rsp.getErrors().toString());
@@ -182,7 +186,17 @@ public class MapMatcher {
         // use the best path, see the GHResponse class for more possibilities.
         PathWrapper bestPath = rsp.getBest();
         return bestPath;
+        */
 
+        QueryGraph qg = new QueryGraph(graph);
+        QueryResult fromQR = hopper.getLocationIndex().findClosest(fromLat, fromLon, EdgeFilter.ALL_EDGES);
+        QueryResult toQR = hopper.getLocationIndex().findClosest(toLat, toLon, EdgeFilter.ALL_EDGES);
+        qg.lookup(fromQR, toQR);
+
+        Path path = new Dijkstra(qg, encoder, new FastestWeighting(encoder), hopper.getTraversalMode()).
+                calcPath(fromQR.getClosestNode(), toQR.getClosestNode());
+
+        return path;
     }
 
 
