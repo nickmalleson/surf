@@ -14,7 +14,7 @@ import random
 datadir = "~/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/"
 outfile = "~/mapping/projects/runkeeper/mitmount/runkeeper/breeze-out.csv"
 
-# Use these paths if running on the MIT server:
+# Use these paths if running on the MIT server (in the ~/runkeeper directory)`:
 #datadir = "runkeeper-data/boston/breeze_geo/"
 #outfile = "breeze-out.csv"
 

@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="com.graphhopper:graphhopper:0.7.0" type="repository">
-    <properties maven-id="com.graphhopper:graphhopper:0.7.0" />
+  <library name="com.graphhopper:graphhopper:0.7.0">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/graphhopper-0.7.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/graphhopper-tools-lgpl-0.7.0.jar!/" />
@@ -12,9 +11,7 @@
       <root url="jar://$PROJECT_DIR$/lib/protobuf-java-2.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/osmosis-osm-binary-0.44.1.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/graphhopper-0.7.0-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib/graphhopper-0.7.0-sources.jar!/" />
     </SOURCES>

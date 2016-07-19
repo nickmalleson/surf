@@ -12,10 +12,12 @@ import com.graphhopper.storage.index.LocationIndexTree;
 import com.graphhopper.storage.index.QueryResult;
 import com.graphhopper.ui.MiniGraphUI;
 import com.graphhopper.util.*;
+import scala.actors.threadpool.Arrays;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,14 +28,31 @@ import java.util.Locale;
  */
 public class MapMatcher {
 
+    /** Debug mode. Stop afer 20 files */
+    private static boolean DEBUG = false;
+
     /** The location of the input OSM pbf file */
     private static String OSM_DATA_FILE = "./map-data/massachusetts-latest.osm.pbf";
+
     /** The location to cache the graph after reading the OSM data (Graphhopper creates this on first run) */
     private static String CACHE_DIR = "./cache/massachusetts";
-    /** The directory that contains the input trace files */
-    private static String TRACES_DIR = "./traces";
+
+    /** A class to store the names of the directories where data files can be read and written */
+    private static final class Directories {
+        /** The root for all files */
+        private static final String ROOT = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/";
+        //String ROOT = "./traces"
+        /** Subdirectory contains the original gpx files (to be read) */
+        static String ORIG_GPX = ROOT + "gpx/";
+        /** Subdirectory contains the matched (output) gpx files */
+        static String GPX_MATCHED = ROOT + "gpx-matched/";
+        /** Subdirectory contains the shortest path (output) gpx files */
+        static String GPX_SHORTEST = ROOT + "gpx-shortest/";
+    }
+
     /** Whether or not to write out the GPX traces after matching. These files contain the original gps points and path, as well as the matched route.*/
     private static boolean WRITE_MATCHED_PATH = true;
+
     /** Whether or not to write out the GPX shortest path after matching. */
     private static boolean WRITE_SHORTEST_PATH = true;
 
@@ -48,12 +67,11 @@ public class MapMatcher {
      * Do the matching.
      * @param osmDataFile The file that contains the OSM data.
      * @param cacheDir The directory to use for cacheing the graph (generated from the OSM data)
-     * @param tracesDir The directory to search for traces in (the input gpx files).
      * @param writeMatchedPath Whether to write GPX files for each matched path
      */
-    public MapMatcher(String osmDataFile, String cacheDir, String tracesDir, boolean writeMatchedPath, boolean writeShortestPath ) throws Exception {
+    public MapMatcher(String osmDataFile, String cacheDir, boolean writeMatchedPath, boolean writeShortestPath ) throws Exception {
         init(osmDataFile, cacheDir);
-        run(tracesDir, writeMatchedPath, writeShortestPath);
+        run(writeMatchedPath, writeShortestPath);
     }
 
     /**
@@ -83,25 +101,38 @@ public class MapMatcher {
 
     /**
      * Run the map matcher.
-     * @param tracesDir The directory from which to read (and optionally write) the traces
      * @param writeMatchedPath Whether or not to write each mathched path (as GPX).
      * @throws IOException
      */
-    private static void run(String tracesDir, boolean writeMatchedPath, boolean writeShortestPath) throws IOException, Exception {
+    private static void run(boolean writeMatchedPath, boolean writeShortestPath) throws IOException, Exception {
 
-        File tracesDirectory = new File(tracesDir);
-        if (!tracesDirectory.isDirectory()) {
-            throw new IOException("Traces directory ("+tracesDir+") is not a directory");
+        // Check which directories will be used to read and write the data to/from.
+        File gpxDir = new File(Directories.ORIG_GPX);
+        File matchedDir = new File(Directories.GPX_MATCHED);
+        File shortestDir = new File(Directories.GPX_SHORTEST);
+        for (File dir : (List<File>)Arrays.asList(new File[]{gpxDir, matchedDir, shortestDir}) ) {
+            if (!dir.isDirectory()) {
+                throw new IOException("Error: ("+dir+") is not a directory");
+            }
         }
 
-        // Read all the gpx files in the traces directory
-        File[] allFiles = tracesDirectory.listFiles();
+        // Read all the gpx files
+
+        System.out.println("Reading directory: "+gpxDir);
+        File[] allFiles = gpxDir.listFiles();
+        System.out.println("\tThere are "+allFiles.length+" files in the directory.\nReading files.");
+
+        int counter = 0; // Remember the number of files processed
         for (int i = 0; i < allFiles.length; i++) {
+            if (DEBUG && i > 20) {
+                System.out.println("Debug mode is on. Stopping now.");
+                break;
+            }
+            if (i % 5000 == 0) {
+                System.out.println("\t .. read file "+i);
+            }
             File file = allFiles[i];
-            if (file.isFile() && file.getName().endsWith(".gpx") &&
-                    !file.getName().endsWith("-matched.gpx") && // Ignore 'matched' and 'shortest' files - these
-                    !file.getName().endsWith("-shortest.gpx")   // are created by this program!
-                    ) {
+            if ( file.isFile() && file.getName().endsWith(".gpx") ) {
 
                 System.out.println("Reading file ("+i+"): "+file);
 
@@ -120,9 +151,12 @@ public class MapMatcher {
                 }
 
                 if (writeMatchedPath) {
-                    String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-matched.gpx";
+                    // file should be created in the 'matched' sub directory and have '-matched' inserted into the filename
+                    String gpxout = Directories.GPX_MATCHED + file.getName().substring(0,file.getName().length()-4)+ "-matched.gpx";
                     System.out.println("\tWriting matched path to GPX: "+gpxout);
-                    GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                    if (!DEBUG) {
+                        GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                    }
                 }
 
                 // Now find the shortest path.
@@ -131,14 +165,26 @@ public class MapMatcher {
                 Path shortestPath = shortest(inputGPXEntries);
 
                 if (writeShortestPath) {
-                    String gpxout = file.getAbsolutePath().substring(0,file.getAbsolutePath().length()-4) + "-shortest.gpx";
+                    String gpxout = Directories.GPX_SHORTEST + file.getName().substring(0,file.getName().length()-4)+ "-shortest.gpx";
                     System.out.println("\tWriting shortest path to GPX: "+gpxout);
-                    GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
-
+                    if (!DEBUG) {
+                        GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                    }
                 }
 
+                counter++;
+
+
             } // if isfile
+            else {
+                System.out.println("\tIgnoring "+file);
+            }
         } // For all files
+        if (DEBUG) {
+            System.out.println("WARN: Debug is ON, so no output will actually have been created");
+        }
+        System.out.println("Finished. Processed "+counter+" files.");
+
 
     }
 
@@ -203,7 +249,7 @@ public class MapMatcher {
 
     public static void main(String[] args ) throws Exception {
 
-        new MapMatcher(OSM_DATA_FILE, CACHE_DIR, TRACES_DIR, WRITE_MATCHED_PATH, WRITE_SHORTEST_PATH);
+        new MapMatcher(OSM_DATA_FILE, CACHE_DIR, WRITE_MATCHED_PATH, WRITE_SHORTEST_PATH);
 
     }
 }

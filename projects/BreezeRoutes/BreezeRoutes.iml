@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Python" name="Python">
+      <configuration sdkName="Python 2.7.12 (~/anaconda2/envs/py27/bin/python)" />
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="com.graphhopper:map-matching:0.7.0" level="project" />
     <orderEntry type="library" name="com.graphhopper:graphhopper:0.7.0" level="project" />
     <orderEntry type="library" name="com.graphhopper:graphhopper-tools:0.7.0" level="project" />
+    <orderEntry type="library" name="Python 2.7.12 (~/anaconda2/envs/py27/bin/python) interpreter library" level="application" />
   </component>
 </module>

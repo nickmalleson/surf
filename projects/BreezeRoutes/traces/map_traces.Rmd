@@ -25,7 +25,15 @@ Just maps gpx files in the current directory. Useful for comparing different typ
  - shortest paths (the shortest paths the could be used to do the same route)
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
-setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
+library(knitr)
+knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
+
+# Paths to the original files, shortest paths, and matched paths
+path.org =      "./gpx/"
+path.matched =  "./gpx-matched/"
+path.shortest = "./gpx-shortest/"
 
 library(GISTools)
 #library(rgeos)    # For things like gIntersects
@@ -69,18 +77,18 @@ From inside out it does:
 
 
 ```{r plotMatched, fig.width=15, fig.height=10}
-path <- "."
-setwd(path)
-file.names <- dir(path, pattern ="-matched.gpx")
+# Read files in the 'matched' directory. We're only interested in mapping routes that have been matched (and if they've ben matched then they probably also have a companion shortest path).
+file.names <- dir(path.matched, pattern =".gpx")
 for(i in seq(length(file.names))){
-  f <- file.names[i] # The 'matched' file (e.g. 'f531b5395-matched.gpx')
-  f.orig <- paste(substr(f,1, nchar(f)-12),".gpx", sep="") # The orignal file (f531b5395.gpx)
-  f.short <- paste(substr(f,1, nchar(f)-12),"-shortest.gpx", sep="") # The shortest path
-  print(paste("Reading file: ",f))
+  f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
+  f.orig <-    paste(path.org,      f, ".gpx", sep="")
+  f.matched <- paste(path.matched,  f, "-matched.gpx", sep="") # The matched file (f531b5395-matched.gpx)
+  f.short <-   paste(path.shortest, f, "-shortest.gpx", sep="") # The shortest path (f531b5395-shortest.gpx)
+  print(paste("Reading files: ",f.orig, f.matched, f.short))
   # Read the GPX files
-  matched <- readGPX(f,   metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
-  orig <- readGPX(f.orig, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
-  short <- readGPX(f.short, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
+  matched <- readGPX(f.matched, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
+  orig    <- readGPX(f.orig,    metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
+  short   <- readGPX(f.short,   metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = TRUE)
   
   # Create SpatialPoints and SpatialLines objects for spatial analysis using lat/lon cooordinate system.
   # (See explanation about how to make SpatialLines in the explanation above).
@@ -119,6 +127,8 @@ for(i in seq(length(file.names))){
   # Get a bounding box for the whole dataset to make sure plots are big enough
   # Need to do this before projecting otherwise openmap() doesn't work (not sure why)
   bb <- bbox(matched.sp.latlon + orig.sp.latlon)
+  
+   XXXX HERE MAKE THE BOUNDING BOX 10% LARGER!
 
   # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
   matched.sp.merc <- spTransform(matched.sp.latlon, CRS("+init=epsg:3857"))
@@ -140,13 +150,13 @@ for(i in seq(length(file.names))){
   basemap <- openmap(
     upperLeft = c(bb[2,2],bb[1,1]), # Upper-left (lat,lon) (y,x)
     lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
-    type='osm', zoom=18)
+    type='osm', zoom=17)
   #plot(1,1,xlim=c(bb[1,1],bb[1,2]), ylim=c(bb[2,1],bb[2,2]))
   
   par(mfrow=c(1,2))
   # Do the original route and match
   plot(basemap)
-  title(paste("Routes for ",f), cex=0.5 )
+  title(paste("Routes for\n",f), cex=0.5 )
   plot(orig.sp.merc, col='blue', pch='.', cex=5, add=T)
   plot(orig.sp.lines.merc, col='blue', add=T, lwd=3)
   plot(matched.sp.merc, pch=20, col='black', add=T)

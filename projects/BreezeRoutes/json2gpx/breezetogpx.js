@@ -12,7 +12,7 @@
 
 // On Nick's laptop (server directories mounted):
 var INDIR  = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/runkeeper-data/boston/breeze_geo/";
-var OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/";
+var OUTDIR = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/breeze-gpx/;
 
 var OVERWRITE = false; // Whether to override output gpx files
 

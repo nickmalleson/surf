@@ -23,13 +23,41 @@ The main third-party libraries are [Graphhopper](https://github.com/graphhopper/
 
 The `BreezeRoutes` folder is a project that can be openned in the IntelliJ IDEA IDE. To see specifically which Maven libraries have been downloaded, go through IntelliJ.
 
-##  0. Analysing Raw Data and Filtering Trips
 
-The initial analysis of the raw traces is contained in the [./raw_data_analysis](./raw_data_analysis) directory. 
+## 1. Preparing GPX files with json2gpx
+
+See [./json2gpx](./json2gpx/) directory.
+
+The first step is to convert the raw json files to gpx. To assign the GPS coordiantes to OSM segments I'm using the [map-matching](https://github.com/graphhopper/map-matching) library. This requires GPX files, rather than geojson files. Converting geojson to gpx should be easy, but the times associated with each coordinate are stored in a non-standard place in the json:
+
+```
+features:properties:coordinateProperties:times
+```
+
+So I've used the [togpx](https://github.com/tyrasd/togpx) library to convert the geojson files to GPX files. The only tricky thing is using a callback function that specifies where the times associated with each coordinate are in the json.
+
+For details see: `./json2gpx/breezetogpx.js`. The script reads all `.json` files in its directory:
+
+`~/runkeeper/runkeeper-data/boston/breeze_geo/`
+
+and writes out `.gpx` files to an output directory:
+
+`~/runkeeper/breeze-gpx/`
+
+To run the script, do:
+
+```
+./breezetogpx.js
+```
+
+
+##  2. Analysing Raw Data and Filtering Trips
+
+The initial analysis of the raw traces is contained in the [./raw\_data\_analysis](./raw_data_analysis) directory. Note that the previous step (converting json files to gpx) isn't needed until later.
 
 ### 1-breeze-read_data.py
 
-The first step. This reads the json files on the MIT server and extracts useful information to a csv file. It doesn't keep the paths themselves, just information about them. It can be configuted to igore some trips, e.g. those that are a long way from boston or those that are made up of only one point.
+The first step. This reads the geojson files on the MIT server and extracts useful information to a csv file. It doesn't keep the paths themselves, just information about them. It can be configuted to igore some trips, e.g. those that are a long way from boston or those that are made up of only one point.
 It can also be configured to create a map of the trips, but this only works when running on Nick's laptop because it requires the Follium library which isn't installed on the MIT server.
 
 **OUTPUT**: ./breeze-out.csv
@@ -47,6 +75,18 @@ This reads the file created in the previous step and calculates some statistics 
 
 **Important OUTPUT**: It also does some filtering to idenfity useful trips and writes the names of the original *.json files as a csv file with a similar name to the input file. E.g. `breeze-simple-inf-filtered-traces.csv`. This file is written to the server (see the DIR parameter).
 
+### 3-breeze-copy_filtered_traces.py
+
+This file completes the pre-analysis process by copyig the filtered traces (the csv list of filenames from `2-breeze-analyse_data.Rmd`) to a new directory ready for map matching. The map matching library needs GPX files, so it copies the raw gpx files created earlier from
+
+`~/runkeeper/breeze-gpx/`
+
+to
+
+`~/mapmatching-traces/gpx/`
+
+It is best to run this file on the MIT server.
+
 
 ### breeze-map_long_trips.py
 
@@ -62,51 +102,26 @@ for analysis in a GIS
 
 
 
-## 1. Preparing GPX files with json2gpx
-
-(_The previous steps were about initially analysing the data and identifying useful traces that warrant further analysis. This step is about preparing the files for route analysis using a Java library_).
-
-To assign the GPS coordiantes to OSM segments I'm using the [map-matching](https://github.com/graphhopper/map-matching) library. This requires GPX files, rather than geojson files. Converting geojson to gpx should be easy, but the times associated with each coordinate are stored in a non-standard place in the json:
-
-```
-features:properties:coordinateProperties:times
-```
-
-So I've used the [togpx](https://github.com/tyrasd/togpx) library to convert the geojson files to GPX files. The only tricky thing is using a callback function that specifies where the times associated with each coordinate are in the json.
-
-For details see: `./json2gpx/breezetogpx.js`. The script reads all `.json` files in its directory and writes out `.gpx` files in the same place.
-
-To run the script, copy the json files into the `json2gpx` folder and do:
-
-```
-./breezetogpx.js
-```
-
-Or alternatively, leave the json files where they are and change the `INDIR` and `OUTDIR` parameters (the input and output directories).
-
-
-
-## 2. Map Matching with GraphHopper
-
-**The `BreezeRoutes` directory is the root of an IntelliJ IDEA project. So the easiest way edit or run the code is through IntelliJ IDEA. (There is a free version of the IDE).**
-
-**_XXXX HERE_**
-
-1 - Move the scripts etc. here and rename appropriately. DONE
-
-2 - Add another script to collect the filtered traces (output from breeze-analysis_data.Rmd) or adapt MapMatcher to do this.
-
-3 - Update MapMatcher.java to read these files.
-
-4 - Update map_traces.Rmd to map a _sample_ of the files.
+## 3. Map Matching with GraphHopper
 
 ### Matching
 
-The `surf.projects.breezeroutes.MapMatcher` class does most of the work. It looks for GPX files in the `traces` directory (or another directory if you change the parameter) (the output files from step 1), matches them to the OSM network, and wites out a gpx file with '-matched.gpx' appended to the end of the filename
+The `surf.projects.breezeroutes.MapMatcher` class does most of the work. It looks for GPX files in (the output files from step 2):
+
+`~/mapmatching-traces/gpx/`
+
+matches them to the OSM network, and wites out a gpx file with '-matched.gpx' and '-shortest.gpx' appended to the end of the filename into the directories:
+
+`~/mapmatching-traces/gpx-matched/`
+
+and
+
+`~/mapmatching-traces/gpx-shortest/`
+
 
 #### Viewing the matches
 
-The file `traces/map_traces.Rmd` will map all of the matched traces in the directory and compare them to their originals.
+The file `traces/map_traces.Rmd` will map all of the matched and shortest traces and compare them to their originals.
 
 ### Shortest path
 

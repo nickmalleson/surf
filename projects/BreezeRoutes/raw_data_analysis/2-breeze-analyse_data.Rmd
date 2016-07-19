@@ -19,7 +19,7 @@ fontsize: 10pt
 ---
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
-setwd('~/mapping/projects/runkeeper/')
+setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/raw_data_analysis')
 
 library(GISTools)
 #library(rgeos)    # For things like gIntersects
@@ -357,7 +357,7 @@ h2 <- hist(d$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="(sho
 boxplot(d$elapsedTimeMin, ylab="Length (minutes)")
 
 hist(d.f1$elapsedTimeMin, breaks="Scott", xlab="Length (minutes)", main="After filtering short distances", ylim=c(0,max(h1$counts)) )
-hist(d.f1$elapsedTimeMin, h$breaks, xlab="Length (minutes)", main="(short axis)", xlim=c(0,150), ylim=c(0,max(h2$counts)) )
+hist(d.f1$elapsedTimeMin, h2$breaks, xlab="Length (minutes)", main="(short axis)", xlim=c(0,150), ylim=c(0,max(h2$counts)) )
 boxplot(d.f1$elapsedTimeMin, ylab="Length (minutes)")
 
 summary(d$elapsedTimeMin)
@@ -422,6 +422,7 @@ outfile <- paste(DIR, substr(INFILE,1,nchar(INFILE)-4), "-filtered-traces.csv", 
 print(paste("Writing filtered trace names to ", outfile))
 
 write.csv(d.f3,file=outfile)
+
 
 ```
 
