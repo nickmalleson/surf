@@ -77,8 +77,13 @@ From inside out it does:
 
 
 ```{r plotMatched, fig.width=15, fig.height=10}
+
 # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched (and if they've ben matched then they probably also have a companion shortest path).
-file.names <- dir(path.matched, pattern =".gpx")
+all.file.names <- dir(path.matched, pattern =".gpx")
+
+N <- 50 # The number of files to map
+file.names <- sample(all.file.names, size=N)
+
 for(i in seq(length(file.names))){
   f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
   f.orig <-    paste(path.org,      f, ".gpx", sep="")
@@ -127,8 +132,14 @@ for(i in seq(length(file.names))){
   # Get a bounding box for the whole dataset to make sure plots are big enough
   # Need to do this before projecting otherwise openmap() doesn't work (not sure why)
   bb <- bbox(matched.sp.latlon + orig.sp.latlon)
-  
-   XXXX HERE MAKE THE BOUNDING BOX 10% LARGER!
+  # Make the bounding box x % larger to make sure none of the map is clipped
+  width = bb[1,2] - bb[1,1]
+  height = bb[2,2] - bb[2,1]
+  x <- 0.10 # 20 % larger in total
+  bb[1,1] = bb[1,1] - (width*x)
+  bb[1,2] = bb[1,2] + (width*x)
+  bb[2,1] = bb[2,1] - (height*x)
+  bb[2,2] = bb[2,2] + (height*x)
 
   # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
   matched.sp.merc <- spTransform(matched.sp.latlon, CRS("+init=epsg:3857"))

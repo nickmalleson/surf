@@ -1,25 +1,20 @@
 package surf.projects.breezeroutes;
 
-import com.graphhopper.GHRequest;
-import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
-import com.graphhopper.PathWrapper;
 import com.graphhopper.matching.*;
 import com.graphhopper.routing.*;
 import com.graphhopper.routing.util.*;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.index.LocationIndexTree;
 import com.graphhopper.storage.index.QueryResult;
-import com.graphhopper.ui.MiniGraphUI;
 import com.graphhopper.util.*;
 import scala.actors.threadpool.Arrays;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 
 /**
  * Do some map matching between GPX files and OSM roads.
@@ -122,7 +117,9 @@ public class MapMatcher {
         File[] allFiles = gpxDir.listFiles();
         System.out.println("\tThere are "+allFiles.length+" files in the directory.\nReading files.");
 
-        int counter = 0; // Remember the number of files processed
+        int success = 0; // Remember the number of files successfull processed (or not)
+        int failed = 0;
+        int ignored = 0;
         for (int i = 0; i < allFiles.length; i++) {
             if (DEBUG && i > 20) {
                 System.out.println("Debug mode is on. Stopping now.");
@@ -147,6 +144,7 @@ public class MapMatcher {
                 catch (java.lang.RuntimeException ex) {
                     System.err.println("Could not match file "+file.getName() + ". Message: "+ex.getMessage());
                     // TODO do something about these errors - maybe move the files to make it easier to analyse them
+                    failed++;
                     continue;
                 }
 
@@ -168,22 +166,27 @@ public class MapMatcher {
                     String gpxout = Directories.GPX_SHORTEST + file.getName().substring(0,file.getName().length()-4)+ "-shortest.gpx";
                     System.out.println("\tWriting shortest path to GPX: "+gpxout);
                     if (!DEBUG) {
-                        GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                        GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
                     }
                 }
 
-                counter++;
+                success++;
 
 
             } // if isfile
             else {
                 System.out.println("\tIgnoring "+file);
+                ignored++;
             }
         } // For all files
         if (DEBUG) {
             System.out.println("WARN: Debug is ON, so no output will actually have been created");
         }
-        System.out.println("Finished. Processed "+counter+" files.");
+        System.out.println("Finished. Processed "+ (failed+success+ignored)+" files."+
+                "\n\tSuccess:"+success+
+                "\n\tFailed: "+failed+
+                "\n\tIgnored: "+ignored
+        );
 
 
     }
