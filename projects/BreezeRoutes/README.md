@@ -118,6 +118,21 @@ and
 
 `~/mapmatching-traces/gpx-shortest/`
 
+#### Problems with matching
+
+Quite a lot of files could not be matched:
+
+  - `Processed: 103835`
+  - `Success:   72464`
+  - `Failed:    31371`
+
+The logs included entries like:
+
+  - `Could not match file 0059ccfbec4a1489355f670010c4186c.gpx. Message:  Result contains illegal edges. Try to decrease the separated_search_distance (300.0) or use force_repair=true. Errors:[duplicate edge:Boston HarborWalk:351481->330919]`
+
+  - `Could not match file 12839be8d464810701a9416dfda783c6.gpx. Message: Cannot find matching path! Wrong vehicle foot or missing OpenStreetMap data? Try to increase max_visited_nodes (500). Current gpx sublist:7, start list:[353239-353240  42.33698923551552,-71.08957990679188,NaN], end list:[18358-18358  42.34743287445827,-71.07452089506062,NaN], bounds: -73.5239715916806,-69.93049632602549,41.23936089663269,43.0002039596484`
+
+_I've had a quick search through the Graphhopper and Map-Matching source and can't see anything immediately obvious_.
 
 #### Viewing the matches
 

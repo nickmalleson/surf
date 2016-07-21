@@ -26,6 +26,9 @@ public class MapMatcher {
     /** Debug mode. Stop afer 20 files */
     private static boolean DEBUG = false;
 
+    /** Whether to overide matched- or shortest-paths that have already been created */
+    private static boolean OVERWRITE = false;
+
     /** The location of the input OSM pbf file */
     private static String OSM_DATA_FILE = "./map-data/massachusetts-latest.osm.pbf";
 
@@ -132,6 +135,14 @@ public class MapMatcher {
             if ( file.isFile() && file.getName().endsWith(".gpx") ) {
 
                 System.out.println("Reading file ("+i+"): "+file);
+                String matchedFilename =  Directories.GPX_MATCHED + file.getName().substring(0,file.getName().length()-4)+ "-matched.gpx";
+                String shortestFilename = Directories.GPX_SHORTEST + file.getName().substring(0,file.getName().length()-4)+ "-shortest.gpx";
+
+                if ( ( new File(matchedFilename).exists() || new File(shortestFilename).exists()) && !OVERWRITE) {
+                    System.out.println("\tShortest- or matched-file already exists, ignoring ");
+                    ignored++;
+                    continue;
+                }
 
                 // get the GPX entries from a file
                 List<GPXEntry> inputGPXEntries = new GPXFile().doImport(file.getAbsolutePath()).getEntries();
@@ -150,10 +161,9 @@ public class MapMatcher {
 
                 if (writeMatchedPath) {
                     // file should be created in the 'matched' sub directory and have '-matched' inserted into the filename
-                    String gpxout = Directories.GPX_MATCHED + file.getName().substring(0,file.getName().length()-4)+ "-matched.gpx";
-                    System.out.println("\tWriting matched path to GPX: "+gpxout);
+                    System.out.println("\tWriting matched path to GPX: "+matchedFilename);
                     if (!DEBUG) {
-                        GPXFile.write(matchedPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                        GPXFile.write(matchedPath, matchedFilename, hopper.getTranslationMap().get("en_us"));
                     }
                 }
 
@@ -163,10 +173,9 @@ public class MapMatcher {
                 Path shortestPath = shortest(inputGPXEntries);
 
                 if (writeShortestPath) {
-                    String gpxout = Directories.GPX_SHORTEST + file.getName().substring(0,file.getName().length()-4)+ "-shortest.gpx";
-                    System.out.println("\tWriting shortest path to GPX: "+gpxout);
+                    System.out.println("\tWriting shortest path to GPX: "+shortestFilename);
                     if (!DEBUG) {
-                        GPXFile.write(shortestPath, gpxout, hopper.getTranslationMap().get("en_us"));
+                        GPXFile.write(shortestPath, shortestFilename, hopper.getTranslationMap().get("en_us"));
                     }
                 }
 
