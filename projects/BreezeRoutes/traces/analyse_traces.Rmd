@@ -1,0 +1,299 @@
+---
+title: "Analyse Traces"
+author: "Nick Malleson"
+date: "13 July 2016"
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+An extension to the [map_traces.Rmd](./map_traces.Rmd) program. This has the facility to map traces, but focusses on analysing the difference between matched paths and their equivalent shortest path.
+
+The three different kinds of routes that the script reads are:
+
+ - original traces (the original GPX data)
+ - matched routes (the original data matched to OSM routes)
+ - shortest paths (the shortest paths the could be used to do the same route)
+
+```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
+
+# Paths to the original files, shortest paths, and matched paths
+path.org =      "./gpx/"
+path.matched =  "./gpx-matched/"
+path.shortest = "./gpx-shortest/"
+
+library(GISTools)
+#library(rgeos)    # For things like gIntersects
+library(rgdal)     # For reading shapefiles
+#library(raster)    # For creating regular grids or converting from SpatialPixelsDataFrame to raster
+#library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+#library(classInt) # Jenks natural breaks
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+#library(stats)     # For a-spatial aggregatiion (aggregate)
+#library(ggplot2)   # For density scatter plot
+#library(hexbin)    # For hexagonal density scatter plots in ggplot
+#library(gridExtra) # To put two graphs next to each other in ggplot
+#library(plotKML)   # For reading GPX files
+#library(OpenStreetMap) # For plotting OSM basemaps
+library(parallel) # For running things in parallel (e.g. mclapply())
+```
+
+
+# Function to map a trace
+
+It is sometimes useful to visualise a particualr trace. This has come from [map_traces.Rmd](./map_traces.Rmd) - see that file for proper documentation.
+
+```{r map.trace.function }
+
+expanded.bb <- function(bounds) {
+  
+  bb <- bbox(bounds)
+  # Make the bounding box x % larger to make sure none of the map is clipped
+  width = bb[1,2] - bb[1,1]
+  height = bb[2,2] - bb[2,1]
+  x <- 0.10 # 20 % larger in total
+  bb[1,1] = bb[1,1] - (width*x)
+  bb[1,2] = bb[1,2] + (width*x)
+  bb[2,1] = bb[2,1] - (height*x)
+  bb[2,2] = bb[2,2] + (height*x)
+  return(bb)
+}
+
+# A convenience for plotting a trace given a filename relative to cwd
+map.file <- function(filename) {
+  print(paste("Mapping GPX file",filename))
+  # Create SpatialLinesDataFrames for the track
+  track <- readOGR(dsn=filename, layer="tracks", verbose=FALSE )  
+  # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
+  track.merc <- spTransform(track, CRS("+init=epsg:3857"))
+  
+  bb <- expanded.bb(track@bbox)
+
+  # Get an OSM basemap (coordinates are upper-left and lower-right)
+  basemap <- openmap(
+    upperLeft = c(bb[2,2],bb[1,1]), # Upper-left (lat,lon) (y,x)
+    lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
+    type='osm', zoom=17)
+  
+  par(mfrow=c(1,1))
+  plot(basemap)
+  plot(track.merc, col='blue', lwd=3)
+  title(paste("Track for\n",f), cex=0.5 )
+}
+
+# A convenience to call the plotting function defined below (just pass in the list index for the routes)
+map.index <- function(N, osm=TRUE) {
+  map.trace(orig[[N]], matched[[N]], shortest[[N]], osm=osm)
+}
+
+map.trace <- function(orig, matched, short, osm=TRUE) {
+  # Get a bounding box for the whole dataset to make sure plots are big enough
+  # Need to do this before projecting otherwise openmap() doesn't work (not sure why)
+  bb <- expanded.bb(orig@bbox)
+  
+  # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
+  matched.merc <- spTransform(matched, CRS("+init=epsg:3857"))
+  orig.merc    <-   spTransform(orig,    CRS("+init=epsg:3857"))
+  short.merc <- spTransform(short,    CRS("+init=epsg:3857"))
+  
+  # Get an OSM basemap (coordinates are upper-left and lower-right)
+  if (osm) {
+    basemap <- openmap(
+      upperLeft = c(bb[2,2],bb[1,1]), # Upper-left (lat,lon) (y,x)
+      lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
+      type='osm', zoom=17)
+  }
+  
+  par(mfrow=c(1,1))
+  if (osm) {
+    plot(basemap)
+  }
+  else {
+    plot(orig.merc, col='blue', lwd=3)
+  }
+  title(paste("Routes for\n",f), cex=0.5 )
+  plot(orig.merc, col='blue', lwd=3, add=T)
+  plot(matched.merc, lwd=3, col='black', add=T)
+  plot(short.merc, col='green', lwd=3, add=T)
+  
+}
+  
+```
+
+# Read the Data
+
+Read all of the traces and store in memory. Only read 'matched' traces because those will definitely have an original trace and a shortest path. Not all original traces have been matched by the MapMatcher program.
+
+
+```{r readTraces}
+
+TRACES_FILE = "./traces.RData"
+
+if (!file.exists(TRACES_FILE)) {
+  # Vectors that will contain all of the paths and associated information.
+  orig <- list() 
+  matched <- list()
+  shortest <- list()
+  orig.ma <- list()  # Projected versions
+  matched.ma <- list()
+  shortest.ma <- list()
+  userid <- list()
+
+  # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched 
+  # (and if they've ben matched then they probably also have a companion shortest path).
+  file.names <- dir(path.matched, pattern =".gpx")
+  
+  for(i in 1:100){
+  #for(i in seq(length(file.names))){
+    f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
+    f.orig <-    paste(path.org,      f, ".gpx", sep="")
+    f.matched <- paste(path.matched,  f, "-matched.gpx", sep="") # The matched file (f531b5395-matched.gpx)
+    f.shortest<-   paste(path.shortest, f, "-shortest.gpx", sep="") # The shortest path (f531b5395-shortest.gpx)
+    print(paste("Reading file (",i,")",f))
+    
+    # Create SpatialLinesDataFrames for each track, project them to good projection for MA (Albers) add them to the lists
+    # (https://www.arcgis.com/home/item.html?id=d075ba0b6b5e4d71b596e882493f7789)
+    # Read the three required files simultaneously in parallel
+    read.data <- mclapply(
+      list("orig"=f.orig, "matched"=f.matched, "shortest"=f.shortest), 
+      FUN=function(x){return(readOGR(dsn=x, layer="tracks", verbose=FALSE )  )}
+      )
+    orig[[i]]    =  read.data[['orig']]
+    matched[[i]] =  read.data[['matched']]
+    shortest[[i]] = read.data[['shortest']]
+    #orig[[i]] =    readOGR(dsn=f.orig, layer="tracks", verbose=FALSE )  
+    #matched[[i]] = readOGR(dsn=f.matched, layer="tracks", verbose=FALSE ) 
+    #shortest[[i]] =readOGR(dsn=f.shortest, layer="tracks", verbose=FALSE ) 
+    
+    transformed <- mclapply(
+      list("orig.ma"=orig[[i]], "matched.ma"=matched[[i]], "shortest.ma"=shortest[[i]]),
+      FUN = function(x) { return(spTransform(x, CRS("+init=epsg:5070")) ) }
+    )
+    orig.ma[[i]] =    transformed[['orig.ma']]
+    matched.ma[[i]] = transformed[['matched.ma']]
+    shortest.ma[[i]] =transformed[['shortest.ma']]
+    #orig.ma[[i]] =    spTransform(orig[[i]], CRS("+init=epsg:5070") ) 
+    #matched.ma[[i]] = spTransform(matched[[i]], CRS("+init=epsg:5070") )
+    #shortest.ma[[i]] =spTransform(shortest[[i]], CRS("+init=epsg:5070") )
+    
+    
+    # Get the user ID. This needs to be done by parsing the description as readOGR didn't bring in the metadata properly)
+    # Split the string on '\n' (fixed=T means treat this as it is, not as a regex), and take the 6th element
+    #which should be a string like: userId=857ac8242e49159c7abb25bb458a7bc9. Then just get the id from that
+    uid_str <- strsplit(as.character(orig[[i]]@data$desc), '\n', fixed=T)[[1]][6] 
+    uid_split <- strsplit(uid_str, '=')[[1]]
+    uid = uid_split[2] # Second element after splitting on '='
+    if (uid_split[1]!="userId") {
+      warning(paste("Not able to get the user ID for route (",i,")", f ) )
+      uid = "NA"
+    }
+    userid[[i]] = uid
+  }# for
+    
+  
+  if (length(matched) != length(orig) || length(matched) != length(shortest) || length(matched) != length(userid)) {
+    warning("For some reason there are different numbers of original, matched, and shortest paths.")
+  }
+  
+# Save the traces
+  save(orig, matched, shortest, orig.ma, matched.ma, shortest.ma, userid, file=TRACES_FILE)
+
+} else {
+  print(paste("Loading traces from file", TRACES_FILE))
+  load(TRACES_FILE)
+}
+
+```
+
+Read `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(short)` shortest paths.
+
+# Compare path distances
+
+## Actual paths v.s. shortest path
+
+Look at the differences in the lengths between actual (matched) paths and shortest paths
+
+```{r compareLengths }
+
+orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
+matched.lengths  <- unlist(mclapply(matched.ma, FUN=gLength))
+shortest.lengths <- unlist(mclapply(shortest.ma, FUN=gLength))
+
+par(mfrow=c(1,3))
+ylim <- c(0,100)
+xlim <- c(0,7000)
+
+hist(orig.lengths,     breaks='Scott', xlim=xlim, ylim=ylim )
+hist(matched.lengths,  breaks='Scott', xlim=xlim, ylim=ylim )
+hist(shortest.lengths, breaks='Scott', xlim=xlim, ylim=ylim )
+
+```
+
+## Hausdorff distances
+
+Look at the Hausdorff distances between the paths. This quantifies how similar the paths are.
+
+```{r hausdorffDistances} 
+# Run using lapply as above. This is just slightly more complicated because the distance function requires two 
+# arguments as it compares two lines. mapply does this. The function comes first, followed by the arguments 
+haus.orig.matched <- unlist(
+  mcmapply(
+    FUN=gDistance, # Function to calcuate the distance
+    orig.ma, matched.ma, # First two arguments
+    MoreArgs=list(byid=FALSE, hausdorff=TRUE) # Some other named argments
+  )
+)
+haus.matched.shortest <- unlist(
+  mcmapply(
+    FUN=gDistance, # Function to calcuate the distance
+    matched.ma, shortest.ma, # First two arguments
+    MoreArgs=list(byid=FALSE, hausdorff=TRUE) # Some other named argments
+  )
+)
+par(mfrow=c(1,2))
+hist(haus.orig.matched, main="Hausdorff distance\nOriginal v.s. Matched", xlab="Distance", breaks="Scott")
+hist(haus.matched.shortest, main="Hausdorff distance\nMatched v.s. Shortest", xlab="Distance",  breaks="Scott")
+
+```
+
+
+# Explore User distances
+
+Look at the range of distances travelled by individual users. Is there some regularity
+
+
+# Quantify Symmetry
+
+## Individual-level symmetry
+
+Identify return journeys - two paths from a particular user where the original origins and final destiantion are the same (or close anyway). 
+ 
+## Aggregate symmetry
+
+Replicate the work in Phithakkitnukoon and Ratti (2011):
+
+Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabitant Flow Using Call Detail Records. _Journal of Advances in Information Technology_ 2(4). http://ojs.academypublisher.com/index.php/jait/article/view/jait0204239249.
+
+XXXX
