@@ -95,6 +95,17 @@ public class MapMatcher {
         graph = hopper.getGraphHopperStorage();
         LocationIndexMatch locationIndexMatch = new LocationIndexMatch(graph, (LocationIndexTree) hopper.getLocationIndex());
         mapMatching = new MapMatching(graph, locationIndexMatch, encoder);
+
+        // Configure some parameters to try to stop the algorithm breaking.
+
+        // The following attempts to fix errors like:
+        // Could not match file 58866174745e88db19b3eced744141fc.gpx. Message: Cannot find matching path! Wrong vehicle foot or missing OpenStreetMap data? Try to increase max_visited_nodes (500). Current gpx sublist:2, start list:[6547-300786  42.35620562568512,...
+        // mapMatching.setMaxVisitedNodes(1000); // Didn't work
+
+        // The following attempts to fix errors like:
+        // Could not match file 5e6c6e4d6cc9efe9e314aa77a229f88e.gpx. Message:  Result contains illegal edges. Try to decrease the separated_search_distance (300.0) or use force_repair=true. Errors:[duplicate edge::457954->304150
+        //mapMatching.setSeparatedSearchDistance(200);
+        mapMatching.setForceRepair(true);
     }
 
     /**
