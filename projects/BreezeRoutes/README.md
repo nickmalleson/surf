@@ -137,7 +137,14 @@ The logs included entries like:
     - I tried to fix this with `mapMatching.setMaxVisitedNodes(1000);` but it didn't help.
     - _I wonder if the problem is that that path extends beyond the MA area._
 
-_I've had a quick search through the Graphhopper and Map-Matching source and can't see anything immediately obvious_.
+After fixing that first bug and re-running, another 18138 files were processed, leaving **94,760 files** correctly matched in total.
+
+```
+Finished. Processed 103835 files.
+	Success:18138
+	Failed: 9075
+	Ignored: 76622
+```
 
 #### Viewing the matches
 

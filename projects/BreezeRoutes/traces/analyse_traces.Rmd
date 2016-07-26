@@ -53,10 +53,11 @@ library(rgdal)     # For reading shapefiles
 #library(MVN)      # For testing for multivariate normality (MVN)
 #library(stats)     # For a-spatial aggregatiion (aggregate)
 #library(ggplot2)   # For density scatter plot
+
 #library(hexbin)    # For hexagonal density scatter plots in ggplot
 #library(gridExtra) # To put two graphs next to each other in ggplot
-#library(plotKML)   # For reading GPX files
-#library(OpenStreetMap) # For plotting OSM basemaps
+library(plotKML)   # For reading GPX files
+library(OpenStreetMap) # For plotting OSM basemaps
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
@@ -135,7 +136,7 @@ map.trace <- function(orig, matched, short, osm=TRUE) {
   else {
     plot(orig.merc, col='blue', lwd=3)
   }
-  title(paste("Routes for\n",f), cex=0.5 )
+  #title(paste("Routes for route",N), cex=0.5 )
   plot(orig.merc, col='blue', lwd=3, add=T)
   plot(matched.merc, lwd=3, col='black', add=T)
   plot(short.merc, col='green', lwd=3, add=T)
@@ -174,8 +175,8 @@ Read all of the traces and store in memory. Only read 'matched' traces because t
 
 ```{r readTraces}
 
-#TRACES_FILE = "./traces.RData"
-#if (!file.exists(TRACES_FILE)) {
+TRACES_FILE = "./traces-temp.RData"
+if (!file.exists(TRACES_FILE)) {
   # Vectors that will contain all of the paths and associated information.
   orig <- list() 
   matched <- list()
@@ -188,8 +189,8 @@ Read all of the traces and store in memory. Only read 'matched' traces because t
   # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched 
   # (and if they've ben matched then they probably also have a companion shortest path).
   file.names <- dir(path.matched, pattern =".gpx")
-  
-  for(i in 1:100){
+ 
+  for(i in 1:1000){
   #for(i in seq(length(file.names))){
     start.time <- proc.time()[['elapsed']]
     f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
@@ -278,17 +279,17 @@ Read all of the traces and store in memory. Only read 'matched' traces because t
     warning("For some reason there are different numbers of original, matched, and shortest paths.")
   }
   
-# Save the traces
-#  save(orig, matched, shortest, orig.ma, matched.ma, shortest.ma, userid, file=TRACES_FILE)
+  # Save the traces
+  save(orig, matched, shortest, orig.ma, matched.ma, shortest.ma, userid, file=TRACES_FILE)
 
-#} else {
-#  print(paste("Loading traces from file", TRACES_FILE))
-#  load(TRACES_FILE)
-#}
+} else {
+  print(paste("Loading traces from file", TRACES_FILE))
+  load(TRACES_FILE)
+}
 
 ```
 
-Read `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(short)` shortest paths.
+Read `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
 
 # Compare path distances
 
@@ -296,7 +297,7 @@ Read `r length(matched)` matched traces, `r length(orig)` original traces, and `
 
 Look at the differences in the lengths between actual (matched) paths and shortest paths
 
-```{r compareLengths1 }
+```{r compareLengthsHist1 }
 
 orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
 matched.lengths  <- unlist(mclapply(matched.ma, FUN=gLength))
@@ -312,16 +313,27 @@ hist(shortest.lengths, breaks='Scott', xlim=xlim, ylim=ylim )
 
 ```
 
-```{r compareLengths2}
+```{r compareLengthsHist2 }
 par(mfrow=c(1,1))
-boxplot(list("Original"=orig.lengths,"Matched"=matched.lengths,"Shortest"=shortest.lengths),ylim=c(0,5000), main="Path lengths (short y axis)", ylab="Path length")
+d <- density(shortest.lengths, kernel="gaussian") # Remember first density plot so parameters can be reused
+plot(d, col="blue", main="Trip distance distribution")
+
+lines(density(orig.lengths, kernel="gaussian", bw=d$bw), col="grey")
+lines(density(matched.lengths, kernel="gaussian", bw=d$bw), col="black")
+legend("topright", c('Shortest', 'Original', 'Matched'), col=c('blue', 'grey', 'black'),lty=1)
+
+```
+
+```{r compareLengthsBoxPlot}
+par(mfrow=c(1,1))
+boxplot(list("Original"=orig.lengths,"Matched"=matched.lengths,"Shortest"=shortest.lengths),ylim=c(0,5000), main="Path distances (short y axis)", ylab="Path distance")
 ```
 
 ## Hausdorff distances
 
 Look at the Hausdorff distances between the paths. This quantifies how similar the paths are.
 
-```{r hausdorffDistances1} 
+```{r hausdorffDistancesHist1} 
 # Run using lapply as above. This is just slightly more complicated because the distance function requires two 
 # arguments as it compares two lines. mapply does this. The function comes first, followed by the arguments 
 haus.orig.matched <- unlist(
@@ -343,6 +355,15 @@ xlim=c(0,1500)
 ylim=c(0,1000)
 hist(haus.orig.matched, main="Hausdorff distance\nOriginal v.s. Matched", xlab="Distance", breaks="Scott",xlim=xlim,ylim=ylim)
 hist(haus.matched.shortest, main="Hausdorff distance\nMatched v.s. Shortest", xlab="Distance",  breaks="Scott",xlim=xlim,ylim=ylim)
+
+```
+
+```{r hausdorffDistancesHist2} 
+par(mfrow=c(1,1))
+d <- density(haus.orig.matched, kernel="gaussian")
+plot(d, main="Hausdorff distance distribution", col="grey", xlim=c(0,2000))
+lines(density(haus.matched.shortest, kernel="gaussian", bw=d$bw), col="black")
+legend("topright", c('Matched - Original','Matched - Shortest'), lty=1, col=c('grey','black'))
 
 ```
 
@@ -385,24 +406,95 @@ uid.total.dists <- data.table(
 uid.total.dists <- uid.total.dists[,list(sum(orig.lengths), sum(matched.lengths), sum(shortest.lengths), (.N) ), by=userid]
 names(uid.total.dists) <- c("userid", "orig", "matched", "shortest", "N")
 
+par(mfrow=c(1,2))
 boxplot(list(
   "Orig"=uid.total.dists$orig/uid.total.dists$N, 
   "Shortest"=uid.total.dists$matched/uid.total.dists$N,
   "Matched"=uid.total.dists$matched/uid.total.dists$N),
-  main="Average distances per user")
+  main="Average distances\ntravelled per user (m)",
+  ylab="Mean distance travelled (m)")
+boxplot(list(
+  "Orig"=uid.total.dists$orig/uid.total.dists$N, 
+  "Shortest"=uid.total.dists$matched/uid.total.dists$N,
+  "Matched"=uid.total.dists$matched/uid.total.dists$N),
+  main="(short y axis)",
+  ylim=c(0,4000))
 
 ```
 
 # Quantify Symmetry
 
-## Individual-level symmetry
-
-Identify return journeys - two paths from a particular user where the original origins and final destiantion are the same (or close anyway). 
- 
-## Aggregate symmetry
-
 Replicate the work in Phithakkitnukoon and Ratti (2011):
 
 Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabitant Flow Using Call Detail Records. _Journal of Advances in Information Technology_ 2(4). http://ojs.academypublisher.com/index.php/jait/article/view/jait0204239249.
 
-XXXX
+## Process:
+
+  - Split area into grid cells
+  - Calculate transition matrix, M, (shows flows between cells)
+  - Calculate in- and out-flows for cells. Symmetrical?
+  - Calculate symmetry of M
+  - Look at places that are not symmetrical.
+  
+**For the similarity analysis only work with the matched traces**
+  
+## Define study area
+
+Need to define the study area.
+
+```{r createSingleLine}
+# Begin by creating one massive SpatialLines object (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
+
+#  Get the Lines objects which contain multiple 'lines'
+lines.objects <- mclapply( matched , function(x) `@`(x , "lines") )
+#  Extract the individual 'lines'
+individual.lines <- mclapply( unlist( lines.objects ) , function(y) `@`(y,"Lines") )
+#  Combine them into a single SpatialLines object
+all.routes <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = matched[[1]]@proj4string )
+#all.routes.merc <- spTransform(all.routes, CRS("+init=epsg:3857"))
+
+plot(all.routes, axes=T, main="All Traces")
+
+# Useful to analyse in a GIS
+writeOGR(SpatialLinesDataFrame(all.routes, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
+
+```
+
+Make a bounding box to remove the distance traces.
+
+```{r selectByBoundingBox}
+
+# Define the study area (farily arbitrary)
+study.area.bb <- all.routes@bbox
+study.area.bb[1,1] <- -7920375 # x min
+study.area.bb[1,2] <- -7908295 # x max
+study.area.bb[2,1] <-  5206223 # y min
+study.area.bb[2,2] <-  5221410 # y max
+
+study.area.coords <- rbind(
+  cbind(study.area.bb[1,1],study.area.bb[2,1]),
+  cbind(study.area.bb[1,1],study.area.bb[2,2]),
+  cbind(study.area.bb[1,2],study.area.bb[2,2]),
+  cbind(study.area.bb[1,2],study.area.bb[2,1])
+)
+
+# Make a polygon from the bounding box
+study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = "b")))
+
+plot(all.routes.merc, axes=T, main="All Traces")
+points(study.area.coords, col="red")
+plot(study.area, col=rgb(1, 0, 0,0.3), add=T)
+
+# Get all traces that are within the bounding box
+
+XXXX HERE - i think it makes sense to first make a big SpatialLinesDataFrame with all the matched traces in. Then maybe easier for subsetting? Try the way below first...
+
+
+matched.sa <- lapply(matched, FUN = function(x){
+  if ()
+})
+plot(matched[[1]])
+
+
+
+```
