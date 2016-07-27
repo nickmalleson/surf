@@ -81,7 +81,7 @@ From inside out it does:
 # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched (and if they've ben matched then they probably also have a companion shortest path).
 all.file.names <- dir(path.matched, pattern =".gpx")
 
-N <- 50 # The number of files to map
+N <- 200 # The number of files to map
 file.names <- sample(all.file.names, size=N)
 
 for(i in seq(length(file.names))){
