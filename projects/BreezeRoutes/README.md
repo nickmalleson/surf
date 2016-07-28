@@ -150,7 +150,19 @@ Finished. Processed 103835 files.
 
 The file `traces/map_traces.Rmd` will map all of the matched and shortest traces and compare them to their originals.
 
-### Shortest path
+## 4. Analysing the Traces
 
+Finally, now that the original traces have been matched (and shortest paths have also been calculated) we can do some analysis on the traces.
 
-XXXX SHORTEST PATH
+Recap about where the data are:
+
+  - The traces are on the server in: `~/runkeeper/mapmatching-traces/`. Inside that there are three directories:
+    - `gpx` - the subset of original data that made it through the initial filtering as gpx
+    - `gpx-matched` - the matched pathes
+    - `gpx-shortest` - the equivalent shortest paths
+
+The analysis is now done in R, see: **[BreezeRoutes/traces/analyse_traces.Rmd](./traces/analyse_traces.Rmd)**
+
+The html file shows what was done: **[BreezeRoutes/traces/analyse_traces.html](./traces/analyse_traces.html)**
+
+See the Rmd file for the remaining analysis.

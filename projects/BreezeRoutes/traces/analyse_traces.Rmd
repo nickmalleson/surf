@@ -62,7 +62,7 @@ library(rgdal)     # For reading shapefiles
 #library(gridExtra) # To put two graphs next to each other in ggplot
 library(plotKML)   # For reading GPX files
 library(OpenStreetMap) # For plotting OSM basemaps
-Sys.setenv(MC_CORES=8) # Run on 8 cores
+Sys.setenv(MC_CORES=4) # Run on n cores
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
@@ -433,8 +433,8 @@ haus.matched.shortest <- unlist(
   )
 )
 par(mfrow=c(1,2))
-xlim=c(0,1500)
-ylim=c(0,1000)
+xlim=c(0,1000)
+ylim=c(0,10000)
 hist(haus.orig.matched, main="Hausdorff distance\nOriginal v.s. Matched", xlab="Distance", breaks="Scott",xlim=xlim,ylim=ylim)
 hist(haus.matched.shortest, main="Hausdorff distance\nMatched v.s. Shortest", xlab="Distance",  breaks="Scott",xlim=xlim,ylim=ylim)
 
@@ -500,7 +500,7 @@ boxplot(list(
   "Shortest"=uid.total.dists$matched/uid.total.dists$N,
   "Matched"=uid.total.dists$matched/uid.total.dists$N),
   main="(short y axis)",
-  ylim=c(0,4000))
+  ylim=c(0,3000))
 
 ```
 
@@ -524,34 +524,48 @@ Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabita
 
 Need to define the study area.
 
+Begin by creating single SpatialLines objects from the discrete Lines (traces).
+
 ```{r createSingleLine}
-# Begin by creating one massive SpatialLines object (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
+# Use a consistent projection
+PROJ4STRING <- matched[[1]]@proj4string
+
+# Begin by creating a single SpatialLines object of all matched lines (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
 
 #  Get the Lines objects which contain multiple 'lines'
-lines.objects <- mclapply( matched , function(x) `@`(x , "lines") )
-#  Extract the individual 'lines'
-individual.lines <- mclapply( unlist( lines.objects ) , function(y) `@`(y,"Lines") )
-#  Combine them into a single SpatialLines object
-all.routes <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = matched[[1]]@proj4string )
-#all.routes.merc <- spTransform(all.routes, CRS("+init=epsg:3857"))
+lines.objects <- unlist( mclapply( matched , function(x) `@`(x , "lines") ) )
+# Give each an ID based on its index
+for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
 
-plot(all.routes, axes=T, main="All Traces")
+# Make a SpatialLines object from all of those lines
+all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
+
+#  Also make one bg SpatialLies object for mapping. Begin by extracting the individual 'lines'
+individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+#  Combine them into a single SpatialLines object. This is good for quick plotting etc.
+all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
+
+plot(all.routes.oneline, axes=T, main="All Traces")
 
 # Useful to analyse in a GIS
-writeOGR(SpatialLinesDataFrame(all.routes, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
+writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
 
 ```
 
-Make a bounding box to remove the distance traces.
+Now define the study are (fairly arbitrary)
 
-```{r selectByBoundingBox}
+```{r defineStudyArea}
 
 # Define the study area (farily arbitrary)
-study.area.bb <- all.routes@bbox
-study.area.bb[1,1] <- -7920375 # x min
-study.area.bb[1,2] <- -7908295 # x max
-study.area.bb[2,1] <-  5206223 # y min
-study.area.bb[2,2] <-  5221410 # y max
+study.area.bb <- all.routes.oneline@bbox
+study.area.bb[1,1] <- -71.2 # x min
+study.area.bb[1,2] <- -71.0 # x max
+study.area.bb[2,1] <-  42.26 # y min
+study.area.bb[2,2] <-  42.42  # y max
+#study.area.bb[1,1] <- -7920375 # x min
+#study.area.bb[1,2] <- -7908295 # x max
+#study.area.bb[2,1] <-  5206223 # y min
+#study.area.bb[2,2] <-  5221410 # y max
 
 study.area.coords <- rbind(
   cbind(study.area.bb[1,1],study.area.bb[2,1]),
@@ -561,22 +575,128 @@ study.area.coords <- rbind(
 )
 
 # Make a polygon from the bounding box
-study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = "b")))
+study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = "b")), proj4string = PROJ4STRING)
 
-plot(all.routes.merc, axes=T, main="All Traces")
+par(mfrow=c(1,1))
+plot(all.routes.oneline, axes=T, main="All Traces and the Study Area")
 points(study.area.coords, col="red")
 plot(study.area, col=rgb(1, 0, 0,0.3), add=T)
 
-# Get all traces that are within the bounding box
+```
 
-XXXX HERE - i think it makes sense to first make a big SpatialLinesDataFrame with all the matched traces in. Then maybe easier for subsetting? Try the way below first...
+## Make the grid (will become the transition matrix)
 
+Now create a regular grid that covers the study area. This will be used to create the transition matrix
 
-matched.sa <- lapply(matched, FUN = function(x){
-  if ()
-})
-plot(matched[[1]])
+```{r makeGridForTransitionMatrix, fig.width=15}
 
+# The number of cells per row or column
+num.cells <- 10
+total.cells <- num.cells ** 2
 
+# Create the grids - adapted from Brunsdon & Comber (2015, p150)
+cell.width <-  (study.area.bb[1,2] - study.area.bb[1,1]) / num.cells
+cell.height <- (study.area.bb[2,2] - study.area.bb[2,1]) / num.cells
+
+#cell.areas <- c(cell.areas, (cell.width * cell.height) ) # Also remember the cell area for later
+
+centre.x <- study.area.bb[1,1] + ( cell.width / 2 )
+centre.y <- study.area.bb[2,1] + ( cell.height / 2 )
+
+# Make the grid
+grd <- GridTopology(
+  cellcentre.offset = c(centre.x, centre.y), # No offset, the grid will just cover all the points
+  cellsize = c(cell.width, cell.height),
+  cells.dim = c(num.cells, num.cells)
+  )
+
+# Convert it into a polygons data frame, and give each cell it's x and y locations in the matrix (-1 initially)
+grid <- SpatialPolygonsDataFrame(
+  as.SpatialPolygons.GridTopology(grd),
+  data = data.frame("CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),
+  match.ID = FALSE
+  )
+proj4string(grid) <- PROJ4STRING
+#names(grid) <- "CellID" # Name the ID column
+# Set the ID properly
+cellcount <- 1
+for (rowcount in seq(1,num.cells)) {
+  for (colcount in seq(1,num.cells)) {
+    grid@data[cellcount,]$CellX <- rowcount
+    grid@data[cellcount,]$CellY <- colcount
+    cellcount <- cellcount + 1
+  }
+}
+
+par(mfrow=c(1,2))
+plot(grid, border='blue', main="Routes and the grid")
+plot(all.routes.oneline, add=T)
+
+plot(grid, border='blue', main="Grid labels")
+polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
 
 ```
+
+## Calculate transition matrix, M
+
+Process:
+
+ 1. Iterate over each cell
+    1. Clip the traces within the cell
+    1. Iterate over each (sub) trace
+      - Identify one of three possible conditions
+
+      1. The line passes through the cell
+         - Increment the _departure_ count for the cell that the line _came from_
+         - Increment the _arrival_ count for the cell that the line is _going to_
+      1. The line begins in the cell
+         - Increment the _arrival_ count for the cell that the line is _going to_
+      1. The line ends in the cell
+         - Increment the _departure_ count for the cell that the line _came from_
+
+_The code below is for testing the aggorithm_
+
+```{r makeTrasitionMatrixTest, eval=FALSE}
+
+
+# Make a tiny grid for testing
+num.cells <- 10
+total.cells <- num.cells ** 2
+cell.width <-  (71.07-71.05) / num.cells
+cell.height <- (42.37-42.344) / num.cells
+centre.x <- -71.07 + ( cell.width / 2 )
+centre.y <- 42.344 + ( cell.height / 2 )
+grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
+grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
+proj4string(grid2) <- PROJ4STRING
+# Set the ID properly
+cellcount <- 1
+for (rowcount in seq(1,num.cells)) {
+  for (colcount in seq(1,num.cells)) {
+    grid2@data[cellcount,]$CellX <- rowcount
+    grid2@data[cellcount,]$CellY <- colcount
+    cellcount <- cellcount + 1
+  }
+}
+
+# Temporarily choose a few routes for testing
+par(mfrow=c(1,1))
+#plot(all.routes.oneline,axes=T,xlim=c(-71.07,-71.05), ylim=c(42.343,42.37), col='gray')
+plot(grid2, border='blue', axes=T)
+plot(all.routes.oneline,col='gray',add=T)
+plot(all.routes[2,],col='blue',add=T)
+plot(all.routes[4,],col='green',add=T)
+plot(all.routes[5,],col='orange',add=T)
+plot(grid2, border='blue', add=T)
+
+
+test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
+plot(test.routes)
+plot(grid2, add=T)
+
+
+
+  
+
+```
+
