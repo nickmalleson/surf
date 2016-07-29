@@ -62,7 +62,8 @@ library(rgdal)     # For reading shapefiles
 #library(gridExtra) # To put two graphs next to each other in ggplot
 library(plotKML)   # For reading GPX files
 library(OpenStreetMap) # For plotting OSM basemaps
-Sys.setenv(MC_CORES=4) # Run on n cores
+Sys.setenv(MC_CORES=4) # Run on n cores (I'm not sure which of these
+options("mc.cores"=4L) # is correct).
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
@@ -374,6 +375,9 @@ userid <- userid[-bad.indices]
 
 ```
 
+After filtering, there are `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
+
+
 # Compare path distances
 
 ## Actual paths v.s. shortest path
@@ -653,6 +657,8 @@ Process:
          - Increment the _arrival_ count for the cell that the line is _going to_
       1. The line ends in the cell
          - Increment the _departure_ count for the cell that the line _came from_
+      1. The line is wholly contained within the cell
+         - XXXX WHAT DO DO?! Check Ratti paper
 
 _The code below is for testing the aggorithm_
 
@@ -690,13 +696,133 @@ plot(all.routes[5,],col='orange',add=T)
 plot(grid2, border='blue', add=T)
 
 
-test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
-plot(test.routes)
-plot(grid2, add=T)
+plot(grid2, border='blue', main="Grid labels")
+polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
 
 
+#test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
+#plot(test.routes)
+#plot(grid2, add=T)
 
+
+```
+
+```{r doIT}
+
+# This function does most of the work. It takes a cell (a SpatialPolygonsDataFrame), calculates whether
+# it has lines passing through it, and returns the cell with this information in a list
+f <- function(cell, the.traces, plot=TRUE) {
   
+  # Remember the number of lines entering and leaving the cell, and their direction.
+  # Store for values for each one, representing whether the line has crossed the n,s,e, or w boundary
+  came.from <- c(0,0,0,0) # A line entered this cell
+  going.to <- c(0,0,0,0) # A line is leaving this cell
+  
+  # Also useful to remember the number of lines starting and finishing here. Don't need direction with 
+  # these though as this is captured in the vectors above
+  starting.count <- 0
+  ending.count   <- 0
+  wholly.contained <- 0 # The line starts and ends in the cell without going through another cell.
+  
+
+  # Clip the lines in this cell
+  #cell<- the.grid[cellid,]
+  lines.in.cell <- gIntersection(cell,the.traces, byid=TRUE) # Creates a list of SpatialLines objects
+  
+  if (plot) {
+    plot(cell,border='gray', add=T) # for debug
+    #plot(lines.in.cell, add=T,col='red') # for debug
+  }
+  
+  #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
+  if (!is.null(lines.in.cell)) { # There are some lines in the cell
+    for (lineno in seq(1,length(lines.in.cell))) {
+      # Note that if a line leaves and re-enters the cell then its SpatialLines object will have two discrete parts,
+      # although it is stored as a single feature. This is pretty unusual but needs to be managed.
+      # The next line handles this. It's horrible but works.
+      for (line in lines.in.cell[lineno,]@lines[[1]]@Lines) {
+        #print(paste("\tline:", lineno))
+        # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
+        # (old way before I notices that lines can leave and re-enter the cell)
+        #line <- lines.in.cell[lineno]
+        #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
+        coords.list <- line@coords
+        #print(coords.list)
+        coords <- data.frame(coords.list)
+        #plot(lines.in.cell[lineno],add=T,col='green') # for debug
+        # Define start and end points and work out whether they're touching the cell boundary or not
+        start <- SpatialPoints(coords[1,], proj4string = PROJ4STRING)
+        end   <- SpatialPoints(coords[nrow(coords),], proj4string = PROJ4STRING)
+        start.within <- gContains(cell, start) # Is the start point *inside* the cell? Has to be wholly inside,
+        end.within   <- gContains(cell, end)   # not touching the border.
+        
+        # Work out which of the three conditions we have here (passing through, starting, ending)
+        
+        if (!start.within & !end.within) { # PASES THROUGH
+          # If neither the start point nor end point are within the cell then the line passes through it.
+          if (plot) { plot(cell,border='blue', add=T)}
+          # Work out which compass direction the cell has come from and where it is going to 
+          #came.from[XXXX] <- came.from[XXXX] + 1
+          #going.to[XXXX]  <- going.to[XXXX] + 1
+          
+  
+        } else if (start.within & end.within) { # WHOLLY CONTAINED
+          # If both start and end points are within the cell then the line is wholly contained within the cell
+          wholly.contained <- wholly.contained + 1
+          if (plot) {plot(cell,col='red', add=T) }
+          
+        } else if (start.within) { # BEGINS
+          # If the start point is within the cell then the line begins here
+          if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
+          # Work out which compass direction the cell is going to
+          #going.to[XXXX] <- going.to[XXXX] + 1
+          starting.count <- starting.count + 1
+          
+        } else if (end.within) { # ENDS
+          # If the end point is within the cell then the line ends here
+          if (plot) { plot(cell, col=rgb(1,0,0,0.5), add=T) }
+          # Work out which compass direction the cell has come from
+          #came.from[XXXX] <- came.from[XXXX] + 1
+          ending.count <- ending.count + 1
+        }
+      
+      } # for linesegments
+      
+    }# for lines in cell
+
+  } # if !is.null (the cell has lines)
+ 
+  # Return the cell, and all the information about lines passing through it
+  return(list(
+    "cell"=cell,
+    "came.from"=came.from,
+    "going.to"=going.to,
+    "starting.count"=starting.count,
+    "ending.count"=ending.count,
+    "wholly.contained"=wholly.contained)
+  )
+}
+
+
+
+make.transition.matrix <- function(the.grid, the.traces, plot=TRUE) {
+  
+  if (plot) {
+    plot(the.grid, border='black')
+    #polygonsLabel(the.grid, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
+    lines(the.traces)
+  }
+  
+  # First make a list of the individual cells 
+  cells <- lapply(seq(1,length(the.grid)), FUN = function(i,g) { return(g[i,]) }, g=the.grid)
+  
+  # Now have each cell find out about the lines passing through it. 
+  # This will return a list of cells and counts of relevant lines.
+  results.cells <- lapply(cells, FUN=f, the.traces=the.traces, plot=plot)
+           
+  #XXXX HERE
+  
+} # function make.transition.matrix
 
 ```
 
