@@ -899,36 +899,38 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   ending.count   <- 0
   wholly.contained <- 0 # The line starts and ends in the cell without going through another cell.
   
-  # Clip the lines in this cell
   # First find the traces that intersect the cell
   intersecting <- gIntersects(the.traces, cell, byid = TRUE) 
   
-  # Now intersect those traces. For some reason gIntersection sometimes breaks whe the intersecting
-  # lines are passed directly (as below) so instead pass each line individuall in a separate call
-  #lines.in.cell <- gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+  # Only continue if some traces intersect
+  if (length(which(intersecting))>0) {
+    
+    # Clip the lines in this cell. For some reason gIntersection sometimes breaks whe the intersecting
+    # lines are passed directly (as below) so instead pass each line individuall in a separate call
+    #lines.in.cell <- gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+    
+    list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
+                            FUN = function(i,g) { return(g[i,]) }, g=the.traces[which(intersecting)])
+    lines.in.cell <- lapply(list.of.cells, FUN=gIntersection, spgeom2=cell, byid=TRUE)
+      #tryCatch(
+      #{
+      #  gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+      #}, 
+      #error = function(e) {
+      #  # Not sure why this happens. By putting stop() here it means I can debug this environment, 
+      #  # not the ones lower-down (which aren't causing the problem)
+      #  warning(e)
+      #  stop()
+      #}
+      #) # tryCatch
   
-  list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
-                          FUN = function(i,g) { return(g[i,]) }, g=the.traces[which(intersecting)])
-  lines.in.cell <- lapply(list.of.cells, FUN=gIntersection, spgeom2=cell, byid=TRUE)
-    #tryCatch(
-    #{
-    #  gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
-    #}, 
-    #error = function(e) {
-    #  # Not sure why this happens. By putting stop() here it means I can debug this environment, 
-    #  # not the ones lower-down (which aren't causing the problem)
-    #  warning(e)
-    #  stop()
-    #}
-    #) # tryCatch
-
-  if (plot) {
-    plot(cell,border='gray', add=T) # for debug
-    #plot(lines.in.cell, add=T,col='red') # for debug
-  }
+    if (plot) {
+      plot(cell,border='gray', add=T) # for debug
+      #plot(lines.in.cell, add=T,col='red') # for debug
+    }
   
   #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
-  if (!is.null(lines.in.cell)) { # There are some lines in the cell
+  #if (!is.null(lines.in.cell)) { # There are some lines in the cell - NOT NEEDED NOW, CHECKED EARLIER
     for (lineno in seq(1,length(lines.in.cell))) {
       # Check for things that aren't lines. Sometimes the intersection creates points, not lines. Not sure 
       # why but this might mess up the counting later.
@@ -997,9 +999,11 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
       
       } # if class(lines)==SpatialLines
       
-    }# for lines in cell
+    #}# for lines in cell
 
   } # if !is.null (the cell has lines)
+  
+  } # if intersecting > 0
   
   # Run the garbage collector occasionally. This might (?) help with the memory explosion that mclapply
   # causes (which is used to execute this function over all cells)
@@ -1050,7 +1054,7 @@ make.transition.matrix <- function(the.grid, the.traces, plot=TRUE, multithread=
 
 ```
 
-Calculate the transition matrix! This will take some time, use loads of memory, and heat up your computer. Good luck.
+Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode), and heat up your computer. Good luck.
 
 ```{r calculateTrans, eval=FALSE}
 
