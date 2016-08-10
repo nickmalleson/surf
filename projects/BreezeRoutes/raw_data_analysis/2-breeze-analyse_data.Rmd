@@ -195,6 +195,12 @@ axis(1, at=1:nrow(month.counts), labels=month.counts$month)
 
 plot(hour.counts, main = "Trips per hour")
 
+# Also make a pdf of the trips per hour for the paper (width is A4 landscape width in inches)
+pdf(file="trips-per-hour.pdf", width = 11.69, height = 5 )
+par(mfrow=c(1,1))
+plot(hour.counts, main = "Trips per hour", xlab="Hour", ylab="Number of Trips", type='o')
+dev.off()
+
 ```
 
 Note that there are no trips in May and June. Some of these were removed at the beginning because there were so few trips in those months that I have assumed the data were incomplete.
@@ -399,11 +405,15 @@ plot(x=d.f3$steps, y=d.f3$elapsedTimeMin, xlim = c(0,2000), xlab="Steps", ylab="
 
 plot1 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex()
 grid.arrange(plot1, ncol=1, nrow=1)
+
+# Also make a pdfx
+ggsave("filter3-steps_vs_eapsed_time.pdf")
+
 #plot2 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + xlim(0,10000)
 #grid.arrange(plot1, plot2, ncol=1, nrow=2)
 ```
 
-After filtering on the elapsed time, this leaves `r nrow(d.f3)` traces.
+After filtering on the number of steps, this leaves `r nrow(d.f3)` traces.
 
 
 ### Filtering 4 - ToDo: unrealistic steps v.s. elapsed time

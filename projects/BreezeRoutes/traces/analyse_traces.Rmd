@@ -195,8 +195,8 @@ if (!file.exists(TRACES_FILE)) {
   # (and if they've ben matched then they probably also have a companion shortest path).
   file.names <- dir(path.matched, pattern =".gpx")
  
-  for(i in 1:1000){
-  #for(i in seq(length(file.names))){
+  #for(i in 1:1000){
+  for(i in seq(length(file.names))){
     start.time <- proc.time()[['elapsed']]
     f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
     f.orig <-    paste(path.org,      f, ".gpx", sep="")
@@ -327,14 +327,15 @@ summary(diff)
 summary(abs.diff)
 summary(rel.diff)
 
-
-par(mfrow=c(5,2))
+# Make margins smaller temporarily
+margins <- par("mar")
+par(mfrow=c(5,2), mar = rep(2, 4))
 boxplot(diff, main="Difference between matched\nand original paths) (m)")
-boxplot(diff, main="(short axxis)", ylim = c(-500,400))
+boxplot(diff, main="(short axis)", ylim = c(-500,400))
 boxplot(abs.diff, main="Abslute Difference (m)")
-boxplot(abs.diff, main="(short axxis)", ylim = c(0,1000))
+boxplot(abs.diff, main="(short axis)", ylim = c(0,1000))
 boxplot(rel.diff, main="Abslute Relative (percentage) Difference (m)")
-boxplot(rel.diff, main="(short axxis)", ylim = c(0,200))
+boxplot(rel.diff, main="(short axis)", ylim = c(0,200))
 
 hist(abs.diff, breaks="Scott", main="Histogram of absolute difference", xlab="Difference (m)")
 abline(v=mean(abs.diff)+1*sd(abs.diff), col="red")
@@ -351,6 +352,8 @@ abline(v=quantile(rel.diff)[4]+(1.5*IQR(rel.diff)), col="blue")
 hist(rel.diff, breaks="Scott", xlim=c(0,200), main="(short axis)", xlab="Percentage Difference (m)")
 abline(v=mean(rel.diff)+1*sd(rel.diff), col="red")
 abline(v=quantile(rel.diff)[4]+(1.5*IQR(rel.diff)), col="blue")
+
+par(mar=margins)
 
 ```
 
@@ -373,14 +376,50 @@ matched.ma <- matched.ma[-bad.indices]
 shortest.ma <- shortest.ma[-bad.indices]
 userid <- userid[-bad.indices]
 
+# Delete old variables
+rm(abs.diff, bad.indices, diff, rel.diff)
+
 ```
 
 After filtering, there are `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
 
+This is a god point to create a single SpatialLines object from the discrete Lines (traces).
+
+```{r createSingleLine}
+# Use a consistent projection
+PROJ4STRING <- matched[[1]]@proj4string
+
+# Begin by creating a single SpatialLines object of all matched lines (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
+
+#  Get the Lines objects which contain multiple 'lines'
+lines.objects <- unlist( mclapply( matched , function(x) `@`(x , "lines") ) )
+# Give each an ID based on its index
+for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
+
+# Make a SpatialLines object from all of those lines
+all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
+
+#  Also make one bg SpatialLines object for mapping. Begin by extracting the individual 'lines'
+individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+#  Combine them into a single SpatialLines object. This is good for quick plotting etc.
+all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
+#writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(c(1)) ), dsn=".", layer="all_routes_oneline", driver="ESRI Shapefile")
+rm(individual.lines, lines.objects)
+
+par(mfrow=c(1,1))
+plot(all.routes.oneline, axes=T, main="All Traces")
+
+# Useful to analyse in a GIS
+writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
+
+```
+
 
 # Compare path distances
 
-## Actual paths v.s. shortest path
+## Aggregate comparisons
+
+### Actual paths v.s. shortest path
 
 Look at the differences in the lengths between actual (matched) paths and shortest paths. The matched and original are very similar, and the shortest are shorter :-).
 
@@ -415,7 +454,7 @@ par(mfrow=c(1,1))
 boxplot(list("Original"=orig.lengths,"Matched"=matched.lengths,"Shortest"=shortest.lengths),ylim=c(0,5000), main="Path distances (short y axis)", ylab="Path distance")
 ```
 
-## Hausdorff distances
+### Hausdorff distances
 
 Look at the Hausdorff distances between the paths. This quantifies how similar the paths are.
 
@@ -458,6 +497,101 @@ par(mfrow=c(1,1))
 boxplot(list("Matched<->Original"=haus.orig.matched, "Matched<->Shortest"=haus.matched.shortest), main="Hausdorff Distances (short y axis)",ylim=c(0,1000))
 
 ```
+
+
+
+## Disaggregate (shortest-matched comparisons)
+
+### Difference between shortest and matched (normalised)
+
+Calculate the normalised difference between the shortest and matched paths. The plot the distribution of these differences.
+
+```{r compareDisaggDistsances, fig.width=10, fig.height=10 }
+
+absolute.diffs <- matched.lengths - shortest.lengths
+# Normalise to range 0->1
+absolute.diffs.n1 <- ( absolute.diffs - min(absolute.diffs) ) / (max(absolute.diffs) - min(absolute.diffs))
+# Normalise by dividing by the shortest path
+absolute.diffs.n2 <- absolute.diffs / shortest.lengths
+
+par(mfrow=c(2,2))
+hist(absolute.diffs.n1, breaks="Scott", xlab="Difference", main="Absolute trip distance differences.\nNormalised to range 0->1 ")
+hist(absolute.diffs.n1, breaks="Scott", xlab="Difference", xlim=c(0.05,0.15), main="(shorter x axis)" )
+
+hist(absolute.diffs.n2, breaks="Scott", xlab="Difference", main="Absolute trip distance differences.\nNormalised by dividing by shortest path")
+hist(absolute.diffs.n2, breaks="Scott", xlab="Difference", xlim=c(0,2), main="(shorter x axis)" )
+
+```
+
+Try plotting the most different matched routes - those that are Q3+1.5*IQR meters (`r quantile(absolute.diffs)[4] + ( 2 * IQR(absolute.diffs))`m) longer than their shortest counterparts)
+
+```{r visualiseDifferentPaths, fig.width=15}
+par(mfrow=c(1,2))
+
+plot(all.routes, xlim=c(-71.2,-71.0), ylim=c(42.2,42.45), 
+     main="Matched routes with very different \n shortest paths (absolute difference)")
+plot(all.routes[ which(absolute.diffs>quantile(absolute.diffs)[4]+(2*IQR(absolute.diffs)) ) ],
+    col="blue", add=T )
+
+plot(all.routes,  xlim=c(-71.2,-71.0), ylim=c(42.2,42.45), 
+     main="(Normalised by shortest path)")
+plot(all.routes[ which(absolute.diffs.n2>quantile(absolute.diffs.n2)[4]+(2*IQR(absolute.diffs.n2)) ) ],
+     col="blue", add=T )
+
+```
+
+_Nothing particularly interesting there so far .._
+
+### Hausdorff and actual difference in distances travelled
+
+Finally compare the Hausdorff and relative distances travelled in one plot (for the paper).
+
+```{r hausdorff.and.actual.difference, fig.height=15}
+
+par(mfrow=c(2,1))
+
+# Actual distance
+
+rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3000), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace) (m)")
+
+# Hausdorff
+hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path differences", xlab="Hausdorff difference (matched - shortest)")
+
+# Both on same graph
+
+#d <- density(haus.matched.shortest, kernel="gaussian")
+#plot(d, col="blue", xlim=c(0,1500), ylim=c(0,0.006), main="")
+#lines(density(abs.diff.distance, kernel="gaussian", bw=d$bw), col="black")
+#legend("topright", c('Hausdorff Distance','Actual Difference'), lty=1, col=c('blue','black'))
+
+# Do a pdf for the paper
+pdf(file="hausdorff_and_actual_difference.pdf", width = 7, height = 11.69)
+par(mfrow=c(2,1))
+rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3000), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace) (m)")
+hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path difference", xlab="Hausdorff difference (m)")
+dev.off()
+
+
+```
+
+## Similarity metrics
+
+Look at the number of road segments that are shared by each path. To do this:
+
+ 1. Create a vector of all segments.
+ 1. For each path, create a vector (or string) that describes whether (1) or not (0) the path contains a particular segment. Most entries will be 0. This is similar to the vectorisation performed in natural language processing.
+
+XXXX
+
+ - graph similarity metrics - e.g. convert to string (0,1) and compare strings (lots of metrics available)
+ 
+
+
+
+
+
 
 # Explore User distances
 
@@ -508,6 +642,7 @@ boxplot(list(
 
 ```
 
+
 # Quantify Symmetry
 
 Replicate the work in Phithakkitnukoon and Ratti (2011):
@@ -526,37 +661,7 @@ Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabita
   
 ## Define study area
 
-Need to define the study area.
-
-Begin by creating single SpatialLines objects from the discrete Lines (traces).
-
-```{r createSingleLine}
-# Use a consistent projection
-PROJ4STRING <- matched[[1]]@proj4string
-
-# Begin by creating a single SpatialLines object of all matched lines (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
-
-#  Get the Lines objects which contain multiple 'lines'
-lines.objects <- unlist( mclapply( matched , function(x) `@`(x , "lines") ) )
-# Give each an ID based on its index
-for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
-
-# Make a SpatialLines object from all of those lines
-all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
-
-#  Also make one bg SpatialLies object for mapping. Begin by extracting the individual 'lines'
-individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
-#  Combine them into a single SpatialLines object. This is good for quick plotting etc.
-all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
-
-plot(all.routes.oneline, axes=T, main="All Traces")
-
-# Useful to analyse in a GIS
-writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
-
-```
-
-Now define the study are (fairly arbitrary)
+Need to define the study area (fairly arbitrary)
 
 ```{r defineStudyArea}
 
@@ -579,7 +684,9 @@ study.area.coords <- rbind(
 )
 
 # Make a polygon from the bounding box
-study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = "b")), proj4string = PROJ4STRING)
+study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = 1)), proj4string = PROJ4STRING)
+
+#writeOGR(SpatialPolygonsDataFrame(study.area, data=data.frame(c(1))) , dsn = "./", layer="study_area", driver="ESRI Shapefile")
 
 par(mfrow=c(1,1))
 plot(all.routes.oneline, axes=T, main="All Traces and the Study Area")
@@ -617,10 +724,11 @@ grd <- GridTopology(
 # Convert it into a polygons data frame, and give each cell it's x and y locations in the matrix (-1 initially)
 grid <- SpatialPolygonsDataFrame(
   as.SpatialPolygons.GridTopology(grd),
-  data = data.frame("CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),
+  data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),
   match.ID = FALSE
   )
 proj4string(grid) <- PROJ4STRING
+rm(grd)
 #names(grid) <- "CellID" # Name the ID column
 # Set the ID properly
 cellcount <- 1
@@ -628,6 +736,7 @@ for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
     grid@data[cellcount,]$CellX <- rowcount
     grid@data[cellcount,]$CellY <- colcount
+    grid@data[cellcount,]$ID <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -660,10 +769,9 @@ Process:
       1. The line is wholly contained within the cell
          - XXXX WHAT DO DO?! Check Ratti paper
 
-_The code below is for testing the aggorithm_
+_The code below is for testing the aggorithm, it defines a few test routes and makes a small grid_
 
 ```{r makeTrasitionMatrixTest, eval=FALSE}
-
 
 # Make a tiny grid for testing
 num.cells <- 10
@@ -673,7 +781,7 @@ cell.height <- (42.37-42.344) / num.cells
 centre.x <- -71.07 + ( cell.width / 2 )
 centre.y <- 42.344 + ( cell.height / 2 )
 grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
-grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
+grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
 proj4string(grid2) <- PROJ4STRING
 # Set the ID properly
 cellcount <- 1
@@ -681,6 +789,7 @@ for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
     grid2@data[cellcount,]$CellX <- rowcount
     grid2@data[cellcount,]$CellY <- colcount
+    grid2@data[cellcount,]$ID <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -700,18 +809,84 @@ plot(grid2, border='blue', main="Grid labels")
 polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
 
 
-#test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
-#plot(test.routes)
-#plot(grid2, add=T)
+test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
+plot(grid2)
+plot(test.routes, add=T)
 
 
 ```
 
-```{r doIT}
+The following function `make.transition.matrix` (and its helper functions) do the analysis. The function runs over each cell, finds routes passing through it, and returns a list of cells with the following properties:
 
-# This function does most of the work. It takes a cell (a SpatialPolygonsDataFrame), calculates whether
-# it has lines passing through it, and returns the cell with this information in a list
-f <- function(cell, the.traces, plot=TRUE) {
+
+
+```{r defineTransitionMatrixFunctions}
+
+make.line <- function(x1, x2, y1, y2, p4s) {
+  # This does Line -> Lines -> SpatialLines (overkill right?!?)
+  return(
+    SpatialLines(
+      list(Lines(
+        list(Line( cbind(c(x1, x2), c(y1, y2)) )),
+        ID="a"
+      )),
+      proj4string = p4s
+    )
+  )
+}
+
+#' Takes a cell and a point and works out whether the point lies on the north, south, east or west
+#' corner of the cell (or none of those)
+#' 
+#' @param the.cell 
+#' @param the.point
+#' @return a vector of size four with TRUE/FALSE for whether the point lies on the north, east,
+#' south, or west edge of the cell.
+find.nsew <- function(the.cell,the.point) {
+  # Make lines for the four squares of the cell to calculate the intersect.
+  north <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','max'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  east <- make.line(
+    the.cell@bbox['x','max'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  south <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','min'],
+    the.point@proj4string)
+  west <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','min'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  return( c(
+    gIntersects(north,the.point),
+    gIntersects(east,the.point),
+    gIntersects(south,the.point),
+    gIntersects(west,the.point)
+    #the.cell@bbox['y','max']==the.point@bbox['y','max'], #N
+    #the.cell@bbox['y','min']==the.point@bbox['y','min'], #S
+    #the.cell@bbox['x','max']==the.point@bbox['x','max'], #E
+    #the.cell@bbox['x','min']==the.point@bbox['y','min']  #W
+    ) )
+}
+
+#' Takes a cell (a SpatialPolygonsDataFrame), calculates whether it has lines passing through it,
+#' and returns the cell with this information in a list
+#' 
+#' @param cell The cell to analyse
+#' @param the.traces All of the traces that might pass through the cell
+#' @param run.gc Whether to run gc() before returning
+#' @return A list, with the following items
+#'   "cell": the cell object itself (a SpatialPolygonsDataFrame),
+#'   "came.from": a vector of size four, showing the number of traces that entered this cell from the 
+#'       north, east, south, west directions.
+#'   "going.to": as with 'came.from', but for traces leaving this cell
+#'   "starting.count": the number of traces that begin in this cell
+#'   "ending.count": the number of traces that end in this cell
+#'   "wholly.contained": the number of traces that are wholly contained in this cell
+calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   
   # Remember the number of lines entering and leaving the cell, and their direction.
   # Store for values for each one, representing whether the line has crossed the n,s,e, or w boundary
@@ -724,11 +899,29 @@ f <- function(cell, the.traces, plot=TRUE) {
   ending.count   <- 0
   wholly.contained <- 0 # The line starts and ends in the cell without going through another cell.
   
-
   # Clip the lines in this cell
-  #cell<- the.grid[cellid,]
-  lines.in.cell <- gIntersection(cell,the.traces, byid=TRUE) # Creates a list of SpatialLines objects
+  # First find the traces that intersect the cell
+  intersecting <- gIntersects(the.traces, cell, byid = TRUE) 
   
+  # Now intersect those traces. For some reason gIntersection sometimes breaks whe the intersecting
+  # lines are passed directly (as below) so instead pass each line individuall in a separate call
+  #lines.in.cell <- gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+  
+  list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
+                          FUN = function(i,g) { return(g[i,]) }, g=the.traces[which(intersecting)])
+  lines.in.cell <- lapply(list.of.cells, FUN=gIntersection, spgeom2=cell, byid=TRUE)
+    #tryCatch(
+    #{
+    #  gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+    #}, 
+    #error = function(e) {
+    #  # Not sure why this happens. By putting stop() here it means I can debug this environment, 
+    #  # not the ones lower-down (which aren't causing the problem)
+    #  warning(e)
+    #  stop()
+    #}
+    #) # tryCatch
+
   if (plot) {
     plot(cell,border='gray', add=T) # for debug
     #plot(lines.in.cell, add=T,col='red') # for debug
@@ -737,60 +930,80 @@ f <- function(cell, the.traces, plot=TRUE) {
   #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
   if (!is.null(lines.in.cell)) { # There are some lines in the cell
     for (lineno in seq(1,length(lines.in.cell))) {
-      # Note that if a line leaves and re-enters the cell then its SpatialLines object will have two discrete parts,
-      # although it is stored as a single feature. This is pretty unusual but needs to be managed.
-      # The next line handles this. It's horrible but works.
-      for (line in lines.in.cell[lineno,]@lines[[1]]@Lines) {
-        #print(paste("\tline:", lineno))
-        # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
-        # (old way before I notices that lines can leave and re-enter the cell)
-        #line <- lines.in.cell[lineno]
-        #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
-        coords.list <- line@coords
-        #print(coords.list)
-        coords <- data.frame(coords.list)
-        #plot(lines.in.cell[lineno],add=T,col='green') # for debug
-        # Define start and end points and work out whether they're touching the cell boundary or not
-        start <- SpatialPoints(coords[1,], proj4string = PROJ4STRING)
-        end   <- SpatialPoints(coords[nrow(coords),], proj4string = PROJ4STRING)
-        start.within <- gContains(cell, start) # Is the start point *inside* the cell? Has to be wholly inside,
-        end.within   <- gContains(cell, end)   # not touching the border.
+      # Check for things that aren't lines. Sometimes the intersection creates points, not lines. Not sure 
+      # why but this might mess up the counting later.
+      if ( class(lines.in.cell[[lineno]]) == "SpatialLines" ) { #
         
-        # Work out which of the three conditions we have here (passing through, starting, ending)
-        
-        if (!start.within & !end.within) { # PASES THROUGH
-          # If neither the start point nor end point are within the cell then the line passes through it.
-          if (plot) { plot(cell,border='blue', add=T)}
-          # Work out which compass direction the cell has come from and where it is going to 
-          #came.from[XXXX] <- came.from[XXXX] + 1
-          #going.to[XXXX]  <- going.to[XXXX] + 1
-          
+        # Note that if a line leaves and re-enters the cell then its SpatialLines object will have two discrete parts,
+        # although it is stored as a single feature. This is pretty unusual but needs to be managed.
+        # The next line handles this. It's horrible.
+        #the.lines <- lines.in.cell[lineno,]@lines[[1]]@Lines # (Needed ',' before having to mess around with gIntersection)
   
-        } else if (start.within & end.within) { # WHOLLY CONTAINED
-          # If both start and end points are within the cell then the line is wholly contained within the cell
-          wholly.contained <- wholly.contained + 1
-          if (plot) {plot(cell,col='red', add=T) }
+        the.lines <- lines.in.cell[[lineno]]@lines[[1]]@Lines
+        for (line in the.lines) {
+          #print(paste("\tline:", lineno))
+          # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
+          # (old way before I notices that lines can leave and re-enter the cell)
+          #line <- lines.in.cell[lineno]
+          #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
+          coords.list <- line@coords
+          #print(coords.list)
+          coords <- data.frame(coords.list)
+          #plot(lines.in.cell[lineno],add=T,col='green') # for debug
+          # Define start and end points and work out whether they're touching the cell boundary or not
+          start <- SpatialPoints(coords[1,], proj4string = PROJ4STRING)
+          end   <- SpatialPoints(coords[nrow(coords),], proj4string = PROJ4STRING)
+          start.within <- gContains(cell, start) # Is the start point *inside* the cell? Has to be wholly inside,
+          end.within   <- gContains(cell, end)   # not touching the border.
           
-        } else if (start.within) { # BEGINS
-          # If the start point is within the cell then the line begins here
-          if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
-          # Work out which compass direction the cell is going to
-          #going.to[XXXX] <- going.to[XXXX] + 1
-          starting.count <- starting.count + 1
+          # Work out which of the three conditions we have here (passing through, starting, ending)
           
-        } else if (end.within) { # ENDS
-          # If the end point is within the cell then the line ends here
-          if (plot) { plot(cell, col=rgb(1,0,0,0.5), add=T) }
-          # Work out which compass direction the cell has come from
-          #came.from[XXXX] <- came.from[XXXX] + 1
-          ending.count <- ending.count + 1
-        }
+          if (!start.within & !end.within) { # PASES THROUGH
+            # If neither the start point nor end point are within the cell then the line passes through it.
+            if (plot) { plot(cell,border='blue', add=T)}
+            # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
+            index.from <- find.nsew(cell,start) # This is a list with four booleans (N, S, E, W).
+            index.to <- find.nsew(cell,end)
+            #print("**")
+            #print(index.from)
+            #print(index.to)
+            stopifnot( length(index.from[index.from==TRUE]) == 1 ) # Check only one true value in the list
+            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            
+            came.from[c(index.from)] <- came.from[c(index.from)] + 1
+            going.to[c(index.to)]  <- going.to[c(index.to)] + 1
+    
+          } else if (start.within & end.within) { # WHOLLY CONTAINED
+            # If both start and end points are within the cell then the line is wholly contained within the cell
+            wholly.contained <- wholly.contained + 1
+            if (plot) {plot(cell,col='red', add=T) }
+            
+          } else if (start.within) { # BEGINS
+            # If the start point is within the cell then the line begins here
+            if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
+            # Work out which compass direction the cell is going to
+            #going.to[XXXX] <- going.to[XXXX] + 1
+            starting.count <- starting.count + 1
+            
+          } else if (end.within) { # ENDS
+            # If the end point is within the cell then the line ends here
+            if (plot) { plot(cell, col=rgb(1,0,0,0.5), add=T) }
+            # Work out which compass direction the cell has come from
+            #came.from[XXXX] <- came.from[XXXX] + 1
+            ending.count <- ending.count + 1
+          }
+        
+        } # for linesegments
       
-      } # for linesegments
+      } # if class(lines)==SpatialLines
       
     }# for lines in cell
 
   } # if !is.null (the cell has lines)
+  
+  # Run the garbage collector occasionally. This might (?) help with the memory explosion that mclapply
+  # causes (which is used to execute this function over all cells)
+  if (run.gc & runif(1) < 0.2) gc()
  
   # Return the cell, and all the information about lines passing through it
   return(list(
@@ -804,12 +1017,19 @@ f <- function(cell, the.traces, plot=TRUE) {
 }
 
 
-
-make.transition.matrix <- function(the.grid, the.traces, plot=TRUE) {
+#' Iteratively call `calc.cell` to work out how many traces start, end, and pass through each cell
+#' 
+#' @param the.grid The grid to aggregate to 
+#' @param the.traces The traces to analyse
+#' @return A list with the information for each grid cell. See `calc.cell` for details about the 
+#' information returned for each cell
+#' @examples
+#' result <- make.transition.matrix(grid,all.routes)
+make.transition.matrix <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
   
   if (plot) {
     plot(the.grid, border='black')
-    #polygonsLabel(the.grid, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
+    polygonsLabel(the.grid, paste(the.grid$ID,'\n(',the.grid$CellX,',',the.grid$CellY,')', sep=""), cex=0.3 )
     lines(the.traces)
   }
   
@@ -818,11 +1038,22 @@ make.transition.matrix <- function(the.grid, the.traces, plot=TRUE) {
   
   # Now have each cell find out about the lines passing through it. 
   # This will return a list of cells and counts of relevant lines.
-  results.cells <- lapply(cells, FUN=f, the.traces=the.traces, plot=plot)
-           
-  #XXXX HERE
+  results.cells <- 
+    if (multithread) 
+      mclapply(cells, FUN=calc.cell, the.traces=the.traces, plot=plot, run.gc=TRUE)
+    else
+      lapply(cells, FUN=calc.cell, the.traces=the.traces, plot=plot)
+  
+  return(results.cells)
   
 } # function make.transition.matrix
 
 ```
 
+Calculate the transition matrix! This will take some time, use loads of memory, and heat up your computer. Good luck.
+
+```{r calculateTrans, eval=FALSE}
+
+result <- make.transition.matrix(grid,all.routes, plot=FALSE, multithread = FALSE)
+
+```

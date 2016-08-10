@@ -2,3 +2,9 @@ classes/
 cache/*
 map-data/*
 *.RData
+*.pdf
+
+
+# TEPMORARY
+temp_nltk_stuff/
+
