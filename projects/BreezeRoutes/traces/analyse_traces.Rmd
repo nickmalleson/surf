@@ -1054,10 +1054,10 @@ make.transition.matrix <- function(the.grid, the.traces, plot=TRUE, multithread=
 
 ```
 
-Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode), and heat up your computer. Good luck.
+Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
 ```{r calculateTrans, eval=FALSE}
 
-result <- make.transition.matrix(grid,all.routes, plot=FALSE, multithread = FALSE)
+result1 <- make.transition.matrix(grid,all.routes, plot=FALSE, multithread = FALSE)
 
 ```
