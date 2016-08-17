@@ -734,8 +734,8 @@ rm(grd)
 cellcount <- 1
 for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
-    grid@data[cellcount,]$CellX <- rowcount
-    grid@data[cellcount,]$CellY <- colcount
+    grid@data[cellcount,]$CellX <- colcount
+    grid@data[cellcount,]$CellY <- rowcount
     grid@data[cellcount,]$ID <- cellcount
     cellcount <- cellcount + 1
   }
@@ -750,6 +750,13 @@ polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
 
 ```
 
+
+
+
+
+
+
+
 ## Calculate transition matrix, M
 
 Process:
@@ -759,13 +766,12 @@ Process:
     1. Iterate over each (sub) trace
       - Identify one of three possible conditions
 
-      1. The line passes through the cell
-         - Increment the _departure_ count for the cell that the line _came from_
-         - Increment the _arrival_ count for the cell that the line is _going to_
       1. The line begins in the cell
-         - Increment the _arrival_ count for the cell that the line is _going to_
+        - Increment the _departure_ count, for the appropriate direction (N,S,E,W)
+      1. The line passes through the cell
+         - Increment the _departure_ count for the appropriate direction (N,S,E,W)
       1. The line ends in the cell
-         - Increment the _departure_ count for the cell that the line _came from_
+         - Do nothing.
       1. The line is wholly contained within the cell
          - XXXX WHAT DO DO?! Check Ratti paper
 
@@ -787,8 +793,8 @@ proj4string(grid2) <- PROJ4STRING
 cellcount <- 1
 for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
-    grid2@data[cellcount,]$CellX <- rowcount
-    grid2@data[cellcount,]$CellY <- colcount
+    grid2@data[cellcount,]$CellX <- colcount
+    grid2@data[cellcount,]$CellY <- rowcount
     grid2@data[cellcount,]$ID <- cellcount
     cellcount <- cellcount + 1
   }
@@ -880,9 +886,8 @@ find.nsew <- function(the.cell,the.point) {
 #' @param run.gc Whether to run gc() before returning
 #' @return A list, with the following items
 #'   "cell": the cell object itself (a SpatialPolygonsDataFrame),
-#'   "came.from": a vector of size four, showing the number of traces that entered this cell from the 
+#'   "departure.count": a vector of size four, showing the number of traces that left this cell from the 
 #'       north, east, south, west directions.
-#'   "going.to": as with 'came.from', but for traces leaving this cell
 #'   "starting.count": the number of traces that begin in this cell
 #'   "ending.count": the number of traces that end in this cell
 #'   "wholly.contained": the number of traces that are wholly contained in this cell
@@ -892,6 +897,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   # Store for values for each one, representing whether the line has crossed the n,s,e, or w boundary
   came.from <- c(0,0,0,0) # A line entered this cell
   going.to <- c(0,0,0,0) # A line is leaving this cell
+  departure.count <- c(0,0,0,0) # The number of traces leaving this cell and their direction
   
   # Also useful to remember the number of lines starting and finishing here. Don't need direction with 
   # these though as this is captured in the vectors above
@@ -960,6 +966,9 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
           
           # Work out which of the three conditions we have here (passing through, starting, ending)
           
+          # XXXX CHANGE THIS - CHECK IF THE LINE STARTS HERE. IF SO, INCREMENT THE going.to COUNTER.
+          # Otherwise, just increment the came.from
+          
           if (!start.within & !end.within) { # PASES THROUGH
             # If neither the start point nor end point are within the cell then the line passes through it.
             if (plot) { plot(cell,border='blue', add=T)}
@@ -1012,7 +1021,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   # Return the cell, and all the information about lines passing through it
   return(list(
     "cell"=cell,
-    "came.from"=came.from,
+    #"came.from"=came.from,
     "going.to"=going.to,
     "starting.count"=starting.count,
     "ending.count"=ending.count,
@@ -1029,7 +1038,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
 #' information returned for each cell
 #' @examples
 #' result <- make.transition.matrix(grid,all.routes)
-make.transition.matrix <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
+calc.flows <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
   
   if (plot) {
     plot(the.grid, border='black')
@@ -1052,12 +1061,78 @@ make.transition.matrix <- function(the.grid, the.traces, plot=TRUE, multithread=
   
 } # function make.transition.matrix
 
+#' Convert the output of calc.flows (a list) to a SpatialPolygonsDataFrame
+#' 
+#' @param result The results list from calc.flows
+#' result.list <- calc.flows(grid,all.routes)
+#' result.spdf <- result.to.spdf(result.list)
+result.to.spdf <- function(result) {
+
+  # Extract the polygons and their data from the list of results
+  polys.polygons <- lapply(result, function(x){x$cell@polygons[[1]]}) #   https://gis.stackexchange.com/questions/180682/merge-a-list-of-spatial-polygon-objects-in-r
+
+  polys.data <- data.frame(
+    "ID" = unlist(lapply(result, function(x){x$cell$ID})),
+    "CellX" = unlist(lapply(result, function(x){x$cell$CellX})),
+    "CellY" = unlist(lapply(result, function(x){x$cell$CellY})),
+    "came.from.N" = unlist(lapply(result, function(x){x$came.from[[1]]})),
+    "came.from.E" = unlist(lapply(result, function(x){x$came.from[[2]]})),
+    "came.from.S" = unlist(lapply(result, function(x){x$came.from[[3]]})),
+    "came.from.W" = unlist(lapply(result, function(x){x$came.from[[4]]})),
+    "going.to.N" = unlist(lapply(result, function(x){x$going.to[[1]]})),
+    "going.to.E" = unlist(lapply(result, function(x){x$going.to[[2]]})),
+    "going.to.S" = unlist(lapply(result, function(x){x$going.to[[3]]})),
+    "going.to.W" = unlist(lapply(result, function(x){x$going.to[[4]]})),
+    "starting.count" = unlist(lapply(result, function(x){x$starting.count})),
+    "ending.count" = unlist(lapply(result, function(x){x$ending.count})),
+    "wholly.contained" = unlist(lapply(result, function(x){x$wholly.contained}))
+  )
+
+polys <- SpatialPolygonsDataFrame(
+  SpatialPolygons(polys.polygons, proj4string=PROJ4STRING), 
+  polys.data, match.ID = FALSE
+  )
+
+}
+
 ```
 
 Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
-```{r calculateTrans, eval=FALSE}
+```{r calculateFlows, eval=FALSE}
 
-result1 <- make.transition.matrix(grid,all.routes, plot=FALSE, multithread = FALSE)
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1 <- calc.flows(grid,all.routes, plot=FALSE, multithread = TRUE)
+
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.spdf <- result.to.spdf(result1) 
+```
+
+Now mess around with the data a bit to get an actual transition matrix
+
+```{r makeMatrix} 
+
+# Define an empty matrix
+trans.mat.1 <- matrix(data=0, nrow=total.cells, ncol=total.cells)
+
+# Iterate over each cell and increment the relevant values
+for(i in seq(1,nrow(result1.spdf))) {
+  cell <- result1.spdf[i,]
+  id <- cell$ID
+  x <- cell$CellX
+  y <- cell$CellY
+  # For each came.from.X and going.to.X increment the appropriate matrix cell
+  
+  
+  
+  
+  
+  trans.mat.1[y-1,x] <- trans.mat.1[y-1,x] + cell$came.from.N
+  trans.mat.1[y,x+1] <- trans.mat.1[y,x+1] + cell$came.from.E
+  trans.mat.1[y+1,x] <- trans.mat.1[y+1,x] + cell$came.from.S
+  trans.mat.1[y,x-1] <- trans.mat.1[y,x-1] + cell$came.from.W
+}
+
+  
 
 ```
