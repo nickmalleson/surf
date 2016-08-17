@@ -788,6 +788,7 @@ centre.x <- -71.07 + ( cell.width / 2 )
 centre.y <- 42.344 + ( cell.height / 2 )
 grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
 grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
+rm(grd2)
 proj4string(grid2) <- PROJ4STRING
 # Set the ID properly
 cellcount <- 1
@@ -895,8 +896,6 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   
   # Remember the number of lines entering and leaving the cell, and their direction.
   # Store for values for each one, representing whether the line has crossed the n,s,e, or w boundary
-  came.from <- c(0,0,0,0) # A line entered this cell
-  going.to <- c(0,0,0,0) # A line is leaving this cell
   departure.count <- c(0,0,0,0) # The number of traces leaving this cell and their direction
   
   # Also useful to remember the number of lines starting and finishing here. Don't need direction with 
@@ -949,11 +948,11 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   
         the.lines <- lines.in.cell[[lineno]]@lines[[1]]@Lines
         for (line in the.lines) {
-          #print(paste("\tline:", lineno))
           # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
           # (old way before I notices that lines can leave and re-enter the cell)
           #line <- lines.in.cell[lineno]
           #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
+          
           coords.list <- line@coords
           #print(coords.list)
           coords <- data.frame(coords.list)
@@ -966,42 +965,39 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
           
           # Work out which of the three conditions we have here (passing through, starting, ending)
           
-          # XXXX CHANGE THIS - CHECK IF THE LINE STARTS HERE. IF SO, INCREMENT THE going.to COUNTER.
-          # Otherwise, just increment the came.from
-          
-          if (!start.within & !end.within) { # PASES THROUGH
-            # If neither the start point nor end point are within the cell then the line passes through it.
-            if (plot) { plot(cell,border='blue', add=T)}
-            # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
-            index.from <- find.nsew(cell,start) # This is a list with four booleans (N, S, E, W).
-            index.to <- find.nsew(cell,end)
-            #print("**")
-            #print(index.from)
-            #print(index.to)
-            stopifnot( length(index.from[index.from==TRUE]) == 1 ) # Check only one true value in the list
-            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
-            
-            came.from[c(index.from)] <- came.from[c(index.from)] + 1
-            going.to[c(index.to)]  <- going.to[c(index.to)] + 1
-    
-          } else if (start.within & end.within) { # WHOLLY CONTAINED
+          if (start.within & end.within) { # WHOLLY CONTAINED
             # If both start and end points are within the cell then the line is wholly contained within the cell
             wholly.contained <- wholly.contained + 1
-            if (plot) {plot(cell,col='red', add=T) }
-            
-          } else if (start.within) { # BEGINS
+            if (plot) {plot(cell,col='red', add=T)}
+              
+          } else if (start.within) { # BEGINS 
             # If the start point is within the cell then the line begins here
-            if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
             # Work out which compass direction the cell is going to
-            #going.to[XXXX] <- going.to[XXXX] + 1
-            starting.count <- starting.count + 1
+            index.to <- find.nsew(cell,end) # This is a list with four booleans (N, S, E, W).
+            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
             
+            starting.count <- starting.count + 1 # For info (not used in making the transition matrix)
+            if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
+            
+          } else if (!start.within & !end.within) { # PASES THROUGH
+            # If neither the start point nor end point are within the cell then the line passes through it.
+            # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
+            index.to <- find.nsew(cell,end) # This is a list with four booleans (N, S, E, W).
+            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
+            
+            if (plot) { plot(cell,border='blue', add=T)}
+    
           } else if (end.within) { # ENDS
             # If the end point is within the cell then the line ends here
+            ending.count <- ending.count + 1 # For info
+            
             if (plot) { plot(cell, col=rgb(1,0,0,0.5), add=T) }
-            # Work out which compass direction the cell has come from
-            #came.from[XXXX] <- came.from[XXXX] + 1
-            ending.count <- ending.count + 1
+          }
+          
+          else {
+            stop("Internal error - should not have got here.")
           }
         
         } # for linesegments
@@ -1021,8 +1017,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   # Return the cell, and all the information about lines passing through it
   return(list(
     "cell"=cell,
-    #"came.from"=came.from,
-    "going.to"=going.to,
+    "departure.count"=departure.count,
     "starting.count"=starting.count,
     "ending.count"=ending.count,
     "wholly.contained"=wholly.contained)
@@ -1075,14 +1070,10 @@ result.to.spdf <- function(result) {
     "ID" = unlist(lapply(result, function(x){x$cell$ID})),
     "CellX" = unlist(lapply(result, function(x){x$cell$CellX})),
     "CellY" = unlist(lapply(result, function(x){x$cell$CellY})),
-    "came.from.N" = unlist(lapply(result, function(x){x$came.from[[1]]})),
-    "came.from.E" = unlist(lapply(result, function(x){x$came.from[[2]]})),
-    "came.from.S" = unlist(lapply(result, function(x){x$came.from[[3]]})),
-    "came.from.W" = unlist(lapply(result, function(x){x$came.from[[4]]})),
-    "going.to.N" = unlist(lapply(result, function(x){x$going.to[[1]]})),
-    "going.to.E" = unlist(lapply(result, function(x){x$going.to[[2]]})),
-    "going.to.S" = unlist(lapply(result, function(x){x$going.to[[3]]})),
-    "going.to.W" = unlist(lapply(result, function(x){x$going.to[[4]]})),
+    "departure.count.N" = unlist(lapply(result, function(x){x$departure.count[[1]]})),
+    "departure.count.E" = unlist(lapply(result, function(x){x$departure.count[[2]]})),
+    "departure.count.S" = unlist(lapply(result, function(x){x$departure.count[[3]]})),
+    "departure.count.W" = unlist(lapply(result, function(x){x$departure.count[[4]]})),
     "starting.count" = unlist(lapply(result, function(x){x$starting.count})),
     "ending.count" = unlist(lapply(result, function(x){x$ending.count})),
     "wholly.contained" = unlist(lapply(result, function(x){x$wholly.contained}))
@@ -1102,7 +1093,7 @@ Calculate the transition matrix! This will take some time, use loads of memory (
 ```{r calculateFlows, eval=FALSE}
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
-result1 <- calc.flows(grid,all.routes, plot=FALSE, multithread = TRUE)
+result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
 
 # Convert that list of results to a SpatialPolygonsDataFrame
 result1.spdf <- result.to.spdf(result1) 
@@ -1121,6 +1112,11 @@ for(i in seq(1,nrow(result1.spdf))) {
   id <- cell$ID
   x <- cell$CellX
   y <- cell$CellY
+  
+  # XXXX HERE
+   - First make an (x,y) -> ID map, then build the transition matrix
+  
+  
   # For each came.from.X and going.to.X increment the appropriate matrix cell
   
   
