@@ -729,14 +729,15 @@ grid <- SpatialPolygonsDataFrame(
   )
 proj4string(grid) <- PROJ4STRING
 rm(grd)
-#names(grid) <- "CellID" # Name the ID column
-# Set the ID properly
+# Set the ID properly and keep a record of the (x,y) coordinates and associated ID
+grid.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
 cellcount <- 1
 for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
     grid@data[cellcount,]$CellX <- colcount
     grid@data[cellcount,]$CellY <- rowcount
     grid@data[cellcount,]$ID <- cellcount
+    grid.ids[rowcount,colcount] <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -791,12 +792,14 @@ grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data =
 rm(grd2)
 proj4string(grid2) <- PROJ4STRING
 # Set the ID properly
+grid2.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
 cellcount <- 1
 for (rowcount in seq(1,num.cells)) {
   for (colcount in seq(1,num.cells)) {
     grid2@data[cellcount,]$CellX <- colcount
     grid2@data[cellcount,]$CellY <- rowcount
     grid2@data[cellcount,]$ID <- cellcount
+    grid2.ids[rowcount,colcount] <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -804,27 +807,23 @@ for (rowcount in seq(1,num.cells)) {
 # Temporarily choose a few routes for testing
 par(mfrow=c(1,1))
 #plot(all.routes.oneline,axes=T,xlim=c(-71.07,-71.05), ylim=c(42.343,42.37), col='gray')
-plot(grid2, border='blue', axes=T)
-plot(all.routes.oneline,col='gray',add=T)
-plot(all.routes[2,],col='blue',add=T)
-plot(all.routes[4,],col='green',add=T)
-plot(all.routes[5,],col='orange',add=T)
-plot(grid2, border='blue', add=T)
+#plot(grid2, border='blue', axes=T)
+#plot(all.routes.oneline,col='gray',add=T)
+#plot(all.routes[2,],col='blue',add=T)
+#plot(all.routes[4,],col='green',add=T)
+#plot(all.routes[5,],col='orange',add=T)
+#plot(grid2, border='blue', add=T)
 
 
 plot(grid2, border='blue', main="Grid labels")
 polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
-
-
 test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
-plot(grid2)
 plot(test.routes, add=T)
 
 
 ```
 
-The following function `make.transition.matrix` (and its helper functions) do the analysis. The function runs over each cell, finds routes passing through it, and returns a list of cells with the following properties:
-
+The following functions do the analysis. They're defined here and then executed in the next chunk.
 
 
 ```{r defineTransitionMatrixFunctions}
@@ -1059,10 +1058,10 @@ calc.flows <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
 #' Convert the output of calc.flows (a list) to a SpatialPolygonsDataFrame
 #' 
 #' @param result The results list from calc.flows
+#' @examples
 #' result.list <- calc.flows(grid,all.routes)
 #' result.spdf <- result.to.spdf(result.list)
 result.to.spdf <- function(result) {
-
   # Extract the polygons and their data from the list of results
   polys.polygons <- lapply(result, function(x){x$cell@polygons[[1]]}) #   https://gis.stackexchange.com/questions/180682/merge-a-list-of-spatial-polygon-objects-in-r
 
@@ -1086,48 +1085,78 @@ polys <- SpatialPolygonsDataFrame(
 
 }
 
+#' Convert the output of results.to.spdf (a SpatialPolygonsDataFrame with counts of the number
+#' of traces departing from each cell) to a transition matrix.
+#' 
+#' @param spdf The SpatialPolygonsDataFrame (output from results.to.spdf)
+#' @examples
+#' result.list <- calc.flows(grid,all.routes)
+#' result.spdf <- result.to.spdf(result.list)
+#' result1.matrix <- spdf.to.matrix(result1.spdf)
+spdf.to.matrix <- function(spdf) {
+  # Define an empty matrix. Origins the columns and destinations are rows. This looks backwards because
+  # matricies are accessed by m[row,col]
+  trans.mat <- matrix(data=0, nrow=nrow(spdf), ncol=nrow(spdf))
+
+  # Iterate over each cell and increment the relevant values
+  for(i in seq(1,nrow(spdf))) {
+    cell <- spdf[i,]
+    x <- cell$CellX
+    y <- cell$CellY
+    oid <- cell$ID # origin id
+    
+    # Work out the destination ID (N, S, E, W) and then increment the appropriate cell matrix. Ignore the
+    # posibility of lines departing out of the grid (i.e. border cases)
+    
+    if ( y > 0 ) { # N
+      # (Can only have a line departing to the north if we're not in the first row)
+      did.N <- grid.ids[y-1,x] # Destination ID to the north
+      trans.mat[did.N,oid] <- trans.mat[did.N,oid] + cell$departure.count.N
+    }
+    if ( x < num.cells ) { # E
+      did.E <- grid.ids[y,x+1] # Destination ID to the east
+      trans.mat[did.E,oid] <- trans.mat[did.E,oid] + cell$departure.count.E
+    }
+    if ( y < num.cells ) { # S
+      did.S <- grid.ids[y+1,x] # Destination ID to the south
+      trans.mat[did.S,oid] <- trans.mat[did.S,oid] + cell$departure.count.S
+    }
+    if ( x > 0 ) { # W
+      did.W <- grid.ids[y,x-1] # Destination ID to the west
+      trans.mat[did.W,oid] <- trans.mat[did.W,oid] + cell$departure.count.W
+    }
+  }
+  return(trans.mat)
+}
+
 ```
 
 Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
-```{r calculateFlows, eval=FALSE}
+```{r makeMatrix, eval=FALSE}
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
 result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
 
 # Convert that list of results to a SpatialPolygonsDataFrame
 result1.spdf <- result.to.spdf(result1) 
+
+# Finally make a transition matrix 
+result1.matrix <- spdf.to.matrix(result1.spdf)
+
+
+# FOR TESTING
+#test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
+#test.spdf <- result.to.spdf(test.result) 
+#test.matrix <- spdf.to.matrix(test.spdf)
+write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 ```
 
 Now mess around with the data a bit to get an actual transition matrix
 
 ```{r makeMatrix} 
 
-# Define an empty matrix
-trans.mat.1 <- matrix(data=0, nrow=total.cells, ncol=total.cells)
 
-# Iterate over each cell and increment the relevant values
-for(i in seq(1,nrow(result1.spdf))) {
-  cell <- result1.spdf[i,]
-  id <- cell$ID
-  x <- cell$CellX
-  y <- cell$CellY
-  
-  # XXXX HERE
-   - First make an (x,y) -> ID map, then build the transition matrix
-  
-  
-  # For each came.from.X and going.to.X increment the appropriate matrix cell
-  
-  
-  
-  
-  
-  trans.mat.1[y-1,x] <- trans.mat.1[y-1,x] + cell$came.from.N
-  trans.mat.1[y,x+1] <- trans.mat.1[y,x+1] + cell$came.from.E
-  trans.mat.1[y+1,x] <- trans.mat.1[y+1,x] + cell$came.from.S
-  trans.mat.1[y,x-1] <- trans.mat.1[y,x-1] + cell$came.from.W
-}
 
   
 
