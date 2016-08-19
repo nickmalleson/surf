@@ -776,52 +776,6 @@ Process:
       1. The line is wholly contained within the cell
          - XXXX WHAT DO DO?! Check Ratti paper
 
-_The code below is for testing the aggorithm, it defines a few test routes and makes a small grid_
-
-```{r makeTrasitionMatrixTest, eval=FALSE}
-
-# Make a tiny grid for testing
-num.cells <- 10
-total.cells <- num.cells ** 2
-cell.width <-  (71.07-71.05) / num.cells
-cell.height <- (42.37-42.344) / num.cells
-centre.x <- -71.07 + ( cell.width / 2 )
-centre.y <- 42.344 + ( cell.height / 2 )
-grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
-grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
-rm(grd2)
-proj4string(grid2) <- PROJ4STRING
-# Set the ID properly
-grid2.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
-cellcount <- 1
-for (rowcount in seq(1,num.cells)) {
-  for (colcount in seq(1,num.cells)) {
-    grid2@data[cellcount,]$CellX <- colcount
-    grid2@data[cellcount,]$CellY <- rowcount
-    grid2@data[cellcount,]$ID <- cellcount
-    grid2.ids[rowcount,colcount] <- cellcount
-    cellcount <- cellcount + 1
-  }
-}
-
-# Temporarily choose a few routes for testing
-par(mfrow=c(1,1))
-#plot(all.routes.oneline,axes=T,xlim=c(-71.07,-71.05), ylim=c(42.343,42.37), col='gray')
-#plot(grid2, border='blue', axes=T)
-#plot(all.routes.oneline,col='gray',add=T)
-#plot(all.routes[2,],col='blue',add=T)
-#plot(all.routes[4,],col='green',add=T)
-#plot(all.routes[5,],col='orange',add=T)
-#plot(grid2, border='blue', add=T)
-
-
-plot(grid2, border='blue', main="Grid labels")
-polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
-test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
-plot(test.routes, add=T)
-
-
-```
 
 The following functions do the analysis. They're defined here and then executed in the next chunk.
 
@@ -1126,7 +1080,8 @@ spdf.to.matrix <- function(spdf) {
       trans.mat[did.W,oid] <- trans.mat[did.W,oid] + cell$departure.count.W
     }
   }
-  return(trans.mat)
+  # Finally transpose the matrix, so that the origins are rows not colums (as in the Ratti paper)
+  return(t(trans.mat))
 }
 
 ```
@@ -1144,13 +1099,59 @@ result1.spdf <- result.to.spdf(result1)
 # Finally make a transition matrix 
 result1.matrix <- spdf.to.matrix(result1.spdf)
 
+```
 
-# FOR TESTING
-#test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
-#test.spdf <- result.to.spdf(test.result) 
-#test.matrix <- spdf.to.matrix(test.spdf)
-XXXX HERE NEED TO TRANSPOSE?
-write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
+_The code below is for testing the aggorithm, it defines a few test routes and makes a small grid_
+
+```{r makeTrasitionMatrixTest, eval=FALSE, echo=FALSE}
+
+# Make a tiny grid for testing
+num.cells <- 10
+total.cells <- num.cells ** 2
+cell.width <-  (71.07-71.05) / num.cells
+cell.height <- (42.37-42.344) / num.cells
+centre.x <- -71.07 + ( cell.width / 2 )
+centre.y <- 42.344 + ( cell.height / 2 )
+grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
+grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
+rm(grd2)
+proj4string(grid2) <- PROJ4STRING
+# Set the ID properly
+grid2.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
+cellcount <- 1
+for (rowcount in seq(1,num.cells)) {
+  for (colcount in seq(1,num.cells)) {
+    grid2@data[cellcount,]$CellX <- colcount
+    grid2@data[cellcount,]$CellY <- rowcount
+    grid2@data[cellcount,]$ID <- cellcount
+    grid2.ids[rowcount,colcount] <- cellcount
+    cellcount <- cellcount + 1
+  }
+}
+
+# Temporarily choose a few routes for testing
+par(mfrow=c(1,1))
+#plot(all.routes.oneline,axes=T,xlim=c(-71.07,-71.05), ylim=c(42.343,42.37), col='gray')
+#plot(grid2, border='blue', axes=T)
+#plot(all.routes.oneline,col='gray',add=T)
+#plot(all.routes[2,],col='blue',add=T)
+#plot(all.routes[4,],col='green',add=T)
+#plot(all.routes[5,],col='orange',add=T)
+#plot(grid2, border='blue', add=T)
+
+
+# Plot the test grids and routes
+plot(grid2, border='blue', main="Grid labels")
+polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
+test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
+plot(test.routes, add=T)
+
+
+# Test the algorithm
+test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
+test.spdf <- result.to.spdf(test.result) 
+test.matrix <- spdf.to.matrix(test.spdf)
+#write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 ```
 
 Now mess around with the data a bit to get an actual transition matrix
