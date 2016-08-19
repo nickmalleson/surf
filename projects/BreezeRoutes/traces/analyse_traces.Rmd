@@ -737,7 +737,7 @@ for (rowcount in seq(1,num.cells)) {
     grid@data[cellcount,]$CellX <- colcount
     grid@data[cellcount,]$CellY <- rowcount
     grid@data[cellcount,]$ID <- cellcount
-    grid.ids[colcount,rowcount] <- cellcount
+    grid.ids[rowcount,colcount] <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -799,7 +799,7 @@ for (rowcount in seq(1,num.cells)) {
     grid2@data[cellcount,]$CellX <- colcount
     grid2@data[cellcount,]$CellY <- rowcount
     grid2@data[cellcount,]$ID <- cellcount
-    grid2.ids[colcount,rowcount] <- cellcount
+    grid2.ids[rowcount,colcount] <- cellcount
     cellcount <- cellcount + 1
   }
 }
@@ -1094,7 +1094,8 @@ polys <- SpatialPolygonsDataFrame(
 #' result.spdf <- result.to.spdf(result.list)
 #' result1.matrix <- spdf.to.matrix(result1.spdf)
 spdf.to.matrix <- function(spdf) {
-  # Define an empty matrix. Origins the columns and destinations are rows. 
+  # Define an empty matrix. Origins the columns and destinations are rows. This looks backwards because
+  # matricies are accessed by m[row,col]
   trans.mat <- matrix(data=0, nrow=nrow(spdf), ncol=nrow(spdf))
 
   # Iterate over each cell and increment the relevant values
@@ -1109,20 +1110,20 @@ spdf.to.matrix <- function(spdf) {
     
     if ( y > 0 ) { # N
       # (Can only have a line departing to the north if we're not in the first row)
-      did.N <- grid.ids[x,y-1] # Destination ID to the north
-      trans.mat[oid,did.N] <- trans.mat[oid,did.N] + cell$departure.count.N
+      did.N <- grid.ids[y-1,x] # Destination ID to the north
+      trans.mat[did.N,oid] <- trans.mat[did.N,oid] + cell$departure.count.N
     }
     if ( x < num.cells ) { # E
-      did.E <- grid.ids[x+1,y] # Destination ID to the east
-      trans.mat[oid,did.E] <- trans.mat[oid,did.E] + cell$departure.count.E
+      did.E <- grid.ids[y,x+1] # Destination ID to the east
+      trans.mat[did.E,oid] <- trans.mat[did.E,oid] + cell$departure.count.E
     }
     if ( y < num.cells ) { # S
       did.S <- grid.ids[y+1,x] # Destination ID to the south
-      trans.mat[oid,did.S] <- trans.mat[oid,did.S] + cell$departure.count.S
+      trans.mat[did.S,oid] <- trans.mat[did.S,oid] + cell$departure.count.S
     }
     if ( x > 0 ) { # W
-      did.W <- grid.ids[x-1,y] # Destination ID to the west
-      trans.mat[oid,did.W] <- trans.mat[oid,did.W] + cell$departure.count.W
+      did.W <- grid.ids[y,x-1] # Destination ID to the west
+      trans.mat[did.W,oid] <- trans.mat[did.W,oid] + cell$departure.count.W
     }
   }
   return(trans.mat)
@@ -1148,6 +1149,7 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 #test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
 #test.spdf <- result.to.spdf(test.result) 
 #test.matrix <- spdf.to.matrix(test.spdf)
+XXXX HERE NEED TO TRANSPOSE?
 write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 ```
 
