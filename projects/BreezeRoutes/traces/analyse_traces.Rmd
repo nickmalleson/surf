@@ -702,7 +702,7 @@ Now create a regular grid that covers the study area. This will be used to creat
 ```{r makeGridForTransitionMatrix, fig.width=15}
 
 # The number of cells per row or column
-num.cells <- 10
+num.cells <- 15
 total.cells <- num.cells ** 2
 
 # Create the grids - adapted from Brunsdon & Comber (2015, p150)
@@ -753,11 +753,6 @@ polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
 
 
 
-
-
-
-
-
 ## Calculate transition matrix, M
 
 Process:
@@ -778,6 +773,8 @@ Process:
 
 
 The following functions do the analysis. They're defined here and then executed in the next chunk.
+
+### Define matrix functions
 
 
 ```{r defineTransitionMatrixFunctions}
@@ -1086,6 +1083,8 @@ spdf.to.matrix <- function(spdf) {
 
 ```
 
+### Make the matrix
+
 Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
 ```{r makeMatrix, eval=FALSE}
@@ -1098,6 +1097,9 @@ result1.spdf <- result.to.spdf(result1)
 
 # Finally make a transition matrix 
 result1.matrix <- spdf.to.matrix(result1.spdf)
+
+# Write out the matrix
+#write.csv(result1.matrix, file="./")
 
 ```
 
@@ -1154,12 +1156,13 @@ test.matrix <- spdf.to.matrix(test.spdf)
 #write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 ```
 
-Now mess around with the data a bit to get an actual transition matrix
+### Within-cell flow
 
-```{r makeMatrix} 
+XXXX
 
+Calculate inflow and outflow from each cell 
 
+### Pairwise flow
 
-  
+XXXX
 
-```
