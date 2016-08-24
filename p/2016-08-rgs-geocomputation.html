@@ -60,7 +60,7 @@
                       <h2>Overview</h2>
 
                       <p>Background - agent-based models and making future predictions</p>
-                      <p>ABM Problems:</p>
+                      <p>Barriers to ABMs as predictive tools: <i>difficult to calibrate</i></p>
                       <p class="l2">1. Computationally Expensive</p>
                       <p class="l2">2. Data hungry</p>
                       <p class="l2">3. <strong>Divergent</strong></p>
@@ -83,7 +83,7 @@
                 </section>
            
                 <section data-background-video="../videos/sim.mp4,../videos/sim.webm"
-                         data-background-video-loop
+                         data-background-video-loop="loop"
                          id="abm-example-predictive">
                     <h2 style="background-color: white;">ABM Example - Burglary</h2>
                     <figure class="fragment">
@@ -127,6 +127,7 @@
                 
                 <section id="prob-computation">
                     <h2>1. Computationally Expensive</h2>
+                    <img class="right" src="../figures/parameter_space.png" />
                     <p>Very large parameter space to explore</p>
                     <p class="l2">Models are usually highly non-linear</p>
                     <p>And very difficult to explore it</p>
@@ -135,7 +136,7 @@
                 </section>
                 
                  <section data-background-video="../videos/surf_simulation_1-540p.webm"
-                         data-background-video-loop
+                         data-background-video-loop="loop"
                          id="abm-improbable-video2">
                     
                     <div id="columns" class="fragment">
@@ -186,10 +187,10 @@
                         <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
                         <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
                     </figure>
-                    <h2>'Big Data'</h2>
+                    <h2>Rise of Big Data</h2>
                     <p>Recent explosion in data volume.</p>
                     <p>'Datafication'</p>
-                    <p>Transformational impact on social sciences.</p>
+                    <p><i>Streams of data</i></p>
                     <p>Great potential for calibrating ABM</p>
                     <h3>Example: Mobile Communications</h3>
                     <!--<img class="left" data-src="../figures/paper_figures/census_mobile-correlation.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />-->
@@ -225,10 +226,17 @@
                 
                 
                 
-                <section id="prob-divergence">
-                    <h2>3. Divergence</h2>
-                    <p>XXXX HERE</p>
-                    <p class="l2"></p>
+                <section id="prob-divergence" 
+                         data-background-video="../videos/BBC_Swarm_Natures_Incredible_Invasions.mp4" 
+                         data-background-video-muted 
+                         data-background-video-loop="loop">
+                    
+                    <div class="text-over-video fragment">
+                        <h2>3. Divergence</h2>
+                        <p>Complex systems</p>
+                        <p>One-shot calibration</p>
+                        <p>Nonlinear models predict near future well, but diverge over time.</p>
+                    </div>
                 </section>
                 
                 <section id="abm-calibration">
@@ -238,27 +246,73 @@
                         <figcaption>Typical model development process</figcaption>
                     </figure>
                     
-                    <h2>ABM Calibration</h2>
-                    <p>Typical to use waterfall-style approach</p>
-                    <p>Includes 'one-shot' calibration</p>
+                    <h2>3. Divergence</h2>
+                    <p>Drawback with the 'typical' model development process</p>
+                    <p>Waterfall-style approach is common</p>
+                    <p>Calibrate until fitness is reasonable, then make predictions</p>
+                    <p>But we can do better:</p>
+                    <p class="l2">Better computers</p>
+                    <p class="l2">More data</p>
+                    <p>Methodological gap</p>
+                    
                 </section>
                 
-                <section>
-                    <figure>
-                        <figcaption>Calibration: typical process</figcaption>
-                        <img data-src="../figures/calib_process.png" alt="The process of calibration"/>
-                    </figure>
-                </section>
 
                 
-                <section id="prob-">
-                    <h2></h2>
-                    <p></p>
-                    <p class="l2"></p>
+                <section id="dda">
+                    <h2>Dynamic Data Assimilation</h2>
+                    <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                    <p>We can:</p>
+                    <p class="l2">Restart model with new (up to date) data</p>
+                    <p class="l2">Adjust model parameters to better match reality</p>
                 </section>
                 
+                
+                <section id="dda2">
+                    <h2>Dynamic Data Assimilation</h2>
+                    <h3>How?</h3>
+                    <p>Particle filters</p>
+                    <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
+                    <p>Kalman Filter</p>
+                    <p class="l2">Air traffic (Chen et al., 2012)</p>
+                    <p>Ensemble Kalman Filter</p>
+                    <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
+                    <p>Sequential Monte Carlo (SMC)</p>
+                    <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
+                
+                </section>
+                
+                <section id="enkf">
+                    
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    
+                    <p></p>
+                
+                </section>
+                
+                
                 <section id="references">
+                    
+                    <p></p>
+                    
+                    <p>Chen, Haiyan, Jiandong Wang, and Lirong Feng. 2012. “Research on the Dynamic Data-Driven Application System Architecture for Flight Delay Prediction.” Journal of Software 7 (2). doi:10.4304/jsw.7.2.263-268.</p>
+                    
                     <p>Grimm, Volker, Eloy Revilla, Uta Berger, Florian Jeltsch, Wolf M. Mooij, Steven F. Railsback, Hans-Hermann Thulke, Jacob Weiner, Thorsten Wiegand, and Donald L. DeAngelis. (2005) Pattern-Oriented Modeling of Agent-Based Complex Systems: Lessons from Ecology. <i>Science</i> 310(5750): 987–91. doi:10.1126/science.1116681.</p>
+                    
+                    <p>Hu, Xiaolin. 2011. “Dynamic Data Driven Simulation.” SCS M&amp;S Magazine 1: 16–22.</p>
+                    
+                    <p>Mandel, Jan, Jonathan D. Beezley, Adam K. Kochanski, Volodymyr Y. Kondratenko, and Minjeong Kim. 2012. “Assimilation of Perimeter Data and Coupling with Fuel Moisture in a Wildland Fire–Atmosphere DDDAS.” Procedia Computer Science 9: 1100–1109. doi:10.1016/j.procs.2012.04.119.</p>
+
+                    
+                    <p>Rai, S., and X. Hu. 2013. “Behavior Pattern Detection for Data Assimilation in Agent-Based Simulation of Smart Environments.” In 2013 IEEE/WIC/ACM International Joint Conferences on Web Intelligence (WI) and Intelligent Agent Technologies (IAT), 2:171–78. doi:10.1109/WI-IAT.2013.106.</p>
+                    
+                    
+                    
+                    <p>Wang, M. and X. Hu (2015). Data assimilation in agent based simulation of smart environments using particle filters. Simulation Modelling Practice and Theory 56, 36–54.</p>
+                    
+                    <p>Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson. 2016. “Dynamic Calibration of Agent-Based Models Using Data Assimilation.” Open Science 3 (4). doi:10.1098/rsos.150703.</p>
+                    
+                    
                 </section>
                 
                 

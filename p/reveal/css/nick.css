@@ -271,6 +271,18 @@ img.top {
 }
 
 
+/* A class for text that appears over a background video. 
+It basically draws a white transparent box behind the text to make it easier to read. */
+.reveal .text-over-video {
+    background-color:rgba(255,255,255,0.6);
+    border-radius: 25px;
+    padding:15px;
+    
+}
+
+
+
+
 /*********************************************
  * COLUMNS AND TABLES
  *********************************************/
