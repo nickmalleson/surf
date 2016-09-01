@@ -1099,7 +1099,7 @@ result1.spdf <- result.to.spdf(result1)
 result1.matrix <- spdf.to.matrix(result1.spdf)
 
 # Write out the matrix
-#write.csv(result1.matrix, file="./")
+#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
 
 ```
 
@@ -1158,11 +1158,78 @@ test.matrix <- spdf.to.matrix(test.spdf)
 
 ### Within-cell flow
 
-XXXX
+Compute incoming and outgoing flows for each cell and see if they're semetrical.
 
-Calculate inflow and outflow from each cell 
+```{r withinCellFlows}
+
+inflow <- colSums(result1.matrix)
+outflow <- rowSums(result1.matrix)
+
+# Make a linear model to quantify difference in flows (degree of symmetry)
+within.cell.model <- lm(inflow~outflow)
+
+par(mfrow=c(1,1))
+plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
+abline(within.cell.model, col="red")
+abline(a=0,b=1,col="black")
+legend("topright", legend=c("x=y","Model"), col=c("black","red"), lty=1 )
+
+cor(inflow,outflow)
+
+```
+
+Whilst they're not symmetrical, they are very similar. The correlation is `r cor(inflow,outflow)`
+
+The following shows the distribution of the flows:
+
+```{r withinCellDistribution}
+
+par(mfrow=c(2,2))
+hist(inflow,  breaks="Scott")
+hist(outflow, breaks="Scott")
+plot(density(inflow))
+plot(density(outflow))
+
+```
 
 ### Pairwise flow
 
-XXXX
+Now look at the flows between cells. The aim is to see whether the matrix is symmetrical, i.e. M=M^T^. Following the Ratti paper, constuct absolute and relative _difference matrix_.
+
+```{r pairwiseFlows}
+
+result1.abs.diff.matrix <- matrix(NA,nrow=nrow(result1.matrix),ncol=ncol(result1.matrix))
+result1.rel.diff.matrix <- matrix(NA,nrow=nrow(result1.matrix),ncol=ncol(result1.matrix))
+
+
+for ( i in seq(1,nrow(result1.matrix))) {
+  for (j in seq(1, ncol(result1.matrix))) {
+    if (i <= j) { # Don't need bottom half of the matrix, it will be identical to top half ('triangular')
+      maximum <- max(result1.matrix[i,j],result1.matrix[j,i])
+      # Absolute and relative difference (ignoring cells with no flows, where max=0, which will stay as NA)
+      if (maximum > 0) {
+        result1.abs.diff.matrix[i,j] = abs(result1.matrix[i,j] - result1.matrix[j,i])
+        result1.rel.diff.matrix[i,j] = abs(result1.matrix[i,j] - result1.matrix[j,i]) / maximum
+      }
+  }
+}
+# Sanity check: the number of non-zero items in each matrix should be the same
+stopifnot(length(which(result1.abs.diff.matrix>0)) == length(which(result1.rel.diff.matrix>0)) )
+# Also all relative flows should be in range [0,1]
+stopifnot(length(result1.rel.diff.matrix[which(result1.rel.diff.matrix<0 | result1.rel.diff.matrix>1)]))
+
+write.csv(result1.abs.diff.matrix, file="/Users/nick/Desktop/result1_abs_diff.csv")
+write.csv(result1.rel.diff.matrix, file="/Users/nick/Desktop/result1_rel_diff.csv")
+
+```
+
+There are `r length(which(result1.abs.diff.matrix>0))` non-zero flows. Note: in the results matrices, NA indicates no flow between i,j, whereas 0 represents no _difference_ in the flow.
+
+Summary information: 
+
+ - Absolute flows: `r summary(result1.abs.diff.matrix[which(result1.abs.diff.matrix>0)])`
+ - Relative flows: `r summary(result1.rel.diff.matrix[which(result1.rel.diff.matrix>0)])`
+
+
+
 
