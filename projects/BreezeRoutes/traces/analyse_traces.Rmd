@@ -383,6 +383,8 @@ rm(abs.diff, bad.indices, diff, rel.diff)
 
 After filtering, there are `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
 
+These were created by `r length(unique(unlist(userid)))` separate users.
+
 This is a god point to create a single SpatialLines object from the discrete Lines (traces).
 
 ```{r createSingleLine}
@@ -702,7 +704,7 @@ Now create a regular grid that covers the study area. This will be used to creat
 ```{r makeGridForTransitionMatrix, fig.width=15}
 
 # The number of cells per row or column
-num.cells <- 15
+num.cells <- 20
 total.cells <- num.cells ** 2
 
 # Create the grids - adapted from Brunsdon & Comber (2015, p150)
@@ -742,7 +744,7 @@ for (rowcount in seq(1,num.cells)) {
   }
 }
 
-par(mfrow=c(1,2))
+par(mfrow=c(1,1))
 plot(grid, border='blue', main="Routes and the grid")
 plot(all.routes.oneline, add=T)
 
@@ -751,6 +753,26 @@ plot(all.routes.oneline, add=T)
 
 ```
 
+The grid consists of `r num.cells` cells, with a mean square area of `r mean(raster::area(grid))/(1000**2)` km^2^.
+
+Now count (so that we can map) the number of traces that pass through each cell.
+
+```{r countTracesPerCell}
+
+XXXX HERE - count traces that pass through each cell
+
+lapply()
+overlap <- over(all.routes, grid, returnList = TRUE)
+aggs = sapply(overlap, function(os){sum(all.routes[[attr]][os])})
+
+sum(!is.na(overlap))
+
+
+lines.per.cell <- lapply(grid[], FUN=over, y=all.routes)
+
+
+
+```
 
 
 ## Calculate transition matrix, M
