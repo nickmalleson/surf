@@ -760,6 +760,7 @@ Now count (so that we can map) the number of traces that pass through each cell.
 ```{r countTracesPerCell}
 
 XXXX HERE - count traces that pass through each cell
+If I can't figure it out soon, just add something to the function that creates the Transition Matrix to count the number of intersecting lines.
 
 lapply()
 overlap <- over(all.routes, grid, returnList = TRUE)
