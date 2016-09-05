@@ -1,3 +1,5 @@
 # Don't want any results being uploaded
 *.html
+analyse_traces_files/
+
 

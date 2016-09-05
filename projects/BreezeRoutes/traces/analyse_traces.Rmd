@@ -410,7 +410,7 @@ par(mfrow=c(1,1))
 plot(all.routes.oneline, axes=T, main="All Traces")
 
 # Useful to analyse in a GIS
-writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
+#writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
 
 ```
 
@@ -746,8 +746,8 @@ par(mfrow=c(1,2))
 plot(grid, border='blue', main="Routes and the grid")
 plot(all.routes.oneline, add=T)
 
-plot(grid, border='blue', main="Grid labels")
-polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
+#plot(grid, border='blue', main="Grid labels")
+#polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
 
 ```
 
@@ -1249,7 +1249,7 @@ for ( i in seq(1,nrow(result1.matrix))) {
 percentage.asymmetry <- sum.absolute.flow / sum.max.flow
 ```
 
-The percentage asymmetry is `r round(percentage.asymmetry,3) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry) * 100`% of the time.
+The percentage asymmetry is `r round(percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry,2) * 100`% of the time.
 
 ### Map(s) of Asymmetric Flows
 
