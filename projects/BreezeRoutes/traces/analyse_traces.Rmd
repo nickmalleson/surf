@@ -1251,3 +1251,7 @@ percentage.asymmetry <- sum.absolute.flow / sum.max.flow
 
 The percentage asymmetry is `r round(percentage.asymmetry,3) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry) * 100`% of the time.
 
+### Map(s) of Asymmetric Flows
+
+XXXX maybe do these, will write up paper first.
+
