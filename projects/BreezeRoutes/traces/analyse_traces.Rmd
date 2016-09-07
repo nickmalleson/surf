@@ -27,10 +27,11 @@ The three different kinds of routes that the script reads are:
  - shortest paths (the shortest paths the could be used to do the same route)
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
-library(knitr)
-knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
-setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
-#setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
+#library(knitr)
+#knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+
+setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
 
 # The binary file that contains all the traces (exhaustively read in on the server)
 TRACES_FILE = "./traces-server-all.RData"
@@ -62,8 +63,8 @@ library(rgdal)     # For reading shapefiles
 #library(gridExtra) # To put two graphs next to each other in ggplot
 library(plotKML)   # For reading GPX files
 library(OpenStreetMap) # For plotting OSM basemaps
-Sys.setenv(MC_CORES=4) # Run on n cores (I'm not sure which of these
-options("mc.cores"=4L) # is correct).
+Sys.setenv(MC_CORES=6) # Run on n cores (I'm not sure which of these
+options("mc.cores"=6L) # is correct).
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
@@ -171,7 +172,7 @@ read.userid <- function(filename) {
   #print(paste("Got UID: ",uid))
   return(uid)
 }
-  
+
 ```
 
 # Read the Data
@@ -755,25 +756,7 @@ plot(all.routes.oneline, add=T)
 
 The grid consists of `r num.cells` cells, with a mean square area of `r mean(raster::area(grid))/(1000**2)` km^2^.
 
-Now count (so that we can map) the number of traces that pass through each cell.
 
-```{r countTracesPerCell}
-
-XXXX HERE - count traces that pass through each cell
-If I can't figure it out soon, just add something to the function that creates the Transition Matrix to count the number of intersecting lines.
-
-lapply()
-overlap <- over(all.routes, grid, returnList = TRUE)
-aggs = sapply(overlap, function(os){sum(all.routes[[attr]][os])})
-
-sum(!is.na(overlap))
-
-
-lines.per.cell <- lapply(grid[], FUN=over, y=all.routes)
-
-
-
-```
 
 
 ## Calculate transition matrix, M
@@ -876,15 +859,20 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
   starting.count <- 0
   ending.count   <- 0
   wholly.contained <- 0 # The line starts and ends in the cell without going through another cell.
+  total.intersection <- 0 # The total number of lines that intersect the cell
   
   # First find the traces that intersect the cell
   intersecting <- gIntersects(the.traces, cell, byid = TRUE) 
+  
+  # For info, store the number of lines that intersect this cell
+  total.intersection <- length(which(intersecting))
+  
   
   # Only continue if some traces intersect
   if (length(which(intersecting))>0) {
     
     # Clip the lines in this cell. For some reason gIntersection sometimes breaks whe the intersecting
-    # lines are passed directly (as below) so instead pass each line individuall in a separate call
+    # lines are passed directly (as below) so instead pass each line individually in a separate call
     #lines.in.cell <- gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
     
     list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
@@ -906,9 +894,10 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
       plot(cell,border='gray', add=T) # for debug
       #plot(lines.in.cell, add=T,col='red') # for debug
     }
-  
-  #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
-  #if (!is.null(lines.in.cell)) { # There are some lines in the cell - NOT NEEDED NOW, CHECKED EARLIER
+    
+
+    #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
+    #if (!is.null(lines.in.cell)) { # There are some lines in the cell - NOT NEEDED NOW, CHECKED EARLIER
     for (lineno in seq(1,length(lines.in.cell))) {
       # Check for things that aren't lines. Sometimes the intersection creates points, not lines. Not sure 
       # why but this might mess up the counting later.
@@ -920,6 +909,8 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
         #the.lines <- lines.in.cell[lineno,]@lines[[1]]@Lines # (Needed ',' before having to mess around with gIntersection)
   
         the.lines <- lines.in.cell[[lineno]]@lines[[1]]@Lines
+
+        # Now go through each line and work out how it interacts with the cell 
         for (line in the.lines) {
           # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
           # (old way before I notices that lines can leave and re-enter the cell)
@@ -993,7 +984,8 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
     "departure.count"=departure.count,
     "starting.count"=starting.count,
     "ending.count"=ending.count,
-    "wholly.contained"=wholly.contained)
+    "wholly.contained"=wholly.contained,
+    "total.intersection"=total.intersection)
   )
 }
 
@@ -1049,7 +1041,8 @@ result.to.spdf <- function(result) {
     "departure.count.W" = unlist(lapply(result, function(x){x$departure.count[[4]]})),
     "starting.count" = unlist(lapply(result, function(x){x$starting.count})),
     "ending.count" = unlist(lapply(result, function(x){x$ending.count})),
-    "wholly.contained" = unlist(lapply(result, function(x){x$wholly.contained}))
+    "wholly.contained" = unlist(lapply(result, function(x){x$wholly.contained})),
+    "total.intersection"=unlist(lapply(result, function(x){x$total.intersection}))
   )
 
 polys <- SpatialPolygonsDataFrame(
@@ -1126,7 +1119,7 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 
 ```
 
-_The code below is for testing the aggorithm, it defines a few test routes and makes a small grid_
+_The code below is for testing the algorithm, it defines a few test routes and makes a small grid_
 
 ```{r makeTrasitionMatrixTest, eval=FALSE, echo=FALSE}
 
@@ -1177,6 +1170,7 @@ test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
 test.spdf <- result.to.spdf(test.result) 
 test.matrix <- spdf.to.matrix(test.spdf)
 #write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
+
 ```
 
 ### Within-cell flow
@@ -1242,8 +1236,8 @@ stopifnot(length(which(result1.abs.diff.matrix>0)) == length(which(result1.rel.d
 # Also all relative flows should be in range [0,1]
 stopifnot(length(result1.rel.diff.matrix[which(result1.rel.diff.matrix<0 | result1.rel.diff.matrix>1)]) == 0)
 
-write.csv(result1.abs.diff.matrix, file="/Users/nick/Desktop/result1_abs_diff.csv")
-write.csv(result1.rel.diff.matrix, file="/Users/nick/Desktop/result1_rel_diff.csv")
+#write.csv(result1.abs.diff.matrix, file="/Users/nick/Desktop/result1_abs_diff.csv")
+#write.csv(result1.rel.diff.matrix, file="/Users/nick/Desktop/result1_rel_diff.csv")
 
 ```
 
@@ -1275,6 +1269,17 @@ percentage.asymmetry <- sum.absolute.flow / sum.max.flow
 The percentage asymmetry is `r round(percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry,2) * 100`% of the time.
 
 ### Map(s) of Asymmetric Flows
+
+First map the number of traces that pass through each cell.
+
+```{r mapTracesPerCell, fig.width=15}
+
+shades <- auto.shading(result1.spdf$total.intersection, n=9, cutter=quantileCuts)
+choropleth(result1.spdf, result1.spdf$total.intersection, shading = shades)
+choro.legend("topleft", sh=shades)
+plot(all.routes.oneline, add=T, col=RGBA(0.5,0.5,0.5,0.5))
+
+```
 
 XXXX maybe do these, will write up paper first.
 
