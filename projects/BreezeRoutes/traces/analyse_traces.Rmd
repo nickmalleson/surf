@@ -1103,7 +1103,7 @@ spdf.to.matrix <- function(spdf) {
 
 Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
-```{r makeMatrix, eval=FALSE}
+```{r makeMatrix}
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
 result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
@@ -1116,6 +1116,7 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 
 # Write out the matrix
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
+writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile")
 
 ```
 
@@ -1187,10 +1188,20 @@ within.cell.model <- lm(inflow~outflow)
 
 par(mfrow=c(1,1))
 plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
-abline(within.cell.model, col="red")
-abline(a=0,b=1,col="black")
-legend("topright", legend=c("x=y","Model"), col=c("black","red"), lty=1 )
+# abline(within.cell.model, col="red")
+abline(a=0,b=1,col="gray", lty=3)
+#legend("topright", legend=c("x=y","Model"), col=c("black","red"), lty=1 )
+legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
 
+# And one for the paper
+pdf(file="within_cell_flow_correlation.pdf", width = 7, height = 7)
+plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
+abline(a=0,b=1,col="gray", lty=3)
+legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
+dev.off()
+
+
+# The correlation
 cor(inflow,outflow)
 
 ```
@@ -1270,14 +1281,14 @@ The percentage asymmetry is `r round(percentage.asymmetry,5) * 100`%. Therefore 
 
 ### Map(s) of Asymmetric Flows
 
-First map the number of traces that pass through each cell.
+First map the number of traces that pass through each cell. For the final paper I atually do this in ArcMap.
 
 ```{r mapTracesPerCell, fig.width=15}
 
 shades <- auto.shading(result1.spdf$total.intersection, n=9, cutter=quantileCuts)
 choropleth(result1.spdf, result1.spdf$total.intersection, shading = shades)
 choro.legend("topleft", sh=shades)
-plot(all.routes.oneline, add=T, col=RGBA(0.5,0.5,0.5,0.5))
+plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 
 ```
 
