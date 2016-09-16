@@ -1,4 +1,5 @@
 # tensorflow mnist beginner tutorial
+# https://www.tensorflow.org/versions/r0.10/tutorials/mnist/beginners/index.html
 
 # Download the input data. This will give three data sets:
 # mnist.train, mnist.test and mnist.validation
