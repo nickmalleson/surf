@@ -120,6 +120,10 @@ p.small{
  font-size:70%;
 }
 
+p.verysmall{
+ font-size:40%;
+}
+
 /* For a reference in the slides */
 p.reference {
     font-size:70%;
