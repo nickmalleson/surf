@@ -17,7 +17,10 @@ Presentations about, or relating to, the surf project
    - [Dynamic, data-driven agent-based models for simulating
      cities]({{site.baseurl}}/p/2016-07-media_lab.html). An invited presentation to the [MIT Media Lab](https://www.media.mit.edu/). (19th July 2016)
 
-   - [Exploring the Impact of Ambient Population Measures on Crime Hotspots](http://{{site.baseurl}}/p/2016-03-ambient_population.pdf). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 29th March – 2nd April, San Francisco._
+   - [Exploring the Impact of Ambient Population Measures on Crime Hotspots]({{site.baseurl}}/p/2016-03-ambient_population.pdf). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 29th March – 2nd April, San Francisco._
+
+   -  [Agent-Based Modelling, Ambient Populations and Models of Burglar Behaviour]({{site.baseurl}}/p/2016-09-30-crime_mapping.html). Presentation to the _[N8 Policing Research Partnership](http://n8prp.org.uk/) [Data Analysis, Management and Crime Mapping Workshop](http://n8prp.org.uk/event/data-analysis-management-and-crime-mapping/?instance_id=57), 30 September 2017, Leeds UK_
+
 
 
 Conference sessions organised:
