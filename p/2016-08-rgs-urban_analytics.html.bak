@@ -1,0 +1,572 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="author" content="Nick Malleson">
+        <meta name="keywords" content="TEMPLATE KEYWORDS">
+
+		<title>Simulating Urban Flows to Estimate the Disease Burden of Air Pollution</title>
+
+		<link rel="stylesheet" href="reveal/css/reveal.css">
+		<link rel="stylesheet" href="reveal/css/theme/white.css">
+        
+        <!-- Some extra bits added by Nick -->
+        <link rel="stylesheet" href="reveal/css/nick.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal/css/print/pdf.css' : 'reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                
+                <!--
+                <section data-markdown id="index"
+                         data-background-image="http://surf.leeds.ac.uk/figures/cityscapes/chicago_bw.jpg">
+                -->
+
+                <section class="title"  id="index">    
+                    <h1>Simulating Urban Flows to Estimate the Disease Burden of Air Pollution</h1>
+                    <hr/>
+                    <h3><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a></h3>
+                    <h4>School of Geography, University of Leeds</h4>
+                    <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                    <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
+                    <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
+                </section>
+                
+                
+                
+                <section id="abstract">
+                    
+					<h2>Abstract</h2>
+                    
+					<p class="small">An understanding of how people move around cities is vital for building up reliable estimates of the population at risk for phenomena that vary in space and time. For example, to reliably assess the disease burden of air pollution on a population it is important to understand when and where the activities of individuals intersect with pollution hotspots. However, modelling dynamic populations is extremely difficult as most well-established data sources contain sparse information about non-residential activities. Fortunately, emerging data sources such as those arising through the use of social media or loyalty cards hold the promise of providing more reliable information about non-residential daily activities. The challenge, therefore, is to create a high-resolution model of urban flows that is able to take advantage of good quality residential and non-residential data sources.</p>
+
+					<p class="small">This research proposes an original approach: to use agent-based modelling as the tool to bring together disparate data sources and create an accurate, high-resolution model of individual-level daily urban flows. The model will draw on advances from disciplines such as meteorology to dynamically calibrate the agent-based model as new data streams become available. Ultimately the results of the simulation will be married to estimates of pollutant concentrations to estimate the disease burden of some pollutants. Preliminary results illustrate that the model holds promise as a reliable tool for modelling the ambient urban population.</p>
+
+                </section>
+                
+                <section id="outline">
+                    
+                    <h2>Outline</h2>
+                    <p>Context: The Ambient Population</p>
+                    <p class="l2">Crime victimisation</p>
+                    <p class="l2">Disease burden of pollution</p>
+                    <p>Quantifying the ambient population</p>
+                    <p>A new approach to merging urban flow data: Agent-Based Modelling?</p>
+                    <p>Conclusions and outlook</p>
+                </section>
+                
+                
+                <!-- *
+                     *
+                     *
+                     CONTEXT - ambient population
+                     *
+                     *
+                -->
+                
+                <section id="AmbientPop"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="fragment whitebackground2">
+                        <h2>Quantifying the Ambient population</h2>
+                        <p>Surprisingly poor data to quantify mobile populations </p>
+                        <p>But understanding mobile populations is vital</p>
+                        <p>Crime</p>
+                        <p class="l2">Daily flows of people radically alter urban characteristics</p>
+                        <p class="l2">Substantial impact on crime rates (Andresen and Jenion, 2010; Felson and Boivin, 2015; Stults and Hasbrouck, 2015).</p>
+                        <p>Pollution</p>
+                        <p class="l2">Large variations over small scales (Britter and Hanna, 2003)</p>
+                        <p class="l2">Human exposure also dependent on mobility</p>            
+                    </div>
+                </section>
+                
+                <section id="AmbientPop"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="whitebackground2">
+                        <h2>We need better models of the ambient population!</h2>
+                    </div>
+                </section>
+                
+                
+                <section id="Context-BigData">
+                    <h2>The 'Age of Big Data'</h2>
+                    <!-- <img data-src="../figures/big_data.jpg" /> -->
+                    <a href="http://www.sciencedaily.com/releases/2013/05/130522085217.htm">
+                        <img class="right" data-src="http://images.sciencedaily.com/2013/05/130522085217-large.jpg"
+                        alt="Image of big data globe (from Science Daily)." /></a>
+                    
+                    <p>Explosion in data volume.</p>
+                    <p>'Datafication' of hitherto private thoughts/actions.</p>
+                    <p>Proliferation of GPS-enabled devices</p>
+                    <p>Opportunity to better understand urban flows</p>
+                </section>
+            
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     Crime Victimisation
+                     *
+                     *
+                -->
+                
+                <section id="Ambient-Crime">
+                    <h2>The Ambient Population</h2>
+                    <h3>Crime Victims</h3>
+                    
+                    <p>What is the most appropriate denominator for crime rate calculations?</p>
+                    <p class="l2">Residential population is the most common</p>
+                    <p class="l2">But not always appropriate</p>
+                    <p>Difficult to quantify hotspot severity without good population at risk estimates</p>
+                    
+                </section>
+                
+                <section id="Ambient-Crime2a"
+                             data-transition="zoom-out slide-in">
+                    
+                    <figure >
+                        <figcaption>
+                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-A.png" alt="Hotspot disappearing from the city centre"/>
+                    </figure>
+                </section>
+                
+                <section id="Ambient-Crime2b" 
+                         data-transition="zoom-in slide-out">
+                    
+                    <figure >
+                        <figcaption>
+                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-B.png" alt="Hotspot disappearing from the city centre"/>
+                    </figure>
+                </section>
+                
+                
+
+                <section id="Ambient-Crime3">
+                    <figure class="two-left">
+                        <figcaption>
+                            Malleson, N. and M. A. Andresen (2015a) Spatio-temporal crime hotspots and the ambient population. <i>Crime Science</i> 4(10).
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/city_centre_results.png" alt="Hotspot shifting from the city centre in the evening"/>
+                    </figure>
+                    <figure class="two-right">
+                        <figcaption>
+                            Malleson, N., and  M. A. Andresen (2016) Exploring the impact of ambient population measures on London crime hotspots. <i>Journal of Criminal Justice</i> 46: 52-63
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/data_overview.png" alt="Different data sources used to measure the 'ambient' population - mobile phones, twitter, the census, pop247."/>
+                    </figure>
+                </section>
+                
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     Disease burden of pollution
+                     *
+                     *
+                -->
+
+                 <section id="Abient-Pollution">
+                    <figure class="right">
+                        <img data-src="../figures/attribution/pollution.jpg" alt="Polluted city" />
+                        <figcaption>
+                            <p>Source: <a href="https://www.flickr.com/photos/thewildrover/">dreamingyakker</a> (<a href="https://creativecommons.org/licenses/by-nc-nd/2.0/">CC BY-NC-ND 2.0</a>).
+                            </p>
+                        </figcaption>
+                    </figure>
+                    <h2>The Ambient Population</h2>
+                    <h3>Impacts of Pollution</h3>
+                    <p>Largest cause of preventable deaths (WHO)</p>
+                    <p>Improved models of pollution generation and dispersal</p>
+                    <p class="l2">Including individual polluters (Nyhan et al., 2016)</p>
+                    <p>But still relatively weak estimates of the population-at-risk</p>
+                </section>
+                
+                <section id="Pollution-RelatedWork" data-background-image="../figures/attribution/pollution.jpg">
+                    
+                    <div class="fragment whitebackground2">
+                        <h2>Individual Exposure</h2>
+                        <h3>Related Work - Modelling dynamic /individual exposure</h3>
+                        
+                        <p>Travel diaries (&amp; GPS tracking)</p>
+                        <p class="l2">Calculate personal exposure (Yoo et al., 2015)</p>
+                        
+                        <p>Travel surveys</p>
+                        <p class="l2">Coupled activity model and dispersion model (Beckx et al., 2009, Dhondt et al, 2012, Setton et al., 2011)</p>
+                        
+                        <p>Bulk mobile phone activity</p>
+                        <p class="l2"> . . .</p>
+                        
+                    </div>
+                    
+                </section>
+                
+                <section id="Pollution-RelatedWork2" data-background-image="../figures/attribution/pollution.jpg">    
+                    <div class="whitebackground2">
+                        <h2>Individual Exposure</h2>
+                        <h3>Related Work - Modelling dynamic /individual exposure</h3>
+                        
+                        <p>Improved pollution models</p>
+                        <p class="l2">Nyhan et al. (2016): large taxi dataset to estimate street segment polution (highly detailed: factored in accelaration!)</p>
+                        
+                        <p><strong>Consistent finding:</strong> <i>Residential</i> models underestimate exposure</p>
+                        
+                        <p>Opportunity to use simulation to:</p>
+                        <p class="l2">Combine data sources</p>
+                        <p class="l2">Scale-up smaller surveys</p>
+                    
+            
+                    </div>
+                    
+                </section>
+            
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     Representing the ambient population
+                     *
+                     *
+                -->
+
+                    <section id="Abmient-Data"  
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="whitebackground2">
+                        <h2>Urban Flow Data</h2>
+                        <p>The ambient population is important</p>
+                        <p>But how to quantify it?</p>
+                        <p>And how to better understand urban flows?</p>                        
+                    </div>
+                </section>
+                
+                <section id="Data-Twitter">
+                    <h2>Urban Flow Data</h2>
+                    <h3>Social Media</h3>
+                    <figure>
+                        <img data-src="../figures/paper_figures/example_activity_space1-forStanford-3D.png" alt="Example activity spaces derived from twitter messages"/>
+                        <figcaption>Malleson, N and M. Birkin. (2014) New Insights into Individual Activity Spaces using Crowd-Sourced Big Data. <i>Paper presented at the 2014 <a href="http://www.scienceengineering.org/ase/conference/2014/bigdata/sanjose/website/">BigData conference,</a> Stanford, CA, USA, 27-31 May.</i> [<a href="http://nickmalleson.co.uk/wp-content/uploads/2014/05/bigdata-stanford-final.pdf">paper (pdf)</a>][<a href="http://nickmalleson.co.uk/html/presentations/2014-05-BigData">slides (html)</a>].
+                        </figcaption>
+                    </figure>
+                </section>
+                
+                
+                <section id="Data-MobilePhones">
+                    <figure class="right">
+                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
+                        <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                    </figure>
+                    <h2>Urban Flow Data</h2>
+                    <h3>Mobile Communications</h3>
+                    <p>Large population coverage</p>
+                    <img class="left" data-src="../figures/paper_figures/census_mobile-correlation.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                    <p>Private, unknown methodology, privacy concerns, coarse resolution (?)</p>
+                </section>
+                
+                <section id="Data-Geo-Apps">
+                    <img class="right" data-src="../figures/traces.jpg" alt="Traces of movement from a smart-phone app" />
+                    <h2>Urban Flow Data</h2>
+                    <h3>Geo-Apps</h3>
+                    <p>Smart-phone apps that capture movement / location are becoming ubiquitous</p>
+                    <p>Great potential for understanding (some) urban dynamics</p>
+                </section>
+                
+                <!--<section id="Data-Geo-Apps2" data-background-video="../videos/Discover-Pokemon-in-the-Real-World-with-Pokemon-GO-.webm">
+                </section> -->
+                <section id="Data-Geo-Apps2" data-background-image="../figures/pokemon.jpg">
+                    
+                </section>
+                
+                
+                <section id="Data-Issues">
+                    <h2>Urban Flow Data</h2>
+                    <div id="columns">
+                        <div class="left column">
+                            <h3>Difficulties</h3>
+                            <p>Skewness</p>
+                            <p class="l2">Prolific users distort patterns</p>
+                            <p>Representation</p>
+                            <p class="l2">Online &amp; public &ne; offline &amp; private</p>
+                            <!-- <p class="l2">Device / service only used for certain purposes</p> -->
+                            <p>Spatial accuracy</p>
+                            <p>Bias</p>
+                            <p class="l2">Participation inequality and the digital divide</p>
+                            <p>Complicated!!</p>
+                            <p class="l2">Messy, and "too big for Excel"</p>
+                        </div>
+                        <div class="right column">
+                            <h3>Benefits</h3>
+                            <p>Volume</p>
+                            <p class="l2">Potential for large sub-samples</p>
+                            <p>Velocity</p>
+                            <p class="l2">Streaming / regularly updated</p>
+                            <p class="l2">Potential for dynamic models</p>
+                            <div class="fragment">
+                                <h3 >Need to consolidate diverse sources</h3>
+                                <h3>Solution: Agent-Based Modelling ?</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     ABM & surf
+                     *
+                     *
+                -->
+
+                <section id="abm">
+                    <h2>Agent-Based Modelling (ABM)</h2>
+                    <img class="right" data-src="../figures/virtual_city.jpeg"/>
+                    <p>Autonomous, interacting 'agents'</p>
+                    <p>Model phenomena from the 'bottom-up'</p>
+                    <p>Advantages:</p>
+                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
+                    <p class="l2">Natural description of a system</p>
+                    <p class="l2">Bridge between verbal theories and mathematical models</p>
+                    <p class="l2">History of the evolution of the system</p>
+                </section>
+           
+                
+
+                <!--
+                <section id="abm-advantages">    
+                    <h2>Agent-Based Modelling</h2>
+                    <h3>Appeal:</h3>
+                    <img class="right" data-src="../figures/virtual_city.jpeg"/>
+                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
+                    <p class="l2">Natural description of a system</p>
+                    <p class="l2">Bridge between verbal theories and mathematical models</p>
+                    <p class="l2">Produces a history of the evolution of the system</p>
+                </section>
+                
+                <section id="abm-Disadvantages">
+                    <h2>Agent-Based Modelling</h2>
+                    <figure class="right" >
+                        <img data-src="../figures/jacobs_choice.png" />
+                        <figcaption>Will I play with the truck, or the duck?<br/><br/>Both!</figcaption>
+                    </figure>
+
+                    <h3>Difficulties:</h3>
+                    
+                    <p>Stochasticity</p>
+                    <p>Computationally expensive (not amenable to optimisation)</p>
+                    <p class="l2">Complicated agent decisions</p>
+                    <p class="l2">Lots of decisions!</p>
+                    <p class="l2">Multiple model runs (robustness)</p>
+                    <p>Modelling "soft" human factors</p>
+                    <p class="l2">Need detailed, high-resolution, individual-level data</p>
+
+                </section>
+                -->
+                
+                
+                <section data-background-image="../figures/surf_workplan-v2.png" id="surf">
+                        
+                    <div class="fragment whitebackground2">
+                        
+                        <h2>surf</h2>                        
+                        <h3>Big Data, ABM, Smart Cities, Ambient Populations</h3>
+
+                        <p>A city-wide dynamic ABM, constantly re-calibrated to streaming data</p>
+                        
+                        <p>New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
+
+                    </div>
+                    
+                </section>
+                
+                
+                <section data-background-video="../videos/surf_simulation_1-540p.webm"
+                         data-background-video-loop="loop"
+                         id="abm-improbable-video2">
+                    
+                    <div id="columns" class="fragment">
+                        <div class="left column" style="background-color:rgba(255,255,255,0.5)" >
+                            <p>Simulating Urban Flows (surf) prototype</p>
+                            <p><a href="https://github.com/nickmalleson/surf" >github.com/nickmalleson/surf</a></p>
+                        </div>
+                    <!--<a style="background-color:white;" href="http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html">http://surf.leeds.ac.uk/announce/2015/12/10/ImprobableSim.html</a>-->                        
+                        <div class="right column">
+                            <figure >
+                                <figcaption>
+                                    Source: Improbable Spatial OS <a href="http://improbable.io/learn-more">http://improbable.io/learn-more</a>
+                                </figcaption>
+                                <a href="http://improbable.io/learn-more"><img data-src="../figures/spatialos.jpg" /></a>
+                        </figure>
+                        </div>
+                    </div>
+                </section>
+
+                
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     DDA
+                     *
+                     *
+                -->
+                
+            
+                
+                <section id="dda2">
+                    <h2>Dynamic Data Assimilation</h2>
+                    
+                    <div id="columns">
+                        <div class="left column">
+                            <h3>Approach</h3>
+                            <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                            <p>We can:</p>
+                            <p class="l2">Restart model with new (up to date) data</p>
+                            <p class="l2">Adjust model parameters to better match reality</p>
+                        </div>
+                        <div class="right column">
+                            <h3>How?</h3>
+                            <p>Particle filters</p>
+                            <p>Kalman Filter</p>
+                            <p>Ensemble Kalman Filter</p>
+                            <p>Sequential Monte Carlo (SMC)</p>
+                            <p>... others ...</p>
+                         </div>
+                    </div>
+                    
+                    
+                
+                </section>
+                
+                <section id="enkf">
+                    
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Outline</h3>
+                    <figure>
+                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
+                        <figcaption>
+                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
+                        </figcaption>
+                    </figure>                
+                </section>                
+                
+                
+                
+                <!-- *
+                     *
+                     *
+                     Conclusions / Outlook 
+                     *
+                     *
+                -->
+
+                
+                <section id="conclusion"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="whitebackground2">
+                        <h2>Conclusion and Outlook</h2>
+
+                        <p>Ongoing advances in pollution modelling</p>
+                        <p>Models of the <i>population</i> need to keep pace</p>
+                        <p>Opportunities with 'big' data</p>
+                        <p>(Agent-Based) simulation as a means of:</p>
+                        <p class="l2">Combining disparate data</p>
+                        <p class="l2">Scale up small surveys</p>
+                    </div>
+                </section>
+                
+                
+                
+                
+
+                
+                
+                <section id="references">
+                    
+                    <h2>References</h2>
+                    
+                    
+                    <p>Andresen, M. A., and Jenion, G. W. (2010). Ambient populations and the calculation of crime rates and risk. Security Journal, 23, 114–133.</p>
+                    
+                    <p>Beckx, C., L. Int Panis, T. Arentze, D. Janssens, R. Torfs, S. Broekx, and G. Wets (2009). A dynamic activity-based population modelling approach to evaluate exposure to air pollution: Methods and appli- cation to a Dutch urban area. Environmental Impact Assessment Review 29(3), 179–185.</p>
+                    
+                    <p>Felson, M., and Newton, A. (2015). Crime patterns in time and space: The dynamics of crime opportunities in Urban areas. Special issue. Crime Science, 4.</p>
+                    
+                    <p>Nyhan, M., Sobolevsky, S., Kang, C., Robinson, P., Corti, A., Szell, M., Streets, D., Lu, Z., Britter, R., Barrett, S.R.H., Ratti, C., (2016). Predicting vehicular emissions in high spatial resolution using pervasively measured transportation data and microscopic emissions model. Atmospheric Environment -. doi:http://dx.doi.org/10.1016/j.atmosenv.2016.06.018</p>
+                    
+                    <p>Setton, E., J. D. Marshall, M. Brauer, K. R. Lundquist, P. Hystad, P. Keller, and D. Cloutier-Fisher (2011). The impact of daily mobility on exposure to tra ic-related air pollution and health e ect estimates. Journal of Exposure Science and Environmental Epidemiology 21(1), 42–48.</p>
+                    
+                    <p>Stults, B. J., and Hasbrouck, M. (2015). The effect of commuting on city-level crime rates. Journal of Quantitative Criminology, 31, 331–350.</p>
+                    
+                    <p> Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access)</p>
+                    
+                    <p>Yoo, E.-H., Rudra, C., Glasgow, M., Mu, L., 2015. Geospatial Estimation of Individual Exposure to Air Pollutants: Moving From Static Monitoring to Activity-Based Dynamic Exposure Assessment. Annals of the Association of American Geographers.</p>
+                    
+                </section>
+                
+                
+                <section class="title"  id="thanks">    
+                    <h1>Thanks</h1>
+                    <h2>Simulating Urban Flows to Estimate the Disease Burden of Air Pollution</h2>
+                    <hr/>
+                    <h3><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a></h3>
+                    <h4>School of Geography, University of Leeds</h4>
+                    <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                    <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
+                    <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
+                </section>
+                
+                
+
+                
+			</div>
+		</div>
+
+		<script src="reveal/lib/js/head.min.js"></script>
+		<script src="reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal/plugin/markdown/marked.js' },
+					{ src: 'reveal/plugin/markdown/markdown.js' },
+					{ src: 'reveal/plugin/notes/notes.js', async: true },
+					{ src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
