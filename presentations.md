@@ -7,6 +7,8 @@ tagline: Presentations about, or relating to, the surf project
 Presentations about, or relating to, the surf project
 
  - 2016
+
+   - [Crime Analytics and the Role of Dynamic Simulation Models]({{site.baseurl}}/p/2016-10-20-LIDA_Crime_Analytics.html) Presentation as part of the [Crime Analytics](http://lida.leeds.ac.uk/event/crime-analytics/) [LIDA Seminar](http://lida.leeds.ac.uk/latest/lida-seminar-series/). 20th October 2016.
      
    - [Simulating Urban Flows to Estimate the Disease Burden of Air Pollution]({{site.baseurl}}/p/2016-08-rgs-urban_analytics.html) Presentation to the _[Royal Geographical Society Annual International Conference](http://www.rgs.org/WhatsOn/ConferencesAndSeminars/Annual+International+Conference/Annual+international+conference.htm). 30 August - 2 September._ [Urban Analytics](http://{{site.baseurl}}/announce/2016/04/27/RGS2016-UrbanAnalytics-Papers.html) session. (31st August 2016)
 
