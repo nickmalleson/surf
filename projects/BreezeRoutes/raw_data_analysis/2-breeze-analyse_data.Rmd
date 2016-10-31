@@ -406,11 +406,33 @@ plot(x=d.f3$steps, y=d.f3$elapsedTimeMin, xlim = c(0,2000), xlab="Steps", ylab="
 plot1 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex()
 grid.arrange(plot1, ncol=1, nrow=1)
 
-# Also make a pdfx
-ggsave("filter3-steps_vs_eapsed_time.pdf")
-
 #plot2 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + xlim(0,10000)
 #grid.arrange(plot1, plot2, ncol=1, nrow=2)
+# Also make a pdfx
+
+#ggsave("filter3-steps_vs_eapsed_time.pdf")
+
+```
+
+Show the relationship between steps and elapsed time before and after filtering
+
+```{r filter3-steps2b}
+
+plot1 <- ggplot(d,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + 
+  ggtitle("Before cleaning") + ylab("Elapsed time (min)") + xlab("Number of steps")
+
+plot2 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + 
+  ggtitle("After cleaning") + ylab("Elapsed time (min)") + xlab("Number of steps")
+
+# Show the two plots:
+grid.arrange(plot1, plot2, ncol=1, nrow=2)
+
+# Save the two plots (need to use arrangeGrob because grid.arrange doesn't save the last plot)
+g <- arrangeGrob(plot1, plot2, ncol=1, nrow=2)
+plot1 <- ggplot(d.f3,aes(x=steps, y=elapsedTimeMin)) + stat_binhex() + ggtitle("After cleaning")
+
+ggsave(file="filter3-steps_vs_eapsed_time.pdf", plot = g, width=5, height=8)
+
 ```
 
 After filtering on the number of steps, this leaves `r nrow(d.f3)` traces.
