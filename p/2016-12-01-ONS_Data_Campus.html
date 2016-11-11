@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="author" content="Nick Malleson">
+        <meta name="keywords" content="crime, ABM, pollution, simulation, ambient population">
+
+		<title>Dynamic, data-driven, agent-based modelling for simulating cities: Understanding Crime and Pollution</title>
+
+		<link rel="stylesheet" href="reveal/css/reveal.css">
+		<link rel="stylesheet" href="reveal/css/theme/white.css">
+        
+        <!-- Some extra bits added by Nick -->
+        <link rel="stylesheet" href="reveal/css/nick.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal/css/print/pdf.css' : 'reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                
+                <!--
+                <section data-markdown id="index"
+                         data-background-image="http://surf.leeds.ac.uk/figures/cityscapes/chicago_bw.jpg">
+                -->
+                    
+                <section class="title"  id="index">
+                    
+                    <h2>Dynamic, data-driven, agent-based modelling for simulating cities:</h2>
+                    <h3>Understanding Crime and Pollution</h3>
+                    <hr/>
+                    <h3>Nick Malleson</h3>
+                    <h4>School of Geography, University of Leeds</h4>
+                    <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                    <h4 style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></h4>
+                </section>
+                
+
+                <section>
+                    <section id="abstract" >
+
+                	
+                	<h2>Abstract</h2>
+                	
+                	<p class="small">An understanding about how people move around cities is vital for building up reliable estimates of the population at risk for phenomena that vary in space and time. For example, to reliably assess the disease burden of air pollution or the risk of crime victimisation, it is important to understand when and where the activities of individuals intersect with areas of potential harm. However, modelling dynamic populations is extremely difficult as most well-established data sources contain very little information about non-residential activities. Fortunately, emerging ‘big' data sources such as those arising through the use of mobile telephones, social media, or loyalty cards hold the promise of providing more reliable information about non-residential daily activities. The challenge, therefore, is to create a high-resolution model of urban flows that is able to take advantage of good quality residential and non-residential data sources.</p>
+
+					<p class="small">This presentation will discuss an ongoing research project called Simulating Urban Flows (surf) that is using agent-based modelling as the tool to bring together varied data sources and create an accurate, high-resolution model of individual-level daily urban flows. Its vision is for a comprehensive model that is able to simulate the movements of individual synthetic people and subsequently build up accurate, dynamic footfall estimates. These will be compared to air pollution hotspots and to crime patterns to better understand how mobile populations are affected by these problems.</p>
+                    
+                </section>
+                </section>
+                
+                
+			</div>
+		</div>
+
+		<script src="reveal/lib/js/head.min.js"></script>
+		<script src="reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal/plugin/markdown/marked.js' },
+					{ src: 'reveal/plugin/markdown/markdown.js' },
+					{ src: 'reveal/plugin/notes/notes.js', async: true },
+					{ src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
