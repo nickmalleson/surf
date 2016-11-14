@@ -27,17 +27,25 @@ The three different kinds of routes that the script reads are:
  - shortest paths (the shortest paths the could be used to do the same route)
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
-#library(knitr)
-#knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
-#setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
-
-setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
-
+# FOR COMPILING RMD ON THE SERVER:
+library(knitr)
+knitr::opts_knit$set(root.dir = "/home/geonsm/runkeeper/mapmatching-traces/")
+setwd("/home/geonsm/runkeeper/mapmatching-traces/")
 # The binary file that contains all the traces (exhaustively read in on the server)
 TRACES_FILE = "./traces-server-all.RData" # When running from the server
 
+
+
+# FOR COMPILING RMD ON NICK's LAPTOP (data on server):
+#library(knitr)
+#knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
 #TRACES_FILE = "~/research_not_syncd/mapping_local/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/traces-server-all.RData" # When running on laptop (all data on server)
 
+
+
+# FOR WORKING LOCALLY (e.g. testing stuff)
+#setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
 #TRACES_FILE = "./traces-temp.RData"
 
 # Paths to the original files, shortest paths, and matched paths
