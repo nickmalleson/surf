@@ -34,7 +34,10 @@ The three different kinds of routes that the script reads are:
 setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
 
 # The binary file that contains all the traces (exhaustively read in on the server)
-TRACES_FILE = "./traces-server-all.RData"
+TRACES_FILE = "./traces-server-all.RData" # When running from the server
+
+#TRACES_FILE = "~/research_not_syncd/mapping_local/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/traces-server-all.RData" # When running on laptop (all data on server)
+
 #TRACES_FILE = "./traces-temp.RData"
 
 # Paths to the original files, shortest paths, and matched paths
@@ -552,6 +555,8 @@ Finally compare the Hausdorff and relative distances travelled in one plot (for 
 ```{r hausdorff.and.actual.difference, fig.height=15}
 
 par(mfrow=c(2,1))
+
+XXXX HERE - REDRAW WITH Y AXIS THAT DOESN'T LEAVE THE PAGE
 
 # Actual distance
 
@@ -1173,6 +1178,80 @@ test.matrix <- spdf.to.matrix(test.spdf)
 #write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 
 ```
+
+### Comparing in- and out-flows for symmetry
+
+As all flows in-to and out-of a cell involve an interaction with only one of the four possible von Neumann neighbours, we can test the symmetry of traces passing through each cell by calculating the flow in-to and out-of each cell as a 4-element vectors (_fin(i)_ and _fout(i)_ respectively). Then the _relative flow_ (_frel(i)_)can be defined as the magnitude difference between the _fin(i)_ and _fout(i)_ vectors. If all traces are symmetrical, then for all cells the number of traces entering the cell from each direction will be equal to the number of traces leaving from the same direction.
+
+```{r relativeFlowSymmetry}
+
+# Calculate the flows in-to and out-of each cell in each direction using the transition matrix
+
+rel.flow <- c() # Relative flow in each cell (absoulte difference between fin and fout vetors for each cell)
+total.flow <- c() # Useful for percentages
+
+calc.flow <- function(o,d) { # Calculate flow from o to d, checking for boundary errors
+    if ( o > total.cells || o < 1 || d > total.cells || d < 1) {
+      return (0)
+    } else {
+      return(result1.matrix[o,d])
+    }
+}
+
+# Iterate over all cells 
+for (cell in seq(1, total.cells)) {
+  
+  # Work out which cell IDs make up the von Neuman neighbours of the curent cell. These are used to index into the transition matrix
+  n <- cell - num.cells # (number of cells per row)
+  e <- cell +1
+  s <- cell + num.cells
+  w <- cell -1
+  
+  # Flows into the cell from N E S W. Note that matrix is accessed by mat[y,x] (not x,y)
+  fin <- c(
+    calc.flow(n,cell), # N
+    calc.flow(e,cell), # E
+    calc.flow(s,cell), # S
+    calc.flow(w,cell) # W
+  )
+  fout <- c(
+    calc.flow(cell, n), # N
+    calc.flow(cell, e), # E
+    calc.flow(cell, s), # S
+    calc.flow(cell, w) # W
+  )
+  # Relative flow is the Euclidean distance between inflows and outflows
+  frel <- dist(rbind(fin, fout))
+  rel.flow <- c(rel.flow, frel)
+  
+  # Also remember the total flow
+  total.flow <- c(total.flow, result1[,cell]@data$total.intersection)
+  
+}
+
+
+```
+
+Lets see the distribution of total and relative flows
+
+```{r relativeFlowSymmetry-Distributions }
+
+
+par(mfrow=c(1,2))
+hist(rel.flow, breaks="Scott", main="Distribution of relative flows")
+hist(rel.flow/total.flow, breaks="Scott", main="Proportional relative flows")
+
+# And one for the paper
+#pdf(file="within_cell_flow_correlation.pdf", width = 7, height = 7)
+#plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
+#abline(a=0,b=1,col="gray", lty=3)
+#legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
+#dev.off()
+
+
+
+```
+
 
 ### Within-cell flow
 
