@@ -8,6 +8,7 @@ This is the website for <a href="http://nickmalleson.co.uk/">Nick Malleson's</a>
 
  - For the latest news, see the [blog]({{site.baseurl}}/blog.html).
  - For some relevant presentations, see [presentations]({{site.baseurl}}/presentations.html).
+ - For the model code and other programming work see the [GitHub page](https://github.com/nickmalleson/surf)
 
 ## Introduction
 
