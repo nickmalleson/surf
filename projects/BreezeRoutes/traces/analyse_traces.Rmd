@@ -1131,6 +1131,9 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
 writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile")
 
+# Save the objects - easy to read back in
+save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
+
 ```
 
 _The code below is for testing the algorithm, it defines a few test routes and makes a small grid_
@@ -1233,7 +1236,7 @@ for (cell in seq(1, total.cells)) {
   rel.flow <- c(rel.flow, frel)
   
   # Also remember the total flow
-  total.flow <- c(total.flow, result1[,cell]@data$total.intersection)
+  total.flow <- c(total.flow, result1[[cell]]$total.intersection)
   
 }
 
@@ -1246,20 +1249,36 @@ Lets see the distribution of total and relative flows
 
 
 par(mfrow=c(1,2))
-hist(rel.flow, breaks="Scott", main="Distribution of relative flows")
-hist(rel.flow/total.flow, breaks="Scott", main="Proportional relative flows")
+hist(rel.flow, breaks="Scott", main="Distribution of relative flows", xlab=expression("f"["rel"]*"()."))
+hist(rel.flow/total.flow, breaks="Scott", main="Relative flow proportions", xlab=expression("f"["rel"]*"()/total_flow."))
 
 # And one for the paper
-#pdf(file="within_cell_flow_correlation.pdf", width = 7, height = 7)
-#plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
-#abline(a=0,b=1,col="gray", lty=3)
-#legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
-#dev.off()
+pdf(file="relative_flow_symmetry-distributions.pdf", width = 7, height = 7)
+par(mfrow=c(1,2))
+hist(rel.flow, breaks="Scott", main="Distribution of relative flows", xlab=expression("f"["rel"]*"()."))
+hist(rel.flow/total.flow, breaks="Scott", main="Relative flow proportions", xlab=expression("f"["rel"]*"()/total_flow."))
+dev.off()
 
 
 
 ```
 
+Map those relative flows
+
+```{r relativeFlowSymmetry-Distributions, fig.width=11, fig.height=7}
+
+# Attach the relative flows to the spatial data frame for mapping
+result1.spdf@data$rel.flow <- rel.flow # Relative flow
+result1.spdf@data$rel.flow.prop <- rel.flow/total.flow # proportion (catching zero division)
+result1.spdf$rel.flow.prop[is.nan(result1.spdf$rel.flow.prop)] <- 0
+
+par(mfrow=c(1,2))
+choropleth(result1.spdf, result1.spdf@data$rel.flow, main="Relative flow asymmetry, frel()")
+choropleth(result1.spdf, result1.spdf@data$rel.flow.prop,  main = "Proportions - frel()/total.flows")
+
+```
+
+_At this point write out the result1 data frame as a shapefile and make a map in ArcGIS_
 
 ### Within-cell flow
 
