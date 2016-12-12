@@ -6,7 +6,7 @@ import sim.portrayal.simple.OvalPortrayal2D
 /**
   * Created by nick on 25/11/2016.
   */
-class Agent extends OvalPortrayal2D with Steppable {
+class Agent(state: SurfDDA) extends OvalPortrayal2D with Steppable {
 
   // A unique id for each agent with a public accessor.
   private val _id : Int = Agent.uniqueID()
@@ -25,4 +25,7 @@ object Agent {
     _uniqueID+=1
     _uniqueID
   }
+
+  def apply(state:SurfDDA) : Agent = new Agent(state)
+
 }

@@ -1265,7 +1265,7 @@ dev.off()
 
 Map those relative flows
 
-```{r relativeFlowSymmetry-Distributions, fig.width=11, fig.height=7}
+```{r relativeFlowSymmetry-Distributions2, fig.width=11, fig.height=7}
 
 # Attach the relative flows to the spatial data frame for mapping
 result1.spdf@data$rel.flow <- rel.flow # Relative flow
@@ -1398,5 +1398,38 @@ plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 
 ```
 
-XXXX maybe do these, will write up paper first.
+
+## Shortest path choice v.s. symmetry
+
+It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
+
+ 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest)
+ 1. Remove them from the data set, leaving on only the shortest relative routes.
+ 1. Repeat the asymmetry analysis on the remaining (shortest-path like) traces.
+ 1. Calculate the aggregate asymmetry value:
+   - If it ramains similar (~15%) then the shortest-path and asymmetry choices are independent.
+   - If not, then there may be a correlation between the two choices.  
+ 1. **Repeat using the longest relative path routes**. 
+
+
+XXXX HERE
+
+```{r }
+
+
+```
+
+
+
+
+# Anlnymise and Save Workspace
+
+It is useful to save all these data so that it isn't necessary to re-run everything.
+
+```{r saveWorkspace}
+
+save.image(file="analyse_traces.RData")
+
+```
+
 

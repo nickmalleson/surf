@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/abm/SimBurglarMason/SimBurglarMason.iml" filepath="$PROJECT_DIR$/abm/SimBurglarMason/SimBurglarMason.iml" />
-      <module fileurl="file://$PROJECT_DIR$/abm//dda-abm.iml" filepath="$PROJECT_DIR$/abm//dda-abm.iml" />
       <module fileurl="file://$PROJECT_DIR$/abm/resources/mason/contrib/geomason/geomason.iml" filepath="$PROJECT_DIR$/abm/resources/mason/contrib/geomason/geomason.iml" />
       <module fileurl="file://$PROJECT_DIR$/abm/resources/mason/mason/mason.iml" filepath="$PROJECT_DIR$/abm/resources/mason/mason/mason.iml" />
       <module fileurl="file://$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" filepath="$PROJECT_DIR$/abm/surf-abm/surf-abm.iml" />
