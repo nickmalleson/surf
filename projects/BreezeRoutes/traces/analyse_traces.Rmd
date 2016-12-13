@@ -304,9 +304,15 @@ if (!file.exists(TRACES_FILE)) {
   load(TRACES_FILE)
 }
 
+# No longer using the non-transformed versions for anything, so delete them
+# (I could delete them from the TRACES_FILE, but that would mean more changes to the code and re-running
+# the trace analysis on the server)
+# Note: 'matched' isn't deleted because this is used to create the 'all.routes' data later and getting rid of it now would mean redoing lots of the maps. It isn't used in the analysis though so doesn't really matter.
+rm(orig, shortest)
+
 ```
 
-Read `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
+Read `r length(matched.ma)` matched traces, `r length(orig.ma)` original traces, and `r length(shortest.ma)` shortest paths.
 
 # Filter Bad Matches
 
@@ -380,9 +386,9 @@ bad.indices <- which(
   rel.diff>(quantile(rel.diff)[4]+(1.5*IQR(rel.diff)))
   )
 
-orig <- orig[-bad.indices]
+#orig <- orig[-bad.indices]
+#shortest <- shortest[-bad.indices]
 matched <- matched[-bad.indices]
-shortest <- shortest[-bad.indices]
 orig.ma <- orig.ma[-bad.indices]
 matched.ma <- matched.ma[-bad.indices]
 shortest.ma <- shortest.ma[-bad.indices]
@@ -393,19 +399,21 @@ rm(abs.diff, bad.indices, diff, rel.diff)
 
 ```
 
-After filtering, there are `r length(matched)` matched traces, `r length(orig)` original traces, and `r length(shortest)` shortest paths.
+After filtering, there are `r length(matched.ma)` matched traces, `r length(orig.ma)` original traces, and `r length(shortest.ma)` shortest paths.
 
 These were created by `r length(unique(unlist(userid)))` separate users.
 
 This is a god point to create a single SpatialLines object from the discrete Lines (traces).
 
 ```{r createSingleLine}
-# Use a consistent projection
+# Use a consistent projection. 
+# Note: could use Albers to be consistent throughout (and use 'matched.ma' below rather than 'matched') but this would mean redoing the maps. It doesn't affect the analysis.
 PROJ4STRING <- matched[[1]]@proj4string
 
 # Begin by creating a single SpatialLines object of all matched lines (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
 
 #  Get the Lines objects which contain multiple 'lines'
+# Note: using the non-Albers (*.ma) projected routes. I sohould really be using the projected versions to be consistent, but this would mean re-doing all the maps. This doesn't actually affect the results though so I'm going to leave it as it is for now.
 lines.objects <- unlist( mclapply( matched , function(x) `@`(x , "lines") ) )
 # Give each an ID based on its index
 for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
@@ -564,7 +572,7 @@ Finally compare the Hausdorff and relative distances travelled in one plot (for 
 
 par(mfrow=c(2,1))
 
-XXXX HERE - REDRAW WITH Y AXIS THAT DOESN'T LEAVE THE PAGE
+#XXXX HERE - REDRAW WITH Y AXIS THAT DOESN'T LEAVE THE PAGE
 
 # Actual distance
 
@@ -677,11 +685,11 @@ Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabita
   
 ## Define study area
 
-Need to define the study area (fairly arbitrary)
+Need to define the  (the area that qualitatively contains most of the flows)
 
 ```{r defineStudyArea}
 
-# Define the study area (farily arbitrary)
+# Define the study area (the area that qualitatively contains most of the flows)
 study.area.bb <- all.routes.oneline@bbox
 study.area.bb[1,1] <- -71.2 # x min
 study.area.bb[1,2] <- -71.0 # x max
@@ -691,6 +699,12 @@ study.area.bb[2,2] <-  42.42  # y max
 #study.area.bb[1,2] <- -7908295 # x max
 #study.area.bb[2,1] <-  5206223 # y min
 #study.area.bb[2,2] <-  5221410 # y max
+
+# These could be used when projection is Albers (epsg:5070) (not tested)
+#study.area.bb[1,1] <-  2007000 # x min
+#study.area.bb[1,2] <-  2024700# x max
+#study.area.bb[2,1] <-  2406300# y min
+#study.area.bb[2,2] <-  2422000# y max
 
 study.area.coords <- rbind(
   cbind(study.area.bb[1,1],study.area.bb[2,1]),
@@ -1116,7 +1130,7 @@ spdf.to.matrix <- function(spdf) {
 
 Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
 
-```{r makeMatrix}
+```{r makeMatrix, cache=TRUE}
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
 result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
@@ -1129,7 +1143,7 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 
 # Write out the matrix
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
-writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile")
+writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects - easy to read back in
 save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
@@ -1403,7 +1417,7 @@ plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 
 It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
 
- 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest)
+ 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest). **There are `r length(which((shortest.lengths*0.2)+shortest.lengths>matched.lengths))` / `r length(shortest.lengths)`** of these.
  1. Remove them from the data set, leaving on only the shortest relative routes.
  1. Repeat the asymmetry analysis on the remaining (shortest-path like) traces.
  1. Calculate the aggregate asymmetry value:
@@ -1412,19 +1426,42 @@ It will be interesting to see if there is some relationship between the choice t
  1. **Repeat using the longest relative path routes**. 
 
 
-XXXX HERE
+```{r createSubsets}
 
-```{r }
+# Create a subset of the longest traces relative to their shortest paths (all of those that are 20% longer than their shortest equivalent)
+
+relative.shortest.indices <- which( (shortest.lengths*0.2)+shortest.lengths > matched.lengths)
+relative.longest.indices <-  which( (shortest.lengths*0.2)+shortest.lengths <= matched.lengths)
+relative.shortest <- matched[relative.shortest.indices]
+relative.longest <-  matched[relative.longest.indices]
+
+# Sanity check - the number of elements in the two subsets should be the same as in the original data.
+stopifnot( (length(relative.longest)+length(relative.shortest)) == length(shortest.ma)   )
+
+par(mfrow=c(1,2))
+plot(relative.shortest)
+plot(study.area, add=T, border="blue")
+plot(relative.longest)
+plot(study.area, add=T, border="blue")
 
 
 ```
 
+Now re-do the asymmetry analysis but with these shortest path subsets
 
+```{r rerunAsymmetryAnalysis}
+
+
+```
+
+XXXX HERE
 
 
 # Anlnymise and Save Workspace
 
 It is useful to save all these data so that it isn't necessary to re-run everything.
+
+
 
 ```{r saveWorkspace}
 
