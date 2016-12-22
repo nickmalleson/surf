@@ -9,9 +9,7 @@
     <bookmark url="file://$PROJECT_DIR$/abm/surf-abm/src/surf/abm/main/SurfABM.scala" line="83" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="f46bcba9-5567-42a1-ad9c-cc47c842b3b2" name="Default" comment="" />
     <ignored path="surf.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,10 +36,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2835">
               <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#9217#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -51,12 +46,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1170">
               <caret line="89" column="24" lean-forward="false" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#7288#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#3774#3775#0" expanded="false" />
-                <element signature="e#3806#3807#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -66,12 +56,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="885">
               <caret line="75" column="34" lean-forward="false" selection-start-line="75" selection-start-column="34" selection-end-line="75" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#5055#0" expanded="false" />
-                <element signature="imports" expanded="false" />
-                <element signature="e#1161#1162#0" expanded="false" />
-                <element signature="e#1241#1242#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,9 +76,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1485">
               <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-              <folding>
-                <element signature="e#23#55#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -115,9 +98,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="5115">
               <caret line="357" column="3" lean-forward="false" selection-start-line="357" selection-start-column="3" selection-end-line="357" selection-end-column="3" />
-              <folding>
-                <element signature="e#23#42#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -127,9 +108,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="840">
               <caret line="58" column="29" lean-forward="false" selection-start-line="58" selection-start-column="29" selection-end-line="58" selection-end-column="29" />
-              <folding>
-                <element signature="e#18#48#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -326,7 +305,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -341,6 +319,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -376,7 +355,7 @@
       <recent name="$PROJECT_DIR$/abm/surf-mason/" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SurfDDA">
+  <component name="RunManager" selected="Application.surf-abm-withgui">
     <configuration default="false" name="ABBFAgentSpec" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="surf-abm" />
@@ -920,6 +899,7 @@
       <workItem from="1481648001777" duration="22000" />
       <workItem from="1481648193805" duration="212000" />
       <workItem from="1481648510103" duration="166000" />
+      <workItem from="1482415799743" duration="358000" />
     </task>
     <task id="LOCAL-00001" summary="Created an IntelliJ IDEA project for surf">
       <created>1455802500252</created>
@@ -971,7 +951,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="151205000" />
+    <option name="totallyTimeSpent" value="151563000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2522" height="1417" extended-state="6" />
@@ -987,7 +967,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3078635" sideWeight="0.6525265" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32299465" sideWeight="0.42594653" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26486915" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26486915" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24953213" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1260,10 +1240,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2835">
           <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9217#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1288,12 +1265,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1170">
           <caret line="89" column="24" lean-forward="false" selection-start-line="89" selection-start-column="24" selection-end-line="89" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#7288#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#3774#3775#0" expanded="false" />
-            <element signature="e#3806#3807#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1302,12 +1274,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="885">
           <caret line="75" column="34" lean-forward="false" selection-start-line="75" selection-start-column="34" selection-end-line="75" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#5055#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#1161#1162#0" expanded="false" />
-            <element signature="e#1241#1242#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1323,9 +1290,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1485">
           <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-          <folding>
-            <element signature="e#23#55#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1333,9 +1298,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5115">
           <caret line="357" column="3" lean-forward="false" selection-start-line="357" selection-start-column="3" selection-end-line="357" selection-end-column="3" />
-          <folding>
-            <element signature="e#23#42#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1343,9 +1306,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="840">
           <caret line="58" column="29" lean-forward="false" selection-start-line="58" selection-start-column="29" selection-end-line="58" selection-end-column="29" />
-          <folding>
-            <element signature="e#18#48#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
