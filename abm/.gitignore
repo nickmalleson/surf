@@ -9,3 +9,7 @@ surf-abm/results/surf_results.html
 
 # Logs
 surfabm.log*
+
+# Some data that can't be made publicly available
+surf-abm/data/otley
+

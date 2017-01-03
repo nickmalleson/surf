@@ -58,6 +58,6 @@ class SurfDDAWithUI extends GUIState(new SurfDDA(System.currentTimeMillis())) {
 
 object SurfDDAWithUI {
 
-  def main(args: Array[String]): Unit = new sim.app.antsforage.AntsForageWithUI().createController()
+  def main(args: Array[String]): Unit = new SurfDDAWithUI().createController()
 
 }
