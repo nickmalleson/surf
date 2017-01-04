@@ -257,7 +257,7 @@ object UrbanAgent {
         //throw new RoutingException("Agent " + this.toString + "(home " + this.getHomeID(state) + ", destination " + state.buildingIDs.inverse.get(destination) + ")" + " got an empty path between junctions " + currentJunction + " and " + destinationJunction + ". Probably the network is disconnected.")
         throw new RoutingException(
           s"Object ${caller.getOrElse("[Not Provided]")} got an empty path between junctions\n\t" +
-            s"Current: ${nearestJunctionToCurrent}\n\tDestination: ${nearestJunctionToDestination}.\n\t" +
+            s"Current: ${nearestJunctionToCurrent.toString} \n\tDestination: ${nearestJunctionToDestination.toString}.\n\t" +
             "The network is probably disconnected. Run disconnected-islands plugin in QGIS"
         )
       }

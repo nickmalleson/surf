@@ -16,7 +16,7 @@ case class Junction(node: Node) {
   def id() = this._id
 
   override def toString: String =
-    "Junction %d (%d,%d)".format(this.id(),this.node.getCoordinate.x, this.node.getCoordinate.y)
+    s"Junction ${this.id}, ${this.node.getCoordinate.x.toString}, ${this.node.getCoordinate.y.toString}"
 
 }
 object Junction {
