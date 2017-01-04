@@ -1,9 +1,11 @@
 package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
+import sim.field.geo.GeomVectorField
 import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
-import surf.abm.main.{SurfABM, SurfGeometry}
+import surf.abm.environment.Building
+import surf.abm.main.{BUILDING_FIELDS, SurfABM, SurfGeometry}
 
 /**
   * An agent loaded specifically for the Otley simulation. This might become generic later. See
@@ -15,6 +17,9 @@ object ABBFAgentLoaderOtley {
 
   /**
     * This method is called by [[surf.abm.main.SurfABM]] after initialisation when the model starts.
+    * For the Otley scenario, we read a file that has the origin and destination OAs for each commuter
+    * in the study area (see Nick's local file ~/mapping/projects/frl/model_data/otley/model_data/)
+    * for the details about how these data were created.
     *
     *
     * @param state The model state
@@ -22,6 +27,38 @@ object ABBFAgentLoaderOtley {
   def createAgents(state: SurfABM) = {
 
     LOG.info(s"Creating agents using ${this.getClass.getName}")
+
+    // First need to work out which buildings are contained within each output area. This is because the commuting
+    // behaviour is defined at output area level. When the buildings data were created a field called "OA" was
+    // created that contains the OA code.
+    LOG.info("Creating map of output areas and their constituent buildings")
+    val oaBuildingIDMap: Map[String, Set[Int]] = { // Create mutable obejects but, when they're ready, return them as immutable
+      val b_map = scala.collection.mutable.Map[String, scala.collection.mutable.Set[Int]]() // Temporary map (to return)
+      // Iterate over all buildings (their ID and SurfGeometry)
+      for (  (id:Int, b:SurfGeometry[Building @unchecked]) <- SurfABM.buildingIDGeomMap) {
+        val oaCode = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString) // OA code for this building
+        if (b_map.contains(oaCode)) { // Have already come across this OA; add the new building id
+          // Add the building to the set
+          b_map(oaCode) = b_map(oaCode) + id
+        }
+        else { // Not found this OA yet. Add it to the map and associate it with a new Set of building ids
+          var s = scala.collection.mutable.Set.empty[Int]
+          s += id
+          b_map(oaCode) = s
+        }
+        //println(i+" : "+b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString))
+      }
+      // Return the map and all sets as immutatable (that's what toMap and toSet do)
+      // (https://stackoverflow.com/questions/2817055/converting-mutable-to-immutable-map)
+      b_map.map(kv => (kv._1,kv._2.toSet)).toMap
+    }
+
+    LOG.info(s"\tFound ${oaBuildingIDMap.size} OAs and ${oaBuildingIDMap.values.map( x => x.size).sum} buildings")
+
+    //for ( (k,v) <- oaBuildingIDMap ) println(k+":"+v.size+" - "+v.toString())
+
+    // XXXX HERE - Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
+    // FIRST NEED TO WRITE OUT THE FLOW DATA - SEE otley.Rmd
 
     for (i <- 0.until(N)) {
 
