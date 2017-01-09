@@ -60,6 +60,9 @@ object ABBFAgentLoaderOtley {
     // XXXX HERE - Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
     // FIRST NEED TO WRITE OUT THE FLOW DATA - SEE otley.Rmd
 
+
+
+
     for (i <- 0.until(N)) {
 
       // Instantiate the agent.
