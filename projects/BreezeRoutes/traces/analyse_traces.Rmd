@@ -1417,21 +1417,22 @@ plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 
 It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
 
- 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest). **There are `r length(which((shortest.lengths*0.2)+shortest.lengths>matched.lengths))` / `r length(shortest.lengths)`** of these.
+ 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest). **There are `r length(which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.
  1. Remove them from the data set, leaving on only the shortest relative routes.
  1. Repeat the asymmetry analysis on the remaining (shortest-path like) traces.
  1. Calculate the aggregate asymmetry value:
    - If it ramains similar (~15%) then the shortest-path and asymmetry choices are independent.
    - If not, then there may be a correlation between the two choices.  
- 1. **Repeat using the longest relative path routes**. 
+ 1. **Repeat using the 'non-longest' relative path routes (i.e. thost that were not included in the above analysis).** There are `r length(which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.. 
 
 
-```{r createSubsets}
+```{r createSubsets, eval=FALSE}
 
-# Create a subset of the longest traces relative to their shortest paths (all of those that are 20% longer than their shortest equivalent)
+# The longest routes are those where the matched length is at least 20% greater than the equivalent shortest path.
+relative.longest.indices <-  which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)
+# Also repeat with the remaining 'non-longest' routes (i.e. all other routes)
+relative.shortest.indices <- which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths)
 
-relative.shortest.indices <- which( (shortest.lengths*0.2)+shortest.lengths > matched.lengths)
-relative.longest.indices <-  which( (shortest.lengths*0.2)+shortest.lengths <= matched.lengths)
 relative.shortest <- matched[relative.shortest.indices]
 relative.longest <-  matched[relative.longest.indices]
 
@@ -1447,9 +1448,11 @@ plot(study.area, add=T, border="blue")
 
 ```
 
-Now re-do the asymmetry analysis but with these shortest path subsets
+Now re-do the asymmetry analysis but with these path subsets
 
 ```{r rerunAsymmetryAnalysis}
+
+
 
 
 ```
@@ -1457,9 +1460,9 @@ Now re-do the asymmetry analysis but with these shortest path subsets
 XXXX HERE
 
 
-# Anlnymise and Save Workspace
+# Anonymise and Save Workspace
 
-It is useful to save all these data so that it isn't necessary to re-run everything.
+It is useful to save all these data so that it isn't necessary to re-run everything. There is a companion script that removes individual traces.
 
 
 
