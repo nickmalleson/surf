@@ -7,6 +7,8 @@ import surf.abm.agents.abbf.activities._
 import surf.abm.environment.Building
 import surf.abm.main.{BUILDING_FIELDS, SurfABM, SurfGeometry}
 
+import scala.io.Source
+
 /**
   * An agent loaded specifically for the Otley simulation. This might become generic later. See
   * [[surf.abm.agents.abbf.ABBFAgentLoader]] for more details about ABBF agent loaders.
@@ -55,12 +57,32 @@ object ABBFAgentLoaderOtley {
 
     LOG.info(s"\tFound ${oaBuildingIDMap.size} OAs and ${oaBuildingIDMap.values.map( x => x.size).sum} buildings")
 
-    //for ( (k,v) <- oaBuildingIDMap ) println(k+":"+v.size+" - "+v.toString())
 
-    // XXXX HERE - Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
-    // FIRST NEED TO WRITE OUT THE FLOW DATA - SEE otley.Rmd
+    // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
+    val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig+".DataDir")
+    val filename = "./data/" + dataDir + "/commuting_flows.csv"
+    LOG.info(s"Reading agents from file: '$filename'" )
+    // Get line and line number as a tuple
+    for ( (lineStr,i) <- Source.fromFile(filename).getLines().zipWithIndex) {
+      val line : Array[String] = lineStr.split(",")
+      println(s"$i === ${lineStr.toString} === ${line.toString}")
+      if (i==0) { // Check the header is as expected. It should have four columns.
+        if (line.size != 4) { // It should have four columns
+          throw new  Exception (s"Problem reading the commuting file($filename) - should have four columns but found ${line.size}")
+        }
+      }
+      else {
+        // Get the origin, destination and flow. First column (0) is not important..
+        val orig = line(1)
+        val dest = line(2)
+        val flow = line(3)
+        Array(orig, dest, flow).foreach( x => println("\t"+x) )
 
+      }
+    }
+
+    // NOW CREATE x AGENTS PER OA.
 
 
     for (i <- 0.until(N)) {
