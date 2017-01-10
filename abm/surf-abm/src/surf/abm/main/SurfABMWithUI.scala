@@ -17,7 +17,8 @@ import surf.abm.agents.Agent
   * This class can be used to run the model with a GUI.
   * Created by nick on 16/03/16.
   */
-class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
+class SurfABMWithUI extends GUIState (new SurfABM(1l)) { // Start with the same random seed each time (can be changed in the GUI).
+  //class SurfABMWithUI extends GUIState (new SurfABM(System.currentTimeMillis())) {
 
   // The display has all the portrayals added to it. It is initialised in init()
   private val display = new Display2D(SurfABM.WIDTH, SurfABM.HEIGHT, this)

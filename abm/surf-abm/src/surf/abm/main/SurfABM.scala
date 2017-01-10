@@ -46,6 +46,8 @@ class SurfABM(seed: Long) extends SimState(seed) {
   override def start(): Unit = {
     super.start
 
+    SurfABM.LOG.info("Random seed is: "+this.seed)
+
     // Initialise the clock. Currently using a default time period, but this could just as easily be defined
     // by configuration parameters.
     Clock.create(this)
