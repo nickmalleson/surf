@@ -1442,21 +1442,29 @@ relative.longest <-  matched[relative.longest.indices]
 stopifnot( (length(relative.longest)+length(relative.shortest)) == length(shortest.ma)   )
 
 # That gives lists of traces. Need to convert these into a single lines dataframe. See an explanation for how do do this in the chunk called 'createSingleLine'
-create.single.line <- function(list.of.traces) {
+create.single.line <- function(list.of.traces, oneline=FALSE) {
   #  Get the Lines objects which contain multiple 'lines'
   lines.objects <- unlist( mclapply( list.of.traces , function(x) `@`(x , "lines") ) )
   # Give each an ID based on its index
   for (i in seq(1,length(list.of.traces))) { lines.objects[[i]]@ID <- as.character(i) }
-  # Make a SpatialLines object from all of those lines
-  return(SpatialLines(lines.objects, proj4string = PROJ4STRING) )
+  
+  if (oneline) { # Make a single Lines object, for mapping
+    individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+    return(SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING ) )
+  } else { # Make a SpatialLines object from all of those lines
+    return(SpatialLines(lines.objects, proj4string = PROJ4STRING) )
+  }
+
 }
   
 relative.shortest.routes <- create.single.line(relative.shortest)
 relative.longest.routes  <- create.single.line(relative.longest)
 
-
-#  Optionally also make one big line object, for mapping
-#all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
+# Also make a single SpatialLines object for mapping (and write it out)
+relative.shortest.routes.oneline <- create.single.line(relative.shortest, oneline = TRUE)
+relative.longest.routes.oneline <- create.single.line(relative.longest, oneline = TRUE)
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_shortest_routes_oneline", driver="ESRI Shapefile" )
+writeOGR(SpatialLinesDataFrame(relative.longest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_longest_routes_oneline", driver="ESRI Shapefile" )
 
 
 # Make a plot now.
@@ -1476,6 +1484,15 @@ plot(study.area, add=T, border="blue")
 
 Now re-do the asymmetry analysis but with these path subsets (see the chunk called `makeMatrix` for an explanation)
 
+**NOTE: after writing out the shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons. I should do this here, but it would mean re-running all of the analysis which will take ages.**
+
+The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
+
+` 0 if !ttl_ntr! == 0 else !ttl_ntr! / x` 
+
+where `x` is the total number of traces in the data set. I couldn't work out how to get this total directly in the formula so had to hard code it, i.e. _`r sum(result1.longest.spdf@data$total.intersection)`_ for the longest and _`r sum(result1.shortest.spdf@data$total.intersection)`_ for the shortest. I made a new field called `prop_ntr` and used this to create the map '`result-shortest_vs_longest`'.
+
+
 ```{r rerunAsymmetryAnalysis-longestPaths}
 # This repeasts the code in `make matrix` chunk
 
@@ -1491,8 +1508,11 @@ result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf)
 
 # Write out the matrices
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
-writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
-writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description above)
+
+#writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+#writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in
 save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
