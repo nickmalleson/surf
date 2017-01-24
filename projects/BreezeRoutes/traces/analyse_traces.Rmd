@@ -74,9 +74,11 @@ library(rgdal)     # For reading shapefiles
 #library(gridExtra) # To put two graphs next to each other in ggplot
 library(plotKML)   # For reading GPX files
 library(OpenStreetMap) # For plotting OSM basemaps
-Sys.setenv(MC_CORES=6) # Run on n cores (I'm not sure which of these
-options("mc.cores"=6L) # is correct).
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
+no_cores <- detectCores() - 1 # Detect the number of cores that are available
+Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
+options("mc.cores"=no_cores) # is correct).
+
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
 ```
@@ -1385,19 +1387,23 @@ Now calculate the _percentage of of asymmetry_
 
 sum.absolute.flow <- 0
 sum.max.flow <- 0
-  
-for ( i in seq(1,nrow(result1.matrix))) {
-  for (j in seq(1, ncol(result1.matrix))) {
-    if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
-      sum.absolute.flow <- sum.absolute.flow + abs(result1.matrix[i,j] - result1.matrix[j,i])
-      sum.max.flow <- sum.max.flow + max(result1.matrix[i,j], result1.matrix[j,i] )
+
+calculate.asymmetry <- function(the.matrix) {
+  for ( i in seq(1,nrow(the.matrix))) {
+    for (j in seq(1, ncol(the.matrix))) {
+      if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
+        sum.absolute.flow <- sum.absolute.flow + abs(the.matrix[i,j] - the.matrix[j,i])
+        sum.max.flow <- sum.max.flow + max(the.matrix[i,j], the.matrix[j,i] )
+      }
     }
   }
+  percentage.asymmetry <- sum.absolute.flow / sum.max.flow
+  return(percentage.asymmetry)
 }
-percentage.asymmetry <- sum.absolute.flow / sum.max.flow
+result1.percentage.asymmetry <- calculate.asymmetry(result1.matrix)
 ```
 
-The percentage asymmetry is `r round(percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry,2) * 100`% of the time.
+The percentage asymmetry is `r round(result1.percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry,2) * 100`% of the time.
 
 ### Map(s) of Asymmetric Flows
 
@@ -1423,10 +1429,10 @@ It will be interesting to see if there is some relationship between the choice t
  1. Calculate the aggregate asymmetry value:
    - If it ramains similar (~15%) then the shortest-path and asymmetry choices are independent.
    - If not, then there may be a correlation between the two choices.  
- 1. **Repeat using the 'non-longest' relative path routes (i.e. thost that were not included in the above analysis).** There are `r length(which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.. 
+ 1. **Repeat using the 'non-longest' relative path routes (i.e. thost that were not included in the above analysis).** **There are `r length(which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.. 
 
 
-```{r createSubsets, eval=FALSE}
+```{r createSubsets, fig.width=15}
 
 # The longest routes are those where the matched length is at least 20% greater than the equivalent shortest path.
 relative.longest.indices <-  which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)
@@ -1439,23 +1445,108 @@ relative.longest <-  matched[relative.longest.indices]
 # Sanity check - the number of elements in the two subsets should be the same as in the original data.
 stopifnot( (length(relative.longest)+length(relative.shortest)) == length(shortest.ma)   )
 
+# That gives lists of traces. Need to convert these into a single lines dataframe. See an explanation for how do do this in the chunk called 'createSingleLine'
+create.single.line <- function(list.of.traces, oneline=FALSE) {
+  #  Get the Lines objects which contain multiple 'lines'
+  lines.objects <- unlist( mclapply( list.of.traces , function(x) `@`(x , "lines") ) )
+  # Give each an ID based on its index
+  for (i in seq(1,length(list.of.traces))) { lines.objects[[i]]@ID <- as.character(i) }
+  
+  if (oneline) { # Make a single Lines object, for mapping
+    individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+    return(SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING ) )
+  } else { # Make a SpatialLines object from all of those lines
+    return(SpatialLines(lines.objects, proj4string = PROJ4STRING) )
+  }
+
+}
+  
+relative.shortest.routes <- create.single.line(relative.shortest)
+relative.longest.routes  <- create.single.line(relative.longest)
+
+# Also make a single SpatialLines object for mapping (and write it out)
+relative.shortest.routes.oneline <- create.single.line(relative.shortest, oneline = TRUE)
+relative.longest.routes.oneline <- create.single.line(relative.longest, oneline = TRUE)
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_shortest_routes_oneline", driver="ESRI Shapefile" )
+writeOGR(SpatialLinesDataFrame(relative.longest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_longest_routes_oneline", driver="ESRI Shapefile" )
+
+
+# Make a plot now.
+
 par(mfrow=c(1,2))
-plot(relative.shortest)
+#plot(relative.longest, main="longest")
+#plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
+plot(relative.longest.routes, main="longest")
 plot(study.area, add=T, border="blue")
-plot(relative.longest)
+#plot(relative.shortest, main="not longest")
+#plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
+plot(relative.shortest.routes, main="not longest")
 plot(study.area, add=T, border="blue")
 
 
 ```
 
-Now re-do the asymmetry analysis but with these path subsets
+This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done).
 
-```{r rerunAsymmetryAnalysis}
+Now re-do the asymmetry analysis but with these path subsets (see the chunk called `makeMatrix` for an explanation)
 
+```{r rerunAsymmetryAnalysis-longestPaths, cache=TRUE}
+# This repeasts the code in `make matrix` chunk
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1.longest  <- calc.flows(grid, relative.longest.routes,  plot=FALSE, multithread = TRUE)
+result1.shortest <- calc.flows(grid, relative.shortest.routes, plot=FALSE, multithread = TRUE)
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.longest.spdf  <- result.to.spdf(result1.longest) 
+result1.shortest.spdf <- result.to.spdf(result1.shortest)
+# Finally make a transition matrix 
+result1.matrix.longest  <- spdf.to.matrix(result1.longest.spdf)
+result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf)
+
+# Write out the matrices
+#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
+
+# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description below)
+
+#writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+#writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects (these as well as the original results) - easy to read back in
+save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+     result1.matrix.longest, result1.matrix.shortest,
+     file="results.RData")
 
 
 
 ```
+
+**NOTE: after writing out the above shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons. I should do this here, but to do it properly (rather than added on at the end) it would mean re-running all of the analysis which will take ages.** 
+
+The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
+
+` 0 if !ttl_ntr! == 0 else !ttl_ntr! / x` 
+
+where `x` is the total number of traces in the data set. I couldn't work out how to get this total directly in the formula so had to hard code it, i.e. _`r sum(result1.longest.spdf@data$total.intersection)`_ for the longest and _`r sum(result1.shortest.spdf@data$total.intersection)`_ for the shortest. I made a new field called `prop_ntr` and used this to create the map '`result-shortest_vs_longest`'.
+
+Now recalculate the asymetry for the longest and shortest paths.
+
+```{r recalculateAsymmetry-longestPaths}
+
+result1.percentage.asymmetry.longest  <- calculate.asymmetry(result1.matrix.longest)
+result1.percentage.asymmetry.shortest <- calculate.asymmetry(result1.matrix.shortest)
+
+```
+
+The asymmetry values for longest and shortest paths are:
+
+ - For *Longest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.longest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.longest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.longest,2) * 100`% of the time.
+
+ - For *Shortest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
+
+
+
+
 
 XXXX HERE
 

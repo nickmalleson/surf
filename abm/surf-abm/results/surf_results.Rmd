@@ -23,7 +23,7 @@ In particular - see if there is a nice way to visualise routine behaviours to ch
 
 ```{r initialise, echo=FALSE, message=FALSE, warning=FALSE}
 
-SCENARIO <- "ABBF-easel" # The name of the scenario to analyse
+SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
 AGENT_ID <- -1
 #AGENT_ID <- 342
