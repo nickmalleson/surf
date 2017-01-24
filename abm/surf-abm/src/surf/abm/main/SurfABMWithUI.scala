@@ -9,7 +9,7 @@ import sim.display.{Console, Controller, Display2D, GUIState}
 import sim.engine.SimState
 import sim.portrayal.geo.{GeomPortrayal, GeomVectorFieldPortrayal}
 import sim.portrayal.simple.{LabelledPortrayal2D, OvalPortrayal2D}
-import sim.portrayal.{DrawInfo2D, SimplePortrayal2D}
+import sim.portrayal.{DrawInfo2D, Portrayal, SimplePortrayal2D}
 import surf.abm.environment.Building
 import surf.abm.agents.Agent
 
@@ -65,19 +65,25 @@ class SurfABMWithUI extends GUIState (new SurfABM(1l)) { // Start with the same 
       )
     )
 
-    // Give the agents a round oval to represent them and a protrayal that returns their toString() method if they are clicked on..
     agentPortrayal.setField(SurfABM.agentGeoms)
-    // agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0)) // Just the red oval
-    agentPortrayal.setPortrayalForAll( // use the agent portrayal to display their ID
-      new AgentLabelPortrayal(
-        //new GeomPortrayal(Color.red, true), Color.BLACK
-        new OvalPortrayal2D(Color.RED,6.0),
-        Color.BLACK,
-        false // Only label when selected? Or all the time.
-      )
-    )
 
-    //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
+    // Give the agents a round oval to represent them and optionally a protrayal that shows their ID
+    if (SurfABM.conf.getBoolean("AgentLabels")) { // Label the agents with their ID
+      agentPortrayal.setPortrayalForAll( // use the agent portrayal to display their ID
+        new AgentLabelPortrayal(
+          //new GeomPortrayal(Color.red, true), Color.BLACK
+          new OvalPortrayal2D(Color.RED,6.0),
+          Color.BLACK,
+          false // Only label when selected? Or all the time.
+        )
+      )
+    }
+    else { // Don't label the agents
+      agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0)) // Just the red oval
+    }
+
+
+      //agentPortrayal.setPortrayalForAll(new AgentLabelPortrayal())
 
     // Each agent should have a different, random colour.
     // For some reason this doesn't work. I think there must be a bug in setPortrayalForObject when
@@ -197,6 +203,7 @@ object AgentLabelPortrayal {
   * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different
   * Portrayals that are available.
   */
+/*
 @SerialVersionUID(1L)
 class AgentLabelPortrayal2()
   extends LabelledPortrayal2D (null, null, null, true) {
@@ -246,3 +253,4 @@ class AgentLabelPortrayal2()
   }*/
 
 }
+*/

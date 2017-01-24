@@ -1387,19 +1387,23 @@ Now calculate the _percentage of of asymmetry_
 
 sum.absolute.flow <- 0
 sum.max.flow <- 0
-  
-for ( i in seq(1,nrow(result1.matrix))) {
-  for (j in seq(1, ncol(result1.matrix))) {
-    if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
-      sum.absolute.flow <- sum.absolute.flow + abs(result1.matrix[i,j] - result1.matrix[j,i])
-      sum.max.flow <- sum.max.flow + max(result1.matrix[i,j], result1.matrix[j,i] )
+
+calculate.asymmetry <- function(the.matrix) {
+  for ( i in seq(1,nrow(the.matrix))) {
+    for (j in seq(1, ncol(the.matrix))) {
+      if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
+        sum.absolute.flow <- sum.absolute.flow + abs(the.matrix[i,j] - the.matrix[j,i])
+        sum.max.flow <- sum.max.flow + max(the.matrix[i,j], the.matrix[j,i] )
+      }
     }
   }
+  percentage.asymmetry <- sum.absolute.flow / sum.max.flow
+  return(percentage.asymmetry)
 }
-percentage.asymmetry <- sum.absolute.flow / sum.max.flow
+result1.percentage.asymmetry <- calculate.asymmetry(result1.matrix)
 ```
 
-The percentage asymmetry is `r round(percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(percentage.asymmetry,2) * 100`% of the time.
+The percentage asymmetry is `r round(result1.percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry,2) * 100`% of the time.
 
 ### Map(s) of Asymmetric Flows
 
@@ -1482,18 +1486,11 @@ plot(study.area, add=T, border="blue")
 
 ```
 
+This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done).
+
 Now re-do the asymmetry analysis but with these path subsets (see the chunk called `makeMatrix` for an explanation)
 
-**NOTE: after writing out the shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons. I should do this here, but it would mean re-running all of the analysis which will take ages.**
-
-The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
-
-` 0 if !ttl_ntr! == 0 else !ttl_ntr! / x` 
-
-where `x` is the total number of traces in the data set. I couldn't work out how to get this total directly in the formula so had to hard code it, i.e. _`r sum(result1.longest.spdf@data$total.intersection)`_ for the longest and _`r sum(result1.shortest.spdf@data$total.intersection)`_ for the shortest. I made a new field called `prop_ntr` and used this to create the map '`result-shortest_vs_longest`'.
-
-
-```{r rerunAsymmetryAnalysis-longestPaths}
+```{r rerunAsymmetryAnalysis-longestPaths, cache=TRUE}
 # This repeasts the code in `make matrix` chunk
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
@@ -1509,7 +1506,7 @@ result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf)
 # Write out the matrices
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
 
-# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description above)
+# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description below)
 
 #writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
 #writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
@@ -1523,6 +1520,33 @@ save(result1, result1.spdf, result1.matrix, num.cells, total.cells,
 
 
 ```
+
+**NOTE: after writing out the above shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons. I should do this here, but to do it properly (rather than added on at the end) it would mean re-running all of the analysis which will take ages.** 
+
+The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
+
+` 0 if !ttl_ntr! == 0 else !ttl_ntr! / x` 
+
+where `x` is the total number of traces in the data set. I couldn't work out how to get this total directly in the formula so had to hard code it, i.e. _`r sum(result1.longest.spdf@data$total.intersection)`_ for the longest and _`r sum(result1.shortest.spdf@data$total.intersection)`_ for the shortest. I made a new field called `prop_ntr` and used this to create the map '`result-shortest_vs_longest`'.
+
+Now recalculate the asymetry for the longest and shortest paths.
+
+```{r recalculateAsymmetry-longestPaths}
+
+result1.percentage.asymmetry.longest  <- calculate.asymmetry(result1.matrix.longest)
+result1.percentage.asymmetry.shortest <- calculate.asymmetry(result1.matrix.shortest)
+
+```
+
+The asymmetry values for longest and shortest paths are:
+
+ - For *Longest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.longest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.longest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.longest,2) * 100`% of the time.
+
+ - For *Shortest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
+
+
+
+
 
 XXXX HERE
 

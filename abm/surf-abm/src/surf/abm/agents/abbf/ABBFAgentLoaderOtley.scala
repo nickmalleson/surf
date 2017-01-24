@@ -86,7 +86,7 @@ object ABBFAgentLoaderOtley {
         val flow: Int = line(3).toInt
         //Array(orig, dest, flow).foreach( x => println("\t"+x) )
 
-        println(s"$orig, $dest, $flow")
+        LOG.debug(s"Origin: '$orig', Destination: '$dest', Flow: '$flow'")
         // Now create 'flow' agents who live in 'orig' and work in 'dest'
         // It is helpful to have all the buildings in the origin and destinations as lists
         val homeList = oaBuildingIDMap(orig).toList
