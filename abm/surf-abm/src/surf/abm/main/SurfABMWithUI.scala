@@ -68,18 +68,19 @@ class SurfABMWithUI extends GUIState (new SurfABM(1l)) { // Start with the same 
     agentPortrayal.setField(SurfABM.agentGeoms)
 
     // Give the agents a round oval to represent them and optionally a protrayal that shows their ID
+    val size = SurfABM.conf.getDouble("AgentDisplaySize")
     if (SurfABM.conf.getBoolean("AgentLabels")) { // Label the agents with their ID
       agentPortrayal.setPortrayalForAll( // use the agent portrayal to display their ID
         new AgentLabelPortrayal(
           //new GeomPortrayal(Color.red, true), Color.BLACK
-          new OvalPortrayal2D(Color.RED,6.0),
+          new OvalPortrayal2D(Color.RED,size),
           Color.BLACK,
           false // Only label when selected? Or all the time.
         )
       )
     }
     else { // Don't label the agents
-      agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED,6.0)) // Just the red oval
+      agentPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.RED, size)) // Just the red oval
     }
 
 
