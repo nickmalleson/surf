@@ -1488,6 +1488,29 @@ plot(study.area, add=T, border="blue")
 
 This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done).
 
+As a sanity check, make sure that the 'longest' paths are actually longer!
+
+```{r longestPath-sanityCheck, fig.width=15}
+
+# First the longest:
+
+longest.lengths <- unlist(mclapply(relative.longest, gLength ))
+summary(longest.lengths)
+
+# Now the shortest:
+shortest.lengths <- unlist(mclapply(relative.shortest, gLength ))
+summary(shortest.lengths)
+
+# And a histogram
+par(mfrow=c(1,2))
+hist(longest.lengths, main="Longest path lengths", breaks="Scott", xlim=c(0,0.1), ylim=c(0,4000))
+hist(shortest.lengths, main="Non-longest path lengths", breaks="Scott", xlim=c(0,0.1), ylim=c(0,4000))
+
+# So as not to confuse things later:
+rm(longest.lengths, shortest.lengths)
+
+```
+
 Now re-do the asymmetry analysis but with these path subsets (see the chunk called `makeMatrix` for an explanation)
 
 ```{r rerunAsymmetryAnalysis-longestPaths, cache=TRUE}
@@ -1546,9 +1569,6 @@ The asymmetry values for longest and shortest paths are:
 
 
 
-
-
-XXXX HERE
 
 
 # Anonymise and Save Workspace
