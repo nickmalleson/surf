@@ -1296,7 +1296,7 @@ choropleth(result1.spdf, result1.spdf@data$rel.flow.prop,  main = "Proportions -
 
 _At this point write out the result1 data frame as a shapefile and make a map in ArcGIS_
 
-### Within-cell flow
+## Within-cell flow
 
 Compute incoming and outgoing flows for each cell and see if they're semetrical.
 
@@ -1342,7 +1342,7 @@ plot(density(outflow))
 
 ```
 
-### Pairwise flow
+## Pairwise flow
 
 Now look at the flows between cells. The aim is to see whether the matrix is symmetrical, i.e. M=M^T^. Following the Ratti paper, constuct absolute and relative _difference matrix_.
 
@@ -1405,7 +1405,7 @@ result1.percentage.asymmetry <- calculate.asymmetry(result1.matrix)
 
 The percentage asymmetry is `r round(result1.percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry,2) * 100`% of the time.
 
-### Map(s) of Asymmetric Flows
+## Map(s) of Asymmetric Flows
 
 First map the number of traces that pass through each cell. For the final paper I atually do this in ArcMap.
 
@@ -1544,7 +1544,7 @@ save(result1, result1.spdf, result1.matrix, num.cells, total.cells,
 
 ```
 
-**NOTE: after writing out the above shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons. I should do this here, but to do it properly (rather than added on at the end) it would mean re-running all of the analysis which will take ages.** 
+**NOTE: after writing out the above shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons on maps. I should do this here, but to do it properly (rather than added on at the end) it would mean re-running all of the analysis which will take ages.** 
 
 The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
 
@@ -1569,11 +1569,38 @@ The asymmetry values for longest and shortest paths are:
 
 
 
+## Weekday/weekend v.s. symmetry
+
+Repeat the previous analysis (comparing path symmetry for longest and shortest paths) but this time comparing paths on the weekend and weekday.
+
+Begin by creating subsets for the weekend and weekday.
+
+```{r createWeekdayEndSubsets, fig.width=15}
+
+XXXXX
+
+```
+
+Sanity check that this looks sensible
+
+```{r weekdayEnd-sanityCheck}
+
+XXXX
+
+```
+
+Re-run the analysis for the weekday and weekend paths
+
+```{r rerunAsymmetryAnalysis-weekdayEnd, pycache=TRUE}
+
+XXXX
+
+```
 
 
 # Anonymise and Save Workspace
 
-It is useful to save all these data so that it isn't necessary to re-run everything. There is a companion script that removes individual traces.
+It is useful to save all these data so that it isn't necessary to re-run everything. There is aso a companion script that removes individual traces if necessary. 
 
 
 
