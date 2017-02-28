@@ -1,8 +1,60 @@
+# Main .gitignore file. Don't use any others!
+
+# ********** Global stuff **********
+
 # Mac crap
 .DS_Store
 
 # Vim swap files
 *.swp
 
-# R stuff
+# All build directories
+build/
+
+# R history files
 *.Rhistory
+
+
+# ********** ABM **********
+
+# Results
+abm/surf-abm/results/out/*
+abm/surf-abm/results/surf_results_files
+abm/surf-abm/results/surf_results.html
+
+# Logs
+surfabm.log*
+
+# Some data that can't be made publicly available
+abm/surf-abm/data/otley
+
+
+
+# ********** BreezeRoutes **********
+
+projects/BreezeRoutes/classes/
+# (Note: there is a .gitignore file in 'cache' that allows the directory itself to exist)
+projects/BreezeRoutes/cache/* 
+projects/BreezeRoutes/map-data/*
+projects/BreezeRoutes/*.RData
+projects/BreezeRoutes/*.pdf
+
+projects/BreezeRoutes/raw_data_analysis/*.csv
+projects/BreezeRoutes/raw_data_analysis/*.html
+# (Note: there is a .gitignore file in 'Rdata' that allows the directory itself to exist)
+projects/BreezeRoutes/raw_data_analysis/Rdata/*
+
+projects/BreezeRoutes/traces/*.html
+projects/BreezeRoutes/traces/analyse_traces_files/
+
+
+# TEPMORARY
+temp_nltk_stuff/
+
+# ********** **********
+
+# ********** **********
+
+# ********** **********
+
+# ********** **********

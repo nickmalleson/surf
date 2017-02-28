@@ -56,7 +56,7 @@ path.shortest = "./gpx-shortest/"
 library(GISTools)
 #library(rgeos)    # For things like gIntersects
 library(rgdal)     # For reading shapefiles
-#library(raster)    # For creating regular grids or converting from SpatialPixelsDataFrame to raster
+library(raster)    # For creating regular grids or converting from SpatialPixelsDataFrame to raster
 #library(plyr)     # For counting and aggregating
 #library(tmap)     # For thematic maps
 #library(classInt) # Jenks natural breaks
@@ -69,6 +69,8 @@ library(rgdal)     # For reading shapefiles
 #library(MVN)      # For testing for multivariate normality (MVN)
 #library(stats)     # For a-spatial aggregatiion (aggregate)
 #library(ggplot2)   # For density scatter plot
+#library(stplanr)   # For finding n,e,s,w part of a line
+library(nabor)     # Ditto, for k-nearest-neighbours (knn) function specifically
 
 #library(hexbin)    # For hexagonal density scatter plots in ggplot
 #library(gridExtra) # To put two graphs next to each other in ggplot
@@ -192,115 +194,14 @@ read.userid <- function(filename) {
 
 Read all of the traces and store in memory. Only read 'matched' traces because those will definitely have an original trace and a shortest path. Not all original traces have been matched by the MapMatcher program.
 
+*NOTE: in practice this script wont ever read the data. It takes too long. Instead, use the `analyse-traces-server\*.R`scripts to read the data in simulataneously and then use the `collate_traces.R` script to bring the four separate .RData files together into a single TRACES_FILE that this script will read.*
 
 ```{r readTraces}
 
 if (!file.exists(TRACES_FILE)) {
-  # Vectors that will contain all of the paths and associated information.
-  orig <- list() 
-  matched <- list()
-  shortest <- list()
-  orig.ma <- list()  # Projected versions
-  matched.ma <- list()
-  shortest.ma <- list()
-  userid <- list()
-
-  # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched 
-  # (and if they've ben matched then they probably also have a companion shortest path).
-  file.names <- dir(path.matched, pattern =".gpx")
- 
-  #for(i in 1:1000){
-  for(i in seq(length(file.names))){
-    start.time <- proc.time()[['elapsed']]
-    f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
-    f.orig <-    paste(path.org,      f, ".gpx", sep="")
-    f.matched <- paste(path.matched,  f, "-matched.gpx", sep="") # The matched file (f531b5395-matched.gpx)
-    f.shortest<- paste(path.shortest, f, "-shortest.gpx", sep="") # The shortest path (f531b5395-shortest.gpx)
-    print(paste("Reading file (",i,")",f))
-    
-    # Create SpatialLinesDataFrames for each track, project them to good projection for MA (Albers) add them to the lists
-    # (https://www.arcgis.com/home/item.html?id=d075ba0b6b5e4d71b596e882493f7789)
-    # Read the three required files simultaneously in parallel
-    read.data <- mclapply(
-      list("orig"=f.orig, "matched"=f.matched, "shortest"=f.shortest), 
-      FUN=function(x){
-        # Read the GPX and convert the $tracks to a dataframe. All wrapped in a try-catch in case file can't be read
-        gpx <- as.data.frame(
-          tryCatch(
-            {
-              readGPX(x, metadata = TRUE, bounds = TRUE,waypoints = FALSE, tracks = TRUE, routes = FALSE)$tracks
-            },
-            error=function(cond) {
-              message(paste("Could not read file: ", x, '. Message is:', cond))
-              return(NULL)
-            },
-            warning=function(cond) {
-              message(paste("Could not read file: ", x, '. Message is:', cond))
-              return(NULL)
-            }
-          ) #trycatch
-        ) #as.data.frame
-        # Work out where x,y coords are
-        if ('GraphHopper.lon' %in% colnames(gpx) ) {
-          xcor <- gpx$GraphHopper.lon
-          ycor <- gpx$GraphHopper.lat
-        } else {
-          xcor <- gpx$lon
-          ycor <- gpx$lat
-        }
-        
-        lines <- SpatialLines(
-          list(Lines(lapply(list(cbind(xcor, ycor)), Line), ID="a")),
-          proj4string = CRS("+init=epsg:4326"))
-        return(lines)
-      }
-    )
-    orig[[i]]    =  read.data[['orig']]
-    matched[[i]] =  read.data[['matched']]
-    shortest[[i]] = read.data[['shortest']]
-    
-    transformed <- mclapply(
-      list("orig.ma"=orig[[i]], "matched.ma"=matched[[i]], "shortest.ma"=shortest[[i]]),
-      FUN = function(x) { return(spTransform(x, CRS("+init=epsg:5070")) ) }
-    )
-    orig.ma[[i]] =    transformed[['orig.ma']]
-    matched.ma[[i]] = transformed[['matched.ma']]
-    shortest.ma[[i]] =transformed[['shortest.ma']]
-   
-    # To get the user id we need to re-read the original gpx file and parse it manually. The
-    # readGPX function doesn't keep the meta-data, and readOGR is too slow.
-    uid <- read.userid(f.orig)
-    if (uid == -1) {
-      warning(paste("Not able to get the user ID for route (",i,")", f ) )
-      uid = "NA"
-    }
-    userid[[i]] = uid
-    
-    # OLD WAY OF GETTING UID WHEN SING readOGR
-    ## Get the user ID. This needs to be done by parsing the description as readOGR didn't bring in the metadata properly)
-    ## Split the string on '\n' (fixed=T means treat this as it is, not as a regex), and take the 6th element
-    ##which should be a string like: userId=857ac8242e49159c7abb25bb458a7bc9. Then just get the id from that
-    #uid_str <- strsplit(as.character(orig[[i]]@data$desc), '\n', fixed=T)[[1]][6] 
-    #uid_split <- strsplit(uid_str, '=')[[1]]
-    #uid = uid_split[2] # Second element after splitting on '='
-    #if (uid_split[1]!="userId") {
-    #  warning(paste("Not able to get the user ID for route (",i,")", f ) )
-    #  uid = "NA"
-    #}
-    #userid[[i]] = uid
-    
-    print(paste("\t.. finished in",round(proc.time()[['elapsed']]-start.time,digits=2),"secs"))
-    
-  }# for files
-    
   
-  if (length(matched) != length(orig) || length(matched) != length(shortest) || length(matched) != length(userid)) {
-    warning("For some reason there are different numbers of original, matched, and shortest paths.")
-  }
+  stop("Error - the TRACES_FILE does not exist so I can't read the traces. You need to use the read-traces-server*.R scripts to read the data first and save an RData file with the traces in.")
   
-  # Save the traces
-  save(orig, matched, shortest, orig.ma, matched.ma, shortest.ma, userid, file=TRACES_FILE)
-
 } else {
   print(paste("Loading traces from file", TRACES_FILE))
   load(TRACES_FILE)
@@ -395,6 +296,8 @@ orig.ma <- orig.ma[-bad.indices]
 matched.ma <- matched.ma[-bad.indices]
 shortest.ma <- shortest.ma[-bad.indices]
 userid <- userid[-bad.indices]
+starttime <- starttime[-bad.indices]
+endtime <- endtime[-bad.indices]
 
 # Delete old variables
 rm(abs.diff, bad.indices, diff, rel.diff)
@@ -827,14 +730,114 @@ make.line <- function(x1, x2, y1, y2, p4s) {
   )
 }
 
+# The next functions are directly from the stplanr project: https://github.com/ropensci/stplanr/
+# I can't use the stplanr library directly because it has dependencies that aren't met on the server (e.g. rJava)
+crs_select_aeq <- function(shp){
+  cent <- rgeos::gCentroid(shp)
+  aeqd <- sprintf("+proj=aeqd +lat_0=%s +lon_0=%s +x_0=0 +y_0=0",
+          cent@coords[[2]], cent@coords[[1]])
+  CRS(aeqd)
+}
+reproject = function(shp, crs = crs_select_aeq(shp)){
+  if(is.na(raster::crs(shp))){
+    #message("Assuming a geographical (lat/lon) CRS (EPSG:4326)")
+    raster::crs(shp) = CRS("+init=epsg:4326")
+  }
+  if(is.numeric(crs)) # test if it's an epsg code
+    crs = CRS(paste0("+init=epsg:", crs))
+  #message(paste0("Transforming to CRS ", crs))
+  res = spTransform(shp, crs)
+  res
+}
+gprojected = function(shp, fun, crs = crs_select_aeq(shp), ...){
+  # assume it's not projected  (i.e. lat/lon) if there is no CRS
+  if(!is.na(is.projected(shp))){
+    if(is.projected(shp)){
+      res = fun(shp, ...)
+    } else {
+      shp_projected = reproject(shp, crs = crs)
+      #message(paste0("Running function on a temporary projected version of the Spatial object using the CRS: ", crs))
+      res = fun(shp_projected, ...)
+      if(is(res, "Spatial"))
+        res = spTransform(res, CRS("+init=epsg:4326"))
+    }
+  } else {
+    shp_projected = reproject(shp, crs = crs)
+    #message(paste0("Running function on a temporary projected version of the Spatial object using the CRS: ", crs))
+    res = fun(shp_projected, ...)
+    if(is(res, "Spatial"))
+      res = spTransform(res, CRS("+init=epsg:4326"))
+  }
+  res
+}
+bb2poly <- function(bb){
+  if(class(bb) == "matrix"){
+    b_poly <- as(raster::extent(as.vector(t(bb))), "SpatialPolygons")
+  } else {
+    b_poly <- as(raster::extent(bb), "SpatialPolygons")
+    proj4string(b_poly) <- proj4string(bb)
+  }
+  b_poly
+}
+
+
+
 #' Takes a cell and a point and works out whether the point lies on the north, south, east or west
-#' corner of the cell (or none of those)
-#' 
+#' corner of the cell (or none of those). Thanks Robin Lovelace for the solution to this!
+#' https://gis.stackexchange.com/questions/229599/finding-the-side-of-a-square-that-a-point-intersects-with-r-sp?noredirect=1#comment356470_229599
+#' Note: assumes that the cell is square.
+#'
 #' @param the.cell 
 #' @param the.point
 #' @return a vector of size four with TRUE/FALSE for whether the point lies on the north, east,
 #' south, or west edge of the cell.
 find.nsew <- function(the.cell,the.point) {
+  # Check that cell is made up of one polygon
+  stopifnot(length(the.cell@polygons) == 1) # 1 polygon
+  
+  b = bb2poly(bb = the.cell) # create polygon of bb
+  p = raster::geom(b) # extract vertices of polygon
+  # Get the four lines
+  for(i in 1:4){
+    if(i == 1) {
+      l = raster::spLines(rbind(p[i, c("x", "y")], p[i + 1, c("x", "y")])) 
+    } else {
+        l = raster::bind(
+          l,
+          raster::spLines(rbind(p[i, c("x", "y")], p[i + 1, c("x", "y")]))
+        )
+    }
+  }
+  proj4string(l) <- proj4string(the.cell)
+  #l_points = line_midpoint(l) # midpoint - makes the nearest problem easier (only works for squares - use something else for rectangles)
+  l_points <- gprojected(l, maptools::SpatialLinesMidPoints) # Do this directly so that we don't need stplanr
+  
+  l_points$bearing = c("w", "n", "e", "s") # add names to edges (XXXX CAN GUARANTEE ORDER OF EDGES?)
+  #text(x = l_points@coords[,1] + 0.1, y = l_points@coords[,2] + 0.1, l_points$bearing)
+  #plot(the.point, add = T)
+  nearest_one = nabor::knn(data = coordinates(l_points), query = coordinates(the.point), k = 1)
+  nearest_side = l_points$bearing[nearest_one$nn.idx]
+  #text(x = the.point@coords[,1] + 0.1, y = the.point@coords[,2] + 0.1, nearest_side)
+  
+  return( c(
+    nearest_side == "n", # N
+    nearest_side == "s", # S
+    nearest_side == "e", # E
+    nearest_side == "w"  # W
+    ) )
+}
+
+
+#' DEPRICATED. This is the old version that doesn't work if cell isn't isothetic
+#' Takes a cell and a point and works out whether the point lies on the north, south, east or west
+#' corner of the cell (or none of those).
+#' Note: assumes tha the cell is perfectly aligned with a compass. There is a new version of this function that works #' properly
+#' 
+#' @param the.cell 
+#' @param the.point
+#' @return a vector of size four with TRUE/FALSE for whether the point lies on the north, east,
+#' south, or west edge of the cell.
+find.nsew.old <- function(the.cell,the.point) {
   # Make lines for the four squares of the cell to calculate the intersect.
   north <- make.line(
     the.cell@bbox['x','min'], the.cell@bbox['x','max'], 
@@ -852,6 +855,12 @@ find.nsew <- function(the.cell,the.point) {
     the.cell@bbox['x','min'], the.cell@bbox['x','min'], 
     the.cell@bbox['y','min'], the.cell@bbox['y','max'],
     the.point@proj4string)
+  print(north)
+  print(east)
+  print(south)
+  print(west)
+  print(the.point)
+  save(the.cell, north, east, south, west, the.point, file = "temp.RData")
   return( c(
     gIntersects(north,the.point),
     gIntersects(east,the.point),
@@ -863,6 +872,7 @@ find.nsew <- function(the.cell,the.point) {
     #the.cell@bbox['x','min']==the.point@bbox['y','min']  #W
     ) )
 }
+
 
 #' Takes a cell (a SpatialPolygonsDataFrame), calculates whether it has lines passing through it,
 #' and returns the cell with this information in a list
@@ -907,6 +917,11 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
     list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
                             FUN = function(i,g) { return(g[i,]) }, g=the.traces[which(intersecting)])
     lines.in.cell <- lapply(list.of.cells, FUN=gIntersection, spgeom2=cell, byid=TRUE)
+    #print(paste("TYPE:",typeof(lines.in.cell),"HEAD:",head(lines.in.cell)))
+    
+    # There should be lines passing thorough the cell (would not get here if not)
+    stopifnot(length(lines.in.cell)>0)
+    
       #tryCatch(
       #{
       #  gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
@@ -945,7 +960,6 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
           # (old way before I notices that lines can leave and re-enter the cell)
           #line <- lines.in.cell[lineno]
           #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
-          
           coords.list <- line@coords
           #print(coords.list)
           coords <- data.frame(coords.list)
@@ -1573,29 +1587,133 @@ The asymmetry values for longest and shortest paths are:
 
 Repeat the previous analysis (comparing path symmetry for longest and shortest paths) but this time comparing paths on the weekend and weekday.
 
+*NOTE: the start and end times of the trips might be out by one hour, because I didn't know what the UTC offset should be for each trace (see notes in analyse_traces-server\*.R for an explanation). This wont adversely affect the weekday/weekend analysis, but the times should not be used for analysis of trip start/end times.*
+
 Begin by creating subsets for the weekend and weekday.
 
-```{r createWeekdayEndSubsets, fig.width=15}
+```{r createWeekdayEndSubsets, fig.width=15, eval=FALSE}
 
-XXXXX
+# Filter weekday and weekend traces. Use the starttime list, which is a separate list that has the time that each journey started
+# (this was extracted in the read_traces-server*.R file as it required interrogating the original GPX files)
+
+stopifnot( length(starttime) == length(matched) ) # (Sanity check - there should be a start time for each route)
+
+# Create a vector that, rather than the actual start time, just has the number of the day (0-6 starting on Sunday)
+day.of.week <- unlist(lapply(starttime, FUN= function(x) as.POSIXlt(x)$wday))
+stopifnot(max(day.of.week) == 6 & min(day.of.week) == 0 ) # Sanity check - days must be 0-6
+
+# For info, lets have a histogram of the days
+hist(day.of.week, main="Days of the week when trips started" xlab="Day (Sunday -> Monday)")
+
+# Subset weekdays v.s. weekends
+weekday.indices <- which(day.of.week==0 | day.of.week==6) # Sunday (0) or Saturday (6)
+weekend.indices <- which(day.of.week > 0 & day.of.week < 6) # Weekdays
+stopifnot( length(starttime) == ( length(weekday.indices) + length(weekend.indices)) )
+
+weekday.list <- matched[weekday.indices]
+weekend.list <- matched[weekend.indices]
+stopifnot( (length(weekday.list)+length(weekend.list)) == length(matched) )
+
+# That gives lists of traces. Need to convert these into a single lines dataframe. See 'create.single.line' defined earlier.
+weekday.routes <- create.single.line(weekday.list)
+weekend.routes <- create.single.line(weekend.list)
+
+# Also make a single SpatialLines object for mapping (and write it out)
+weekday.routes.oneline <-  create.single.line(weekday.list, oneline = TRUE)
+weekend.routes.oneline <- create.single.line(weekend.list, oneline = TRUE)
+writeOGR(SpatialLinesDataFrame(weekday.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekday_routes_oneline", driver="ESRI Shapefile" )
+writeOGR(SpatialLinesDataFrame(weekend.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekend_routes_oneline", driver="ESRI Shapefile" )
+
+# Make a plot now.
+
+par(mfrow=c(1,2))
+#plot(relative.longest, main="longest")
+#plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
+plot(weekend.routes, main="weekend routes")
+plot(study.area, add=T, border="blue")
+#plot(relative.shortest, main="not longest")
+#plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
+plot(weekday.routes, main="weekday routes")
+plot(study.area, add=T, border="blue")
+
 
 ```
+
+There were `r length(weekday.indices)` trips during weekdays, and `r length(weekend.indices)` trips over the weekend (out of a total of `r length(starttime)` trips.
+
 
 Sanity check that this looks sensible
 
 ```{r weekdayEnd-sanityCheck}
 
-XXXX
+#XXXX
 
 ```
 
 Re-run the analysis for the weekday and weekend paths
 
-```{r rerunAsymmetryAnalysis-weekdayEnd, pycache=TRUE}
+```{r rerunAsymmetryAnalysis-weekdayEnd }
 
-XXXX
+#XXXX
 
 ```
+
+
+## Asymmetry Analysis for Anthony
+
+AV would also like to calculate relative asymmetry for an area that he is working on 
+
+
+```{r AV.asymmetry.analysis, eval=FALSE }
+
+# Read the grid to use
+av.grid.temp <- readOGR( ds = "./tony_grid/", layer="BOS CAM 200M")
+
+# Project it so that it matcches the traces
+av.grid <- spTransform(av.grid.temp, CRS(proj4string(all.routes))) # "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+rm(av.grid.temp)
+
+# Add ID, CELLX and CELLY columns.
+# These are needed so that the functions don't break, but as Tony's grid is square the numbering and cellX/cellY values wont
+# be correct. Hopefully this doesn't matter for now? (Not doing this now because Tony's grid isn't square which could be annoying)
+#total.av.cells <- nrow(av.grid)
+#num.av.cells <- XXXX # What to make this? my code assumes that the grid has an equal number of rows and columns
+#av.grid$ID <- -1
+#av.grid$CellX <- -1
+#av.grid$CellY <- -1
+#grid.ids <- matrix(data=0, nrow=num.av.cells, ncol=num.av.cells)
+#cellcount <- 1
+#for (rowcount in seq(1,num.av.cells)) {
+#  for (colcount in seq(1,num.av.cells)) {
+#    grid@data[cellcount,]$CellX <- colcount
+#    grid@data[cellcount,]$CellY <- rowcount
+#    grid@data[cellcount,]$ID <- cellcount
+#    grid.ids[rowcount,colcount] <- cellcount
+#    cellcount <- cellcount + 1
+#  }
+#}
+
+
+# ***************************
+
+
+# Do the analysis
+
+#av.result <-  calc.flows(av.grid, all.routes,  plot=FALSE, multithread = TRUE)
+
+#av.result.spdf <- result.to.spdf(av.result) 
+
+#av.result.matrix <- spdf.to.matrix(av.result.spdf)
+
+#av.result.percentage.asymmetry <- calculate.asymmetry(result1.matrix.shortest)
+
+#writeOGR(av.result.spdf, dsn = "tony_grid", layer="av_result_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+av.result.percentage.asymmetry <- -1 # TEMPORARILY SO AS NOT TO BREAK THE FOLLOWING MARKDOWN
+
+```
+
+In Anthony's data, the percentage asymmetry is `r round(av.result.percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(av.result.percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(av.result.percentage.asymmetry,2) * 100`% of the time.
 
 
 # Anonymise and Save Workspace
