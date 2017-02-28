@@ -38,20 +38,31 @@ projects/BreezeRoutes/cache/*
 projects/BreezeRoutes/map-data/*
 projects/BreezeRoutes/*.RData
 projects/BreezeRoutes/*.pdf
+projects/BreezeRoutes/raw_data_analysis/*.pdf
 
+# raw_data_analysis
 projects/BreezeRoutes/raw_data_analysis/*.csv
 projects/BreezeRoutes/raw_data_analysis/*.html
 # (Note: there is a .gitignore file in 'Rdata' that allows the directory itself to exist)
 projects/BreezeRoutes/raw_data_analysis/Rdata/*
 
+# traces
+projects/BreezeRoutes/traces/result/
+projects/BreezeRoutes/traces/results.RData
+projects/BreezeRoutes/traces/tony_grid/
 projects/BreezeRoutes/traces/*.html
+projects/BreezeRoutes/traces/*.pdf
 projects/BreezeRoutes/traces/analyse_traces_files/
+projects/BreezeRoutes/traces/analyse_traces-anonymise.RData
 
 
 # TEPMORARY
 temp_nltk_stuff/
 
-# ********** **********
+# ********** DDA **********
+
+projects/dda/alice_dda_code/__pycache__/
+ 
 
 # ********** **********
 
