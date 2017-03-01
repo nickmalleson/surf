@@ -2,6 +2,7 @@ import random
 import collections
 import shortestpath
 from scipy import misc
+from scipy.ndimage import imread
 import numpy as np
 import pandas as pd
 import time 
@@ -23,7 +24,7 @@ from scipy.stats import norm
 class IO:
     
     def readMap(self):    
-        arr = misc.imread('streetinleeds.png')
+        arr = imread('streetinleeds.png')
 
         data =[[arr[j, i, 0] for i in range(arr.shape[1])] for j in range(arr.shape[0])]
 

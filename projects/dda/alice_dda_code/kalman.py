@@ -1,11 +1,14 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 """
 Created on Fri Dec 16 13:55:06 2016
 
 @author: Alice
 """
+
+# Note: will need pachages 'pandas' and 'pillow'
 import numpy as np
 import workingcameras as cam
+
 
 np.random.seed(3)
 
