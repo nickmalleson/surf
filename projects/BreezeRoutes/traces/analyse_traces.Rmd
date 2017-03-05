@@ -991,7 +991,10 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
             # If neither the start point nor end point are within the cell then the line passes through it.
             # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
             index.to <- find.nsew(cell,end) # This is a list with four booleans (N, S, E, W).
-            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            #stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            if(length(index.to[index.to==TRUE]) != 1) 
+              stop(paste("Error, it looks like the cell has entered from more than one direction! N,E,S,W: ",index.to))
+            
             departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
             
             if (plot) { plot(cell,border='blue', add=T)}
@@ -1161,8 +1164,8 @@ result1.matrix <- spdf.to.matrix(result1.spdf)
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
 writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
-# Save the objects - easy to read back in
-save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
+# Save the objects - easy to read back in (now done later)
+#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
 
 ```
 
@@ -1548,11 +1551,11 @@ result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf)
 #writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
 #writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
-# Save the objects (these as well as the original results) - easy to read back in
-save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
-     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
-     result1.matrix.longest, result1.matrix.shortest,
-     file="results.RData")
+# Save the objects (these as well as the original results) - easy to read back in (now done later)
+#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+#     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+#     result1.matrix.longest, result1.matrix.shortest,
+#     file="results.RData")
 
 
 
@@ -1591,7 +1594,7 @@ Repeat the previous analysis (comparing path symmetry for longest and shortest p
 
 Begin by creating subsets for the weekend and weekday.
 
-```{r createWeekdayEndSubsets, fig.width=15, eval=FALSE}
+```{r createWeekdayEndSubsets, fig.width=15}
 
 # Filter weekday and weekend traces. Use the starttime list, which is a separate list that has the time that each journey started
 # (this was extracted in the read_traces-server*.R file as it required interrogating the original GPX files)
@@ -1603,7 +1606,7 @@ day.of.week <- unlist(lapply(starttime, FUN= function(x) as.POSIXlt(x)$wday))
 stopifnot(max(day.of.week) == 6 & min(day.of.week) == 0 ) # Sanity check - days must be 0-6
 
 # For info, lets have a histogram of the days
-hist(day.of.week, main="Days of the week when trips started" xlab="Day (Sunday -> Monday)")
+hist(day.of.week, main="Days of the week when trips started", xlab="Day (Sunday -> Monday)")
 
 # Subset weekdays v.s. weekends
 weekday.indices <- which(day.of.week==0 | day.of.week==6) # Sunday (0) or Saturday (6)
@@ -1621,42 +1624,78 @@ weekend.routes <- create.single.line(weekend.list)
 # Also make a single SpatialLines object for mapping (and write it out)
 weekday.routes.oneline <-  create.single.line(weekday.list, oneline = TRUE)
 weekend.routes.oneline <- create.single.line(weekend.list, oneline = TRUE)
-writeOGR(SpatialLinesDataFrame(weekday.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekday_routes_oneline", driver="ESRI Shapefile" )
-writeOGR(SpatialLinesDataFrame(weekend.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekend_routes_oneline", driver="ESRI Shapefile" )
+writeOGR(SpatialLinesDataFrame(weekday.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekday_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+writeOGR(SpatialLinesDataFrame(weekend.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekend_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
 
 # Make a plot now.
 
 par(mfrow=c(1,2))
 #plot(relative.longest, main="longest")
 #plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
-plot(weekend.routes, main="weekend routes")
+plot(study.area, border="blue")
+plot(weekend.routes, main="weekend routes", add=T)
 plot(study.area, add=T, border="blue")
 #plot(relative.shortest, main="not longest")
 #plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
-plot(weekday.routes, main="weekday routes")
+plot(study.area, border="blue")
+plot(weekday.routes, main="weekday routes", add=T)
 plot(study.area, add=T, border="blue")
 
 
 ```
 
-There were `r length(weekday.indices)` trips during weekdays, and `r length(weekend.indices)` trips over the weekend (out of a total of `r length(starttime)` trips.
+There were `r length(weekday.indices)` trips during weekdays, and `r length(weekend.indices)` trips over the weekend (out of a total of `r length(starttime)` trips).
 
-
-Sanity check that this looks sensible
-
-```{r weekdayEnd-sanityCheck}
-
-#XXXX
-
-```
 
 Re-run the analysis for the weekday and weekend paths
 
-```{r rerunAsymmetryAnalysis-weekdayEnd }
+```{r rerunAsymmetryAnalysis-weekdayEnd, cache=TRUE }
 
-#XXXX
+# This repeasts the code in `make matrix` chunk
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1.weekday <- calc.flows(grid, weekday.routes, plot=FALSE, multithread = TRUE)
+result1.weekend <- calc.flows(grid, weekend.routes, plot=FALSE, multithread = TRUE)
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.weekday.spdf <- result.to.spdf(result1.weekday) 
+result1.weekend.spdf <- result.to.spdf(result1.weekend)
+# Finally make a transition matrix 
+result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf)
+result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf)
+
+# Write out the matrices
+#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
+
+# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description below)
+
+#writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+#writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects (these as well as the original results) - easy to read back in
+save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+     result1.matrix.longest, result1.matrix.shortest,
+     result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
+     result1.matrix.weekday, result1.matrix.weekend,
+     file="results.RData")
 
 ```
+
+Re-calculate the asymmetry values for weekday and weekend trips.
+
+```{r recalculateAsymmetry-weekendDay}
+
+result1.percentage.asymmetry.weekday <- calculate.asymmetry(result1.matrix.weekday)
+result1.percentage.asymmetry.weekend <- calculate.asymmetry(result1.matrix.weekend)
+
+```
+
+Asymettry values:
+
+ - Weekday asymetry: `r result1.percentage.asymmetry.weekday`
+
+ - Weekend asymetry: `r result1.percentage.asymmetry.weekend`
+
 
 
 ## Asymmetry Analysis for Anthony
@@ -1664,34 +1703,32 @@ Re-run the analysis for the weekday and weekend paths
 AV would also like to calculate relative asymmetry for an area that he is working on 
 
 
-```{r AV.asymmetry.analysis, eval=FALSE }
+```{r AV.asymmetry.analysis, cache=TRUE }
 
 # Read the grid to use
-av.grid.temp <- readOGR( ds = "./tony_grid/", layer="BOS CAM 200M")
+av.grid.temp <- readOGR( ds = "./tony_grid/", layer="BC Square Grid")
 
 # Project it so that it matcches the traces
 av.grid <- spTransform(av.grid.temp, CRS(proj4string(all.routes))) # "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 rm(av.grid.temp)
 
-# Add ID, CELLX and CELLY columns.
-# These are needed so that the functions don't break, but as Tony's grid is square the numbering and cellX/cellY values wont
-# be correct. Hopefully this doesn't matter for now? (Not doing this now because Tony's grid isn't square which could be annoying)
-#total.av.cells <- nrow(av.grid)
-#num.av.cells <- XXXX # What to make this? my code assumes that the grid has an equal number of rows and columns
-#av.grid$ID <- -1
-#av.grid$CellX <- -1
-#av.grid$CellY <- -1
-#grid.ids <- matrix(data=0, nrow=num.av.cells, ncol=num.av.cells)
-#cellcount <- 1
-#for (rowcount in seq(1,num.av.cells)) {
-#  for (colcount in seq(1,num.av.cells)) {
-#    grid@data[cellcount,]$CellX <- colcount
-#    grid@data[cellcount,]$CellY <- rowcount
-#    grid@data[cellcount,]$ID <- cellcount
-#    grid.ids[rowcount,colcount] <- cellcount
-#    cellcount <- cellcount + 1
-#  }
-#}
+# Add ID, CELLX and CELLY columns. These are needed so that the algorithn knows which cells neighbour each other
+total.av.cells <- nrow(av.grid)
+num.av.cells <- sqrt(nrow(av.grid)) # Cells per row or column (it's a square grid so these will be the same) 
+av.grid$ID <- -1
+av.grid$CellX <- -1
+av.grid$CellY <- -1
+av.grid.ids <- matrix(data=0, nrow=num.av.cells, ncol=num.av.cells)
+cellcount <- 1
+for (rowcount in seq(1,num.av.cells)) {
+  for (colcount in seq(1,num.av.cells)) {
+    av.grid@data[cellcount,]$CellX <- colcount
+    av.grid@data[cellcount,]$CellY <- rowcount
+    av.grid@data[cellcount,]$ID <- cellcount
+    av.grid.ids[rowcount,colcount] <- cellcount
+    cellcount <- cellcount + 1
+  }
+}
 
 
 # ***************************
@@ -1699,17 +1736,18 @@ rm(av.grid.temp)
 
 # Do the analysis
 
-#av.result <-  calc.flows(av.grid, all.routes,  plot=FALSE, multithread = TRUE)
+av.result <-  calc.flows(av.grid, all.routes,  plot=FALSE, multithread = TRUE)
 
-#av.result.spdf <- result.to.spdf(av.result) 
+av.result.spdf <- result.to.spdf(av.result) 
 
-#av.result.matrix <- spdf.to.matrix(av.result.spdf)
+av.result.matrix <- spdf.to.matrix(av.result.spdf)
 
-#av.result.percentage.asymmetry <- calculate.asymmetry(result1.matrix.shortest)
+av.result.percentage.asymmetry <- -1 # TEMPORARILY IN CASE FOLLOWING DOESN'T WORK AND BREAKS MARKDOWN compilation
+av.result.percentage.asymmetry <- calculate.asymmetry(result1.matrix.shortest)
 
-#writeOGR(av.result.spdf, dsn = "tony_grid", layer="av_result_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(av.result.spdf, dsn = "tony_grid", layer="av_result_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
-av.result.percentage.asymmetry <- -1 # TEMPORARILY SO AS NOT TO BREAK THE FOLLOWING MARKDOWN
+
 
 ```
 
