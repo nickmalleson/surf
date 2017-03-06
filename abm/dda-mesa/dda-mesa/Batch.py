@@ -1,6 +1,8 @@
 # For running multiple versions of the model
 
-from Model import DDAModel
+from model import DDAModel
+
+from mesa.batchrunner import BatchRunner
 
 import matplotlib.pyplot as plt
 
@@ -19,3 +21,4 @@ for j in range(100):
 
 plt.hist(all_wealth, bins=range(max(all_wealth)+1))
 plt.show()
+

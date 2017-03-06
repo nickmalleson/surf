@@ -41,3 +41,4 @@ These might be installed when mesa is installed, but maybe not. If not, they're 
 `sudo pip install .. `
 
   - `matplotlib`
+  - `numpy`
