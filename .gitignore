@@ -14,6 +14,9 @@ build/
 # R history files
 *.Rhistory
 
+# Python caches
+__pycache__/
+
 
 # ********** ABM **********
 
@@ -59,10 +62,6 @@ projects/BreezeRoutes/traces/analyse_traces-anonymise.RData
 # TEPMORARY
 temp_nltk_stuff/
 
-# ********** DDA **********
-
-projects/dda/alice_dda_code/__pycache__/
- 
 
 # ********** **********
 
