@@ -3,10 +3,13 @@ from mesa import Agent
 import random
 
 class DDAAgent(Agent):
-    """Default agent"""
+    """Default DDA agent"""
+
     def __init__(self, unique_id, model):
+        """Initialise an agent with a unique_id and a reference to the model"""
         super().__init__(unique_id, model)
-        print("\tCreated agent {}".format(unique_id) )
+
+        print("\tCreated agent {}".format(unique_id))
 
 
     def step(self):
@@ -27,15 +30,22 @@ class DDAAgent(Agent):
         else: # Otherwise chose to move left or right, or not
             self.model.grid.move_agent(self, random.choice([(x, 0), (x-1, 0), (x+1,0) ]))
 
-        
+    def activate(self):
+        """Take this agent from a RETIRED state into an ACTIVE state (i.e. moving in the street)"""
+
+        # Choose a location (either endpoint A or B) and move the agent there
+        x = random.choice([self.model.loc_a, self.model.loc_b])
+        self.model.grid.move_agent(self, x)
+
+        # Change their state
+        if x == self.model.loc_a:
+            self.state = AgentStates.TRAVELLING_FROM_A
+        else:
+            self.state = AgentStates.TRAVELLING_FROM_B
+
 
     def __repr__(self):
         return "DDAAgent {}".format(self.unique_id)
-    
-
-
-
-
 
 
 
@@ -63,4 +73,8 @@ class DDAAgent(Agent):
     def _agents_near_me(self):
         """Get agents near me (as a list)"""
         self.model.grid.get_neighbors(self.pos, moore=True, include_center=False, radius=1)
-        
+
+
+class AgentStates:
+    RETIRED, TRAVELLING_FROM_A, TRAVELLING_FROM_B = range(3)
+
