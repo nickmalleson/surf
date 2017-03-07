@@ -8,12 +8,16 @@ from mesa.datacollection import DataCollector # For collecting model data
 import matplotlib.pyplot as plt
 import numpy as np
 
+import sys
+import traceback
+
+
 # These parameters are used when the model is executed from this class
 # (e.g. by the code in if__name__=="__main__" at the end of the file)
 # and are also read by the visualisation class.
 
-NUM_AGENTS = 100
-NUM_ITERATIONS = 1000
+NUM_AGENTS = 600
+NUM_ITERATIONS = 7200
 _WIDTH = 24 # Don't change the width and the height
 _HEIGHT = 1
 
@@ -91,35 +95,42 @@ class DDAModel(Model):
             raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr) )
         self.__bleedout_rate = blr
         
+    
+        
 
 
 if __name__ == "__main__":
     model = DDAModel(NUM_AGENTS, NUM_ITERATIONS)
-    
-    while model.running:
-        model.step()
+
+    try: # Do it all in a try so that I can have the console afterwards to see what's going on
+        while model.running:
+            model.step()
 
 
-    # Lets see a graph of the agent ids:
-    #plt.hist([a.unique_id for a in model.schedule.agents] )
-    #plt.show()
-    
-    # Lets see where most of the agents are
-    agent_counts = np.zeros((model.grid.width, model.grid.height))
-    for cell in model.grid.coord_iter():
-        cell_content, x, y = cell
-        agent_count = len(cell_content)
-        agent_counts[x][y] = agent_count
-    plt.imshow(agent_counts, interpolation='nearest')
-    plt.title("Locations of all agents")
-    plt.colorbar()
-    plt.show()
-    
-    # Look at the distribution of x values
-    model.datacollector.get_agent_vars_dataframe().hist()
-    
-    # Look at the change in bleedout rate
-    model.datacollector.get_model_vars_dataframe().hist()
+
+        # Lets see a graph of the agent ids:
+        #plt.hist([a.unique_id for a in model.schedule.agents] )
+        #plt.show()
+
+        # Lets see where most of the agents are
+        agent_counts = np.zeros((model.grid.width, model.grid.height))
+        for cell in model.grid.coord_iter():
+            cell_content, x, y = cell
+            agent_count = len(cell_content)
+            agent_counts[x][y] = agent_count
+        plt.imshow(agent_counts, interpolation='nearest')
+        plt.title("Locations of all agents")
+        plt.colorbar()
+        plt.show()
+
+        # Look at the distribution of x values
+        model.datacollector.get_agent_vars_dataframe().hist()
+
+        # Look at the change in bleedout rate
+        model.datacollector.get_model_vars_dataframe().hist()
 
 
-    print("Finished")
+        print("Finished")
+    except:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)

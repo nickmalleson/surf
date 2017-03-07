@@ -678,7 +678,9 @@ def plotBothCounts(countsIn):
     camera_a = countsIn[0]
     camera_b = countsIn[1]
     xaxis = [i for i in range(len(camera_a))]
-    plt.plot(xaxis, camera_a, xaxis, camera_b)
+    plt.plot(xaxis, camera_a, 'r--', xaxis, camera_b, 'bs')
+    plt.ylabel("Camera Counts")
+    
     
 
     # T = time, xf0 initial state vector, pf0 initial covariance
