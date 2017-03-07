@@ -14,7 +14,6 @@
       <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.7.7.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.17.jar!/" />
     </CLASSES>
-    <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib/map-matching-0.7.0-sources.jar!/" />
     </SOURCES>
