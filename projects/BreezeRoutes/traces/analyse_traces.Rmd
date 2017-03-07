@@ -330,7 +330,7 @@ all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
 individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
 #  Combine them into a single SpatialLines object. This is good for quick plotting etc.
 all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
-#writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(c(1)) ), dsn=".", layer="all_routes_oneline", driver="ESRI Shapefile")
+writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(c(1)) ), dsn="./result/", layer="all_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE)
 rm(individual.lines, lines.objects)
 
 par(mfrow=c(1,1))
@@ -1402,10 +1402,10 @@ Now calculate the _percentage of of asymmetry_
 
 ```{r pairwiseFlow-percentage_asymmetry}
 
-sum.absolute.flow <- 0
-sum.max.flow <- 0
 
 calculate.asymmetry <- function(the.matrix) {
+  sum.absolute.flow <- 0
+  sum.max.flow <- 0
   for ( i in seq(1,nrow(the.matrix))) {
     for (j in seq(1, ncol(the.matrix))) {
       if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
@@ -1663,13 +1663,8 @@ result1.weekend.spdf <- result.to.spdf(result1.weekend)
 result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf)
 result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf)
 
-# Write out the matrices
-#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
-
-# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description below)
-
-#writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
-#writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(result1.weekday.spdf, dsn = "result", layer="result1_weekday_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(result1.weekend.spdf, dsn = "result", layer="result1_weekend_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in
 save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
@@ -1733,6 +1728,7 @@ for (rowcount in seq(1,num.av.cells)) {
 
 # ***************************
 
+av.result.percentage.asymmetry <- -1 # TEMPORARILY IN CASE FOLLOWING DOESN'T WORK AND BREAKS MARKDOWN compilation
 
 # Do the analysis
 
@@ -1742,7 +1738,6 @@ av.result.spdf <- result.to.spdf(av.result)
 
 av.result.matrix <- spdf.to.matrix(av.result.spdf)
 
-av.result.percentage.asymmetry <- -1 # TEMPORARILY IN CASE FOLLOWING DOESN'T WORK AND BREAKS MARKDOWN compilation
 av.result.percentage.asymmetry <- calculate.asymmetry(result1.matrix.shortest)
 
 writeOGR(av.result.spdf, dsn = "tony_grid", layer="av_result_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
