@@ -115,7 +115,7 @@ class DDAModel(Model):
         for a in agents:
             a.activate()
 
-        XXXX HERE - see line 477 om wprlomgca,eras/py
+#        XXXX HERE - see line 477 om wprlomgca,eras/py
 
 
 
