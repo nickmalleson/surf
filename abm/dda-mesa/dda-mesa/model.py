@@ -7,12 +7,13 @@ from mesa.space import MultiGrid # The environment
 from mesa.datacollection import DataCollector # For collecting model data
 
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from scipy.stats import norm
 
 import sys
 import traceback
+import numpy as np
+import random
+from multiprocessing import Pool
 
 
 # These parameters are used when the model is executed from this class
@@ -22,6 +23,7 @@ import traceback
 NUM_AGENTS = 600
 #NUM_ITERATIONS = 7200
 NUM_ITERATIONS = 1000
+MULTIPROCESS = False
 _WIDTH = 24 # Don't change the width and the height
 _HEIGHT = 1
 
@@ -36,7 +38,9 @@ class DDAModel(Model):
 
     
     def __init__(self, N, iterations,
-                 bleedout_rate=np.random.normal(0.5, scale=0.1)):
+                 bleedout_rate=np.random.normal(0.5, scale=0.1),
+                 mp = True):
+
         """
         Create a new instance of the DDA model.
         
@@ -44,10 +48,12 @@ class DDAModel(Model):
             N - the number of agents
             iterations - the number of iterations to run the model for
             blr - the bleedout rate (the probability that agents leave at the midpoint)
+            mp - whether to use multiprocess (agents call step() method at same time)
         """
         self.num_agents = N
         self.bleedout_rate = bleedout_rate
         self.iterations = iterations
+        self.mp = mp
 
         # Locations of important parts of the environment. These shouldn't be changed
         self.graveyard = (0, 0)  # x,y locations of the graveyard
@@ -55,8 +61,11 @@ class DDAModel(Model):
         self.loc_b = (23, 0)  # Location b (on the right side)
         self.loc_mid = (12, 0)  # The midpoint
 
-        # Set up the scheduler
-        self.schedule = RandomActivation(self) # Random order for calling agent's step methods
+        # Set up the scheduler. Note that this isn't actually used (see below re. agent's stepping)
+        self.schedule = RandomActivation(self)  # Random order for calling agent's step methods
+
+        # For multiprocess step method
+        self.pool = Pool()
         
         # Create the environment
         self.grid = MultiGrid(DDAModel._width, DDAModel._height, False)
@@ -80,14 +89,14 @@ class DDAModel(Model):
         # Define a collector for model data
         self.datacollector = DataCollector(
             model_reporters={"Bleedout Rate": lambda m: m.bleedout_rate},
-            agent_reporters={"Location (x)":  lambda a: a.pos[0],
+            agent_reporters={"Location (x)": lambda a: a.pos[0],
                              "State": lambda a: a.state}
             )
-    
-        
+
+
 
     def step(self):
-        '''Advance the model by one step.'''
+        """Advance the model by one step."""
         print("Iteration {}".format(self.schedule.steps))
 
         self.datacollector.collect(self) # Collect data about the model
@@ -99,21 +108,23 @@ class DDAModel(Model):
 
         # Activate some agents based on the clock
         num_to_activate = -1
-        s = self.schedule.steps # Number of steps (for convenience)
-        if s % 60 == 0: # On the hour
+        s = self.schedule.steps  # Number of steps (for convenience)
+        if s % 60 == 0:  # On the hour
             num_to_activate == self._agent_dist[ int(s/60) % 24  ]
             print("Activating", num_to_activate)
         else:
             num_to_activate = 0
 
         # Choose some agents that are retired to activate
-        agents = np.random.choice(
+        retired_agents = np.random.choice(
             [a for a in self.schedule.agents if a.state == AgentStates.RETIRED],
             size=num_to_activate,
-            replace=False )
+            replace=False)
 
-        for a in agents:
+        for a in retired_agents:
             a.activate()
+
+
 
 #        XXXX HERE - see line 477 om wprlomgca,eras/py
 
@@ -123,10 +134,36 @@ class DDAModel(Model):
 
 
 
-        # Call all agents' 'step' method
-        self.schedule.step()
-        
+        # Call all agents' 'step' method.
 
+        if not self.mp:  # Not using multiprocess. Do it the mesa way:
+            self.schedule.step()
+        else:
+            # Better to do it a different way to take advantage of multicore processors and to ignore agents who are not
+            # active (no need for them to step at all)
+            # NOTE: Doesn't work! The problem is that the DDAAgent needs the DDAModel class, which means
+            # that this class needs to be pickled and copied to the child processes. The first problem (which can be
+            # fixed by creating functions rather than using lambda, although this is messy) is that DDAModel uses
+            # lambda functions, that can't be pickled. Second and more difficult problem is that the Pool object itself
+            # cannot be shared. Possible solution here: https://stackoverflow.com/questions/25382455/python-notimplementederror-pool-objects-cannot-be-passed-between-processes
+            # but for the meantime I'm not going to try to fix this.
+            active_agents = [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
+            random.shuffle(active_agents)
+
+            if active_agents is None:
+                print("\tNo agents are active")  # Nothing to do
+            else:
+                p = Pool()
+                p.map(self._step_agent, active_agents)  # Calls step() for all agents
+
+            # As not using the proper schedule method, need to update time manually.
+            self.schedule.steps += 1
+            self.schedule.time += 1
+
+
+    def _step_agent(self, a):
+        """Call the given agent's step method. Only required because Pool.map doesn't take lambda functions."""
+        a.step()
 
     # bleedout rate is defined as a property: http://www.python-course.eu/python3_properties.php
     @property
@@ -152,7 +189,7 @@ class DDAModel(Model):
 
 
 if __name__ == "__main__":
-    model = DDAModel(NUM_AGENTS, NUM_ITERATIONS)
+    model = DDAModel(NUM_AGENTS, NUM_ITERATIONS, mp=MULTIPROCESS)
 
     try: # Do it all in a try so that I can have the console afterwards to see what's going on
         while model.running:
@@ -182,6 +219,9 @@ if __name__ == "__main__":
 
 
         print("Finished")
-    except:
+    except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
+        traceback.print_exc()
+        print(e)
+        #traceback.print_tb(exc_traceback)
+
