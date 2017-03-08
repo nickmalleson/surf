@@ -21,6 +21,9 @@ class DDAAgent(Agent):
         # and unnecessary in this simple model
         #self.model.grid.move_agent(self, DDAAgent._get_rand_neighbour_cell(self))
 
+        if self.state == AgentStates.RETIRED:  # Don't do anything if the agent is retired. The model will activate them first
+            return
+
         # Randomly move
         x,y = self.pos
         if x == 0: # If far left, move right (or not)
@@ -45,7 +48,7 @@ class DDAAgent(Agent):
 
 
     def __repr__(self):
-        return "DDAAgent {}".format(self.unique_id)
+        return "DDAAgent {} (state {})".format(self.unique_id, self.state)
 
 
 
