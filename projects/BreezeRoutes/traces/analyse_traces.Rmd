@@ -326,6 +326,9 @@ for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
 # Make a SpatialLines object from all of those lines
 all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
 
+# Write it out (for mapping etc., not for anlaysis)
+writeOGR(SpatialLinesDataFrame(all.routes, data=data.frame(seq(1,length(all.routes)))), dsn="./routes-shp/", layer="all_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
 #  Also make one bg SpatialLines object for mapping. Begin by extracting the individual 'lines'
 individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
 #  Combine them into a single SpatialLines object. This is good for quick plotting etc.
@@ -1484,9 +1487,13 @@ relative.longest.routes  <- create.single.line(relative.longest)
 # Also make a single SpatialLines object for mapping (and write it out)
 relative.shortest.routes.oneline <- create.single.line(relative.shortest, oneline = TRUE)
 relative.longest.routes.oneline <- create.single.line(relative.longest, oneline = TRUE)
-writeOGR(SpatialLinesDataFrame(relative.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_shortest_routes_oneline", driver="ESRI Shapefile" )
-writeOGR(SpatialLinesDataFrame(relative.longest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_longest_routes_oneline", driver="ESRI Shapefile" )
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_shortest_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+writeOGR(SpatialLinesDataFrame(relative.longest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_longest_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
 
+
+# Also write out a shapefile with individual lines in it (again for mapping at MIT, not copied from server)
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes, data=data.frame(seq(1,length(relative.shortest.routes)))), dsn="./routes-shp/", layer="relative_shortest_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(SpatialLinesDataFrame(relative.longest.routes, data=data.frame(seq(1,length(relative.longest.routes)))), dsn="./routes-shp/", layer="relative_longest_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Make a plot now.
 
