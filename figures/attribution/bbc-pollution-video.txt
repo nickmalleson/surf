@@ -1,0 +1,8 @@
+<figure style="float:left; height:auto%; width:30%;padding:5px; margin: 10px 10px 10px 10px;" >
+	<a href="http://www.bbc.co.uk/news/science-environment-39170488">
+		<img src="{{site.url}}/{{site.baseurl}}/figures/attribution/bbc-pollution-video.jpg" alt="Screenshot of the BBC pollution video"/>
+	</a>
+	<figcaption>
+		Source: <a href="http://www.bbc.co.uk/news/science-environment-39170488">http://www.bbc.co.uk/news/science-environment-39170488</a>
+	</figcaption>
+</figure>

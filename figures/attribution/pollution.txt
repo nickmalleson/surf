@@ -1,0 +1,6 @@
+<figure style="float:right; height:auto%; width:40%;padding:5px; margin: 10px 10px 10px 10px;" >
+	<img src="{{site.url}}/{{site.baseurl}}/figures/attribution/pollution.jpg" alt="Air pollution in a city"/>
+	<figcaption>Source: <a href="https://www.flickr.com/photos/thewildrover/">dreamingyakker</a> (<a href="https://creativecommons.org/licenses/by-nc-nd/2.0/">CC BY-NC-ND 2.0</a>).
+	</figcaption>
+</figure>
+
