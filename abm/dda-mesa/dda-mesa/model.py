@@ -34,13 +34,7 @@ class DDAModel(Model):
     _width  = _WIDTH # width and height of the world. These shouldn't be changed
     _height = _HEIGHT
 
-
-
-    
-    def __init__(self, N, iterations,
-                 bleedout_rate=np.random.normal(0.5, scale=0.1),
-                 mp = True):
-
+    def __init__(self, N, iterations, bleedout_rate=np.random.normal(0.5, scale=0.1), mp=False):
         """
         Create a new instance of the DDA model.
         
@@ -88,9 +82,10 @@ class DDAModel(Model):
         
         # Define a collector for model data
         self.datacollector = DataCollector(
-            model_reporters={"Bleedout Rate": lambda m: m.bleedout_rate},
-            agent_reporters={"Location (x)": lambda a: a.pos[0],
-                             "State": lambda a: a.state}
+            model_reporters={"Bleedout rate": lambda m: m.bleedout_rate,
+                             "Number of active agents": lambda m: len(m.active_agents())},
+            agent_reporters={"Location (x)": lambda agent: agent.pos[0],
+                             "State": lambda agent: agent.state}
             )
 
 
@@ -110,7 +105,7 @@ class DDAModel(Model):
         num_to_activate = -1
         s = self.schedule.steps  # Number of steps (for convenience)
         if s % 60 == 0:  # On the hour
-            num_to_activate == self._agent_dist[ int(s/60) % 24  ]
+            num_to_activate == self._agent_dist[int(s/60) % 24]
             print("Activating", num_to_activate)
         else:
             num_to_activate = 0
@@ -170,6 +165,7 @@ class DDAModel(Model):
     def bleedout_rate(self):
         """Get the current bleedout rate"""
         return self.__bleedout_rate
+
     @bleedout_rate.setter
     def bleedout_rate(self, blr):
         """Set the bleedout rate. It must be between 0 and 1 (inclusive). Failure
@@ -178,6 +174,9 @@ class DDAModel(Model):
             raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr) )
         self.__bleedout_rate = blr
 
+    def active_agents(self):
+        """Return a list of the active agents (i.e. those who are not retired"""
+        return [ a for a in self.schedule.agents if a.state != AgentStates.RETIRED ]
 
     @classmethod
     def _make_agent_distribution(cls, N):
@@ -191,10 +190,9 @@ class DDAModel(Model):
 if __name__ == "__main__":
     model = DDAModel(NUM_AGENTS, NUM_ITERATIONS, mp=MULTIPROCESS)
 
-    try: # Do it all in a try so that I can have the console afterwards to see what's going on
+    try:  # Do it all in a try so that I can have the console afterwards to see what's going on
         while model.running:
             model.step()
-
 
         # Lets see a graph of the agent ids:
         #plt.hist([a.unique_id for a in model.schedule.agents] )
@@ -217,8 +215,8 @@ if __name__ == "__main__":
         # Look at the change in bleedout rate
         model.datacollector.get_model_vars_dataframe().hist()
 
-
         print("Finished")
+
     except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback.print_exc()

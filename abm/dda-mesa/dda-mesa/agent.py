@@ -8,6 +8,10 @@ class DDAAgent(Agent):
     def __init__(self, unique_id, model):
         """Initialise an agent with a unique_id and a reference to the model"""
         super().__init__(unique_id, model)
+        # Agents need a state - this will be set by the model when the agent is created
+        self.state = None
+        # Each should have a colour for display (doesn't affect the analysis)
+        self.colour = random.choice(["red", "blue", "green", "yellow", "orange", "pink", "green", "purple"])
 
         print("\tCreated agent {}".format(unique_id))
 
@@ -19,19 +23,46 @@ class DDAAgent(Agent):
         
         # Randomly move cell. This is to demo how to do it the 'proper way' (computationally expensive
         # and unnecessary in this simple model
-        #self.model.grid.move_agent(self, DDAAgent._get_rand_neighbour_cell(self))
+        # self.model.grid.move_agent(self, DDAAgent._get_rand_neighbour_cell(self))
 
-        if self.state == AgentStates.RETIRED:  # Don't do anything if the agent is retired. The model will activate them first
+        if self.state == AgentStates.RETIRED:  # Don't do anything if the agent is retired.
             return
 
-        # Randomly move
-        x,y = self.pos
-        if x == 0: # If far left, move right (or not)
-            self.model.grid.move_agent(self, random.choice([ (x,0), (1,0) ] ) )
-        elif x == self.model._width-1: # If far right, move left (or not)
-            self.model.grid.move_agent(self, random.choice([(x, 0), (self.model._width-2, 0)]))
-        else: # Otherwise chose to move left or right, or not
-            self.model.grid.move_agent(self, random.choice([(x, 0), (x-1, 0), (x+1,0) ]))
+        x,y = self.pos # The agent's position
+        a, b, g = self.model.loc_a, self.model.loc_b, self.model.graveyard # The locations; for convenience
+
+        # If the agent has reached their destination then they can retire to the graveyard
+        if (self.state == AgentStates.TRAVELLING_FROM_A and self.pos == b) or \
+            (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == a):
+            self.retire()
+            return
+
+        # See if they should leave through the midpoint
+        if self.pos == g:
+            if random.random > self.model.bleedout_rate():
+                self.retire()
+                return
+
+        # Otherwise move
+        if self.state == AgentStates.TRAVELLING_FROM_A:
+            self.model.grid.move_agent(self, ((x+1), 0) ) # Move 1 to right (away from point A)
+        elif self.state == AgentStates.TRAVELLING_FROM_B:
+            self.model.grid.move_agent(self, ((x-1), 0) ) # Move 1 to left (away from point A)
+
+
+
+
+        # XXXX WHAT ABOUT LEAVING FROM THE GRAVEYARD
+
+        # # Randomly move
+        # if x == 0: # If far left, move right (or not)
+        #     self.model.grid.move_agent(self, random.choice([ (x,0), (1,0) ] ) )
+        # elif x == self.model._width-1: # If far right, move left (or not)
+        #     self.model.grid.move_agent(self, random.choice([(x, 0), (self.model._width-2, 0)]))
+        # else: # Otherwise chose to move left or right, or not
+        #     self.model.grid.move_agent(self, random.choice([(x, 0), (x-1, 0), (x+1,0) ]))
+
+
 
     def activate(self):
         """Take this agent from a RETIRED state into an ACTIVE state (i.e. moving in the street)"""
@@ -46,6 +77,10 @@ class DDAAgent(Agent):
         else:
             self.state = AgentStates.TRAVELLING_FROM_B
 
+    def retire(self):
+        """Make this agent RETIRE"""
+        self.model.grid.move_agent(self, self.model.graveyard)
+        self.state = AgentStates.RETIRED
 
     def __repr__(self):
         return "DDAAgent {} (state {})".format(self.unique_id, self.state)
@@ -54,7 +89,7 @@ class DDAAgent(Agent):
 
 
     
-    # Other useful functions, for reference more than anything else
+    #  Other useful functions, for reference more than anything else
 
     @classmethod
     def _get_rand_neighbour_cell(cls, agent):
@@ -80,4 +115,3 @@ class DDAAgent(Agent):
 
 class AgentStates:
     RETIRED, TRAVELLING_FROM_A, TRAVELLING_FROM_B = range(3)
-
