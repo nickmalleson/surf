@@ -29,17 +29,18 @@ class DDAAgent(Agent):
             return
 
         x, y = self.pos  # The agent's position
-        a, b, g = self.model.loc_a, self.model.loc_b, self.model.graveyard  # The locations; for convenience
 
         # If the agent has reached their destination then they can retire to the graveyard
-        if (self.state == AgentStates.TRAVELLING_FROM_A and self.pos == b) or \
-                (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == a):
+        if (self.state == AgentStates.TRAVELLING_FROM_A and self.pos == self.model.loc_b) or \
+                (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == self.model.loc_a):
             self.retire()
             return
 
         # See if they should leave through the midpoint
-        if self.pos == g:
-            if random.random > self.model.bleedout_rate():
+        if self.pos == self.model.loc_mid:
+            print(random.random())
+            print(self.model.bleedout_rate)
+            if random.random() > self.model.bleedout_rate:
                 self.retire()
                 return
 

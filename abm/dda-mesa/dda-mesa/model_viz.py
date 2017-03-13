@@ -18,8 +18,8 @@ def agent_portrayal(agent):
             "r": 0.5}
 
 
-# A 10x10 grid with 500*500 pixels
-grid = CanvasGrid(agent_portrayal, model._WIDTH, model._HEIGHT, 500, 500)
+# A 10x10 grid with 500*50 pixels
+grid = CanvasGrid(agent_portrayal, model._WIDTH, model._HEIGHT, 500, 50)
 
 # A graph. For more info:
 # https://mesa.readthedocs.io/en/latest/tutorials/adv_tutorial.html#building-your-own-visualization-component
@@ -32,8 +32,8 @@ active_agents_chart = ChartModule([{"Label": "Number of active agents", "Color":
 server = ModularServer(DDAModel,
                        [grid, bleedout_chart, active_agents_chart],
                        "DDA Model",
-                       5,  # Agents
-                       1000,  # Iterations
+                       model.NUM_AGENTS,  # Agents
+                       model.NUM_ITERATIONS,  # Iterations
                        0.5)  # Bleedout rate
 server.port = 8889
 server.launch()

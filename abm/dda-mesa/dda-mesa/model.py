@@ -44,7 +44,7 @@ class DDAModel(Model):
             mp - whether to use multiprocess (agents call step() method at same time)
         """
         self.num_agents = N
-        self.bleedout_rate = bleedout_rate
+        self.__bleedout_rate = bleedout_rate
         self.iterations = iterations
         self.mp = mp
 
@@ -102,18 +102,22 @@ class DDAModel(Model):
         num_to_activate = -1
         s = self.schedule.steps  # Number of steps (for convenience)
         if s % 60 == 0:  # On the hour
-            num_to_activate == self._agent_dist[int(s / 60) % 24]
-            print("Activating", num_to_activate)
+            num_to_activate = int( self._agent_dist[int((s / 60) % 24)])
+            #print("Activating", num_to_activate)
         else:
             num_to_activate = 0
+        print("\tNum to activate: {}".format(num_to_activate))
+        assert num_to_activate >= 0, \
+            "The number of agents to activate should be greater or equal to 0, not {}".format(num_to_activate)
 
-        # Choose some agents that are retired to activate
-        retired_agents = np.random.choice(
-            [a for a in self.schedule.agents if a.state == AgentStates.RETIRED],
-            size=num_to_activate,
-            replace=False)
+        # Choose some agents that are currently retired to activate.
+        retired_agents = [a for a in self.schedule.agents if a.state == AgentStates.RETIRED]
+        assert len(retired_agents) >= num_to_activate, \
+            "Too few agents to activate (have {}, need {})".format(length(retired_agents), num_to_activate)
 
-        for a in retired_agents:
+        to_activate = np.random.choice(retired_agents, size=num_to_activate, replace=False)
+
+        for a in to_activate:
             a.activate()
 
 
@@ -165,6 +169,7 @@ class DDAModel(Model):
             raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr))
         self.__bleedout_rate = blr
 
+
     def active_agents(self):
         """Return a list of the active agents (i.e. those who are not retired"""
         return [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
@@ -172,10 +177,10 @@ class DDAModel(Model):
     @classmethod
     def _make_agent_distribution(cls, N):
         """Create a distribution that tells us the number of agents to be created at each hour"""
-        x = np.arange(0, 24, 1)  # Create an array with one item for each hour
+        a = np.arange(0, 24, 1)  # Create an array with one item for each hour
         rv1 = norm(loc=12., scale=6.0)  # A continuous, normal random variable with a peak at 12
-        dist = rv1.pdf(x)  # Draw from the random variable pdf, taking values from x
-        return [round(item * N) for item in dist]  # Return a rounded list (the number of agents at each hour)
+        dist = rv1.pdf(a)  # Draw from the random variable pdf, taking values from a
+        return [round(item * N, ndigits=0) for item in dist]  # Return a rounded list (the number of agents at each hour)
 
 
 if __name__ == "__main__":
