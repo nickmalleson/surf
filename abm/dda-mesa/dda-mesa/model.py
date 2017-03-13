@@ -2,9 +2,9 @@ from agent import DDAAgent
 from agent import AgentStates
 
 from mesa import Model
-from mesa.time import RandomActivation # To randomise the order of agent step() methods
-from mesa.space import MultiGrid # The environment
-from mesa.datacollection import DataCollector # For collecting model data
+from mesa.time import RandomActivation  # To randomise the order of agent step() methods
+from mesa.space import MultiGrid  # The environment
+from mesa.datacollection import DataCollector  # For collecting model data
 
 import matplotlib.pyplot as plt
 from scipy.stats import norm
@@ -15,23 +15,22 @@ import numpy as np
 import random
 from multiprocessing import Pool
 
-
 # These parameters are used when the model is executed from this class
 # (e.g. by the code in if__name__=="__main__" at the end of the file)
 # and are also read by the visualisation class.
 
 NUM_AGENTS = 600
-#NUM_ITERATIONS = 7200
+# NUM_ITERATIONS = 7200
 NUM_ITERATIONS = 1000
 MULTIPROCESS = False
-_WIDTH = 24 # Don't change the width and the height
+_WIDTH = 24  # Don't change the width and the height
 _HEIGHT = 1
 
 
 class DDAModel(Model):
     """A simple DDA model"""
-    
-    _width  = _WIDTH # width and height of the world. These shouldn't be changed
+
+    _width = _WIDTH  # width and height of the world. These shouldn't be changed
     _height = _HEIGHT
 
     def __init__(self, N, iterations, bleedout_rate=np.random.normal(0.5, scale=0.1), mp=False):
@@ -60,41 +59,39 @@ class DDAModel(Model):
 
         # For multiprocess step method
         self.pool = Pool()
-        
+
         # Create the environment
         self.grid = MultiGrid(DDAModel._width, DDAModel._height, False)
-        
+
         # Define a variable that can be used to indicate whether the model has finished
         self.running = True
 
         # Create a distribution that tells us the number of agents to be added to the world at each
         self._agent_dist = DDAModel._make_agent_distribution(N)
-        
+
         # Create all the agents
         for i in range(self.num_agents):
             a = DDAAgent(i, self)
-            self.schedule.add(a) # Add the agents to the schedule
+            self.schedule.add(a)  # Add the agents to the schedule
             # All agents start as 'retired' in the graveyard
             a.state = AgentStates.RETIRED
-            self.grid.place_agent(a, self.graveyard) # All agents start in the graveyard
+            self.grid.place_agent(a, self.graveyard)  # All agents start in the graveyard
 
-        print("Created {} agents".format(len(self.schedule.agents) ) )
-        
+        print("Created {} agents".format(len(self.schedule.agents)))
+
         # Define a collector for model data
         self.datacollector = DataCollector(
             model_reporters={"Bleedout rate": lambda m: m.bleedout_rate,
                              "Number of active agents": lambda m: len(m.active_agents())},
             agent_reporters={"Location (x)": lambda agent: agent.pos[0],
                              "State": lambda agent: agent.state}
-            )
-
-
+        )
 
     def step(self):
         """Advance the model by one step."""
         print("Iteration {}".format(self.schedule.steps))
 
-        self.datacollector.collect(self) # Collect data about the model
+        self.datacollector.collect(self)  # Collect data about the model
 
         # See if the model has finished running.
         if self.schedule.steps >= self.iterations:
@@ -105,7 +102,7 @@ class DDAModel(Model):
         num_to_activate = -1
         s = self.schedule.steps  # Number of steps (for convenience)
         if s % 60 == 0:  # On the hour
-            num_to_activate == self._agent_dist[int(s/60) % 24]
+            num_to_activate == self._agent_dist[int(s / 60) % 24]
             print("Activating", num_to_activate)
         else:
             num_to_activate = 0
@@ -121,13 +118,7 @@ class DDAModel(Model):
 
 
 
-#        XXXX HERE - see line 477 om wprlomgca,eras/py
-
-
-
-
-
-
+        #        XXXX HERE - see line 477 om wprlomgca,eras/py
 
         # Call all agents' 'step' method.
 
@@ -140,7 +131,8 @@ class DDAModel(Model):
             # that this class needs to be pickled and copied to the child processes. The first problem (which can be
             # fixed by creating functions rather than using lambda, although this is messy) is that DDAModel uses
             # lambda functions, that can't be pickled. Second and more difficult problem is that the Pool object itself
-            # cannot be shared. Possible solution here: https://stackoverflow.com/questions/25382455/python-notimplementederror-pool-objects-cannot-be-passed-between-processes
+            # cannot be shared. Possible solution here:
+            # https://stackoverflow.com/questions/25382455/python-notimplementederror-pool-objects-cannot-be-passed-between-processes
             # but for the meantime I'm not going to try to fix this.
             active_agents = [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
             random.shuffle(active_agents)
@@ -154,7 +146,6 @@ class DDAModel(Model):
             # As not using the proper schedule method, need to update time manually.
             self.schedule.steps += 1
             self.schedule.time += 1
-
 
     def _step_agent(self, a):
         """Call the given agent's step method. Only required because Pool.map doesn't take lambda functions."""
@@ -171,20 +162,20 @@ class DDAModel(Model):
         """Set the bleedout rate. It must be between 0 and 1 (inclusive). Failure
         to do that raises a ValueError."""
         if blr < 0 or blr > 1:
-            raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr) )
+            raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr))
         self.__bleedout_rate = blr
 
     def active_agents(self):
         """Return a list of the active agents (i.e. those who are not retired"""
-        return [ a for a in self.schedule.agents if a.state != AgentStates.RETIRED ]
+        return [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
 
     @classmethod
     def _make_agent_distribution(cls, N):
         """Create a distribution that tells us the number of agents to be created at each hour"""
-        x = np.arange(0, 24, 1) # Create an array with one item for each hour
-        rv1 = norm(loc=12., scale=6.0) # A continuous, normal random variable with a peak at 12
-        dist = rv1.pdf(x) # Draw from the random variable pdf, taking values from x
-        return [round(item * N) for item in dist] # Return a rounded list (the number of agents at each hour)
+        x = np.arange(0, 24, 1)  # Create an array with one item for each hour
+        rv1 = norm(loc=12., scale=6.0)  # A continuous, normal random variable with a peak at 12
+        dist = rv1.pdf(x)  # Draw from the random variable pdf, taking values from x
+        return [round(item * N) for item in dist]  # Return a rounded list (the number of agents at each hour)
 
 
 if __name__ == "__main__":
@@ -195,8 +186,8 @@ if __name__ == "__main__":
             model.step()
 
         # Lets see a graph of the agent ids:
-        #plt.hist([a.unique_id for a in model.schedule.agents] )
-        #plt.show()
+        # plt.hist([a.unique_id for a in model.schedule.agents] )
+        # plt.show()
 
         # Lets see where most of the agents are
         agent_counts = np.zeros((model.grid.width, model.grid.height))
@@ -221,5 +212,4 @@ if __name__ == "__main__":
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback.print_exc()
         print(e)
-        #traceback.print_tb(exc_traceback)
-
+        # traceback.print_tb(exc_traceback)

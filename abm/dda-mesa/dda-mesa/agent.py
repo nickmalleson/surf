@@ -2,6 +2,7 @@ from mesa import Agent
 
 import random
 
+
 class DDAAgent(Agent):
     """Default DDA agent"""
 
@@ -15,12 +16,11 @@ class DDAAgent(Agent):
 
         print("\tCreated agent {}".format(unique_id))
 
-
     def step(self):
         """Step the agent"""
         # Note: to get the other agents
-        #print(self.unique_id," have found the agents:",self.model.schedule.agents)
-        
+        # print(self.unique_id," have found the agents:",self.model.schedule.agents)
+
         # Randomly move cell. This is to demo how to do it the 'proper way' (computationally expensive
         # and unnecessary in this simple model
         # self.model.grid.move_agent(self, DDAAgent._get_rand_neighbour_cell(self))
@@ -28,12 +28,12 @@ class DDAAgent(Agent):
         if self.state == AgentStates.RETIRED:  # Don't do anything if the agent is retired.
             return
 
-        x,y = self.pos # The agent's position
-        a, b, g = self.model.loc_a, self.model.loc_b, self.model.graveyard # The locations; for convenience
+        x, y = self.pos  # The agent's position
+        a, b, g = self.model.loc_a, self.model.loc_b, self.model.graveyard  # The locations; for convenience
 
         # If the agent has reached their destination then they can retire to the graveyard
         if (self.state == AgentStates.TRAVELLING_FROM_A and self.pos == b) or \
-            (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == a):
+                (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == a):
             self.retire()
             return
 
@@ -45,24 +45,22 @@ class DDAAgent(Agent):
 
         # Otherwise move
         if self.state == AgentStates.TRAVELLING_FROM_A:
-            self.model.grid.move_agent(self, ((x+1), 0) ) # Move 1 to right (away from point A)
+            self.model.grid.move_agent(self, ((x + 1), 0))  # Move 1 to right (away from point A)
         elif self.state == AgentStates.TRAVELLING_FROM_B:
-            self.model.grid.move_agent(self, ((x-1), 0) ) # Move 1 to left (away from point A)
+            self.model.grid.move_agent(self, ((x - 1), 0))  # Move 1 to left (away from point A)
 
 
 
 
-        # XXXX WHAT ABOUT LEAVING FROM THE GRAVEYARD
+            # XXXX WHAT ABOUT LEAVING FROM THE GRAVEYARD
 
-        # # Randomly move
-        # if x == 0: # If far left, move right (or not)
-        #     self.model.grid.move_agent(self, random.choice([ (x,0), (1,0) ] ) )
-        # elif x == self.model._width-1: # If far right, move left (or not)
-        #     self.model.grid.move_agent(self, random.choice([(x, 0), (self.model._width-2, 0)]))
-        # else: # Otherwise chose to move left or right, or not
-        #     self.model.grid.move_agent(self, random.choice([(x, 0), (x-1, 0), (x+1,0) ]))
-
-
+            # # Randomly move
+            # if x == 0: # If far left, move right (or not)
+            #     self.model.grid.move_agent(self, random.choice([ (x,0), (1,0) ] ) )
+            # elif x == self.model._width-1: # If far right, move left (or not)
+            #     self.model.grid.move_agent(self, random.choice([(x, 0), (self.model._width-2, 0)]))
+            # else: # Otherwise chose to move left or right, or not
+            #     self.model.grid.move_agent(self, random.choice([(x, 0), (x-1, 0), (x+1,0) ]))
 
     def activate(self):
         """Take this agent from a RETIRED state into an ACTIVE state (i.e. moving in the street)"""
@@ -85,10 +83,6 @@ class DDAAgent(Agent):
     def __repr__(self):
         return "DDAAgent {} (state {})".format(self.unique_id, self.state)
 
-
-
-
-    
     #  Other useful functions, for reference more than anything else
 
     @classmethod
@@ -102,12 +96,10 @@ class DDAAgent(Agent):
             include_center=True)
         return random.choice(possible_steps)
 
-    
-    
     def _agents_with_me(self):
         """Get the agents on the same cell as me (as a list)"""
-        self.model.grid.get_cell_list_contents([self.pos])        
-        
+        self.model.grid.get_cell_list_contents([self.pos])
+
     def _agents_near_me(self):
         """Get agents near me (as a list)"""
         self.model.grid.get_neighbors(self.pos, moore=True, include_center=False, radius=1)
