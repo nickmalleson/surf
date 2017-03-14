@@ -15,6 +15,8 @@ import numpy as np
 import random
 from multiprocessing import Pool
 
+from typing import List
+
 # These parameters are used when the model is executed from this class
 # (e.g. by the code in if__name__=="__main__" at the end of the file)
 # and are also read by the visualisation class.
@@ -40,11 +42,12 @@ class DDAModel(Model):
         Parameters:
             N - the number of agents
             iterations - the number of iterations to run the model for
-            blr - the bleedout rate (the probability that agents leave at the midpoint)
-            mp - whether to use multiprocess (agents call step() method at same time)
+            blr - the bleedout rate (the probability that agents leave at the midpoint) (default normal distribution
+            with mean=0.5 and sd=0.1)
+            mp - whether to use multiprocess (agents call step() method at same time) (doesn't work!) (default False)
         """
         self.num_agents = N
-        self.__bleedout_rate = bleedout_rate
+        self._bleedout_rate = bleedout_rate
         self.iterations = iterations
         self.mp = mp
 
@@ -53,6 +56,12 @@ class DDAModel(Model):
         self.loc_a = (1, 0)  # Location a (on left side of street)
         self.loc_b = (23, 0)  # Location b (on the right side)
         self.loc_mid = (12, 0)  # The midpoint
+
+        # 'Cameras' that store the number of agents who pass them over the course of an hour. The historical counts
+        # are saved by mesa using the DataCollector
+        self._camera_a = 0  # Camera A
+        self._camera_b = 0  # Camera B
+        self._camera_m = 0  # The midpoint
 
         # Set up the scheduler. Note that this isn't actually used (see below re. agent's stepping)
         self.schedule = RandomActivation(self)  # Random order for calling agent's step methods
@@ -82,9 +91,14 @@ class DDAModel(Model):
         # Define a collector for model data
         self.datacollector = DataCollector(
             model_reporters={"Bleedout rate": lambda m: m.bleedout_rate,
-                             "Number of active agents": lambda m: len(m.active_agents())},
+                             "Number of active agents": lambda m: len(m.active_agents()),
+                             "Camera A counts": lambda m: m.camera_a,
+                             "Camera B counts": lambda m: m.camera_b,
+                             "Camera M counts": lambda m: m.camera_m
+                             },
             agent_reporters={"Location (x)": lambda agent: agent.pos[0],
-                             "State": lambda agent: agent.state}
+                             "State": lambda agent: agent.state
+                             }
         )
 
     def step(self):
@@ -98,12 +112,17 @@ class DDAModel(Model):
             self.running = False
             return
 
-        # Activate some agents based on the clock
+        # Things to do every hour.
+        #  - 1 - reset the camera counters
+        #  - 2 - activate some agents
+
         num_to_activate = -1
         s = self.schedule.steps  # Number of steps (for convenience)
         if s % 60 == 0:  # On the hour
-            num_to_activate = int( self._agent_dist[int((s / 60) % 24)])
-            #print("Activating", num_to_activate)
+            # Reset the cameras
+            self._reset_cameras()
+            # Calculate the number of agents to activate
+            num_to_activate = int(self._agent_dist[int((s / 60) % 24)])
         else:
             num_to_activate = 0
         print("\tNum to activate: {}".format(num_to_activate))
@@ -113,7 +132,7 @@ class DDAModel(Model):
         # Choose some agents that are currently retired to activate.
         retired_agents = [a for a in self.schedule.agents if a.state == AgentStates.RETIRED]
         assert len(retired_agents) >= num_to_activate, \
-            "Too few agents to activate (have {}, need {})".format(length(retired_agents), num_to_activate)
+            "Too few agents to activate (have {}, need {})".format(len(retired_agents), num_to_activate)
 
         to_activate = np.random.choice(retired_agents, size=num_to_activate, replace=False)
 
@@ -138,20 +157,57 @@ class DDAModel(Model):
             # cannot be shared. Possible solution here:
             # https://stackoverflow.com/questions/25382455/python-notimplementederror-pool-objects-cannot-be-passed-between-processes
             # but for the meantime I'm not going to try to fix this.
-            active_agents = [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
+            active_agents = self.active_agents()  # Get all of the active agents
             random.shuffle(active_agents)
 
             if active_agents is None:
                 print("\tNo agents are active")  # Nothing to do
             else:
                 p = Pool()
-                p.map(self._step_agent, active_agents)  # Calls step() for all agents
+                p.map(DDAAgent._step_agent, active_agents)  # Calls step() for all agents
 
             # As not using the proper schedule method, need to update time manually.
             self.schedule.steps += 1
             self.schedule.time += 1
 
-    def _step_agent(self, a):
+    def increment_camera_a(self):
+        """Used by agents to tell the model that they have just passed the camera at location A. It would be neater
+        to have the cameras detect the agents, but I think that this would be quite expensive."""
+        self._camera_a += 1  # Increment the count of the current hour (most recent)
+
+    def increment_camera_b(self):
+        """Used by agents to tell the model that they have just passed the camera at location B. It would be neater
+        to have the cameras detect the agents, but I think that this would be quite expensive."""
+        self._camera_b += 1  # Increment the count of the current hour (most recent)
+
+    def increment_camera_m(self):
+        """Used by agents to tell the model that they have just passed the camera at the midpoint. This is only for
+        information really, in this scenario there is no camera at the midpoint"""
+        self._camera_m += 1  # Increment the count of the current hour (most recent)
+
+    @property
+    def camera_a(self) -> int:
+        """Getter for the count of the camera at location A"""
+        return self._camera_a
+
+    @property
+    def camera_b(self) -> int:
+        """Getter for the count of the camera at location B"""
+        return self._camera_b
+
+    @property
+    def camera_m(self) -> int:
+        """Getter for the count of the camera at the midpoint"""
+        return self._camera_m
+
+    def _reset_cameras(self):
+        """Reset the cameras to zero. Done on the hour"""
+        self._camera_a = 0
+        self._camera_b = 0
+        self._camera_m = 0
+
+    @staticmethod
+    def _step_agent(a):
         """Call the given agent's step method. Only required because Pool.map doesn't take lambda functions."""
         a.step()
 
@@ -159,19 +215,18 @@ class DDAModel(Model):
     @property
     def bleedout_rate(self):
         """Get the current bleedout rate"""
-        return self.__bleedout_rate
+        return self._bleedout_rate
 
     @bleedout_rate.setter
-    def bleedout_rate(self, blr):
+    def bleedout_rate(self, blr: float) -> None:
         """Set the bleedout rate. It must be between 0 and 1 (inclusive). Failure
         to do that raises a ValueError."""
         if blr < 0 or blr > 1:
             raise ValueError("The bleedout rate must be between 0 and 1, not '{}'".format(blr))
-        self.__bleedout_rate = blr
+        self._bleedout_rate = blr
 
-
-    def active_agents(self):
-        """Return a list of the active agents (i.e. those who are not retired"""
+    def active_agents(self) -> List[DDAAgent]:
+        """Return a list of the active agents (i.e. those who are not retired)"""
         return [a for a in self.schedule.agents if a.state != AgentStates.RETIRED]
 
     @classmethod

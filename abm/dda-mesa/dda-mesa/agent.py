@@ -31,16 +31,21 @@ class DDAAgent(Agent):
         x, y = self.pos  # The agent's position
 
         # If the agent has reached their destination then they can retire to the graveyard
-        if (self.state == AgentStates.TRAVELLING_FROM_A and self.pos == self.model.loc_b) or \
-                (self.state == AgentStates.TRAVELLING_FROM_B and self.pos == self.model.loc_a):
+        if self.state == AgentStates.TRAVELLING_FROM_A and self.pos == self.model.loc_b:
+            self.model.increment_camera_b()  # will pass camera b on their way out
+            self.retire()
+            return
+        elif self.state == AgentStates.TRAVELLING_FROM_B and self.pos == self.model.loc_a:
+            self.model.increment_camera_a()  # They will pass camera A on their way out
             self.retire()
             return
 
         # See if they should leave through the midpoint
         if self.pos == self.model.loc_mid:
-            print(random.random())
-            print(self.model.bleedout_rate)
+            #print(random.random())
+            #print(self.model.bleedout_rate)
             if random.random() > self.model.bleedout_rate:
+                self.model.increment_camera_m()  # Tell the midpoint camera that they're leaving
                 self.retire()
                 return
 
@@ -70,11 +75,13 @@ class DDAAgent(Agent):
         x = random.choice([self.model.loc_a, self.model.loc_b])
         self.model.grid.move_agent(self, x)
 
-        # Change their state
+        # Change their state and tell the relevant model camera that they are passing it
         if x == self.model.loc_a:
             self.state = AgentStates.TRAVELLING_FROM_A
+            self.model.increment_camera_a()
         else:
             self.state = AgentStates.TRAVELLING_FROM_B
+            self.model.increment_camera_b()
 
     def retire(self):
         """Make this agent RETIRE"""
