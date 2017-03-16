@@ -9,6 +9,6 @@ setup(name='dda-mesa',
       license='MIT',
       packages=['dda-mesa'],
       install_requires=[
-          'mesa',
+          'mesa','scipy','pandas','matplotlib'
       ],
       zip_safe=False)

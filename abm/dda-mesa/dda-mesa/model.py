@@ -8,6 +8,7 @@ from mesa.datacollection import DataCollector  # For collecting model data
 
 import matplotlib.pyplot as plt
 from scipy.stats import norm
+import pandas  # The model data are collected as DataFrames
 
 import sys
 import traceback
@@ -260,11 +261,24 @@ if __name__ == "__main__":
         plt.colorbar()
         plt.show()
 
-        # Look at the distribution of x values
+        # Graph all of the agent variables (at the moment this is just the distribution of x values)
         model.datacollector.get_agent_vars_dataframe().hist()
 
-        # Look at the change in bleedout rate
+        # Graph the model variables. All of them to start
         model.datacollector.get_model_vars_dataframe().hist()
+
+        # A few model variables separately
+        df: pandas.DataFrame = model.datacollector.get_model_vars_dataframe()
+
+        camera_a = df['Camera A counts']
+        camera_b = df['Camera B counts']
+        #XXXX NEED TO AGGREGATE THE CAMERAS OVER EACH HOUR
+
+
+        xaxis = [i for i in range(len(camera_a))]
+        plt.plot(xaxis, camera_a, 'r--', xaxis, camera_b, 'b--')
+        plt.ylabel("Camera Counts")
+
 
         print("Finished")
 

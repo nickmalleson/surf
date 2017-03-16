@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/dda-mesa" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/alice_dda_code" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.2 (~/research_not_syncd/mapping_local/conda_envs/py35/bin/python3.5)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6.0 (~/research_not_syncd/mapping_local/conda_envs/py35/bin/python3.6)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
