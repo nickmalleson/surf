@@ -824,22 +824,30 @@ find.nsew <- function(the.cell,the.point) {
   ycoords = c()
   for (i in seq(1,nrow(l_points )) ) { 
     midpoint <- l_points[i,]
-    xcoords <- c(xcoords, midpoint@coords[,'x'] ) 
-    ycoords <- c(ycoords, midpoint@coords[,'y'] )
+    xcoords <- c(xcoords, midpoint@coords[,1] ) 
+    ycoords <- c(ycoords, midpoint@coords[,2] )
   }
   bearings = c()
   for (i in seq(1,nrow(l_points )) ) {  
+    print(i)
     #midpoint <- l_points[i,]
-    x <- l_points[i,]@coords['x']
-    y <- l_points[i,]@coords['y']
+    x <- l_points[i,]@coords[,1]
+    y <- l_points[i,]@coords[,2]
     # Four conditions to test if it is most northerly, easterly, southerly or westerly point
-    if (x == max(xcoords)) bearings <- c(bearings, 'e') # Max x so must be most easterly point
-    else if (x == min(xcoords)) bearings <- c(bearings, 'w') # Min x = west
-    else if (y == max(ycoords)) bearings <- c(bearings, 'n') # Max y = north
-    else if (y == min(ycoords)) bearings <- c(bearings, 's') # Min y = south
-    else stop('Should not have gotten here, could not find n,e,s,w for midpoint: ', l_points[i,] )
-  }
-  stopifnot(length(bearings) == 4)
+    if (x == max(xcoords)) {
+      bearings <- c(bearings, 'e') # Max x so must be most easterly point
+    } else if (x == min(xcoords)) {
+      bearings <- c(bearings, 'w') # Min x = west
+    } else if (y == max(ycoords)) {
+      bearings <- c(bearings, 'n') # Max y = north
+    } else if (y == min(ycoords)) {
+      bearings <- c(bearings, 's') # Min y = south
+    } else {
+      stop('Should not have gotten here, could not find n,e,s,w for midpoint: ', str(l_points[i,]) )
+    }
+  } # for
+  stopifnot( length(bearings) == 4 ) # Check that there are 4 bearings (one for each midpoint)
+  stopifnot( length(unique(bearings)) == 4 ) # Also check that each is unique
   
   l_points$bearing = bearings # Add names to each edge
   
