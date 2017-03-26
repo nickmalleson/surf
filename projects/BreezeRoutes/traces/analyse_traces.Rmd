@@ -474,18 +474,16 @@ _Nothing particularly interesting there so far .._
 
 ### Hausdorff and actual difference in distances travelled
 
-Finally compare the Hausdorff and relative distances travelled in one plot (for the paper).
+Compare the Hausdorff and relative distances travelled in one plot (for the paper).
 
 ```{r hausdorff.and.actual.difference, fig.height=15}
 
 par(mfrow=c(2,1))
 
-#XXXX HERE - REDRAW WITH Y AXIS THAT DOESN'T LEAVE THE PAGE
-
 # Actual distance
 
 rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
-hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3000), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace) (m)")
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3300), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace)")
 
 # Hausdorff
 hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path differences", xlab="Hausdorff difference (matched - shortest)")
@@ -501,12 +499,14 @@ hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), mai
 pdf(file="hausdorff_and_actual_difference.pdf", width = 7, height = 11.69)
 par(mfrow=c(2,1))
 rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
-hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3000), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace) (m)")
-hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path difference", xlab="Hausdorff difference (m)")
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3300), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace)")
+hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path difference", xlab="Hausdorff difference")
 dev.off()
 
 
 ```
+
+
 
 ## Similarity metrics
 
@@ -800,6 +800,7 @@ find.nsew <- function(the.cell,the.point) {
   
   b = bb2poly(bb = the.cell) # create polygon of bb
   p = raster::geom(b) # extract vertices of polygon
+  stopifnot(length(p)==4) # Should be four vertices in the polygon
   # Get the four lines
   for(i in 1:4){
     if(i == 1) {
@@ -812,12 +813,40 @@ find.nsew <- function(the.cell,the.point) {
     }
   }
   proj4string(l) <- proj4string(the.cell)
-  #l_points = line_midpoint(l) # midpoint - makes the nearest problem easier (only works for squares - use something else for rectangles)
+  #l_points = stplanr::line_midpoint(l) # midpoint - makes the nearest problem easier (only works for squares - use something else for rectangles). 
+  # Actually I can't use stplanr on the server, so calculate midpoints using the stplanr functions directly (from source)
   l_points <- gprojected(l, maptools::SpatialLinesMidPoints) # Do this directly so that we don't need stplanr
   
-  l_points$bearing = c("w", "n", "e", "s") # add names to edges (XXXX CAN GUARANTEE ORDER OF EDGES?)
+  # Need to find out which line of the square is 'n', 's', 'e' or 'w' so that they can be labelled appropriately
+  stopifnot(nrow(l_points) == 4) # Should be four midpoints
+  # Make a list of the x and y components of the midpoints coordinates so that it is easy to find the point with min/max x or y
+  xcoords = c()
+  ycoords = c()
+  for (i in seq(1,nrow(l_points )) ) { 
+    midpoint <- l_points[i,]
+    xcoords <- c(xcoords, midpoint@coords[,'x'] ) 
+    ycoords <- c(ycoords, midpoint@coords[,'y'] )
+  }
+  bearings = c()
+  for (i in seq(1,nrow(l_points )) ) {  
+    #midpoint <- l_points[i,]
+    x <- l_points[i,]@coords['x']
+    y <- l_points[i,]@coords['y']
+    # Four conditions to test if it is most northerly, easterly, southerly or westerly point
+    if (x == max(xcoords)) bearings <- c(bearings, 'e') # Max x so must be most easterly point
+    else if (x == min(xcoords)) bearings <- c(bearings, 'w') # Min x = west
+    else if (y == max(ycoords)) bearings <- c(bearings, 'n') # Max y = north
+    else if (y == min(ycoords)) bearings <- c(bearings, 's') # Min y = south
+    else stop('Should not have gotten here, could not find n,e,s,w for midpoint: ', l_points[i,] )
+  }
+  stopifnot(length(bearings) == 4)
+  
+  l_points$bearing = bearings # Add names to each edge
+  
+  #l_points$bearing = c("w", "n", "e", "s") # add names to edges (XXXX CAN GUARANTEE ORDER OF EDGES?)
   #text(x = l_points@coords[,1] + 0.1, y = l_points@coords[,2] + 0.1, l_points$bearing)
   #plot(the.point, add = T)
+  
   nearest_one = nabor::knn(data = coordinates(l_points), query = coordinates(the.point), k = 1)
   nearest_side = l_points$bearing[nearest_one$nn.idx]
   #text(x = the.point@coords[,1] + 0.1, y = the.point@coords[,2] + 0.1, nearest_side)
