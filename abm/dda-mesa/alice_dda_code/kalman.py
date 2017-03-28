@@ -319,15 +319,18 @@ n = 117
 
 fig = plt.figure(figsize=(14,20))
 
-plt.subplot(3,1,1)
+ax = plt.subplot(3,1,1)
 
 plt.plot(stored_forecast[m:n], label="forecast")
 
 plt.plot(stored_analysis[m:n], label="analysis")
 
-plt.plot(stored_truth[m:n], label="virtual obs")
+plt.plot(stored_truth[m:n], label="virtual observations")
 
 plt.plot(smallertruth[m:n], label="truth")
+
+ax.set_xlabel('Hour')
+ax.set_ylabel('Count of agents')
 
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
@@ -337,7 +340,7 @@ n = 96
 
 xaxis = [i for i in range(m,n)]
 
-plt.subplot(3,1,2)
+ax = plt.subplot(3,1,2)
 
 plt.plot(xaxis, stored_forecast[m:n], label="forecast")
 
@@ -349,14 +352,21 @@ plt.plot(xaxis, smallertruth[m:n], label="truth")
 
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
+ax.set_xlabel('Hour')
+ax.set_ylabel('Count of agents')
 
 
-plt.subplot(3,1,3)
+ax = plt.subplot(3,1,3)
 
-plt.plot(stored_parameter[0:117])
+plt.plot(stored_parameter[0:117], label="'True' bleedout rate")
 
-plt.plot([bleedoutrate_true for i in range(117)])
+plt.plot([bleedoutrate_true for i in range(117)], label="Estimated bleedout rate")
 
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+
+ax.set_xlabel('Hour')
+ax.set_ylabel('Parameter value')
 
 plt.show()
 
