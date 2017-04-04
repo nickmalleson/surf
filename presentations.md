@@ -6,6 +6,10 @@ tagline: Presentations about, or relating to, the surf project
 
 Presentations about, or relating to, the surf project (most recent first)
 
+ - 2017
+
+   - [Simulation as the Catalyst for Geographical Data Science and Urban Policy Making]({{site.baseurl}}/p/2017-04-06-aag-sim_as_catalyst.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 4th – 8th April, Boston, as part of the Special Sessions on Geographic Data Science_
+
  - 2016
 
    - [Dynamic, data-driven, agent-based modelling for simulating cities: Understanding Crime and Pollution]({{site.baseurl}}/p/2016-12-01-ONS_Data_Campus.html) Presentation to the Office for National Statistics (ONS) Big Data Campus, Titchfield. 1 December 2016.
