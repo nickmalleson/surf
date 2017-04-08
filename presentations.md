@@ -4,7 +4,7 @@ title: Presentations
 tagline: Presentations about, or relating to, the surf project
 ---
 
-Presentations about, or relating to, the surf project (most recent first)
+### Presentations about, or relating to, the surf project (most recent first)
 
  - 2017
 
@@ -33,7 +33,17 @@ Presentations about, or relating to, the surf project (most recent first)
 
 
 
-Conference sessions organised:
+### Conference sessions organised / chaired:
+
+ - 2017
+
+   - Organiser: [Special Sessions on: Geographic Data Science](https://geographicdatascience.com/2016/10/12/special-sessions-on-geographic-data-science-aag-2017-boston/). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
+
+   - Also Chair of [Geographic Data Science](https://geographicdatascience.com/2016/10/12/special-sessions-on-geographic-data-science-aag-2017-boston/) Panel Session. The panelists were: David O'Sullivan; Alex Singleton; Luc Anselin; Daniel Arribas-Bel; Mark Birkin; Cheng Zhong; Andrew Crooks; Ran Wei.
+
+   - Symposium on Human Dynamics in Smart and Connected Communities: [Agents - the 'atomic unit' of social systems?](http://nickmalleson.co.uk/2016/10/aag-2017-call-for-papers-agents-the-atomic-unit-of-social-systems/). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
+
+
 
  - 2016
 
