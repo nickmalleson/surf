@@ -800,7 +800,19 @@ find.nsew <- function(the.cell,the.point) {
   
   b = bb2poly(bb = the.cell) # create polygon of bb
   p = raster::geom(b) # extract vertices of polygon
-  stopifnot(length(p)==4) # Should be four vertices in the polygon
+  
+  # Check that the number of vertices on the polygon look ok
+  if (nrow(p) == 4) {
+    # DOn't need to do anything, 4 is fine
+  } else if ( nrow(p) == 5) {
+    # If five, then just check that the first and last are the same, then just continue as if there were four
+    stopifnot(p[1,'x'] != p[5,'y'])
+  }
+  else { # If there aren't four or five then stop
+    print(p)
+    stop(paste("The polygon should have four or five characters, not: ",nrow(p)))
+  }
+  
   # Get the four lines
   for(i in 1:4){
     if(i == 1) {
@@ -829,7 +841,7 @@ find.nsew <- function(the.cell,the.point) {
   }
   bearings = c()
   for (i in seq(1,nrow(l_points )) ) {  
-    print(i)
+    #print(i)
     #midpoint <- l_points[i,]
     x <- l_points[i,]@coords[,1]
     y <- l_points[i,]@coords[,2]
@@ -1735,6 +1747,14 @@ Asymettry values:
 
  - Weekend asymetry: `r result1.percentage.asymmetry.weekend`
 
+
+## Absolute Route Length
+
+Now the analysis moves on from comparing deviations from the shortest possible path, to comparing the asymmetry assocated with **absolute path length**. The hypothesis here is that route length might impact on pedestrian decisions.  The rationale is that we might know quite well our neighborhood, so that we take shortest path for short walks, while we might significantly deviate from shortest path for longer routes where we haven’t full knowledge of the environment.
+
+To do this the methodology remains unchanged: subset the traces into 'short' and 'long' by absolute length and then repeat the asymmetry analysis for those two subsets.
+
+XXXX
 
 
 ## Asymmetry Analysis for Anthony
