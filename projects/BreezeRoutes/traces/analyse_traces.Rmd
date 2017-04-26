@@ -1773,6 +1773,7 @@ for (rowcount in seq(1,num.av.cells)) {
 # ***************************
 
 av.result.percentage.asymmetry <- -1 # TEMPORARILY IN CASE FOLLOWING DOESN'T WORK AND BREAKS MARKDOWN compilation
+save.image(file="analyse_traces-temp.RData")
 
 # Do the analysis
 

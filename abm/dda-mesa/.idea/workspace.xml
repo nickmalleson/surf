@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7dd592ca-d4ff-4698-909a-c3eab9922fa1" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dda-mesa.iml" afterPath="$PROJECT_DIR$/.idea/dda-mesa.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dda-mesa/model.py" afterPath="$PROJECT_DIR$/dda-mesa/model.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dda-mesa/setup.py" afterPath="$PROJECT_DIR$/dda-mesa/setup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../projects/BreezeRoutes/traces/analyse_traces.Rmd" afterPath="$PROJECT_DIR$/../../projects/BreezeRoutes/traces/analyse_traces.Rmd" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,9 +19,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/dda-mesa$model_viz.coverage" NAME="model_viz Coverage Results" MODIFIED="1488879164677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dda-mesa" />
     <SUITE FILE_PATH="coverage/dda-mesa$agent.coverage" NAME="agent Coverage Results" MODIFIED="1489490466394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dda-mesa" />
     <SUITE FILE_PATH="coverage/dda-mesa$model.coverage" NAME="model Coverage Results" MODIFIED="1488879214115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dda-mesa" />
+    <SUITE FILE_PATH="coverage/dda-mesa$model_viz.coverage" NAME="model_viz Coverage Results" MODIFIED="1488879164677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dda-mesa" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -45,10 +45,11 @@
           <file leaf-file-name="model_viz.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dda-mesa/model_viz.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="595">
-                  <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+                <state relative-caret-position="660">
+                  <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
                   <folding>
                     <element signature="e#98#110#0" expanded="true" />
+                    <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -57,8 +58,8 @@
           <file leaf-file-name="agent.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/dda-mesa/agent.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="765">
-                  <caret line="47" column="96" lean-forward="false" selection-start-line="47" selection-start-column="96" selection-end-line="47" selection-end-column="96" />
+                <state relative-caret-position="1335">
+                  <caret line="91" column="51" lean-forward="false" selection-start-line="91" selection-start-column="51" selection-end-line="91" selection-end-column="51" />
                   <folding>
                     <element signature="e#0#22#0" expanded="true" />
                   </folding>
@@ -69,11 +70,9 @@
           <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/dda-mesa/model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="764">
-                  <caret line="261" column="18" lean-forward="true" selection-start-line="261" selection-start-column="18" selection-end-line="261" selection-end-column="18" />
-                  <folding>
-                    <element signature="e#0#26#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="885">
+                  <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -97,7 +96,7 @@
           <file leaf-file-name="kalman.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/alice_dda_code/kalman.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
+                <state relative-caret-position="315">
                   <caret line="22" column="19" lean-forward="false" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
                   <folding>
                     <element signature="e#135#153#0" expanded="true" />
@@ -143,8 +142,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="2560" />
-    <option name="height" value="1440" />
+    <option name="width" value="1680" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -162,7 +161,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -205,7 +204,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -217,7 +216,7 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="FullScreen" value="true" />
   </component>
-  <component name="RunManager" selected="Python.model">
+  <component name="RunManager" selected="Python.model_viz">
     <configuration default="false" name="model" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -493,9 +492,9 @@
     </list>
     <recent_temporary>
       <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.model" />
-        <item index="1" class="java.lang.String" itemvalue="Python.agent" />
-        <item index="2" class="java.lang.String" itemvalue="Python.model_viz" />
+        <item index="0" class="java.lang.String" itemvalue="Python.model_viz" />
+        <item index="1" class="java.lang.String" itemvalue="Python.model" />
+        <item index="2" class="java.lang.String" itemvalue="Python.agent" />
       </list>
     </recent_temporary>
   </component>
@@ -525,16 +524,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="2560" height="1440" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08339953" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.083333336" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27853554" sideWeight="0.5015625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3270073" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27226278" sideWeight="0.4984375" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27218345" sideWeight="0.4984375" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950467" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -576,6 +575,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -584,9 +584,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1575">
           <caret line="119" column="0" lean-forward="true" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -636,6 +634,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -676,6 +675,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -716,6 +716,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -756,6 +757,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -796,6 +798,7 @@
           <caret line="33" column="18" lean-forward="false" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -836,6 +839,7 @@
           <caret line="33" column="18" lean-forward="true" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
@@ -903,13 +907,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/multiprocessing/pool.py" />
-    <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/site-packages/Mesa-0.8.0-py3.5.egg/mesa/time.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
-          <caret line="94" column="8" lean-forward="false" selection-start-line="94" selection-start-column="8" selection-end-line="94" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/site-packages/Mesa-0.8.0-py3.5.egg/mesa/time.py" />
     <entry file="file://$PROJECT_DIR$/dda-mesa/batch.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -921,18 +919,19 @@
     <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/random.py" />
     <entry file="file://$PROJECT_DIR$/dda-mesa/model_viz.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+        <state relative-caret-position="660">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding>
             <element signature="e#98#110#0" expanded="true" />
+            <marker date="1490261706000" expanded="true" signature="335:410" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dda-mesa/agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="47" column="96" lean-forward="false" selection-start-line="47" selection-start-column="96" selection-end-line="47" selection-end-column="96" />
+        <state relative-caret-position="1335">
+          <caret line="91" column="51" lean-forward="false" selection-start-line="91" selection-start-column="51" selection-end-line="91" selection-end-column="51" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
@@ -940,16 +939,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/site-packages/matplotlib/axes/_axes.py" />
-    <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/site-packages/Mesa-0.8.0-py3.5.egg/mesa/datacollection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="185" column="36" lean-forward="false" selection-start-line="185" selection-start-column="36" selection-end-line="185" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../mapping_local/conda_envs/py35/lib/python3.5/site-packages/Mesa-0.8.0-py3.5.egg/mesa/datacollection.py" />
     <entry file="file://$PROJECT_DIR$/alice_dda_code/kalman.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
+        <state relative-caret-position="315">
           <caret line="22" column="19" lean-forward="false" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
           <folding>
             <element signature="e#135#153#0" expanded="true" />
@@ -969,11 +962,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dda-mesa/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="764">
-          <caret line="261" column="18" lean-forward="true" selection-start-line="261" selection-start-column="18" selection-end-line="261" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="885">
+          <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
