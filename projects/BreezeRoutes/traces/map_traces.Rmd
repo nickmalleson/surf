@@ -30,6 +30,11 @@ knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount
 setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
 #setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
 
+# For running on server
+#knitr::opts_knit$set(root.dir = "/home/geonsm/runkeeper/mapmatching-traces/")
+#setwd("/home/geonsm/runkeeper/mapmatching-traces/")
+
+
 # Paths to the original files, shortest paths, and matched paths
 path.org =      "./gpx/"
 path.matched =  "./gpx-matched/"
@@ -81,8 +86,11 @@ From inside out it does:
 # Read files in the 'matched' directory. We're only interested in mapping routes that have been matched (and if they've ben matched then they probably also have a companion shortest path).
 all.file.names <- dir(path.matched, pattern =".gpx")
 
-N <- 200 # The number of files to map
+N <- 10 # The number of files to map
 file.names <- sample(all.file.names, size=N)
+
+# I also want to map a specific trace: c67b4abe88a9932ce4fbe4339b6f94cd
+file.names[1] <- "c67b4abe88a9932ce4fbe4339b6f94cd-matched.gpx"
 
 for(i in seq(length(file.names))){
   f <- substr(file.names[i], 1, nchar(file.names[i])-12) # The name of the file without the '-matched.gpx' extension.
