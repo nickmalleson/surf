@@ -1795,7 +1795,7 @@ There were `r length(absolute.longest.indices)` long trips, and `r length(absolu
 
 Re-run the analysis for the absolute long and short trips.
 
-```{r rerunAsymmetryAnalysis-weekdayEnd, cache=TRUE }
+```{r rerunAsymmetryAnalysis-absoluteLengths, cache=TRUE, eval=FALSE }
 # This repeasts the code in `make matrix` chunk
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
@@ -1828,7 +1828,7 @@ save(result1, result1.spdf, result1.matrix, num.cells, total.cells,
 
 Re-calculate the asymmetry values for weekday and weekend trips.
 
-```{r recalculateAsymmetry-weekendDay, cache=TRUE}
+```{r recalculateAsymmetry-absoluteLengths, cache=TRUE, eval=FALSE}
 
 result1.percentage.asymmetry.weekday <- calculate.asymmetry(result1.matrix.weekday)
 result1.percentage.asymmetry.weekend <- calculate.asymmetry(result1.matrix.weekend)
@@ -1837,9 +1837,9 @@ result1.percentage.asymmetry.weekend <- calculate.asymmetry(result1.matrix.weeke
 
 Asymettry values:
 
- - Weekday asymetry: `r result1.percentage.asymmetry.weekday`
+ - XXXX Longest asymetry: `r result1.percentage.asymmetry.weekday`
 
- - Weekend asymetry: `r result1.percentage.asymmetry.weekend`
+ - XXXX Shortest asymetry: `r result1.percentage.asymmetry.weekend`
 
 
 
