@@ -9,13 +9,12 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="library" name="config" level="project" />
     <orderEntry type="library" name="surf-abm-lib" level="project" />
     <orderEntry type="library" name="mason" level="project" />
     <orderEntry type="library" name="geomason" level="project" />
     <orderEntry type="library" name="mason_resources" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
     <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
   </component>
 </module>
