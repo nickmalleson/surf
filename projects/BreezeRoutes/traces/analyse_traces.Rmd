@@ -1546,7 +1546,7 @@ plot(study.area, add=T, border="blue")
 
 ```
 
-This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done).
+This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done_).
 
 As a sanity check, make sure that the 'longest' paths are actually longer!
 
@@ -1795,26 +1795,23 @@ There were `r length(absolute.longest.indices)` long trips, and `r length(absolu
 
 Re-run the analysis for the absolute long and short trips.
 
-```{r rerunAsymmetryAnalysis-absoluteLengths, cache=TRUE, eval=FALSE }
+```{r rerunAsymmetryAnalysis-absoluteLengths, cache=TRUE }
 # This repeasts the code in `make matrix` chunk
 
 # Calulate the flows into and out of cells. This makes a list with lots of information
 result1.absolute.longest  <- calc.flows(grid, absolute.longest.routes,  plot=FALSE, multithread = TRUE)
 result1.absolute.shortest <- calc.flows(grid, absolute.shortest.routes, plot=FALSE, multithread = TRUE)
 
-
-XXXX
-
-result1.weekend <- calc.flows(grid, weekend.routes, plot=FALSE, multithread = TRUE)
 # Convert that list of results to a SpatialPolygonsDataFrame
-result1.weekday.spdf <- result.to.spdf(result1.weekday) 
-result1.weekend.spdf <- result.to.spdf(result1.weekend)
-# Finally make a transition matrix 
-result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf, grid.ids)
-result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf, grid.ids)
+result1.absolute.longest.spdf  <- result.to.spdf(result1.absolute.longest ) 
+result1.absolute.shortest.spdf <- result.to.spdf(result1.absolute.shortest)
 
-writeOGR(result1.weekday.spdf, dsn = "result", layer="result1_weekday_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
-writeOGR(result1.weekend.spdf, dsn = "result", layer="result1_weekend_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+# Finally make a transition matrix 
+result1.matrix.absolute.longest  <- spdf.to.matrix(result1.absolute.longest.spdf,  grid.ids)
+result1.matrix.absolute.shortest <- spdf.to.matrix(result1.absolute.shortest.spdf, grid.ids)
+
+writeOGR(result1.absolute.longest.spdf, dsn = "result", layer="result1_absolute_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(result1.absolute.shortest.spdf, dsn = "result", layer="result1_absolute_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in
 save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
@@ -1822,40 +1819,26 @@ save(result1, result1.spdf, result1.matrix, num.cells, total.cells,
      result1.matrix.longest, result1.matrix.shortest,
      result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
      result1.matrix.weekday, result1.matrix.weekend,
+     result1.absolute.longest, result1.absolute.shortest, result1.absolute.longest.spdf, result1.absolute.shortest.spdf,
+     result1.matrix.absolute.longest, result1.matrix.absolute.shortest,
      file="results.RData")
 
 ```
 
 Re-calculate the asymmetry values for weekday and weekend trips.
 
-```{r recalculateAsymmetry-absoluteLengths, cache=TRUE, eval=FALSE}
+```{r recalculateAsymmetry-absoluteLengths, cache=TRUE}
 
-result1.percentage.asymmetry.weekday <- calculate.asymmetry(result1.matrix.weekday)
-result1.percentage.asymmetry.weekend <- calculate.asymmetry(result1.matrix.weekend)
+result1.percentage.asymmetry.absolute.longest  <- calculate.asymmetry(result1.matrix.absolute.longest )
+result1.percentage.asymmetry.absolute.shortest <- calculate.asymmetry(result1.matrix.absolute.shortest)
 
 ```
 
 Asymettry values:
 
- - XXXX Longest asymetry: `r result1.percentage.asymmetry.weekday`
+ - Asymetry for absolute **longest** routes: `r result1.percentage.asymmetry.absolute.longest`
 
- - XXXX Shortest asymetry: `r result1.percentage.asymmetry.weekend`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ - Asymetry for absolute **shortest** routes: `r result1.percentage.asymmetry.absolute.shortest`
 
 
 
