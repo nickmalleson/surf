@@ -849,10 +849,6 @@ find.nsew <- function(the.cell,the.point) {
   
   l_points$bearing = bearings # Add names to each edge
   
-  #l_points$bearing = c("w", "n", "e", "s") # add names to edges (XXXX CAN GUARANTEE ORDER OF EDGES?)
-  #text(x = l_points@coords[,1] + 0.1, y = l_points@coords[,2] + 0.1, l_points$bearing)
-  #plot(the.point, add = T)
-  
   nearest_one = nabor::knn(data = coordinates(l_points), query = coordinates(the.point), k = 1)
   nearest_side = l_points$bearing[nearest_one$nn.idx]
   #text(x = the.point@coords[,1] + 0.1, y = the.point@coords[,2] + 0.1, nearest_side)
@@ -893,12 +889,12 @@ find.nsew.old <- function(the.cell,the.point) {
     the.cell@bbox['x','min'], the.cell@bbox['x','min'], 
     the.cell@bbox['y','min'], the.cell@bbox['y','max'],
     the.point@proj4string)
-  print(north)
-  print(east)
-  print(south)
-  print(west)
-  print(the.point)
-  save(the.cell, north, east, south, west, the.point, file = "temp.RData")
+  #print(north)
+  #print(east)
+  #print(south)
+  #print(west)
+  #print(the.point)
+  #save(the.cell, north, east, south, west, the.point, file = "temp.RData")
   return( c(
     gIntersects(north,the.point),
     gIntersects(east,the.point),
@@ -1018,7 +1014,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
           } else if (start.within) { # BEGINS 
             # If the start point is within the cell then the line begins here
             # Work out which compass direction the cell is going to
-            index.to <- find.nsew(cell,end) # This is a list with four booleans (N, S, E, W).
+            index.to <- find.nsew.old(cell,end) # This is a list with four booleans (N, S, E, W).
             stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
             departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
             
@@ -1028,7 +1024,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
           } else if (!start.within & !end.within) { # PASES THROUGH
             # If neither the start point nor end point are within the cell then the line passes through it.
             # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
-            index.to <- find.nsew(cell,end) # This is a list with four booleans (N, S, E, W).
+            index.to <- find.nsew.old(cell,end) # This is a list with four booleans (N, S, E, W).
             #stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
             if(length(index.to[index.to==TRUE]) != 1) 
               stop(paste("Error, it looks like the cell has entered from more than one direction! N,E,S,W: ",index.to))
@@ -1080,7 +1076,7 @@ calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
 #' @param the.traces The traces to analyse
 #' @return A list with the information for each grid cell. See `calc.cell` for details about the 
 #' information returned for each cell
-#' @examples
+#' @example#
 #' result <- make.transition.matrix(grid,all.routes)
 calc.flows <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
   
@@ -1475,6 +1471,17 @@ plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 ```
 
 
+## Sensitivity to grid size
+
+See how sensitive the asymmetry is to the choice of grid size by running a few grids and comparing the asymettry for each.
+
+```{r sensitivity.to.resolution }
+
+# XXXX HERE
+
+```
+
+
 ## Shortest path choice v.s. symmetry
 
 It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
@@ -1843,12 +1850,22 @@ Asymettry values:
 
 
 
+
+
 ## Asymmetry Analysis for Anthony
 
 AV would also like to calculate relative asymmetry for an area that he is working on 
 
+**This doesn't work at the moment; problem with find.nsew not correctly reporting the edges that lines pass through**
 
-```{r AV.asymmetry.analysis, cache=FALSE }
+```{r av.temp}
+# To stop the Rmd breaking as the code below isn't run.
+av.result.percentage.asymmetry <- 99
+
+```
+
+
+```{r AV.asymmetry.analysis, cache=FALSE, eval=FALSE }
 
 # Read the grid to use
 av.grid.temp <- readOGR( ds = "./tony_grid/", layer="BC Square Grid")
