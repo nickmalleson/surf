@@ -2,7 +2,7 @@ package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
-import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING, WORKING}
+import surf.abm.agents.abbf.activities.ActivityTypes.{SHOPPING, SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
 import surf.abm.environment.Building
 import surf.abm.main.{BUILDING_FIELDS, SurfABM, SurfGeometry}
@@ -91,15 +91,19 @@ object ABBFAgentLoaderOtley {
         // It is helpful to have all the buildings in the origin and destinations as lists
         val homeList = oaBuildingIDMap(orig).toList
         val workList = oaBuildingIDMap(dest).toList
+        //val shopList = oaBuildingIDMap(orig).toList
         for (agent <- 0 until flow) {
           // Get the ID for a random home/work building
           val homeID: Int = homeList(state.random.nextInt(homeList.size))
           val workID: Int = workList(state.random.nextInt(workList.size))
+          //val shopID: Int = shopList(state.random.nextInt(shopList.size))
           // Now get the buildings themselves and tell the agent about them
           val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
           val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
+          //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
 
           makeAgent(state, home, work)
+          //makeAgent(state, home, work, shop)
         }
 
       }
@@ -110,6 +114,7 @@ object ABBFAgentLoaderOtley {
   }
 
   /* Convenience to make an agent, just makes the loops in creatAgent() a bit nicer */
+  //def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
   def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
@@ -127,10 +132,29 @@ object ABBFAgentLoaderOtley {
     //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
+    // Shopping place should be a supermarket or a convenience store of OpenStreetMaps
+    val shoppingPlace = Place(
+      //location = shop,
+      location = null,
+      activityType = SHOPPING,
+      openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
+    )
+
     // SHOPPING
     val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d)))
     // A constant, low intensity
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a)
+
+
+    // School
+    /*val schoolPlace = Place(
+      location = null,
+      activityType = ATTENDING_CLASS,
+      openingTimes = null
+    )*/
+
+    // ATTENDING CLASS (activity at school)
+    //val classTimeProfile = TimeProfile(Array((6d, 0d), (8d+rnd, 1d), (15d+rnd,1d), (17d,0d)))
 
 
     // SLEEPING (high between 11pm and 6am)
