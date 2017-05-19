@@ -113,7 +113,7 @@ object ABBFAgentLoaderOtley {
 
   }
 
-  /* Convenience to make an agent, just makes the loops in creatAgent() a bit nicer */
+  /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
   //def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
   def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
