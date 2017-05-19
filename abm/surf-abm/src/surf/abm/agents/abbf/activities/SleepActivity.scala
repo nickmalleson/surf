@@ -27,8 +27,8 @@ case class SleepActivity(
   // syntax (although probably not simpler to read than the if/else way).
   // Actually, the best way is probably with unique integers and a switch statement, but I'm leaving it as it is
   // for now because it's an example of how scala can do enums. It's also a bit more powerful, as each class
-  // could have their own members. Another advantage beacuse the parent trait is 'sealed', the compiler checks
-  // that all alternatives must be exhaused. You can't have a match statement without all of the subclasses.
+  // could have their own members. Another advantage because the parent trait is 'sealed', the compiler checks
+  // that all alternatives must be exhausted. You can't have a match statement without all of the subclasses.
   //private var sleeping = false // Actually at home and asleep?
   //private var travellingHome = false // On the way home
   //private var init = true // The activity has just been initialised
