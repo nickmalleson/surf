@@ -4,8 +4,8 @@ import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import surf.abm.agents.abbf.activities.ActivityTypes.{SHOPPING, SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
-import surf.abm.environment.Building
-import surf.abm.main.{BUILDING_FIELDS, SurfABM, SurfGeometry}
+import surf.abm.environment.{Building, Junction}
+import surf.abm.main.{BUILDING_FIELDS, GISFunctions, SurfABM, SurfGeometry}
 
 import scala.io.Source
 
@@ -31,26 +31,28 @@ object ABBFAgentLoaderOtley {
 
     LOG.info(s"Creating agents using ${this.getClass.getName}")
 
-    // First need to work out which buildings are contained within each output area. This is because the commuting
-    // behaviour is defined at output area level. When the buildings data were created a field called "OA" was
-    // created that contains the OA code.
+    // First need to work out which buildings of each type are contained within each output area. This is because the commuting
+    // behaviour is defined at output area level. When the buildings data were created, fields called "OA" and "TYPE" were
+    // created that contain the OA code and the type (small, large or shop). People only live in small buildings in the Otley area,
+    // they only shop in shops, and they can work in any type of building.
     LOG.info("Creating map of output areas and their constituent buildings")
-    val oaBuildingIDMap: Map[String, Set[Int]] = {
-      // Create mutable obejects but, when they're ready, return them as immutable
-      val b_map = scala.collection.mutable.Map[String, scala.collection.mutable.Set[Int]]() // Temporary map (to return)
+    val oaBuildingIDMap: Map[Set[String], Set[Int]] = {
+      // Create mutable objects but, when they're ready, return them as immutable
+      val b_map = scala.collection.mutable.Map[Set[String], scala.collection.mutable.Set[Int]]() // Temporary map (to return)
       // Iterate over all buildings (their ID and SurfGeometry)
       for ((id: Int, b: SurfGeometry[Building@unchecked]) <- SurfABM.buildingIDGeomMap) {
         val oaCode = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString) // OA code for this building
-        if (b_map.contains(oaCode)) {
-          // Have already come across this OA; add the new building id
+        val buildingType = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
+        if (b_map.contains(Set(oaCode, buildingType))) {
+          // Have already come across this OA and building type; add the new building id
           // Add the building to the set
-          b_map(oaCode) = b_map(oaCode) + id
+          b_map(Set(oaCode, buildingType)) = b_map(Set(oaCode, buildingType)) + id
         }
         else {
-          // Not found this OA yet. Add it to the map and associate it with a new Set of building ids
+          // Not found this combination of OA and type yet. Add it to the map and associate it with a new Set of building ids
           var s = scala.collection.mutable.Set.empty[Int]
           s += id
-          b_map(oaCode) = s
+          b_map(Set(oaCode, buildingType)) = s
         }
         //println(i+" : "+b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString))
       }
@@ -86,20 +88,31 @@ object ABBFAgentLoaderOtley {
         val flow: Int = line(3).toInt
         //Array(orig, dest, flow).foreach( x => println("\t"+x) )
 
+        // Define the possible building types...
+        val small: String = "SMALL"
+        val large: String = "LARGE"
+        val shopType: String = "SHOP"
+
         LOG.debug(s"Origin: '$orig', Destination: '$dest', Flow: '$flow'")
         // Now create 'flow' agents who live in 'orig' and work in 'dest'
         // It is helpful to have all the buildings in the origin and destinations as lists
-        val homeList = oaBuildingIDMap(orig).toList
-        val workList = oaBuildingIDMap(dest).toList
+        val homeList = oaBuildingIDMap(Set(orig,small)).toList
+        // There might be a more efficient way to define the work buildings list.
+        val workList = List.concat(oaBuildingIDMap(Set(dest,small)).toList, oaBuildingIDMap(Set(dest,large)).toList, oaBuildingIDMap(Set(dest,shopType)).toList)
+
         //val shopList = oaBuildingIDMap(orig).toList
         for (agent <- 0 until flow) {
           // Get the ID for a random home/work building
           val homeID: Int = homeList(state.random.nextInt(homeList.size))
           val workID: Int = workList(state.random.nextInt(workList.size))
-          //val shopID: Int = shopList(state.random.nextInt(shopList.size))
+
           // Now get the buildings themselves and tell the agent about them
           val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
           val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
+
+          val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
+          val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
+          val shopID: Int = 1
           //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
 
           makeAgent(state, home, work)

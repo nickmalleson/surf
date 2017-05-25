@@ -74,7 +74,8 @@ case class ShopActivity(
   }
 
   override def activityChanged(): Unit = {
+    this.currentAction = INITIALISING
     this._currentIntensityDecrease = 0d
-    throw new NotImplementedError("Have not implemented Shopping activity yet")
+    //throw new NotImplementedError("Have not implemented Shopping activity yet")
   }
 }
