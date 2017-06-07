@@ -125,7 +125,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, shopGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -134,7 +134,7 @@ object SurfABM extends Serializable {
       * @return
       */
     private def _readEnvironmentData()
-    //: (GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
+    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
     = {
 
       try {
@@ -150,9 +150,10 @@ object SurfABM extends Serializable {
         // Start with buildings
         val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
         val buildings = new GeomVectorField(WIDTH, HEIGHT);
+        val shops = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
-        val attributes: Bag = new Bag( (for (v <- BUILDING_FIELDS.values) yield v.toString()) ) // Add all of the fields
+        val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
@@ -173,12 +174,23 @@ object SurfABM extends Serializable {
               throw e
             }
           }
+          val buildingType = try {
+            g.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the buldings file. Does it have a colunm called '%s'?".
+              format(BUILDING_FIELDS.BUILDINGS_TYPE.toString,BUILDING_FIELDS.BUILDINGS_TYPE.toString), e)
+            throw e
+          }
           val building = Building(buildingID)
           val s = SurfGeometry(g,building)
           buildings.addGeometry(s)
+          if (buildingType == "SHOP") {
+            shops.addGeometry(s)
+          }
         }
         //buildings.updateSpatialIndex()
-        //println("Gometryies", buildings.getGeometries.size())
+        //println("Geometries", buildings.getGeometries.size())
 
         LOG.debug("Creating id -> buildings map")
         // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
@@ -249,7 +261,7 @@ object SurfABM extends Serializable {
         LOG.info("Finished initialising model environment")
 
         // Return the layers
-        (buildings, b_ids, roads, network, junctions, MBR)
+        (buildings, shops, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {
@@ -259,6 +271,8 @@ object SurfABM extends Serializable {
       }
 
    } // _readEnvironmentData()
+
+
 
   /**
     * Create agents. This needs to be called *after* the model has finished initialising.

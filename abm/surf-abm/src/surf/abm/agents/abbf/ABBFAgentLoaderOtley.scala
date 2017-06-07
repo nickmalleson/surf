@@ -109,14 +109,15 @@ object ABBFAgentLoaderOtley {
           // Now get the buildings themselves and tell the agent about them
           val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
           val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
+          val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
 
           val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
           val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
-          val shopID: Int = 1
+          //val shopID: Int = 1
           //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
 
-          makeAgent(state, home, work)
-          //makeAgent(state, home, work, shop)
+          //makeAgent(state, home, work)
+          makeAgent(state, home, work, shop)
         }
 
       }
@@ -128,7 +129,7 @@ object ABBFAgentLoaderOtley {
 
   /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
   //def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
-  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building]): Unit = {
+  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
 
@@ -147,8 +148,8 @@ object ABBFAgentLoaderOtley {
 
     // Shopping place should be a supermarket or a convenience store of OpenStreetMaps
     val shoppingPlace = Place(
-      //location = shop,
-      location = null,
+      location = shop,
+      //location = null,
       activityType = SHOPPING,
       openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
     )
@@ -179,8 +180,8 @@ object ABBFAgentLoaderOtley {
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     // TODO ADD IN SHOPPING ACTIVITY
-    //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
-    val activities = Set[Activity](workActivity, atHomeActivity)
+    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
+    //val activities = Set[Activity](workActivity, atHomeActivity)
 
     // Finally tell the agent abount them
     a.activities = activities
