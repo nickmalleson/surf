@@ -81,11 +81,36 @@ library(plotKML)   # For reading GPX files
 #library(OpenStreetMap) # For plotting OSM basemaps
 library(parallel) # For ruonning things in parallel (e.g. mclapply())
 #no_cores <- detectCores() - 1 # Detect the number of cores that are available
-no_cores <- 10 # Set the number of cores to use directly (if too many cores then too much memory is consumed)
+no_cores <- 6 # Set the number of cores to use directly (if too many cores then too much memory is consumed)
 options("mc.cores"=no_cores)
 
 library(plotKML)   # For reading GPX files
 library(data.table) # For adding up distances per user (data.table())
+```
+
+A hook for knitr that prints the execution time of each chunk (useful). From: [https://stackoverflow.com/questions/24595280/timing-for-chunks](https://stackoverflow.com/questions/24595280/timing-for-chunks). Include `timeit = TRUE` in chunks to activate.
+
+```{r setupTimeIt }
+
+chunk.times <- list() # Record the times for each chunk in a named list
+
+knitr::knit_hooks$set(timeit = local({
+  now = NULL
+  function(before, options) {
+    if (before) {
+      now <<- Sys.time()
+    } else {
+      res = difftime(Sys.time(), now)
+      now <<- NULL
+      # use options$label if you want the chunk label as well
+      paste('\nTime for this code chunk (',options$label,'):', as.character(res),'\n', sep="")
+      chunk.times <- c(chunk.times, options$label)
+    }
+  }})
+)
+
+# Set thatoption to TRUE for all chunks
+knitr::opts_chunk$set(timeit = TRUE)
 ```
 
 
@@ -226,7 +251,7 @@ Earlier in the data anlysis process, clean traces were filtered out (see `2-bree
 
 Need to decide what 'outliers' are. Try the mean+1sd (red lines) and Q3+1.5*IQR (blue lines).
 
-```{r findBadMatchedPaths, fig.height=20 }
+```{r findBadMatchedPaths, fig.height=20, cache=TRUE }
 
 # Calculate the lenths of the paths
 orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
@@ -356,7 +381,7 @@ plot(all.routes.oneline, axes=T, main="All Traces")
 
 Look at the differences in the lengths between actual (matched) paths and shortest paths. The matched and original are very similar, and the shortest are shorter :-).
 
-```{r compareLengthsHist1 }
+```{r compareLengthsHist1, cache=TRUE }
 # Need to recalculate lengths after filtering
 orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
 matched.lengths  <- unlist(mclapply(matched.ma, FUN=gLength))
@@ -371,7 +396,7 @@ hist(matched.lengths,  breaks='Scott', xlim=xlim, ylim=ylim )
 hist(shortest.lengths, breaks='Scott', xlim=xlim, ylim=ylim )
 ```
 
-```{r compareLengthsHist2 }
+```{r compareLengthsHist2, cache=TRUE }
 par(mfrow=c(1,1))
 d <- density(shortest.lengths, kernel="gaussian") # Remember first density plot so parameters can be reused
 plot(d, col="blue", main="Trip distance distribution")
@@ -382,7 +407,7 @@ legend("topright", c('Shortest', 'Original', 'Matched'), col=c('blue', 'grey', '
 
 ```
 
-```{r compareLengthsBoxPlot}
+```{r compareLengthsBoxPlot, cache=TRUE}
 par(mfrow=c(1,1))
 boxplot(list("Original"=orig.lengths,"Matched"=matched.lengths,"Shortest"=shortest.lengths),ylim=c(0,5000), main="Path distances (short y axis)", ylab="Path distance")
 ```
@@ -416,7 +441,7 @@ hist(haus.matched.shortest, main="Hausdorff distance\nMatched v.s. Shortest", xl
 
 ```
 
-```{r hausdorffDistancesHist2} 
+```{r hausdorffDistancesHist2, cache=TRUE} 
 par(mfrow=c(1,1))
 d <- density(haus.orig.matched, kernel="gaussian")
 plot(d, main="Hausdorff distance distribution", col="grey", xlim=c(0,2000))
@@ -425,7 +450,7 @@ legend("topright", c('Matched - Original','Matched - Shortest'), lty=1, col=c('g
 
 ```
 
-```{r hausdorffDistances2} 
+```{r hausdorffDistances2, cache=TRUE} 
 par(mfrow=c(1,1))
 boxplot(list("Matched<->Original"=haus.orig.matched, "Matched<->Shortest"=haus.matched.shortest), main="Hausdorff Distances (short y axis)",ylim=c(0,1000))
 
@@ -581,7 +606,7 @@ Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabita
 
 Need to define the  (the area that qualitatively contains most of the flows)
 
-```{r defineStudyArea}
+```{r defineStudyArea, cache=TRUE}
 
 # Define the study area (the area that qualitatively contains most of the flows)
 study.area.bb <- all.routes.oneline@bbox
@@ -623,56 +648,71 @@ plot(study.area, col=rgb(1, 0, 0,0.3), add=T)
 
 Now create a regular grid that covers the study area. This will be used to create the transition matrix
 
-```{r makeGridForTransitionMatrix, fig.width=15}
+```{r makeGridForTransitionMatrix, fig.width=15, cache=TRUE}
+#' Make a regular grid
+#' 
+#' @param ncells The number of cells per row (i.e. the resolution)
+#' @param study.area.bbox The bounding box that bounds the study area
+#' @param plot Whether to plot the grid and its routes or not
+#' @return A named list with three items. The first is the grid itself (called 'grid'), the second is the grid IDs (called 'grid.ids'),.
+make.grid <- function(ncells, study.area.bbox, plot=TRUE) {
+  # The number of cells per row or column
+  tot.cells <- ncells ** 2
+  
+  # Create the grids - adapted from Brunsdon & Comber (2015, p150)
+  cell.width <-  (study.area.bbox[1,2] - study.area.bbox[1,1]) / ncells
+  cell.height <- (study.area.bbox[2,2] - study.area.bbox[2,1]) / ncells
+  #cell.areas <- c(cell.areas, (cell.width * cell.height) ) # Also remember the cell area for later
 
-# The number of cells per row or column
-num.cells <- 20
-total.cells <- num.cells ** 2
-
-# Create the grids - adapted from Brunsdon & Comber (2015, p150)
-cell.width <-  (study.area.bb[1,2] - study.area.bb[1,1]) / num.cells
-cell.height <- (study.area.bb[2,2] - study.area.bb[2,1]) / num.cells
-
-#cell.areas <- c(cell.areas, (cell.width * cell.height) ) # Also remember the cell area for later
-
-centre.x <- study.area.bb[1,1] + ( cell.width / 2 )
-centre.y <- study.area.bb[2,1] + ( cell.height / 2 )
-
-# Make the grid
-grd <- GridTopology(
-  cellcentre.offset = c(centre.x, centre.y), # No offset, the grid will just cover all the points
-  cellsize = c(cell.width, cell.height),
-  cells.dim = c(num.cells, num.cells)
+  centre.x <- study.area.bbox[1,1] + ( cell.width / 2 )
+  centre.y <- study.area.bbox[2,1] + ( cell.height / 2 )
+  
+  # Make the grid
+  grd <- GridTopology(
+    cellcentre.offset = c(centre.x, centre.y), # No offset, the grid will just cover all the points
+    cellsize = c(cell.width, cell.height),
+    cells.dim = c(ncells, ncells)
   )
 
-# Convert it into a polygons data frame, and give each cell it's x and y locations in the matrix (-1 initially)
-grid <- SpatialPolygonsDataFrame(
-  as.SpatialPolygons.GridTopology(grd),
-  data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),
-  match.ID = FALSE
+  # Convert it into a polygons data frame, and give each cell it's x and y locations in the matrix (-1 initially)
+  the.grid <- SpatialPolygonsDataFrame(
+    as.SpatialPolygons.GridTopology(grd),
+    data = data.frame("ID"=rep.int(-1,tot.cells),"CellX"=rep.int(-1,tot.cells),"CellY"=rep.int(-1,tot.cells)),
+    match.ID = FALSE
   )
-proj4string(grid) <- PROJ4STRING
-rm(grd)
-# Set the ID properly and keep a record of the (x,y) coordinates and associated ID
-grid.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
-cellcount <- 1
-for (rowcount in seq(1,num.cells)) {
-  for (colcount in seq(1,num.cells)) {
-    grid@data[cellcount,]$CellX <- colcount
-    grid@data[cellcount,]$CellY <- rowcount
-    grid@data[cellcount,]$ID <- cellcount
-    grid.ids[rowcount,colcount] <- cellcount
-    cellcount <- cellcount + 1
+  proj4string(the.grid) <- PROJ4STRING
+  rm(grd)
+  
+  # Set the ID properly and keep a record of the (x,y) coordinates and associated ID
+  gridids <- matrix(data=0, nrow=ncells, ncol=ncells)
+  cellcount <- 1
+  for (rowcount in seq(1,ncells)) {
+    for (colcount in seq(1,ncells)) {
+      the.grid@data[cellcount,]$CellX <- colcount
+      the.grid@data[cellcount,]$CellY <- rowcount
+      the.grid@data[cellcount,]$ID <- cellcount
+      gridids[rowcount,colcount] <- cellcount
+      cellcount <- cellcount + 1
+    }
   }
+
+  if (plot) {
+    par(mfrow=c(1,1))
+    plot(the.grid, border='blue', main=paste("Routes and the grid (num. cells=",ncells,")",sep="") )
+    plot(all.routes.oneline, add=T)
+  }
+  
+  return(list(grid = the.grid, grid.ids = gridids))
+
 }
+#save.image(file="analyse_traces-temp.RData") # For debugging
 
-par(mfrow=c(1,1))
-plot(grid, border='blue', main="Routes and the grid")
-plot(all.routes.oneline, add=T)
+num.cells <- 20
+g <- make.grid(ncells = num.cells, study.area.bbox = study.area.bb, plot=TRUE)
+grid <- g$grid
+grid.ids <- g$grid.ids
 
-#plot(grid, border='blue', main="Grid labels")
-#polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
-
+rm(g) # Keep clean
 ```
 
 The grid consists of `r num.cells` cells, with a mean square area of `r mean(raster::area(grid))/(1000**2)` km^2^.
@@ -1089,7 +1129,7 @@ calc.flows <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
   # First make a list of the individual cells 
   cells <- lapply(seq(1,length(the.grid)), FUN = function(i,g) { return(g[i,]) }, g=the.grid)
   
-  # Now have each cell find out about the lines passing through it. 
+   # Now have each cell find out about the lines passing through it. 
   # This will return a list of cells and counts of relevant lines.
   results.cells <- 
     if (multithread) 
@@ -1141,7 +1181,7 @@ polys <- SpatialPolygonsDataFrame(
 #' result.list <- calc.flows(grid,all.routes)
 #' result.spdf <- result.to.spdf(result.list)
 #' result.matrix <- spdf.to.matrix(result.spdf, grid.ids)
-spdf.to.matrix <- function(spdf, gridids) {
+spdf.to.matrix <- function(spdf, gridids, ncells) {
   # Define an empty matrix. Origins the columns and destinations are rows. This looks backwards because
   # matricies are accessed by m[row,col]
   trans.mat <- matrix(data=0, nrow=nrow(spdf), ncol=nrow(spdf))
@@ -1161,11 +1201,11 @@ spdf.to.matrix <- function(spdf, gridids) {
       did.N <- gridids[y-1,x] # Destination ID to the north
       trans.mat[did.N,oid] <- trans.mat[did.N,oid] + cell$departure.count.N
     }
-    if ( x < num.cells ) { # E
+    if ( x < ncells ) { # E
       did.E <- gridids[y,x+1] # Destination ID to the east
       trans.mat[did.E,oid] <- trans.mat[did.E,oid] + cell$departure.count.E
     }
-    if ( y < num.cells ) { # S
+    if ( y < ncells ) { # S
       did.S <- gridids[y+1,x] # Destination ID to the south
       trans.mat[did.S,oid] <- trans.mat[did.S,oid] + cell$departure.count.S
     }
@@ -1193,14 +1233,14 @@ result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
 result1.spdf <- result.to.spdf(result1) 
 
 # Finally make a transition matrix 
-result1.matrix <- spdf.to.matrix(result1.spdf, grid.ids)
+result1.matrix <- spdf.to.matrix(result1.spdf, grid.ids, num.cells)
 
 # Write out the matrix
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
 writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects - easy to read back in (now done later)
-#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
+#save(result1, result1.spdf, result1.matrix, num.cells, file="results.RData")
 
 ```
 
@@ -1253,7 +1293,7 @@ plot(test.routes, add=T)
 # Test the algorithm
 test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
 test.spdf <- result.to.spdf(test.result) 
-test.matrix <- spdf.to.matrix(test.spdf, grid2.ids)
+test.matrix <- spdf.to.matrix(test.spdf, grid2.ids, num.cells)
 #write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
 
 ```
@@ -1269,8 +1309,8 @@ As all flows in-to and out-of a cell involve an interaction with only one of the
 rel.flow <- c() # Relative flow in each cell (absoulte difference between fin and fout vetors for each cell)
 total.flow <- c() # Useful for percentages
 
-calc.flow <- function(o,d) { # Calculate flow from o to d, checking for boundary errors
-    if ( o > total.cells || o < 1 || d > total.cells || d < 1) {
+calc.flow <- function(o,d, tot.cells) { # Calculate flow from o to d, checking for boundary errors
+    if ( o > tot.cells || o < 1 || d > tot.cells || d < 1) {
       return (0)
     } else {
       return(result1.matrix[o,d])
@@ -1278,7 +1318,8 @@ calc.flow <- function(o,d) { # Calculate flow from o to d, checking for boundary
 }
 
 # Iterate over all cells 
-for (cell in seq(1, total.cells)) {
+total.num.cells <- num.cells**2
+for (cell in seq(1, total.num.cells)) { 
   
   # Work out which cell IDs make up the von Neuman neighbours of the curent cell. These are used to index into the transition matrix
   n <- cell - num.cells # (number of cells per row)
@@ -1288,16 +1329,16 @@ for (cell in seq(1, total.cells)) {
   
   # Flows into the cell from N E S W. Note that matrix is accessed by mat[y,x] (not x,y)
   fin <- c(
-    calc.flow(n,cell), # N
-    calc.flow(e,cell), # E
-    calc.flow(s,cell), # S
-    calc.flow(w,cell) # W
+    calc.flow(n,cell,total.num.cells), # N
+    calc.flow(e,cell,total.num.cells), # E
+    calc.flow(s,cell,total.num.cells), # S
+    calc.flow(w,cell,total.num.cells) # W
   )
   fout <- c(
-    calc.flow(cell, n), # N
-    calc.flow(cell, e), # E
-    calc.flow(cell, s), # S
-    calc.flow(cell, w) # W
+    calc.flow(cell, n,total.num.cells), # N
+    calc.flow(cell, e,total.num.cells), # E
+    calc.flow(cell, s,total.num.cells), # S
+    calc.flow(cell, w,total.num.cells) # W
   )
   # Relative flow is the Euclidean distance between inflows and outflows
   frel <- dist(rbind(fin, fout))
@@ -1461,7 +1502,7 @@ The percentage asymmetry is `r round(result1.percentage.asymmetry,5) * 100`%. Th
 
 First map the number of traces that pass through each cell. For the final paper I atually do this in ArcMap.
 
-```{r mapTracesPerCell, fig.width=15}
+```{r mapTracesPerCell, fig.width=15, cache=TRUE}
 
 shades <- auto.shading(result1.spdf$total.intersection, n=9, cutter=quantileCuts)
 choropleth(result1.spdf, result1.spdf$total.intersection, shading = shades)
@@ -1475,11 +1516,53 @@ plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
 
 See how sensitive the asymmetry is to the choice of grid size by running a few grids and comparing the asymettry for each.
 
-```{r sensitivity.to.resolution }
+Begin by doing the calculations
 
-# XXXX HERE
+```{r sensitivity.to.resolution}
 
+# Iterate over a number of different resolutions
+sen.resolutions <- c(1, 5, 10, 20, 30, 40, 50)
+
+# Remember the grids, results, etc. at the different resolutions ('sen' here is short for sensitivity)
+sen.grids <- list()
+sen.results <- list() # Each element will be a list where each element has info. about a cell (see calc.cell for the specific info)
+sen.results.spdf <- list() # The SpatialPolygonsDataFrames for each list
+sen.results.matrix <- list() # The transition matrices 
+
+for (ncells in sen.resolutions) {
+  # Create the grid and remember it
+  g <- make.grid(ncells = ncells, study.area.bbox = study.area.bb, plot = FALSE)
+  temp.grid <- g$grid
+  temp.grid.ids <- g$grid.ids
+  
+  # Do the maths!
+  result <- calc.flows(temp.grid, all.routes, plot=FALSE, multithread = TRUE)
+  result.spdf <- result.to.spdf(result) 
+  result.matrix <- spdf.to.matrix(result.spdf, temp.grid.ids, ncells)
+  
+  # Store the results
+  sen.grids <- c(sen.grids, g)
+  sen.results <- c(sen.results, result)
+  sen.results.spdf <- c(sen.results.spdf, result.spdf)
+  sen.results.matrix <- c(sen.results.matrix, result.matrix)
+  
+  
+  # XXXX CALCULATE (A)SYMMETRY STATISTICS 
+  
+  # Write out the results
+  writeOGR(result1.spdf, dsn = "sensitivity_results", 
+           layer=paste("result_spdf-", ncells, sep=""),
+           driver="ESRI Shapefile", overwrite_layer = TRUE)
+}
+
+# Save the results as well (might be useful)
+save(sen.resolutions, sen.grids, sen.results, sen.results.spdf, sen.results.matrix, file="sen_results.RData")
+
+
+save.image(file="analyse_traces-temp.RData") # For debugging
 ```
+
+Now analyse them. Start with a graph of 
 
 
 ## Shortest path choice v.s. symmetry
@@ -1583,15 +1666,15 @@ Now re-do the asymmetry analysis but with these path subsets (see the chunk call
 ```{r rerunAsymmetryAnalysis-longestPaths, cache=TRUE}
 # This repeasts the code in `make matrix` chunk
 
-# Calulate the flows into and out of cells. This makes a list with lots of information
+# Calulate the flows into and out of cells. This makes a list with lots of information about each cell
 result1.longest  <- calc.flows(grid, relative.longest.routes,  plot=FALSE, multithread = TRUE)
 result1.shortest <- calc.flows(grid, relative.shortest.routes, plot=FALSE, multithread = TRUE)
 # Convert that list of results to a SpatialPolygonsDataFrame
 result1.longest.spdf  <- result.to.spdf(result1.longest) 
 result1.shortest.spdf <- result.to.spdf(result1.shortest)
 # Finally make a transition matrix 
-result1.matrix.longest  <- spdf.to.matrix(result1.longest.spdf, grid.ids)
-result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf, grid.ids)
+result1.matrix.longest  <- spdf.to.matrix(result1.longest.spdf, grid.ids, num.cells)
+result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf, grid.ids, num.cells)
 
 # Write out the matrices
 #write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
@@ -1602,7 +1685,7 @@ result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf, grid.ids)
 #writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in (now done later)
-#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+#save(result1, result1.spdf, result1.matrix, num.cells, 
 #     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
 #     result1.matrix.longest, result1.matrix.shortest,
 #     file="results.RData")
@@ -1710,14 +1793,14 @@ result1.weekend <- calc.flows(grid, weekend.routes, plot=FALSE, multithread = TR
 result1.weekday.spdf <- result.to.spdf(result1.weekday) 
 result1.weekend.spdf <- result.to.spdf(result1.weekend)
 # Finally make a transition matrix 
-result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf, grid.ids)
-result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf, grid.ids)
+result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf, grid.ids, num.cells)
+result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf, grid.ids, num.cells)
 
 writeOGR(result1.weekday.spdf, dsn = "result", layer="result1_weekday_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
 writeOGR(result1.weekend.spdf, dsn = "result", layer="result1_weekend_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in
-save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+save(result1, result1.spdf, result1.matrix, num.cells,
      result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
      result1.matrix.longest, result1.matrix.shortest,
      result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
@@ -1814,14 +1897,14 @@ result1.absolute.longest.spdf  <- result.to.spdf(result1.absolute.longest )
 result1.absolute.shortest.spdf <- result.to.spdf(result1.absolute.shortest)
 
 # Finally make a transition matrix 
-result1.matrix.absolute.longest  <- spdf.to.matrix(result1.absolute.longest.spdf,  grid.ids)
-result1.matrix.absolute.shortest <- spdf.to.matrix(result1.absolute.shortest.spdf, grid.ids)
+result1.matrix.absolute.longest  <- spdf.to.matrix(result1.absolute.longest.spdf,  grid.ids, num.cells)
+result1.matrix.absolute.shortest <- spdf.to.matrix(result1.absolute.shortest.spdf, grid.ids, num.cells)
 
 writeOGR(result1.absolute.longest.spdf, dsn = "result", layer="result1_absolute_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
 writeOGR(result1.absolute.shortest.spdf, dsn = "result", layer="result1_absolute_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Save the objects (these as well as the original results) - easy to read back in
-save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+save(result1, result1.spdf, result1.matrix, num.cells, 
      result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
      result1.matrix.longest, result1.matrix.shortest,
      result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
@@ -1865,7 +1948,7 @@ av.result.percentage.asymmetry <- 99
 ```
 
 
-```{r AV.asymmetry.analysis, cache=FALSE, eval=FALSE }
+```{r AV.asymmetry.analysis, eval=FALSE }
 
 # Read the grid to use
 av.grid.temp <- readOGR( ds = "./tony_grid/", layer="BC Square Grid")
@@ -1909,7 +1992,7 @@ av.result.spdf <- result.to.spdf(av.result)
 writeOGR(av.result.spdf, dsn = "tony_grid", layer="av_result_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
 
 # Make the results matrix
-av.result.matrix <- spdf.to.matrix(av.result.spdf, av.grid.ids)
+av.result.matrix <- spdf.to.matrix(av.result.spdf, av.grid.ids, num.cells)
 
 av.result.percentage.asymmetry <- calculate.asymmetry(result1.matrix.shortest)
 
@@ -1927,6 +2010,17 @@ It is useful to save all these data so that it isn't necessary to re-run everyth
 ```{r saveWorkspace}
 
 save.image(file="analyse_traces.RData")
+
+```
+
+
+# Runtime analysis
+
+Here is the amount of time that each chunk took to execute:
+
+```{r reportChunkRuntime}
+
+print(chunk.times)
 
 ```
 
