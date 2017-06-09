@@ -200,15 +200,24 @@ object SurfABM extends Serializable {
 
        // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
 
+        val tempIDs = scala.collection.mutable.Set[Int]()
         val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
           {
-            for (o <- buildings.getGeometries())
-              yield {
-                val g = o.asInstanceOf[SurfGeometry[Building]]
-                Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) -> g
+            for (o <- buildings.getGeometries())  yield {
+              val g = o.asInstanceOf[SurfGeometry[Building]] // Convert the geometry to a SurfGeometry
+              val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
+              // Check if the ID has been added already or not
+              if (tempIDs.contains(id)) {
+                println("The ID "+id+" has been found already")
               }
+              else {
+                tempIDs += id
+              }
+              id -> g // This bit means return a mapping from the ID to the geometry
+            }
           }.to[collection.immutable.Seq]: _*) // Splat the array with :_*
 
+        printf("Number of buildings is %d and number of IDs is %d", buildings.getGeometries.size(), b_ids.size)
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... finished creating map for ${b_ids.size} buildings")
 
@@ -231,6 +240,7 @@ object SurfABM extends Serializable {
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
         buildings.setMBR(MBR);
         roads.setMBR(MBR);
+        shops.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
