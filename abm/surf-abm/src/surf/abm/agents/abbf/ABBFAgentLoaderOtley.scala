@@ -96,28 +96,39 @@ object ABBFAgentLoaderOtley {
         LOG.debug(s"Origin: '$orig', Destination: '$dest', Flow: '$flow'")
         // Now create 'flow' agents who live in 'orig' and work in 'dest'
         // It is helpful to have all the buildings in the origin and destinations as lists
-        val homeList = oaBuildingIDMap(Set(orig,small)).toList
-        // There might be a more efficient way to define the work buildings list.
-        val workList = List.concat(oaBuildingIDMap(Set(dest,small)).toList, oaBuildingIDMap(Set(dest,large)).toList, oaBuildingIDMap(Set(dest,shopType)).toList)
+        if (oaBuildingIDMap.contains(Set(orig, small))) {
+          val homeList = oaBuildingIDMap(Set(orig, small)).toList
 
-        //val shopList = oaBuildingIDMap(orig).toList
-        for (agent <- 0 until flow) {
-          // Get the ID for a random home/work building
-          val homeID: Int = homeList(state.random.nextInt(homeList.size))
-          val workID: Int = workList(state.random.nextInt(workList.size))
+          // There might be a more efficient way to define the work buildings list.
+          val workListSmallBool = oaBuildingIDMap.contains(Set(dest, small))
+          val workListLargeBool = oaBuildingIDMap.contains(Set(dest, large))
+          val workListShopBool = oaBuildingIDMap.contains(Set(dest, shopType))
+          if (workListSmallBool || workListLargeBool || workListShopBool) {
+            val workList = List.concat(
+              if (workListSmallBool) oaBuildingIDMap(Set(dest,small)).toList else List.empty,
+              if (workListLargeBool) oaBuildingIDMap(Set(dest,large)).toList else List.empty,
+              if (workListShopBool) oaBuildingIDMap(Set(dest,shopType)).toList else List.empty)
 
-          // Now get the buildings themselves and tell the agent about them
-          val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
-          val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
-          val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
+            //val shopList = oaBuildingIDMap(orig).toList
+            for (agent <- 0 until flow) {
+              // Get the ID for a random home/work building
+              val homeID: Int = homeList(state.random.nextInt(homeList.size))
+              val workID: Int = workList(state.random.nextInt(workList.size))
 
-          val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
-          val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
-          //val shopID: Int = 1
-          //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
+              // Now get the buildings themselves and tell the agent about them
+              val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
+              val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
+              val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
 
-          //makeAgent(state, home, work)
-          makeAgent(state, home, work, shop)
+              val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
+              val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
+              //val shopID: Int = 1
+              //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
+
+              //makeAgent(state, home, work)
+              makeAgent(state, home, work, shop)
+            }
+          }
         }
 
       }
