@@ -38,7 +38,8 @@ case class ShopActivity(
       case INITIALISING => {
         Agent.LOG.debug(s"${agent.toString()} is initialising ShopActivity")
         // See if the agent is in the shop
-        if (this.place.location.equalLocation(this.agent.location())) {
+        if (this.place.location.equalLocation(
+            this.agent.location())) {
           Agent.LOG.debug(s"${agent.toString()} is in the shop. Start shopping.")
           currentAction = SHOPPING // Next iteration the agent will start to shop
         }
