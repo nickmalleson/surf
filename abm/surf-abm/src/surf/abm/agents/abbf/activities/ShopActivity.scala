@@ -11,8 +11,9 @@ import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
   */
 case class ShopActivity(
                      override val timeProfile: TimeProfile,
-                     override val agent: ABBFAgent)
-  extends FlexibleActivity(SHOPPING, timeProfile, agent)  with Serializable
+                     override val agent: ABBFAgent,
+                     override val place: Place)
+  extends FixedActivity(SHOPPING, timeProfile, agent, place)  with Serializable
 {
 
   // These variables define the different things that the agent could be doing in order to satisfy the work activity
@@ -23,7 +24,7 @@ case class ShopActivity(
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
-  private val place : Place = null // start with a null place
+  //private val place : Place = null // start with a null place
 
   /**
     * This makes the agent actually perform the activity.

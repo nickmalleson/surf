@@ -209,7 +209,7 @@ object SurfABM extends Serializable {
 
 
         LOG.debug("Creating id -> buildings map")
-        LOG.debug("Found "+b_ids.size+" buildings and "+shops.getGeometries.size()+" shops.")
+        println("Found "+b_ids.size+" buildings and "+shops.getGeometries.size()+" shops.")
 
 
 

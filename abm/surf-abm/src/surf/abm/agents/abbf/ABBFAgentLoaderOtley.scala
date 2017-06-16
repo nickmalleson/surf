@@ -166,9 +166,9 @@ object ABBFAgentLoaderOtley {
     )
 
     // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d)))
-    // A constant, low intensity
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a)
+    val shoppingTimeProfile = TimeProfile(Array((6d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
+    // Was before a constant, low intensity. Is now a test with higher intensities in late afternoon and early evening.
+    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
 
 
     // School

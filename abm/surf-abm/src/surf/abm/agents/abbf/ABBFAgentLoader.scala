@@ -49,7 +49,7 @@ object ABBFAgentLoader {
 
       // SHOPPING
       val shoppingTimeProfile = TimeProfile(Array((0d, 0.2d))) // A constant, low intensity
-      val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
+      //val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent=a)
 
 
       // SLEEPING (high between 11pm and 6am)
