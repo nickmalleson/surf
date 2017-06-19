@@ -199,7 +199,7 @@ object ABBFAgent {
 
 
 
-  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / ticks per minute = ticks per day
+  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / minutes per tick = ticks per day
   /**
     * Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
     */

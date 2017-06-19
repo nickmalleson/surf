@@ -69,7 +69,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     try {
 
-      // A path should have been created alreadyi
+      // A path should have been created already
       if (this._path == null) {
         throw new Exception(s"The path shouldn't be null (for agent ${this.toString()}. Have you called newDestination() first?")
       }
