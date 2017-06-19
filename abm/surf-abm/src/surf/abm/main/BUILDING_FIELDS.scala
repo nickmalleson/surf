@@ -19,5 +19,6 @@ object BUILDING_FIELDS extends Enumeration {
   // Others used in some of the other scenarios. When reading the buildings data it doesn't matter if the
   // ShapefileReader can't find the attributes
   val BUILDINGS_OA = Value("OA")
+
   val BUILDINGS_TYPE = Value("TYPE")
 }

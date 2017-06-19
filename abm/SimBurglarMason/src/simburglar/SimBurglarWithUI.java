@@ -71,14 +71,14 @@ public class SimBurglarWithUI extends GUIState {
         SimBurglar world = (SimBurglar) state;
 
         walkwaysPortrayal.setField(world.roads);
-        walkwaysPortrayal.setPortrayalForAll(new GeomPortrayal(Color.CYAN, true));
+        walkwaysPortrayal.setPortrayalForAll(new GeomPortrayal(Color.BLACK, true));
 
         buildingPortrayal.setField(world.buildings);
         BuildingLabelPortrayal b = new BuildingLabelPortrayal(new GeomPortrayal(Color.DARK_GRAY, true), Color.BLUE);
         buildingPortrayal.setPortrayalForAll(b);
 
         agentPortrayal.setField(world.agents);
-        agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED, 10.0, true));
+        agentPortrayal.setPortrayalForAll(new GeomPortrayal(Color.RED, 15.0, true));
 
         display.reset();
         display.setBackdrop(Color.WHITE);
