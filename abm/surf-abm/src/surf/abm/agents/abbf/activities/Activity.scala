@@ -14,7 +14,7 @@ import surf.abm.main.Clock
   *
   * <p>
   * Activities also have a <i>background intensity</i>. This is a base level of intensity that gradually increases
-  * over time, unless the agent is actually undertaking the activity in which case it increases. The <code>-=</code>
+  * over time, unless the agent is actually undertaking the activity in which case it decreases. The <code>-=</code>
   * and <code>+=</code> methods can be used to increase or decrease this background intensity.</p>
   *
   * <p>The <code>performAction()</code> function specifies what the agent needs to do in order to perform this
@@ -45,7 +45,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   /**
     * The current extra time-of-day intensity for this activity.
     *
-    * @param currentTime Current decimal 24-hour of the day (e.g. 3.5 = 03:03)
+    * @param currentTime Current decimal 24-hour of the day (e.g. 3.5 = 03:30)
     */
   def timeIntensity(currentTime: Double) = this.timeProfile.calcIntensity(currentTime)
 
@@ -61,7 +61,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   /**
     * Find out how much this activity has been reduced by in one 'sitting' (i.e. from when the agent most recently
     * started satisfying the activity.
-    * <p>This is useful because it make it possible the agent from chaning activity too rapidly.</p>
+    * <p>This is useful because it makes it possible the agent from chaining activity too rapidly.</p>
     */
   def currentIntensityDecrease() = _currentIntensityDecrease
   protected var _currentIntensityDecrease = 0d
@@ -69,7 +69,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
 
   /**
     * This makes the agent actually perform the activity. It must be implemented by sub-classes.
-    * Perorming this action might require the agent to perform some preliminary activites before this one
+    * Performing this action might require the agent to perform some preliminary activities before this one
     * can be performed.
     *
     * @return True if the agent has performed this activity, false if they have not (e.g. if they are still travelling
@@ -80,7 +80,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   /**
     * This method will be called if this Activity was being performed, but now a new one is in charge. This gives
     * the Activity the opportunity to reset itself ready for the next time it is called. For example, in
-    * [[surf.abm.agents.abbf.activities.SleepActivity]], the activity want's to be told if it needs to re-initialise
+    * [[surf.abm.agents.abbf.activities.SleepActivity]], the activity wants to be told if it needs to re-initialise
     * itself to avoid having to check lots of criteria (is the agent at home? are the travelling? etc) at every iteration.
     */
   def activityChanged() : Unit
@@ -121,7 +121,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     }
     else {
       // Stupidity check - make sure that the intensity calculation here matches that in the intensity() function (I don't
-      // want to change the intensity() function and forget to chance the calculation here!)
+      // want to change the intensity() function and forget to change the calculation here!)
       assert (this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour()) == this.intensity())
       if ( ( this._backgroundIntensity - d + this.timeProfile.calcIntensity(Clock.currentHour()) ) < 0 ) {
         return false // Reducing the intensity would take the total intensity below zero

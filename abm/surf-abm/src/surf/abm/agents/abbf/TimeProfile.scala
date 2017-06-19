@@ -47,7 +47,7 @@ case class TimeProfile(val profile: Array[(Double, Double)]) {
     }
 
     // If there is only one reference point, then assume a constant intensity
-    if (this.times.size == 1) {
+    if (this.times.length == 1) {
       return this.intensities(0)
     }
 
@@ -57,7 +57,7 @@ case class TimeProfile(val profile: Array[(Double, Double)]) {
       return this.intensities(index)
 
 
-    // Find the two nearest time points, t0 and t1 and their indices i0 and 01
+    // Find the two nearest time points, t0 and t1 and their indices i0 and i1
     var t0, t1 = -1d // time0 and time1
     var i0, i1 = -1d // intensity0 and intensity1
     breakable {
@@ -120,7 +120,7 @@ case class TimeProfile(val profile: Array[(Double, Double)]) {
     if (!(x1 > x0)) {
       throw new IllegalArgumentException(s"Second input ($x1) must be greater than first input ($x0)")
     }
-    val temp = y0 + ((y1 - y0) * ((x - x0) / (x1 - x0)))
+    //val temp = y0 + ((y1 - y0) * ((x - x0) / (x1 - x0)))
     //println(s"INTER: $x $x0 $y0 $x1 $y1 = $temp")
     return y0 + ((y1 - y0) * ((x - x0) / (x1 - x0)))
 

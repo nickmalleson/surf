@@ -157,9 +157,8 @@ public class Agent implements Steppable, Serializable {
      * Plots a path between the Agent's home Node and its work Node
      *
      * @param state The SimState
-     * @param location The current location of the agent.
-     * @param destination The destination
      * @param agent The burglar who is needs the path.
+     * @return a new path from the agenbt's location to it's current destination
      */
     protected static List<GeomPlanarGraphDirectedEdge> findNewAStarPath(
             SimBurglar state, Agent agent) throws RoutingException {

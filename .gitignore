@@ -61,6 +61,7 @@ projects/BreezeRoutes/raw_data_analysis/Rdata/*
 
 # traces
 projects/BreezeRoutes/traces/result/
+projects/BreezeRoutes/traces/sensitivity_results/
 projects/BreezeRoutes/traces/results.RData
 projects/BreezeRoutes/traces/tony_grid/
 projects/BreezeRoutes/traces/*.html

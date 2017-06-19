@@ -125,7 +125,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, shopGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -134,7 +134,7 @@ object SurfABM extends Serializable {
       * @return
       */
     private def _readEnvironmentData()
-    //: (GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
+    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
     = {
 
       try {
@@ -150,9 +150,10 @@ object SurfABM extends Serializable {
         // Start with buildings
         val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
         val buildings = new GeomVectorField(WIDTH, HEIGHT);
+        val shops = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
-        val attributes: Bag = new Bag( (for (v <- BUILDING_FIELDS.values) yield v.toString()) ) // Add all of the fields
+        val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
         LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
@@ -162,33 +163,68 @@ object SurfABM extends Serializable {
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
         LOG.debug("Casting buildings to SurfGeometry objects")
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
+        val tempIDMap = scala.collection.mutable.Map[Int, SurfGeometry[Building]]()
         for (o <- tempBuildings.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
           val buildingID = try {
-            g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString())
+            g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)
           }
           catch { case e: NullPointerException => {
-              LOG.error("Cannot find a field called '%s' in the buldings file. Does it have a colunm called '%s'?".
-                format(BUILDING_FIELDS.BUILDINGS_ID.toString(),BUILDING_FIELDS.BUILDINGS_ID.toString()), e)
+              LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
+                format(BUILDING_FIELDS.BUILDINGS_ID.toString,BUILDING_FIELDS.BUILDINGS_ID.toString), e)
               throw e
             }
           }
-          val building = Building(buildingID)
-          val s = SurfGeometry(g,building)
-          buildings.addGeometry(s)
+          val buildingType = try {
+            g.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
+              format(BUILDING_FIELDS.BUILDINGS_TYPE.toString,BUILDING_FIELDS.BUILDINGS_TYPE.toString), e)
+            throw e
+          }
+          //val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
+          // Check if the ID has been added already or not
+          println(buildingID, buildingType)
+          if (tempIDMap.contains(buildingID)) {
+            println("Warning: The building ID "+buildingID+" has been found more than once!")
+          }
+          else {
+
+            val building = Building(buildingID)
+            val s = SurfGeometry(g,building)
+            // val s = new SurfGeometry[Building](g, building) // (Line above is the same as this)
+            tempIDMap.put(buildingID, s)
+            buildings.addGeometry(s)
+            if (buildingType == "SHOP") {
+              shops.addGeometry(s)
+            }
+          }
         }
         //buildings.updateSpatialIndex()
-        //println("Gometryies", buildings.getGeometries.size())
+        //println("Geometries", buildings.getGeometries.size())
+
+        // Convert the mutable Building ID map into an immutable one
+        val b_ids: Map[Int, SurfGeometry[Building]] = collection.immutable.Map(tempIDMap.toSeq: _*)
+
 
         LOG.debug("Creating id -> buildings map")
+        println("Found "+b_ids.size+" buildings and "+shops.getGeometries.size()+" shops.")
+
+
+
+
+        assert(buildings.getGeometries.size() == b_ids.size )
+
+
         // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
         // Use a for comprehension to create a temp array of (Int, SurfGeometry) then use that as input to a map
         // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
         // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
 
        // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
+/*
 
-        val tempIDs = scala.collection.mutable.Set[Int]()
         val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
           {
             for (o <- buildings.getGeometries())  yield {
@@ -196,7 +232,7 @@ object SurfABM extends Serializable {
               val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
               // Check if the ID has been added already or not
               if (tempIDs.contains(id)) {
-                println("The ID "+id+" has bee found already")
+                println("The ID "+id+" has been found already")
               }
               else {
                 tempIDs += id
@@ -204,7 +240,78 @@ object SurfABM extends Serializable {
               id -> g // This bit means return a mapping from the ID to the geometry
             }
           }.to[collection.immutable.Seq]: _*) // Splat the array with :_*
+*/
+        // The next section is a not yet working attempt to solve problems that might be caused by the previous section.
+        /* val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
+          {
+            for (o <- tempBuildings.getGeometries()) yield {
+              val g: MasonGeometry = o.asInstanceOf[MasonGeometry]
+              val buildingID = try {
+                g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)
+              }
+              catch {
+                case e: NullPointerException => {
+                  LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
+                    format(BUILDING_FIELDS.BUILDINGS_ID.toString, BUILDING_FIELDS.BUILDINGS_ID.toString), e)
+                  throw e
+                }
+              }
+              val buildingType = try {
+                g.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
+              }
+              catch {
+                case e: NullPointerException =>
+                  LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
+                    format(BUILDING_FIELDS.BUILDINGS_TYPE.toString, BUILDING_FIELDS.BUILDINGS_TYPE.toString), e)
+                  throw e
+              }
+              val id = Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
+              // Check if the ID has been added already or not
+              if (tempIDs.contains(id)) {
+                println("Warning: The building ID " + id + " has been found more than once!")
+              }
+              else {
+                tempIDs += id
+                val building = Building(buildingID)
+                val s = SurfGeometry(g, building)
+                buildings.addGeometry(s)
+                if (buildingType == "SHOP") {
+                  shops.addGeometry(s)
+                }
+              }
+              val gBuilding = o.asInstanceOf[SurfGeometry[Building]]
+              id -> gBuilding // This bit means return a mapping from the ID to the geometry
+            }
+          }.to[collection.immutable.Seq]: _*)
+        //buildings.updateSpatialIndex()
+        //println("Geometries", buildings.getGeometries.size())
 
+        LOG.debug("Creating id -> buildings map")
+        // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
+        // Use a for comprehension to create a temp array of (Int, SurfGeometry) then use that as input to a map
+        // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
+        // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
+
+        // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
+
+        /*tempIDs.empty
+        val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
+          {
+            for (o <- buildings.getGeometries())  yield {
+              val g = o.asInstanceOf[SurfGeometry[Building]] // Convert the geometry to a SurfGeometry
+              val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
+              // Check if the ID has been added already or not
+              if (tempIDs.contains(id)) {
+                println("The ID "+id+" has been found already")
+              }
+              else {
+                tempIDs += id
+              }
+              id -> g // This bit means return a mapping from the ID to the geometry
+            }
+          }.to[collection.immutable.Seq]: _*) // Splat the array with :_* */ */
+
+        printf("Number of buildings is %d and number of IDs is %d \n", buildings.getGeometries.size(), b_ids.size)
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... finished creating map for ${b_ids.size} buildings")
 
@@ -227,6 +334,7 @@ object SurfABM extends Serializable {
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
         buildings.setMBR(MBR);
         roads.setMBR(MBR);
+        shops.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
@@ -257,7 +365,7 @@ object SurfABM extends Serializable {
         LOG.info("Finished initialising model environment")
 
         // Return the layers
-        (buildings, b_ids, roads, network, junctions, MBR)
+        (buildings, shops, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {
@@ -267,6 +375,8 @@ object SurfABM extends Serializable {
       }
 
    } // _readEnvironmentData()
+
+
 
   /**
     * Create agents. This needs to be called *after* the model has finished initialising.
