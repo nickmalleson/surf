@@ -188,13 +188,21 @@ object SurfABM extends Serializable {
 
        // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
 
+        val tempIDs = scala.collection.mutable.Set[Int]()
         val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
           {
-            for (o <- buildings.getGeometries())
-              yield {
-                val g = o.asInstanceOf[SurfGeometry[Building]]
-                Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) -> g
+            for (o <- buildings.getGeometries())  yield {
+              val g = o.asInstanceOf[SurfGeometry[Building]] // Convert the geometry to a SurfGeometry
+              val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
+              // Check if the ID has been added already or not
+              if (tempIDs.contains(id)) {
+                println("The ID "+id+" has bee found already")
               }
+              else {
+                tempIDs += id
+              }
+              id -> g // This bit means return a mapping from the ID to the geometry
+            }
           }.to[collection.immutable.Seq]: _*) // Splat the array with :_*
 
         assert(buildings.getGeometries.size() == b_ids.size)
