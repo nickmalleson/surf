@@ -1971,6 +1971,9 @@ Begin by creating subsets for the absolute longest and shortest trips.
 
 # Filter on absolute trip length
 
+
+XXXX HERE
+
 # First need to decide what constitutes a 'long' and 'short' trip. The data are quite skewed, so use the median as it is less affected by extreme values.
 matched.lengths.mean <- mean(matched.lengths)
 matched.lengths.median <- median(matched.lengths)
