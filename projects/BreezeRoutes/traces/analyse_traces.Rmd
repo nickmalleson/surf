@@ -1808,6 +1808,9 @@ We follow the same methodology as the previous section, although this time route
 
 ```{r createAbsoluteSubsets, fig.width=15}
 
+
+XXXX HERE
+
 # Create a vector that, rather than the actual start time, just has the number of the day (0-6 starting on Sunday)
 day.of.week <- unlist(lapply(starttime, FUN= function(x) as.POSIXlt(x)$wday))
 stopifnot(max(day.of.week) == 6 & min(day.of.week) == 0 ) # Sanity check - days must be 0-6
