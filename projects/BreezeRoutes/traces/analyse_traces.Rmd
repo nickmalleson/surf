@@ -1518,7 +1518,7 @@ See how sensitive the asymmetry is to the choice of grid size by running a few g
 
 Begin by doing the calculations
 
-```{r sensitivity.to.resolution, cache=FALSE}
+```{r sensitivity.to.resolution, cache=TRUE}
 
 # Iterate over a number of different resolutions
 sen.resolutions <- c(1, 5, 10, 15, 20, 30, 50, 100)
@@ -1644,6 +1644,21 @@ plot(x2,y, type='b', main="Asymmetry at different resolutions", xlab="Number of 
 abline(v = num.cells, col="red", lty=2)
 abline(h=sen.results.asymmetry[[which(sen.resolutions==num.cells)]], col="red", lty=2)
 
+
+# Also do a PDF for the paper
+pdf(file="resolution_sensitivity.pdf", width = 7, height = 11.69)
+par(mfrow=c(2,1))
+plot(x1,y, type='b', xlab="Cell square area (km^2)", ylab="Asymmetry")
+abline(v=mean(raster::area(sen.grids[[which(sen.resolutions==num.cells)]]))/(1000**2), col="red", lty=2 )
+abline(h=sen.results.asymmetry[[which(sen.resolutions==num.cells)]], col="red", lty=2)
+
+plot(x2,y, type='b', xlab="Number of cells per row", ylab="Asymmetry")
+abline(v = num.cells, col="red", lty=2)
+abline(h=sen.results.asymmetry[[which(sen.resolutions==num.cells)]], col="red", lty=2)
+dev.off()
+
+
+
 rm(x1,x2,y)
 ```
 
@@ -1660,7 +1675,7 @@ It will be interesting to see if there is some relationship between the choice t
  1. **Repeat using the 'non-longest' relative path routes (i.e. thost that were not included in the above analysis).** **There are `r length(which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.. 
 
 
-```{r createSubsets, fig.width=15}
+```{r createSubsets, fig.width=15, cache=TRUE}
 
 # The longest routes are those where the matched length is at least 20% greater than the equivalent shortest path.
 relative.longest.indices <-  which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)
