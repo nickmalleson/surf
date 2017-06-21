@@ -1800,61 +1800,6 @@ The asymmetry values for longest and shortest paths are:
  - For *Shortest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
 
 
-## Absolute path length v.s. symmetry
-
-In the previous section we looked at the relationship between asymmetry and the amount of deviation from the shortest possible path. In this section we will see whether this relationship holds with the _absolute_ path length. I.e. does the degree of asymmetry change in relation to the overall length of a route?
-
-We follow the same methodology as the previous section, although this time routes are segregated into two groups (absolute longest and shortest) depending on their absolute length.
-
-```{r createAbsoluteSubsets, fig.width=15}
-
-
-XXXX HERE
-
-# Create a vector that, rather than the actual start time, just has the number of the day (0-6 starting on Sunday)
-day.of.week <- unlist(lapply(starttime, FUN= function(x) as.POSIXlt(x)$wday))
-stopifnot(max(day.of.week) == 6 & min(day.of.week) == 0 ) # Sanity check - days must be 0-6
-
-# For info, lets have a histogram of the days
-hist(day.of.week, main="Days of the week when trips started", xlab="Day (Sunday -> Monday)")
-
-# Subset weekdays v.s. weekends
-weekday.indices <- which(day.of.week==0 | day.of.week==6) # Sunday (0) or Saturday (6)
-weekend.indices <- which(day.of.week > 0 & day.of.week < 6) # Weekdays
-stopifnot( length(starttime) == ( length(weekday.indices) + length(weekend.indices)) )
-
-weekday.list <- matched[weekday.indices]
-weekend.list <- matched[weekend.indices]
-stopifnot( (length(weekday.list)+length(weekend.list)) == length(matched) )
-
-# That gives lists of traces. Need to convert these into a single lines dataframe. See 'create.single.line' defined earlier.
-weekday.routes <- create.single.line(weekday.list)
-weekend.routes <- create.single.line(weekend.list)
-
-# Also make a single SpatialLines object for mapping (and write it out)
-weekday.routes.oneline <-  create.single.line(weekday.list, oneline = TRUE)
-weekend.routes.oneline <- create.single.line(weekend.list, oneline = TRUE)
-writeOGR(SpatialLinesDataFrame(weekday.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekday_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
-writeOGR(SpatialLinesDataFrame(weekend.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekend_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
-
-# Make a plot now.
-
-par(mfrow=c(1,2))
-#plot(relative.longest, main="longest")
-#plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
-plot(study.area, border="blue")
-plot(weekend.routes, main="weekend routes", add=T)
-plot(study.area, add=T, border="blue")
-#plot(relative.shortest, main="not longest")
-#plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
-plot(study.area, border="blue")
-plot(weekday.routes, main="weekday routes", add=T)
-plot(study.area, add=T, border="blue")
-
-```
-
-
-
 
 ## Weekday/weekend v.s. symmetry
 
@@ -1975,7 +1920,7 @@ Begin by creating subsets for the absolute longest and shortest trips.
 # Filter on absolute trip length
 
 
-XXXX HERE
+
 
 # First need to decide what constitutes a 'long' and 'short' trip. The data are quite skewed, so use the median as it is less affected by extreme values.
 matched.lengths.mean <- mean(matched.lengths)
