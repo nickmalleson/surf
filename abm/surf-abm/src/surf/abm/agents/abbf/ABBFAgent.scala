@@ -2,7 +2,8 @@ package surf.abm.agents.abbf
 
 import sim.engine.SimState
 import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
-import surf.abm.agents.abbf.activities.{Activity, FixedActivity, SleepActivity, WorkActivity}
+import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
+import surf.abm.agents.abbf.activities._
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.environment.Building
 import surf.abm.exceptions.RoutingException
@@ -57,9 +58,26 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //this.activities = this.activities.map(m => (m._1, m._1.calcIntensity(1.01, m._2)) )
 
     // TODO: Maybe messing around with the activities should be done less frequently. Less computationally expensive and also stops frequent activity changes
-
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
-
+    /*for (a <- this.activities){
+      if (a.toString == "Some(ShopActivity)") {
+        a += 1d / (3d * ABBFAgent.ticksPerDay)
+      } else {
+        a += 1d / ABBFAgent.ticksPerDay
+      }
+    }
+    if (this.currentActivity.isDefined) {
+      //printf("%s\n", this.currentActivity.toString)
+      if (this.currentActivity.toString == "Some(ShopActivity)") {
+        //ABBFAgent.BACKGROUND_INCREASE = 1d / (3d * ABBFAgent.ticksPerDay)
+        ABBFAgent.REDUCE_ACTIVITY = 20d / (3d * ABBFAgent.ticksPerDay)
+        //printf("Shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
+      } else {
+        ABBFAgent.REDUCE_ACTIVITY = 2.5 / ABBFAgent.ticksPerDay
+        //ABBFAgent.REDUCE_ACTIVITY = 2.5 * ABBFAgent.BACKGROUND_INCREASE
+        //printf("Not shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
+      }
+    }*/
     this.activities.foreach(a => {
       a += ABBFAgent.BACKGROUND_INCREASE
     })
@@ -101,6 +119,11 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
+      /*if (highestActivity.toString == "Some(ShopActivity)") {
+        highestActivity -= 20d / (3d * ABBFAgent.ticksPerDay)
+      } else {
+        highestActivity -= 2.5 / ABBFAgent.ticksPerDay
+      }*/
       highestActivity -= (ABBFAgent.REDUCE_ACTIVITY) // (For now, just decrease at a constant rate proportional to increase)
     }
 

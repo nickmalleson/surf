@@ -68,7 +68,7 @@ object ABBFAgentLoaderOtley {
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
+    val filename = "./data/" + dataDir + "/oa_flows-study_area_test.csv"
     LOG.info(s"Reading agents from file: '$filename'")
     // Get line and line number as a tuple
     for ((lineStr, i) <- Source.fromFile(filename).getLines().zipWithIndex) {
@@ -86,6 +86,7 @@ object ABBFAgentLoaderOtley {
         val orig: String = line(1).replace("\"", "") // (get rid of quotes)
         val dest: String = line(2).replace("\"", "")
         val flow: Int = line(3).toInt
+        //val flow = 1
         //Array(orig, dest, flow).foreach( x => println("\t"+x) )
 
         // Define the possible building types...
