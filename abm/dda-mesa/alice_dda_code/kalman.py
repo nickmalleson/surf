@@ -5,9 +5,19 @@ Created on Fri Dec 16 13:55:06 2016
 @author: Alice
 """
 
-# Note: will need pachages 'pandas' and 'pillow'
+# Note: will need packages 'pandas' and 'pillow'
+
+
+# Move to a directory on Nick's laptop
+from os.path import expanduser
+home = expanduser("~")
+import os
+os.chdir(home+'/research_not_syncd/git_projects/surf/abm/dda-mesa/alice_dda_code/')
+
 import numpy as np
 import workingcameras as cam
+
+
 
 
 np.random.seed(3)
