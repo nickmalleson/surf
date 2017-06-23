@@ -59,28 +59,29 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
     // TODO: Maybe messing around with the activities should be done less frequently. Less computationally expensive and also stops frequent activity changes
     // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
-    /*for (a <- this.activities){
-      if (a.toString == "Some(ShopActivity)") {
+    for (a <- this.activities){
+      //printf("a = %s \n",a.toString())
+      if (a.toString == "ShopActivity") {
         a += 1d / (3d * ABBFAgent.ticksPerDay)
       } else {
         a += 1d / ABBFAgent.ticksPerDay
       }
     }
     if (this.currentActivity.isDefined) {
-      //printf("%s\n", this.currentActivity.toString)
+      //printf("currentAct = %s \n",this.currentActivity.toString)
       if (this.currentActivity.toString == "Some(ShopActivity)") {
         //ABBFAgent.BACKGROUND_INCREASE = 1d / (3d * ABBFAgent.ticksPerDay)
-        ABBFAgent.REDUCE_ACTIVITY = 20d / (3d * ABBFAgent.ticksPerDay)
+        ABBFAgent.REDUCE_ACTIVITY = 40d / (3d * ABBFAgent.ticksPerDay)
         //printf("Shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
       } else {
         ABBFAgent.REDUCE_ACTIVITY = 2.5 / ABBFAgent.ticksPerDay
         //ABBFAgent.REDUCE_ACTIVITY = 2.5 * ABBFAgent.BACKGROUND_INCREASE
         //printf("Not shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
       }
-    }*/
-    this.activities.foreach(a => {
+    }
+    /*this.activities.foreach(a => {
       a += ABBFAgent.BACKGROUND_INCREASE
-    })
+    })*/
     //this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
 
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
@@ -119,12 +120,14 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      /*if (highestActivity.toString == "Some(ShopActivity)") {
-        highestActivity -= 20d / (3d * ABBFAgent.ticksPerDay)
+      if (highestActivity().toString == "ShopActivity") {
+        //printf("Shop: %s\n",highestActivity().toString())
+        highestActivity -= 40d / (3d * ABBFAgent.ticksPerDay)
       } else {
+        //printf("Else: %s\n",highestActivity().toString())
         highestActivity -= 2.5 / ABBFAgent.ticksPerDay
-      }*/
-      highestActivity -= (ABBFAgent.REDUCE_ACTIVITY) // (For now, just decrease at a constant rate proportional to increase)
+      }
+      //highestActivity -= (ABBFAgent.REDUCE_ACTIVITY) // (For now, just decrease at a constant rate proportional to increase)
     }
 
   }
@@ -226,12 +229,12 @@ object ABBFAgent {
   /**
     * Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
     */
-  private val BACKGROUND_INCREASE = (1d / ticksPerDay)
+  private var BACKGROUND_INCREASE = (1d / ticksPerDay)
 
   /**
     * Amount to reduce the intensity by if the agent is satisfying it
     */
-  private val REDUCE_ACTIVITY = BACKGROUND_INCREASE * 2.5
+  private var REDUCE_ACTIVITY = BACKGROUND_INCREASE * 2.5
 
 
 
