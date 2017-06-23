@@ -1662,7 +1662,9 @@ dev.off()
 rm(x1,x2,y)
 ```
 
-## Shortest path choice v.s. symmetry
+## Shortest path choice v.s. symmetry (aka 'deviation')
+
+**NOTE: in the paper this analysis is now termed 'deviation' (i.e. deviation from the shortest path) rather than longest/shortest**
 
 It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
 
@@ -1810,9 +1812,9 @@ result1.percentage.asymmetry.shortest <- calculate.asymmetry(result1.matrix.shor
 
 The asymmetry values for longest and shortest paths are:
 
- - For *Longest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.longest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.longest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.longest,2) * 100`% of the time.
+ - For *Longest* (i.e. the most deviation): The percentage asymmetry is `r round(result1.percentage.asymmetry.longest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.longest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.longest,2) * 100`% of the time.
 
- - For *Shortest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
+ - For *Shortest* (i.e. the least deviation): The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
 
 
 
@@ -2026,9 +2028,9 @@ result1.percentage.asymmetry.absolute.shortest <- calculate.asymmetry(result1.ma
 
 Asymettry values:
 
- - Asymetry for absolute **longest** routes: `r result1.percentage.asymmetry.absolute.longest`
+ - Asymmetry for absolute **longest** routes: `r result1.percentage.asymmetry.absolute.longest`
 
- - Asymetry for absolute **shortest** routes: `r result1.percentage.asymmetry.absolute.shortest`
+ - Asymmetry for absolute **shortest** routes: `r result1.percentage.asymmetry.absolute.shortest`
 
 
 
