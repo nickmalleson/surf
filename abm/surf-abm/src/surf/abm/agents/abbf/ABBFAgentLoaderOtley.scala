@@ -86,6 +86,7 @@ object ABBFAgentLoaderOtley {
         val orig: String = line(1).replace("\"", "") // (get rid of quotes)
         val dest: String = line(2).replace("\"", "")
         val flow: Int = line(3).toInt
+        //val flow = 1
         //Array(orig, dest, flow).foreach( x => println("\t"+x) )
 
         // Define the possible building types...

@@ -23,8 +23,8 @@ object GISFunctions {
   /**
     * Find the nearest object to the given input coordinate. It is used quite a lot to do agent routing.
     *
-    * For efficiency, the function needs to decide on an appropraiate search radius. Too large and it becomes very
-    * inneficient, too small and the radius needs to be increased a few times before the nearest object is found
+    * For efficiency, the function needs to decide on an appropriate search radius. Too large and it becomes very
+    * inefficient, too small and the radius needs to be increased a few times before the nearest object is found
     * which is also inefficient. To get round this problem, each time the function is called it stores the final
     * distance that it calculates. Then after x calls, it sets the radius to a value such that most queries will
     * be satisfied, and it will only need to be increased on occasion.
@@ -67,8 +67,8 @@ object GISFunctions {
               oldRadius, oldDenominator, radius, GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR))
           }
           else {
-            LOG.warn("Increasing search radius from %s(%s) to %s(%s).\n\tThis is very inefficient if it happens regularly.".format(
-              oldRadius, oldDenominator, radius, currentDenominator))
+            //LOG.warn("Increasing search radius from %s(%s) to %s(%s).\n\tThis is very inefficient if it happens regularly.".format(
+              //oldRadius, oldDenominator, radius, currentDenominator))
           }
         }
 
@@ -100,14 +100,14 @@ object GISFunctions {
     assert(minDist < Double.MaxValue )
     assert(radius < SurfABM.mbr.getArea)
 
-    if (initRadius) { // We havn't found the optimal radius yet. Store the distance.
+    if (initRadius) { // We haven't found the optimal radius yet. Store the distance.
       distanceList += minDist
 
       if (numCalls > NUM_CALLS_TO_INIT) { // This has been called enough times, find the optimal radius
 
         // println(distanceList.mkString("\n"))
 
-        // There are a few posibilities for calculating the 'optimal' radius. We could use the mean, but the distances
+        // There are a few possibilities for calculating the 'optimal' radius. We could use the mean, but the distances
         // are probably positively skewed so the mean might be unnecessarily large.
         // For now just go with twice the median (still smaller than mean in my tests) and can experiment later
 

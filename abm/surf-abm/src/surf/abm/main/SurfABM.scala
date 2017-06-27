@@ -185,7 +185,7 @@ object SurfABM extends Serializable {
           }
           //val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
           // Check if the ID has been added already or not
-          println(buildingID, buildingType)
+          //println(buildingID, buildingType)
           if (tempIDMap.contains(buildingID)) {
             println("Warning: The building ID "+buildingID+" has been found more than once!")
           }
