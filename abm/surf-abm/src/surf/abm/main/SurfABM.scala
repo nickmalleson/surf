@@ -125,7 +125,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, shopGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, shopGeoms, lunchGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -148,17 +148,18 @@ object SurfABM extends Serializable {
         SurfABM.LOG.info(s"Reading GIS data for the environment from ${dataDir}")
 
         // Start with buildings
-        val tempBuildings = new GeomVectorField(WIDTH, HEIGHT);
-        val buildings = new GeomVectorField(WIDTH, HEIGHT);
+        val tempBuildings = new GeomVectorField(WIDTH, HEIGHT)
+        val buildings = new GeomVectorField(WIDTH, HEIGHT)
         val shops = new GeomVectorField(WIDTH, HEIGHT)
+        val lunchPlaces = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
         // Read the shapefile (path relative from 'surf' directory)
-        val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL();
-        LOG.debug("Reading buildings  from file: " + bldgURI + " ... ");
-        ShapeFileImporter.read(bldgURI, tempBuildings, attributes);
-        LOG.debug("...read %d buildings".format(tempBuildings.getGeometries.size))
+        val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL()
+        LOG.debug("Reading buildings  from file: " + bldgURI + " ... ")
+        ShapeFileImporter.read(bldgURI, tempBuildings, attributes)
+        //LOG.debug("...read %d buildings".format(tempBuildings.getGeometriesSize))
 
         // Now cast all buildings from MasonGeometrys to SurfGeometrys
         LOG.debug("Casting buildings to SurfGeometry objects")
@@ -198,6 +199,9 @@ object SurfABM extends Serializable {
             buildings.addGeometry(s)
             if (buildingType == "SHOP") {
               shops.addGeometry(s)
+            }
+            if (buildingType == "CAFE" || buildingType == "FF") {
+              lunchPlaces.addGeometry(s)
             }
           }
         }
@@ -332,9 +336,10 @@ object SurfABM extends Serializable {
 
 
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
-        buildings.setMBR(MBR);
-        roads.setMBR(MBR);
+        buildings.setMBR(MBR)
+        roads.setMBR(MBR)
         shops.setMBR(MBR)
+        lunchPlaces.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
@@ -365,7 +370,7 @@ object SurfABM extends Serializable {
         LOG.info("Finished initialising model environment")
 
         // Return the layers
-        (buildings, shops, b_ids, roads, network, junctions, MBR)
+        (buildings, shops, lunchPlaces, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {

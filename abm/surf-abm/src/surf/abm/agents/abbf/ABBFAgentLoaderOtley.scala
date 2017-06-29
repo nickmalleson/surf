@@ -2,7 +2,7 @@ package surf.abm.agents.abbf
 
 import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
-import surf.abm.agents.abbf.activities.ActivityTypes.{SHOPPING, SLEEPING, WORKING}
+import surf.abm.agents.abbf.activities.ActivityTypes.{LUNCHING, DINNER, GOING_OUT, SHOPPING, SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
 import surf.abm.environment.{Building, Junction}
 import surf.abm.main.{BUILDING_FIELDS, GISFunctions, SurfABM, SurfGeometry}
@@ -93,6 +93,11 @@ object ABBFAgentLoaderOtley {
         val small: String = "SMALL"
         val large: String = "LARGE"
         val shopType: String = "SHOP"
+        val cafeType: String = "CAFE"
+        val restType: String = "REST" // restaurant
+        val pubType: String = "PUB"
+        val ffType: String = "FF" // fastfood
+        val barType: String = "BAR"
 
         LOG.debug(s"Origin: '$orig', Destination: '$dest', Flow: '$flow'")
         // Now create 'flow' agents who live in 'orig' and work in 'dest'
@@ -104,11 +109,23 @@ object ABBFAgentLoaderOtley {
           val workListSmallBool = oaBuildingIDMap.contains(Set(dest, small))
           val workListLargeBool = oaBuildingIDMap.contains(Set(dest, large))
           val workListShopBool = oaBuildingIDMap.contains(Set(dest, shopType))
-          if (workListSmallBool || workListLargeBool || workListShopBool) {
+          val workListCafeBool = oaBuildingIDMap.contains(Set(dest, cafeType))
+          val workListRestBool = oaBuildingIDMap.contains(Set(dest, restType))
+          val workListPubBool = oaBuildingIDMap.contains(Set(dest, pubType))
+          val workListFFBool = oaBuildingIDMap.contains(Set(dest,  ffType))
+          val workListBarBool = oaBuildingIDMap.contains(Set(dest, barType))
+          if (workListSmallBool || workListLargeBool || workListShopBool || workListCafeBool ||
+            workListRestBool || workListPubBool || workListFFBool || workListBarBool) {
             val workList = List.concat(
               if (workListSmallBool) oaBuildingIDMap(Set(dest,small)).toList else List.empty,
               if (workListLargeBool) oaBuildingIDMap(Set(dest,large)).toList else List.empty,
-              if (workListShopBool) oaBuildingIDMap(Set(dest,shopType)).toList else List.empty)
+              if (workListShopBool) oaBuildingIDMap(Set(dest,shopType)).toList else List.empty,
+              if (workListCafeBool) oaBuildingIDMap(Set(dest,cafeType)).toList else List.empty,
+              if (workListRestBool) oaBuildingIDMap(Set(dest,restType)).toList else List.empty,
+              if (workListPubBool) oaBuildingIDMap(Set(dest,pubType)).toList else List.empty,
+              if (workListFFBool) oaBuildingIDMap(Set(dest,ffType)).toList else List.empty,
+              if (workListBarBool) oaBuildingIDMap(Set(dest,barType)).toList else List.empty)
+
 
             //val shopList = oaBuildingIDMap(orig).toList
             for (agent <- 0 until flow) {
@@ -120,6 +137,7 @@ object ABBFAgentLoaderOtley {
               val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
               val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
               val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
+              val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](work, SurfABM.lunchGeoms)
 
               val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
               val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
@@ -127,7 +145,7 @@ object ABBFAgentLoaderOtley {
               //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
 
               //makeAgent(state, home, work)
-              makeAgent(state, home, work, shop)
+              makeAgent(state, home, work, shop, lunchLocation)
             }
           }
         }
@@ -141,7 +159,7 @@ object ABBFAgentLoaderOtley {
 
   /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
   //def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
-  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
+  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building], lunchLocation: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
 
@@ -153,7 +171,9 @@ object ABBFAgentLoaderOtley {
     )
     // Work time profile is 0 before 6 and after 10, and 1 between 10-4 with a bit of randomness thrown in
     val rnd = state.random.nextDouble() * 4d
-    // A random number between 0 and 2
+    // A random number between 0 and 2 (remark Tomas: shouldn't that be between 0 and 4?)
+    val rndPreference = state.random.nextDouble()
+    // Test with a random preference for leisure activities. Should become activity specific.
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
@@ -171,6 +191,14 @@ object ABBFAgentLoaderOtley {
     // Was before a constant, low intensity. Is now a test with higher intensities in late afternoon and early evening.
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
 
+    // LUNCHING
+    val lunchPlace = Place(
+      location = lunchLocation,
+      activityType = LUNCHING,
+      openingTimes = null      // not really necessary as activity intensity will be 0 outside lunch hours
+    )
+    val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndPreference), (12d + rnd/2, rndPreference), (15d, 0d)))
+    val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, place = lunchPlace)
 
     // School
     /*val schoolPlace = Place(
@@ -192,7 +220,7 @@ object ABBFAgentLoaderOtley {
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     // TODO ADD IN SHOPPING ACTIVITY
-    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
+    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity )
     //val activities = Set[Activity](workActivity, atHomeActivity)
 
     // Finally tell the agent abount them
