@@ -113,7 +113,10 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     if (!simulate) {
       this._backgroundIntensity -= d
       if (this.intensity() < 0) {
-        throw new IllegalArgumentException(s"Overall intenity of activity ${this.toString} for agent ${this.agent.toString()} has dropped below 0")
+        //throw new IllegalArgumentException(s"Overall intensity of activity ${this.toString} for agent ${this.agent.toString()} has dropped below 0")
+
+        // quick temporary fix in order to make total intensity exactly 0 and not less (good fix would be that all intensity types are always positive)
+        this._backgroundIntensity = -this.timeProfile.calcIntensity(Clock.currentHour()) 
       }
       // Also remember how much the activity has gone
       this._currentIntensityDecrease = this._currentIntensityDecrease + d

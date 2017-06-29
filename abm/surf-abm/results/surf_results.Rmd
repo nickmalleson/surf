@@ -31,11 +31,11 @@ AGENT_ID <- -1
 
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
-scenario.dir <- paste("./out/",SCENARIO,"/",sep="") # This is the relative directory of the scenario 
-setwd("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/") # This is only required when running directly in R(Studio)
+scenario.dir <- paste("./out/",SCENARIO,sep="") # This is the relative directory of the scenario 
+setwd("C:/Code/surf/abm/surf-abm/results") # This is only required when running directly in R(Studio)
 runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
-wd <- paste(scenario.dir, run, "/", sep="") # The new working directory
+wd <- paste(scenario.dir, "/", run, sep="") # The new working directory
 print(paste("Using working directory of most recent model of type",SCENARIO,":",wd))
 #setwd(wd)
 
@@ -67,8 +67,8 @@ Read the data on the agent locations and the activities of the agents at each ti
 
 
 ```{r readData}
-agents <- read.csv(paste(wd,'agents.csv',sep=""))
-acts <- read.csv(paste(wd,'agent-activities.csv',sep=""))
+agents <- read.csv(paste(wd,'/agents.csv',sep=""))
+acts <- read.csv(paste(wd,'/agent-activities.csv',sep=""))
 
 # Make proper time columns. Text format is "2011-01-01T01:10"
 
