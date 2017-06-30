@@ -17,6 +17,7 @@ build/
 # Python stuff:
 
 __pycache__/
+.ipynb_checkpoints/
 
 # Compiled python modules.
 *.pyc
@@ -109,6 +110,8 @@ temp_nltk_stuff/
 *.iws
 
 
-# ********** **********
 
+
+# ********** **********
+# ********** **********
 # ********** **********

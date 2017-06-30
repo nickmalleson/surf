@@ -58,18 +58,23 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //this.activities = this.activities.map(m => (m._1, m._1.calcIntensity(1.01, m._2)) )
 
     // TODO: Maybe messing around with the activities should be done less frequently. Less computationally expensive and also stops frequent activity changes
-    // Update all activity intensities. They should go up by one unit per day overall (TEMPORARILY)
-    // Now an activity-specific test. These settings should be moved to activity classes...
+    // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
+    // which, in turn, calls the activity's backgroundIncrease() function, which can be overidden by subclasses.
     for (a <- this.activities){
       //printf("a = %s \n",a.toString())
+      a ++ // Increase this activity
+      /*
       if (a.toString == "ShopActivity") {
         a += 1d / (3d * ABBFAgent.ticksPerDay)
       } else if (a.toString == "LunchActivity") {
         // don't increase => lunch is determined with random time intensity that stays 0 outside lunch hours
       } else {
         a += 1d / ABBFAgent.ticksPerDay
-      }
+      }*/
     }
+
+    // XXXX Tomas I'm not sure what this bit does:
+
     if (this.currentActivity.isDefined) {
       //printf("currentAct = %s \n",this.currentActivity.toString)
       if (this.currentActivity.toString == "Some(ShopActivity)" || this.currentActivity.toString == "Some(LunchActivity)") {
@@ -93,7 +98,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     if (
       ( this.currentActivity.isDefined ) &&
       ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE ) &&
-      ( this.currentActivity.get.-=(d=ABBFAgent.REDUCE_ACTIVITY, simulate=true) ) // Check that the intensity can be reduced
+      ( this.currentActivity.get.--(simulate=true) ) // Check that the intensity can be reduced
       ) {
       Agent.LOG.debug(s"Activity (${this.currentActivity.toString}) increase for ${this.toString()} = ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE}")
     }
@@ -123,14 +128,18 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
-      if (highestActivity().toString == "ShopActivity" || highestActivity().toString == "LunchActivity") {
+      /*if (highestActivity().toString == "ShopActivity" || highestActivity().toString == "LunchActivity") {
         //printf("Shop: %s\n",highestActivity().toString())
         highestActivity -= 40d / (3d * ABBFAgent.ticksPerDay)
       } else {
         //printf("Else: %s\n",highestActivity().toString())
         highestActivity -= 2.5 / ABBFAgent.ticksPerDay
       }
-      //highestActivity -= (ABBFAgent.REDUCE_ACTIVITY) // (For now, just decrease at a constant rate proportional to increase)
+      */
+
+      // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
+      // (the '--' function just calls that)
+      highestActivity--(simulate = false)
     }
 
   }
@@ -222,22 +231,12 @@ object ABBFAgent {
   assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 
   /**
-    * The number of minutes that agents should spend commuting
+    * The number of minutes that agents should spend commuting (used temporarily to balance the requirements of agents
+    * who have to travel long distances. At some point commute will depend on the route and method of travel, and
+    * the activities will have to be balanced more intelligently so that
     */
   private val COMMUTE_TIME_MINS = 30d
 
-
-
-  private val ticksPerDay = 1440d / Clock.minsPerTick.toDouble // Minutes per day / minutes per tick = ticks per day
-  /**
-    * Amount to increase intensity by at each iteration. Set so that each activity increases by 1.0 each day
-    */
-  private var BACKGROUND_INCREASE = (1d / ticksPerDay)
-
-  /**
-    * Amount to reduce the intensity by if the agent is satisfying it
-    */
-  private var REDUCE_ACTIVITY = BACKGROUND_INCREASE * 2.5
 
 
 
