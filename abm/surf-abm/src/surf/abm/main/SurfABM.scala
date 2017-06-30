@@ -463,6 +463,9 @@ object SurfABM extends Serializable {
     }
   }
 
+  // Convenience to know how many ticks per day there are
+  val ticksPerDay = 1440d / Clock.minsPerTick.toDouble
+
 
   def apply(l:Long) = new SurfABM(l)
 

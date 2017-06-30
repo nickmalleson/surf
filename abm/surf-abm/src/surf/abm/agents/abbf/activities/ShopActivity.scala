@@ -3,6 +3,7 @@ package surf.abm.agents.abbf.activities
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
+import surf.abm.main.SurfABM
 
 
 /**
@@ -80,4 +81,22 @@ case class ShopActivity(
     this._currentIntensityDecrease = 0d
     //throw new NotImplementedError("Have not implemented Shopping activity yet")
   }
+
+
+  /**
+    * The amount that the shopping activity should increase at each iteration
+    * @return
+    */
+  override def backgroundIncrease(): Double = {
+    return 1d / (3d * SurfABM.ticksPerDay)
+  }
+
+  /**
+    * The amount that a shopping activity will go down by if an agent is shopping.
+    * @return
+    */
+  override def reduceActivityAmount(): Double = {
+    return 40d / (3d * SurfABM.ticksPerDay)
+  }
+
 }
