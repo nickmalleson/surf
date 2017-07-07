@@ -84,18 +84,18 @@ case class LunchActivity(
   }
 
   /**
-    * The amount that the shopping activity should increase at each iteration
+    * The amount that the lunch activity should increase at each iteration
     * @return
     */
   override def backgroundIncrease(): Double = {
-    return 0d
+    return 1d / (10d * SurfABM.ticksPerDay)
   }
 
   /**
-    * The amount that a shopping activity will go down by if an agent is shopping.
+    * The amount that the lunch activity will go down by if an agent is lunching.
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 80d / (3d * SurfABM.ticksPerDay)
+    return 100d / (3d * SurfABM.ticksPerDay)
   }
 }
