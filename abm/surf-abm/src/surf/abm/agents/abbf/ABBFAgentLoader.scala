@@ -56,7 +56,14 @@ object ABBFAgentLoader {
       val atHomePlace = Place(home, SLEEPING, null)
       val atHomeActivity = SleepActivity(TimeProfile(Array( (0d, 1d), (9d, 0d), (23d, 1d) )), agent=a)
       //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
-      atHomeActivity.+=(0.1d*rnd)// Make this the most powerful activity to begin with, but a bit random
+      // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
+      // (repeatedly call the ++ function to increase it)
+      for (j <- 1.until((rnd * 30).toInt) ) {
+        atHomeActivity.++()
+        if(i % 10 == 0 && j % 10 == 0) {
+          printf("Activ for agent %d at iteration %d increased to %5.3f",i,j,atHomeActivity)
+        }
+      }
 
 
       // Add these activities to the agent's activity list. At Home is the strongest initially.
@@ -64,7 +71,7 @@ object ABBFAgentLoader {
       //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity )
       val activities = Set[Activity](workActivity , atHomeActivity )
 
-      // Finally tell the agent abount them
+      // Finally tell the agent about them
       a.activities = activities
 
 
