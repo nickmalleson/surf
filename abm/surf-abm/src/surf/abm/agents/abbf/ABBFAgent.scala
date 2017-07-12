@@ -118,7 +118,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
       // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
       // (the '--' function just calls that)
-      highestActivity--(simulate = false)
+      highestActivity.--()
     }
 
   }
