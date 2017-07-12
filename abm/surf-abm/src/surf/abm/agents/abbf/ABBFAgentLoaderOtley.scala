@@ -176,7 +176,7 @@ object ABBFAgentLoaderOtley {
     // Test with a random preference for leisure activities. Should become activity specific.
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
-    var workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
+    val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
     // Shopping place should be a supermarket or a convenience store of OpenStreetMaps
     val shoppingPlace = Place(
@@ -227,7 +227,7 @@ object ABBFAgentLoaderOtley {
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity )
     //val activities = Set[Activity](workActivity, atHomeActivity)
 
-    // Finally tell the agent abount them
+    // Finally tell the agent about them
     a.activities = activities
 
 
