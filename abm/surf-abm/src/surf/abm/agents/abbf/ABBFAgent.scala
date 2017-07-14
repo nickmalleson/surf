@@ -61,32 +61,10 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
     // which, in turn, calls the activity's backgroundIncrease() function, which can be overidden by subclasses.
     for (a <- this.activities){
-      //printf("a = %s \n",a.toString())
       a ++ // Increase this activity
-      /*
-      if (a.toString == "ShopActivity") {
-        a += 1d / (3d * ABBFAgent.ticksPerDay)
-      } else if (a.toString == "LunchActivity") {
-        // don't increase => lunch is determined with random time intensity that stays 0 outside lunch hours
-      } else {
-        a += 1d / ABBFAgent.ticksPerDay
-      }*/
     }
 
-    // XXXX Tomas I'm not sure what this bit does:
-
-    if (this.currentActivity.isDefined) {
-      //printf("currentAct = %s \n",this.currentActivity.toString)
-      if (this.currentActivity.toString == "Some(ShopActivity)" || this.currentActivity.toString == "Some(LunchActivity)") {
-        //ABBFAgent.BACKGROUND_INCREASE = 1d / (3d * ABBFAgent.ticksPerDay)
-        ABBFAgent.REDUCE_ACTIVITY = 40d / (3d * ABBFAgent.ticksPerDay)
-        //printf("Shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
-      } else {
-        ABBFAgent.REDUCE_ACTIVITY = 2.5 / ABBFAgent.ticksPerDay
-        //ABBFAgent.REDUCE_ACTIVITY = 2.5 * ABBFAgent.BACKGROUND_INCREASE
-        //printf("Not shopping: reduce with %7.5f \n", ABBFAgent.REDUCE_ACTIVITY)
-      }
-    }
+    // old code to increase all activities with same amount
     /*this.activities.foreach(a => {
       a += ABBFAgent.BACKGROUND_INCREASE
     })*/
@@ -128,6 +106,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
+      // old code to decrease activity
       /*if (highestActivity().toString == "ShopActivity" || highestActivity().toString == "LunchActivity") {
         //printf("Shop: %s\n",highestActivity().toString())
         highestActivity -= 40d / (3d * ABBFAgent.ticksPerDay)
@@ -139,7 +118,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
       // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
       // (the '--' function just calls that)
-      highestActivity--(simulate = false)
+      highestActivity.--()
     }
 
   }

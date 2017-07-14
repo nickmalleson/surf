@@ -68,7 +68,7 @@ object ABBFAgentLoaderOtley {
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
+    val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv"
     LOG.info(s"Reading agents from file: '$filename'")
     // Get line and line number as a tuple
     for ((lineStr, i) <- Source.fromFile(filename).getLines().zipWithIndex) {
@@ -176,7 +176,7 @@ object ABBFAgentLoaderOtley {
     // Test with a random preference for leisure activities. Should become activity specific.
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
-    var workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
+    val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
     // Shopping place should be a supermarket or a convenience store of OpenStreetMaps
     val shoppingPlace = Place(
@@ -217,8 +217,8 @@ object ABBFAgentLoaderOtley {
     //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
-    for (i <- 1.until((rnd * 1000).toInt) ) {
-      atHomeActivity++
+    for (i <- 1.until((rnd * 30).toInt) ) {
+      atHomeActivity.++()
     }
 
 
@@ -227,7 +227,7 @@ object ABBFAgentLoaderOtley {
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity )
     //val activities = Set[Activity](workActivity, atHomeActivity)
 
-    // Finally tell the agent abount them
+    // Finally tell the agent about them
     a.activities = activities
 
 
