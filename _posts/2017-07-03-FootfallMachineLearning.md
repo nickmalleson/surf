@@ -59,17 +59,21 @@ The right figure shows how well the model actually made its predictions. On the 
 A benefit with random forest models, over some other machine learning techniques, is that it is possible to extract information about the input parameters ('features') that are the most _important_. This doesn't tell us whether they are linked with _more_ or _less_ footfall, but does tell us which are the most useful for predicting footfall. The list below shows the top 10. It is important to note that this list is not definitive as there are a number of factors that can affect the importance and if we had chosen another model we would have found slightly different results, but on the whole the variables below were fairly consistent across all of the models tested. The weather variables appear to be the most important, which isn't especially surprising, but is still interesting.
  
 <table>
-<thead><td>Variable</td><td>Relative Importance</td></thead>
-<tr><td>Mean daily temperature</td><td>1142</td></tr>
-<tr><td>Mean daily rainfall</td><td> 383 </td></tr>
-<tr><td>Monday</td><td>131</td></tr>
-<tr><td>2013</td><td>131</td></tr>
-<tr><td>Saturday</td><td>130</td></tr>
-<tr><td>2016</td><td>130</td></tr>
-<tr><td>After Trinity opened</td><td>123</td></tr>
-<tr><td>Thursday</td><td>122</td></tr>
-<tr><td>Tuesday</td><td>116</td></tr>
-<tr><td>School holiday</td><td>115</td></tr>
+	<thead>
+		<tr><th>Variable</th><th>Relative Importance</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Mean daily temperature</td><td>1142</td></tr>
+		<tr><td>Mean daily rainfall</td><td> 383 </td></tr>
+		<tr><td>Monday</td><td>131</td></tr>
+		<tr><td>2013</td><td>131</td></tr>
+		<tr><td>Saturday</td><td>130</td></tr>
+		<tr><td>2016</td><td>130</td></tr>
+		<tr><td>After Trinity opened</td><td>123</td></tr>
+		<tr><td>Thursday</td><td>122</td></tr>
+		<tr><td>Tuesday</td><td>116</td></tr>
+		<tr><td>School holiday</td><td>115</td></tr>
+	</tbody>
 </table>
 
 ### Analysing Events

@@ -60,7 +60,6 @@
                         <p>Tracking people (HABITS)</p>
                         <p>Agent-Based modelling</p>
                         <p>Data assimiliation</p>
-                        <p class="l2">Major hurdle: <i>real time</i> calibration</p>
                         <p>Towards a real-time city simulation ... </p>
                         
                     </div>
@@ -85,7 +84,10 @@
                     <p>This talk presents some LIDA projecsts that aim to make use of these data</p>
                 </section>
                 
-                 <section id="Context-UrbanFlows" data-background-image="../figures/XXXX-TRAFALGAR SQUARE">
+                <section data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop"
+                         id="Context-UrbanFlows">                     
+                     
                     <div class="whitebackground2">
                         <h2>How many people are there in Leicester Square right now?</h2>
                         
@@ -112,13 +114,153 @@
                 <section id="MachineLearningFootfall">
                     
                     <h2>Modelling Footfall with Machine Learning</h2>
-                    
-                    <p>XXXX</p>
-                    
+                    <p>Aim: to better understand footfall in Leeds city centre, using computer models and footfall camera data</p>
+                    <p>Methods</p>
+                    <p class="l2">Data analysis &amp; visualisation</p>
+                    <p class="l2">Machine learning</p>
+                    <p>Ouctomes</p>                    
+                    <p class="l2">Analysis of changes in footfall patterns over time</p>
+                    <p class="l2">A model of footfall, able to quantify the success of events</p>
+                    <p class="l2">Indications of most important drivers</p>
+
                 </section>
                 
                 
+                <section id="MLFootfall-data">
+                    <h2>Modelling Footfall with ML</h2>
+                    <figure class="right">
+                        <img data-src="../figures/lcc-footfall/camera_locations.png", alt="Locations of CCTV cameras"/>
+                        <figcaption>Locations of the footfall cameras in Leeds</figcaption>
+                    </figure>
+                    
+                    <h3>Footfall Data</h3>
+                    
+                    <p>8 cameras installed between 2007 and 2009</p>
+                    <p>Track movement of people through their field of vision</p>
+                    <p>Provide counts of number of passers-by per hour</p>
+                    <p>Cover a relatively small area of the city centre, not
+                    good for wider dynamics.</p>
+                    
                 
+                </section>
+                
+                <section id="MLFootfall-calendar">
+                    <img data-src="../figures/lcc-footfall/calendar.png", 
+                         alt="Calendar showing footfall patterns over a typical week "/>
+                
+                </section>
+                
+                <section id="MLFootfall-temporal_variation">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Side note: Temporal Change</h3>
+                    <p>Saw an change in proportion of people using the city</p>
+                    <p>Daytime (8am to 6pm) -> Evening (6pm to 9pm)</p>
+                    <p>Night time (9pm to 8am) unchanged</p>
+                    
+                    <img data-src="../figures/lcc-footfall/footfall_proportions.png", 
+                         alt="Change in proportions of people in the city at different times"/>
+                
+                </section>
+                
+                <section id="MLFootfall-explanatory_data">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <img class="right" data-src="../figures/lcc-footfall/people_in_the_rain.png"
+                         alt="People in the rain" />
+                    <h3>Explatory factors</h3>
+                    <p>Bank Holidays</p>
+                    <p class="l2">What type of bank holiday?</p>
+                    <p>School and University Holidays</p>
+                    <p>The weather</p>
+                    <p class="l2">Mean temperature, wind speed and rainfall</p>
+                    <p>Day of week</p>
+                    <p>Many others (not tested yet...)</p>
+                    <p class="l2">Train prices, car parking availability, business
+                    openning times, etc.</p>
+                    
+                </section>
+                
+                <section id="MLFootfall-machine_learning">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <img class="right" data-src="../figures/lcc-footfall/model_error.png" 
+                         alt="Errors from the random forest model" />
+                
+                    <h3>Machine Learning Methods</h3>
+                    <p>Attempted a number of different methods</p>
+                    <p class="l2">Mainly neural networks and random forests</p>
+                    <p class="l2">Random forest was most accurate</p>
+                    
+                </section>
+                
+                <section id="MLFootfall-feature_importance">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Feature Importance</h3>
+                    <div style="font-size:70%">
+                    <table>
+                        <thead>
+                            <tr><th>Variable</th><th>Relative Importance</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Mean daily temperature</td><td>1142</td></tr>
+                            <tr><td>Mean daily rainfall</td><td> 383 </td></tr>
+                            <tr><td>Monday</td><td>131</td></tr>
+                            <tr><td>2013</td><td>131</td></tr>
+                            <tr><td>Saturday</td><td>130</td></tr>
+                            <tr><td>2016</td><td>130</td></tr>
+                            <tr><td>After Trinity opened</td><td>123</td></tr>
+                            <tr><td>Thursday</td><td>122</td></tr>
+                            <tr><td>Tuesday</td><td>116</td></tr>
+                            <tr><td>School holiday</td><td>115</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                </section>
+                
+                
+                <section id="MLFootfall-predictive_analytics">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Predictive Analytics</h3>
+                    <div style="font-size:70%">
+                    <table>
+                        <thead>
+                            <tr><th>Event</th><th>Date</th><th>Real Footfall</th><th>Prediction</th><th>Difference (%)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Tour de France</td><td>5-Jul-14</td><td>346,180</td><td>217,277</td><td>-37</td></tr>
+                            <tr><td>Trinity Opening</td><td>21-Mar-13</td><td>279,473</td><td>187,381</td><td>-33</td></tr>
+                            <tr><td>Xmas lights 2013</td><td>07-Nov-13</td><td>193,441</td><td>153,750</td><td>-21</td></tr>
+                            <tr><td>Xmas lights 2015</td><td>12-Nov-15</td><td>175,126</td><td>160,105</td><td>-9</td></tr><tr>
+                            <tr><td>Light Night</td><td>06-Oct-16</td><td>225,660</td><td>198,025</td><td>-12</td></tr>
+                            
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            
+                            <tr><td>???</td><td>30-Dec-12</td><td>106,423</td><td>157,842</td><td>+48</td></tr>
+                            <tr><td>???</td><td>12-Apr-16</td><td>134,808</td><td>173,734</td><td>+29</td></tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+                </section>
+                
+                <section id="MLFootfall-conclusions">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Conclusion</h3>
+                    
+                    <p>Still needs some refinement, but otherwise a useful tool</p>
+                    <p>Potential for prospective analysis as well as forecasting</p>
+                    <p>Not useful for more neuanced analysis</p>
+                    <p class="l2">How should roads be re-configured to encourage pedestrians?</p>
+                    <p class="l2">Where are most visitors coming from?</p>
+                    <p class="l2">How have patterns of use in the city changed</p>
+                    <p>For this we need more detail about individual movements...</p>
+                
+                </section>
                 
                   <!-- *
                      *
@@ -130,13 +272,55 @@
                 
                 <section id="HABITS">
                     
-                    <h2>HABITS</h2>
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
                     
-                    <p>XXXX Talk about another way to capture ambient population and
-                    population flows - HABITS</p>
+                    <h3>Improved policy to mitigate pollutant and inacitivy related health burdens
+                    through new big data</h3>
+                    
+                    <p>Aim: Take new 'Track and Trace' (T&amp;T) data generated from mobile phones to
+                        support new policies to:</p>
+                    <p class="l2">Reduce the disease burden of pollution</p>
+                    <p class="l2">Encourage active travel</p>
+                    <p>Lead by the Institute for Transport Studies, in collaboration with
+                        Newcastle City Council and funded by the ESRC</p>                    
+                    <p>A more neuanced measure of population flows?</p>
                     
                 </section>
                 
+                <section id="HABITS-GoSmarter">
+                    
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    
+                    <h3>Go Smarter</h3>
+                    
+                    <p>XXXX</p>
+                </section>
+                
+                
+                <section id="HABITS-Pollution">
+                    
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    
+                    <h3>Disease Burden of Pollution</h3>
+                    
+                    <p>XXXX a few lines about the pollution work and the Urban Observatory</p>
+                    <p>Newcastle Urban Observatory</p>
+                </section>
                 
                 
                 
