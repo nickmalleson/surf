@@ -38,15 +38,15 @@ case class ShopActivity(
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising ShopActivity")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is initialising ShopActivity")
         // See if the agent is in the shop
         if (this.place.location.equalLocation(
             this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} is in the shop. Start shopping.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is in the shop. Start shopping.")
           currentAction = SHOPPING // Next iteration the agent will start to shop
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at the shop yet. Travelling there.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is not at the shop yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -55,7 +55,7 @@ case class ShopActivity(
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached the shop. Starting to shop")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached the shop. Starting to shop")
           currentAction = SHOPPING
         }
         else {
@@ -65,7 +65,7 @@ case class ShopActivity(
       }
 
       case SHOPPING => {
-        Agent.LOG.debug(s"${agent.toString()} is shopping")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is shopping")
         return true
       }
 

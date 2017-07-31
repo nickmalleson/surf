@@ -58,16 +58,16 @@ case class SleepActivity(
     // Determine what the currentAction is.
     currentAction match {
       case _ : Initialising => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising SleepActivity")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is initialising SleepActivity")
         // See if the agent is at home
 
         //if (this.agent.home.==(this.agent.location())) {
         if (this.place.location.equalLocation(this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} is at home. Starting to sleep")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is at home. Starting to sleep")
           currentAction = Sleeping() // Next iteration the agent will start to sleep
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at home. Travelling there.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is not at home. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TravellingHome()
         }
@@ -75,17 +75,17 @@ case class SleepActivity(
 
       case _ : TravellingHome => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached home. Starting to sleep.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached home. Starting to sleep.")
           currentAction = Sleeping() // Next iteration the agent will start to sleep
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is travelling home.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is travelling home.")
           agent.moveAlongPath()
         }
       } // TravellingHome
 
       case _ : Sleeping => {
-        Agent.LOG.debug(s"${agent.toString()} is sleeping")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is sleeping")
         return true
       }  // Sleeping
 
