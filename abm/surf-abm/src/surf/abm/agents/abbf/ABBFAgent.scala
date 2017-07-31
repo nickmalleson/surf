@@ -78,7 +78,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE ) &&
       ( this.currentActivity.get.--(simulate=true) ) // Check that the intensity can be reduced
       ) {
-      Agent.LOG.debug(s"Activity (${this.currentActivity.toString}) increase for ${this.toString()} = ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE}")
+      Agent.LOG.debug(s"[${state.schedule.getTime()}]Activity (${this.currentActivity.toString}) increase for ${this.toString()} = ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE}")
     }
     else {
       // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold. So now see if it should change.
@@ -90,7 +90,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       // Is the highest activity high enough to take control?
       if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
         // If not, then make the current activity None
-        Agent.LOG.debug(s"${this.toString()}: Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
+        Agent.LOG.debug(s"[${state.schedule.getTime()}]${this.toString()}: Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
         this.changeActivity(None)
         //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
         return // No point in continuing
@@ -133,7 +133,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
     this.previousActivity = this.currentActivity // Remember what the current activity was
     this.currentActivity = newActivity
-    Agent.LOG.debug(s"${this.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
+    Agent.LOG.debug(s"[${state.schedule.getTime()}]${this.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 
   /**
@@ -177,7 +177,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
       val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes
       _cachedCommuterMoveRate = if (moveRate < super.moveRate()) super.moveRate() else moveRate
-      Agent.LOG.debug(s"commuterMoveRate: commute length for ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
+      Agent.LOG.debug(s"[${state.schedule.getTime()}]commuterMoveRate: commute length for ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
       /*println("*********")
       println(length)
       println(iterPer30Min)
