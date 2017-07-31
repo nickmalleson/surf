@@ -36,15 +36,15 @@ class GoingOutActivity (
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is initialising GoingOut")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is initialising GoingOut")
         // See if the agent is in a pub/bar
         if (this.place.location.equalLocation(
           this.agent.location())) {
-          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a pub/bar. GoingOut starts.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} has reached a pub/bar. GoingOut starts.")
           currentAction = GOING_OUT // Next iteration the agent will start going out.
         }
         else {
-          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is not at a bar/pub yet. Travelling there.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is not at a bar/pub yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -53,17 +53,17 @@ class GoingOutActivity (
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a bar/pub. GoingOut starts.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} has reached a bar/pub. GoingOut starts.")
           currentAction = GOING_OUT
         }
         else {
-          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is travelling to a bar/pub.")
+          Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is travelling to a bar/pub.")
           agent.moveAlongPath()
         }
       }
 
       case GOING_OUT => {
-        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is going out.")
+        Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is going out.")
         return true
       }
 
