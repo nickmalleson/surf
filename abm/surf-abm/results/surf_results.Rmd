@@ -28,11 +28,15 @@ SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
 AGENT_ID <- -1
 #AGENT_ID <- 342
 
+# When running this script directly in R(Studio) we need to specify the current working directory
+CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm'
+#CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
+setwd(CURRENT_DIRECTORY) # This is only required when running directly in R(Studio)
 
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
 scenario.dir <- paste("./out/",SCENARIO,sep="") # This is the relative directory of the scenario 
-setwd("C:/Code/surf/abm/surf-abm/results") # This is only required when running directly in R(Studio)
+
 runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
 wd <- paste(scenario.dir, "/", run, sep="") # The new working directory
