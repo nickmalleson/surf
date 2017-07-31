@@ -73,13 +73,19 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
     // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
     // has only been working on the activity for a short while!)
-    if (
-      ( this.currentActivity.isDefined ) &&
-      ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE ) &&
-      ( this.currentActivity.get.--(simulate=true) ) // Check that the intensity can be reduced
-      ) {
-      Agent.LOG.debug(s"[${state.schedule.getTime()}]Activity (${this.currentActivity.toString}) increase for ${this.toString()} = ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE}")
+    if ( this.currentActivity.isDefined ) {
+      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) is undefined.")
     }
+    else if ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
+      // Check that the intensity has gone down enough
+      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) " +
+        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+    }
+    else if ( this.currentActivity.get.--(simulate=true) ) { // Check that the intensity can be reduced
+      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) " +
+        s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+    }
+      
     else {
       // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold. So now see if it should change.
 
