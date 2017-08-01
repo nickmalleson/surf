@@ -86,16 +86,20 @@ object AgentLog {
 
   private val _LOG: Logger = Logger.getLogger(Agent.getClass);
 
+  def msg(agent :Agent ): String = {
+    s"[${agent.state.schedule.getTime().toInt}]${agent.toString()}:"
+  }
+
   def warn(agent: Agent, message: scala.Any): Unit = {
-    _LOG.warn(s"[${agent.state.schedule.getTime()}]${agent.toString()}: ${message}")
+    _LOG.warn(s"${msg(agent)}${message}")
   }
 
   def debug(agent: Agent, message: scala.Any): Unit = {
-    _LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()}: ${message}")
+    _LOG.debug(msg(agent)+message)
   }
 
   def info(agent: Agent, message: scala.Any): Unit = {
-    _LOG.info(s"[${agent.state.schedule.getTime()}]${agent.toString()}: ${message}")
+    _LOG.info(s"${msg(agent)}${message}")
   }
 
 }
