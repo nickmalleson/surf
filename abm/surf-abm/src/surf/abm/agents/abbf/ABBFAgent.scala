@@ -48,6 +48,10 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
   override def step(state: SimState): Unit = {
 
+    //if (this.id()==1 && this.state.schedule.getSteps > 163) {
+    //  print("BREAK POINT")
+    //}
+
     //println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
 
@@ -84,41 +88,37 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     else {
       // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold,
       // or another activity is now more important. So now see if it should change.
+      var msg = "" // Create a single log message to write out (limits nu
 
       // Now find the most intense one, given the current time.
       val highestActivity: Activity = this.highestActivity()
+      msg += s"Highest activity: ${highestActivity.toString()}. "
       //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
       // Is the highest activity high enough to take control?
       if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
         // If not, then make the current activity None
-        Agent.LOG.debug(this, s"Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
-        this.changeActivity(None)
+        msg += s"Not high enough (${this.highestActivity().intensity()}, setting to None."
+        this._changeActivity(None)
         //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
         return // No point in continuing
       }
 
       // See if the activity needs to change (taking into account that there might not be a current activity)
       if (highestActivity != this.currentActivity.getOrElse(None)) {
-        this.changeActivity(Some(highestActivity))
+        msg += s"Changing from ${this.currentActivity.getOrElse(None)} to ${Some(highestActivity)}. "
+        this._changeActivity(Some(highestActivity))
         //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
       }
+
+      Agent.LOG().debug(this, msg)
 
     }
 
     // Perform the action to satisfy the current activity
-    val satisfied = highestActivity.performActivity()
+    //val satisfied = highestActivity.performActivity()
+    val satisfied = this._currentActivity.get.performActivity()
     if (satisfied) {
-      // old code to decrease activity
-      /*if (highestActivity().toString == "ShopActivity" || highestActivity().toString == "LunchActivity") {
-        //printf("Shop: %s\n",highestActivity().toString())
-        highestActivity -= 40d / (3d * ABBFAgent.ticksPerDay)
-      } else {
-        //printf("Else: %s\n",highestActivity().toString())
-        highestActivity -= 2.5 / ABBFAgent.ticksPerDay
-      }
-      */
-
       // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
       // (the '--' function just calls that)
       highestActivity.--()
@@ -131,12 +131,12 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     *
     * @param newActivity
     */
-  private def changeActivity(newActivity: Option[Activity]): Unit = {
+  private def _changeActivity(newActivity: Option[Activity]): Unit = {
     // Tell the current activity (if there is one) that it's no longer in control.
     this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
     this._previousActivity = this.currentActivity // Remember what the current activity was
     this._currentActivity = newActivity
-    Agent.LOG.debug(this, s"has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
+    //Agent.LOG.debug(this, s"has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 
   /**
