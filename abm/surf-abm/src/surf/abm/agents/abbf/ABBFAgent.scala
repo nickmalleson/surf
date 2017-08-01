@@ -116,7 +116,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     }
 
     // Perform the action to satisfy the current activity
-    //val satisfied = highestActivity.performActivity()
+    //val satisfied = highestActivity.performActivity() // THis is wrong! Don't want to perform the highest activity as it might not be the current one.
     val satisfied = this._currentActivity.get.performActivity()
     if (satisfied) {
       // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by

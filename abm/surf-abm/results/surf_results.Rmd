@@ -25,8 +25,8 @@ In particular - see if there is a nice way to visualise routine behaviours to ch
 
 SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
-#AGENT_ID <- -1
-AGENT_ID <- 1
+AGENT_ID <- -1
+#AGENT_ID <- 1
 
 # When running this script directly in R(Studio) we need to specify the current working directory
 CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
