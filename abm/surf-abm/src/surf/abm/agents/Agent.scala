@@ -95,7 +95,7 @@ object AgentLog {
   }
 
   def debug(agent: Agent, message: scala.Any): Unit = {
-    _LOG.debug(msg(agent)+message)
+    _LOG.debug(s"${msg(agent)}${message}")
   }
 
   def info(agent: Agent, message: scala.Any): Unit = {
