@@ -29,12 +29,14 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
   /**
     * The current activity that the agent is doing. Can be None.
     */
-  var currentActivity: Option[_ <: Activity] = None
+  private var _currentActivity: Option[_ <: Activity] = None
+  def currentActivity() = _currentActivity // public accessor to private member
 
   /**
     * The previous activity that the agent was doing. Can be none.
     */
-  var previousActivity: Option[_ <: Activity] = None
+  private var _previousActivity: Option[_ <: Activity] = None
+  def previousActivity() = _previousActivity // public accessor to private member
 
   /**
     * Work out which activity is the most intense at the moment.
@@ -49,45 +51,39 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
 
-
-    // OLD CODE TO MAKE MAPS OF ACTIVITY -> INTENSITY
-    // Begin by increasing the intensities of all activities.
-    // This way does it by making a new map using 'yield'
-    // this.activities = for ( (activity, intensity) <- this.activities ) yield { activity -> intensity*1.1 }
-    // This way uses map() (Note that m._X give you the X element of a tuple, so m._1 is key, m._2 is the value)
-    //this.activities = this.activities.map(m => (m._1, m._1.calcIntensity(1.01, m._2)) )
-
-    // TODO: Maybe messing around with the activities should be done less frequently. Less computationally expensive and also stops frequent activity changes
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
     // which, in turn, calls the activity's backgroundIncrease() function, which can be overidden by subclasses.
     for (a <- this.activities){
       a ++ // Increase this activity
     }
 
-    // old code to increase all activities with same amount
-    /*this.activities.foreach(a => {
-      a += ABBFAgent.BACKGROUND_INCREASE
-    })*/
-    //this.activities.foreach( a => println(s"$a : ${a.backgroundIntensity}" )); print("\n") // print activities
-
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
     // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
     // has only been working on the activity for a short while!)
-    if ( this.currentActivity.isDefined ) {
-      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) is undefined.")
+    if (this.currentActivity.isDefined &&
+      this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE &&
+      this.currentActivity.get.--(simulate=true)
+    )
+    { // For info, log the reasons why the current activity definitely shouldn't change.
+      if ( ! this.currentActivity.isDefined ) {
+        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) is undefined.")
+      }
+      if ( this.currentActivity.get.currentIntensityDecrease() >= ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
+        // Check that the intensity has gone down enough
+        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
+          s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+      }
+      if ( ! this.currentActivity.get.--(simulate=true) ) { // Check that the intensity can be reduced
+        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
+          s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+      }
+
     }
-    else if ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
-      // Check that the intensity has gone down enough
-      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) " +
-        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
-    }
-    else if ( this.currentActivity.get.--(simulate=true) ) { // Check that the intensity can be reduced
-      Agent.LOG.debug(s"[${state.schedule.getTime()}]Agent ${this.toString()}, Activity (${this.currentActivity.toString}) " +
-        s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
-    }
-      
+
+
     else {
-      // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold. So now see if it should change.
+      // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold,
+      // or another activity is now more important. So now see if it should change.
 
       // Now find the most intense one, given the current time.
       val highestActivity: Activity = this.highestActivity()
@@ -96,7 +92,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       // Is the highest activity high enough to take control?
       if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
         // If not, then make the current activity None
-        Agent.LOG.debug(s"[${state.schedule.getTime()}]${this.toString()}: Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
+        Agent.LOG.debug(this, s"Highest activity ${this.highestActivity()} not high enough (${this.highestActivity().intensity()}, setting to None")
         this.changeActivity(None)
         //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
         return // No point in continuing
@@ -109,6 +105,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       }
 
     }
+
     // Perform the action to satisfy the current activity
     val satisfied = highestActivity.performActivity()
     if (satisfied) {
@@ -137,9 +134,9 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
   private def changeActivity(newActivity: Option[Activity]): Unit = {
     // Tell the current activity (if there is one) that it's no longer in control.
     this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
-    this.previousActivity = this.currentActivity // Remember what the current activity was
-    this.currentActivity = newActivity
-    Agent.LOG.debug(s"[${state.schedule.getTime()}]${this.toString()} has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
+    this._previousActivity = this.currentActivity // Remember what the current activity was
+    this._currentActivity = newActivity
+    Agent.LOG.debug(this, s"has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 
   /**
@@ -183,7 +180,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
       val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes
       _cachedCommuterMoveRate = if (moveRate < super.moveRate()) super.moveRate() else moveRate
-      Agent.LOG.debug(s"[${state.schedule.getTime()}]commuterMoveRate: commute length for ${this.toString()} is ${length} so move rate is ${_cachedCommuterMoveRate}")
+      Agent.LOG.debug(this, s"commuterMoveRate: commute length is ${length} so move rate is ${_cachedCommuterMoveRate}")
       /*println("*********")
       println(length)
       println(iterPer30Min)
