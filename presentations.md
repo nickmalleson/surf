@@ -8,6 +8,8 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
+   - [Urban Analytics: Example projects from LIDA]({{site.baseurl}}/p/2017-07-27-ONS-LIDA-UrbanAnlalytics.html). Presentation to the _Office for National Statistics_, 27th July, Titchfield.
+
    - [Quantifying the Ambient Population]({{site.baseurl}}/p/2017-05-25-cdrc-quantifying_ambient.pptx). Presentation at the _CDRC Data Partner Forum_, 25th May, Leeds Institute for Data Analytics.
 
    - [Simulation as the Catalyst for Geographical Data Science and Urban Policy Making]({{site.baseurl}}/p/2017-04-06-aag-sim_as_catalyst.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 4th – 8th April, Boston, as part of the Special Sessions on Geographic Data Science_
