@@ -71,7 +71,7 @@ $(document).ready(function () {
 <h2>Basics: applying a function to data</h2>
 <p>Both the R and Python parallel-processing libraries that I’m going to demonstrate work in a similar way. Basically, you write a function and apply it to a list of data. The clever bit that the parallel libraries do under the hood is to apply the function to the different data elements simultaneously. A diagram might help:</p>
 
-<p><img src="{{site.url}}/{{site.baseurl}}/figures/MultiProcess_R_Python-diagram.png" alt = "Diagram of a for loop v.s. an apply function" /></p>
+<p><img src="{{site.url}}/{{site.baseurl}}figures/MultiProcess_R_Python-diagram.png" alt = "Diagram of a for loop v.s. an apply function" /></p>
 
 <p>In the next sections I’ll show you how to use those <code>apply</code> (or <code>map</code>) functions and make use of all cores.</p>
 </div>
