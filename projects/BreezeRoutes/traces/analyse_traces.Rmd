@@ -1737,9 +1737,9 @@ plot(study.area, add=T, border="blue")
 
 This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done_).
 
-As a sanity check, make sure that the 'longest' paths are actually longer!
+Lets look at the actual lengths of these paths. Turns out that they're quite similar (which isn't entirely unexpected, why should paths that deviate more/less from their shortest path equivalent have anything to do with absolute length)?
 
-```{r longestPath-sanityCheck, fig.width=15}
+```{r longestDeviationPath-sanityCheck, fig.width=15}
 
 # First the longest:
 
@@ -1926,7 +1926,7 @@ Asymettry values:
 
 ## Absolute Route Length
 
-Now the analysis moves on from comparing deviations from the shortest possible path, to comparing the asymmetry assocated with **absolute path length**. The hypothesis here is that route length might impact on pedestrian decisions.  The rationale is that we might know quite well our neighborhood, so that we take shortest path for short walks, while we might significantly deviate from shortest path for longer routes where we haven’t full knowledge of the environment.
+Now the analysis moves on from comparing deviations from the shortest possible path, to comparing the asymmetry assocated with **absolute path length**. The hypothesis here is that route length might impact on pedestrian decisions.  The rationale is that we might know quite well our neighborhood, so that we take shortest path for short walks, while we might significantly deviate from shortest path for longer routes where we haven’t full knowledge of the environment. Or the opposite of course! (We have less confidence on long routes through unknown neighbourhoods so always stay on the same path).
 
 To do this the methodology remains unchanged: subset the traces into 'short' and 'long' by absolute length and then repeat the asymmetry analysis for those two subsets.
 
@@ -1984,6 +1984,36 @@ plot(study.area, add=T, border="blue")
 ```
 
 There were `r length(absolute.longest.indices)` long trips, and `r length(absolute.shortest.indices)` short trips.
+
+Sanity check: make sure that the subsets exhibit substantially different path lengths:
+
+```{r absolutelongestPath-sanityCheck, fig.width=10, height=7}
+
+# First the longest:
+
+absolute.longest.lengths <- unlist(mclapply(absolute.longest, gLength ))
+summary(absolute.longest.lengths)
+
+# Now the shortest:
+absolute.shortest.lengths <- unlist(mclapply(absolute.shortest, gLength ))
+summary(absolute.shortest.lengths)
+
+# And a histogram
+par(mfrow=c(1,2))
+hist(absolute.longest.lengths, main="Absolute Longest Path Lengths", breaks="Scott")
+hist(absolute.shortest.lengths, main="Absolute Shortest Path Lengths", breaks="Scott")
+
+# And one for the paper
+#pdf(file="absolute_length_distribution.pdf", width = 7, height = 11.69)
+#par(mfrow=c(2,1))
+#hist(absolute.longest.lengths, main="Absolute Longest Path Lengths", breaks="Scott")
+#hist(absolute.shortest.lengths, main="Absolute Shortest Path Lengths", breaks="Scott")
+#dev.off()
+
+# So as not to confuse things later:
+rm(absolute.longest.lengths, absolute.shortest.lengths)
+
+```
 
 Re-run the analysis for the absolute long and short trips.
 

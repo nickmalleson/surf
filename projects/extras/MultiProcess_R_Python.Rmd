@@ -1,0 +1,50 @@
+---
+title: "How to Heat Your House with R and Python"
+author: "Nick Malleson"
+date: "04/08/2017"
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+Most (all?) computers these days have lots of cores on their processors. This means that, in theory, they can do lots of things at the same time. But it can be difficult to get all the cores all to work on a problem because most programming operations typically run as a single thread or process, so will only use one core. 
+
+Happily, R and Python both have libraries that allow you to run operations in parallel. This means that all cores on the computer will work together at the same time, using the CPU to its full capacity. As an added bonus, this also makes your room nice and warm.
+
+I'll show how to do this in R and Python. If you'd like to look at the code in full, it is available on github XXXX. I'm only going to cover the most simple example of using 'lazy' parallelisation. This is where each operation can be applied independently, so there is no need for the different processes to communicate with each other. If you want to know how to do this, look elsewhere (it isn't easy!!).
+
+
+## Basics: applying a function to data
+
+Both the R and Python parallel-processing libraries that I'm going to demonstrate work in a similar way. Basically, you write a function and apply it to a list of data. The clever bit that the parallel libraries do under the hood is to apply the function to the different data elements simultaneously. A diagram might help:
+
+<img src="./MultiProcess_R_Python-diagram.png" al"Diagram of a for loop v.s. an apply function" />
+
+In the next sections I'll show you how to use those `apply` (or `map`) functions, but make use of all cores.
+
+## Parallel Processing in R
+
+This is a really quick overview. For more detail you should have a look at a more comprehensive tutorial. [This](https://www.r-bloggers.com/how-to-go-parallel-in-r-basics-tips/) one looks good.
+
+In the following example we're going to use the  `[parallel](http://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf)' package.
+
+
+
+## Parallel Processing in Python
+
+
+
+That's it!
+
+OK that's a very simple example, and it isn't always possible to divide your operations up to make them suitable for parallel processing, but sometimes those libraries really come in use.
