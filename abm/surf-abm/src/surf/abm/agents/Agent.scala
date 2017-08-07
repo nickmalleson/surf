@@ -60,7 +60,8 @@ abstract class Agent (val state:SurfABM, val home:SurfGeometry[Building]) extend
 object Agent extends Serializable {
 
   // Initialise the logger. NOTE: will have one logger per Agent
-  val LOG: Logger = Logger.getLogger(this.getClass);
+  //val LOG: Logger = Logger.getLogger(this.getClass);
+  def LOG() = AgentLog
 
   /**
     * The basic (walking) rate that agents move at. It is by the 'BaseMoveRate' in the surf-abm.conf file.
@@ -74,6 +75,31 @@ object Agent extends Serializable {
   private def uniqueID() : Int = {
     _uniqueID+=1
     _uniqueID
+  }
+
+}
+
+/*
+ * A logger specifically for agents that writes some extra information before the messages (e.g. agent number, simulation time, etc.)
+ */
+object AgentLog {
+
+  private val _LOG: Logger = Logger.getLogger(Agent.getClass);
+
+  def msg(agent :Agent ): String = {
+    s"[${agent.state.schedule.getTime().toInt}]${agent.toString()}:"
+  }
+
+  def warn(agent: Agent, message: scala.Any): Unit = {
+    _LOG.warn(s"${msg(agent)}${message}")
+  }
+
+  def debug(agent: Agent, message: scala.Any): Unit = {
+    _LOG.debug(s"${msg(agent)}${message}")
+  }
+
+  def info(agent: Agent, message: scala.Any): Unit = {
+    _LOG.info(s"${msg(agent)}${message}")
   }
 
 }

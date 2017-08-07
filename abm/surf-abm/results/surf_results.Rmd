@@ -26,13 +26,17 @@ In particular - see if there is a nice way to visualise routine behaviours to ch
 SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
 AGENT_ID <- -1
-#AGENT_ID <- 342
+#AGENT_ID <- 1
 
+# When running this script directly in R(Studio) we need to specify the current working directory
+CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
+#CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
+setwd(CURRENT_DIRECTORY) # This is only required when running directly in R(Studio)
 
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
 scenario.dir <- paste("./out/",SCENARIO,sep="") # This is the relative directory of the scenario 
-setwd("C:/Code/surf/abm/surf-abm/results") # This is only required when running directly in R(Studio)
+
 runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
 wd <- paste(scenario.dir, "/", run, sep="") # The new working directory
@@ -78,19 +82,23 @@ acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 
 # Find all of the activities - useful throughout
 all.acts <- unique(agents$Activity)
-# Also find the active activities (i.e. all not including 'none', as None doesn't have any intensities)
-active.acts <- unique(acts$Activity)
 
-# Select a few agents at random to plot
+# Remove any agents that we're not plotting the results for. Graphs easily become overcomplicated
 agent.ids <- c() # The agents to plot
-
 if (AGENT_ID == -1) { # Plot a selection of agents chosen at random
-  all.ids <- unique(acts$Agent)
-  agent.ids <- sample(all.ids, size=10, replace=FALSE)
+  agent.ids <- sample(unique(acts$Agent), size=10, replace=FALSE) # sample from all ids
 } else {
   # Otherwise just plot the one agent
   agent.ids <- c(AGENT_ID)
 }
+agents <- agents[which(agents$Agent %in% agent.ids),]
+acts <- acts[which(acts$Agent %in% agent.ids),]
+
+
+# Also find the active activities (i.e. all not including 'none', as None doesn't have any intensities)
+active.acts <- unique(acts$Activity)
+
+
 ```
 
 
@@ -118,8 +126,12 @@ for (id in agent.ids) {
         y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='o', col=i )
     }
     # Add a vertical line when a new CurrentActivity starts (with the colour of that new activity)
-    abline(v=acts[which(acts$Activity==activity & acts$CurrentActivity==1 
-                          & dplyr::lag(acts$CurrentActivity, length(active.acts)*length(all.ids)) != 1 & acts$Agent==id),]$Iterations, col=i, lwd=2)
+    abline(v=acts[which(
+      acts$Activity==activity & acts$CurrentActivity==1 & 
+        dplyr::lag(acts$CurrentActivity, length(active.acts)*length(agent.ids)) != 1 & 
+        acts$Agent==id)
+      ,]$Iterations, col=i, lwd=2)
+    
     i <- i + 1 # increment the colour counter (one colour per activity)
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   }

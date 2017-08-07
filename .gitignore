@@ -112,6 +112,12 @@ temp_nltk_stuff/
 
 
 
+# ********** Footfall stuff **********
+
+# The uncompressed footfall data
+projects/footfall/lcc-machine-learning/footfall_data/footfall.csv
+
+# ********** **********
 # ********** **********
 # ********** **********
 # ********** **********
