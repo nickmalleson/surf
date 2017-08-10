@@ -32,7 +32,7 @@ AGENT_ID <- -1
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
 scenario.dir <- paste("./out/",SCENARIO,sep="") # This is the relative directory of the scenario 
-setwd("C:/Code/surf/abm/surf-abm/results") # This is only required when running directly in R(Studio)
+setwd("D:/surf/surf/abm/surf-abm/results") # This is only required when running directly in R(Studio)
 runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
 run <- tail(runs, n=1) # Most recent run/scenario
 wd <- paste(scenario.dir, "/", run, sep="") # The new working directory
@@ -57,6 +57,7 @@ library(classInt) # Jenks natural breaks
 library(RColorBrewer) # For making nice colour themes
 #library(rgl)       # For 3D space-time cube
 library(plot3D)    # For 3D space-time cube
+library(dplyr)     # To look up fields in tables (e.g. N rows higher --> lag)
 
 
 ```
@@ -104,7 +105,7 @@ for (id in agent.ids) {
   for (activity in active.acts) {
     if (i==1) { # First plot
       # Plot overall intensity
-      plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$date,
+      plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$Iterations,
            y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, 
            type='o', col=i, 
            ylim=c(0,max(acts$Intensity)), # All charts have same y axis
@@ -113,9 +114,12 @@ for (id in agent.ids) {
            xlab = "Time", ylab="TotalIntensity", main=paste("Activities for agent",id))
     } else { # Now for the remaining activities
       points(
-        x=acts[which(acts$Activity==activity & acts$Agent==id),]$date, 
+        x=acts[which(acts$Activity==activity & acts$Agent==id),]$Iterations, 
         y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='o', col=i )
     }
+    # Add a vertical line when a new CurrentActivity starts (with the colour of that new activity)
+    abline(v=acts[which(acts$Activity==activity & acts$CurrentActivity==1 
+                          & dplyr::lag(acts$CurrentActivity, length(active.acts)*length(all.ids)) != 1 & acts$Agent==id),]$Iterations, col=i, lwd=2)
     i <- i + 1 # increment the colour counter (one colour per activity)
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   }
