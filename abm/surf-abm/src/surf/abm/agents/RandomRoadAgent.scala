@@ -19,7 +19,7 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
 
     try {
       if (this.destination.isEmpty || this.atDestination) {
-        Agent.LOG.debug("Agent "+ this.id.toString() + " is looking for a new destination")
+        //Agent.LOG.debug("Agent "+ this.id.toString() + " is looking for a new destination")
         this.newDestination(Option(SurfABM.getRandomBuilding(state)))
         //this._destination = Option(SurfABM.getRandomBuilding(state))
         //this._atDestination = false
@@ -30,7 +30,7 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
     }
     catch {
       case ex: RoutingException => {
-        Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
         state.finish
       }
     }

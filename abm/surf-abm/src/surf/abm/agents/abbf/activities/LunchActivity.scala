@@ -40,15 +40,15 @@ case class LunchActivity(
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising LunchActivity")
+        Agent.LOG.debug(agent, "is initialising LunchActivity")
         // See if the agent is in a lunch place
         if (this.place.location.equalLocation(
           this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} has reached a lunch place. Starting lunch.")
+          Agent.LOG.debug(agent, "as reached a lunch place. Starting lunch.")
           currentAction = LUNCHING // Next iteration the agent will start to have lunch.
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at a lunch place yet. Travelling there.")
+          Agent.LOG.debug(agent, "is not at a lunch place yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -57,17 +57,17 @@ case class LunchActivity(
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached a lunch place. Starting lunch")
+          Agent.LOG.debug(agent, "has reached a lunch place. Starting lunch")
           currentAction = LUNCHING
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is travelling to a lunch place.")
+          Agent.LOG.debug(agent, "is travelling to a lunch place.")
           agent.moveAlongPath()
         }
       }
 
       case LUNCHING => {
-        Agent.LOG.debug(s"${agent.toString()} is having lunch")
+        Agent.LOG.debug(agent, "is having lunch")
         return true
       }
 

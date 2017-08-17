@@ -36,15 +36,15 @@ class DinnerActivity (
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising EatingDinner")
+        //Agent.LOG.debug(s"${agent.toString()} is initialising EatingDinner")
         // See if the agent is in a lunch place
         if (this.place.location.equalLocation(
           this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} has reached a restaurant/pub. Starting dinner.")
+          //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a restaurant/pub. Starting dinner.")
           currentAction = EATING // Next iteration the agent will start to have dinner.
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at a restaurant/pub yet. Travelling there.")
+          //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is not at a restaurant/pub yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -53,17 +53,17 @@ class DinnerActivity (
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached a restaurant/pub. Starting dinner")
+          //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a restaurant/pub. Starting dinner")
           currentAction = EATING
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is travelling to a restaurant/pub.")
+          //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} is travelling to a restaurant/pub.")
           agent.moveAlongPath()
         }
       }
 
       case EATING => {
-        Agent.LOG.debug(s"${agent.toString()} is having dinner")
+        //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is having dinner")
         return true
       }
 

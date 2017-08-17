@@ -78,19 +78,20 @@ acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 
 # Find all of the activities - useful throughout
 all.acts <- unique(agents$Activity)
-# Also find the active activities (i.e. all not including 'none', as None doesn't have any intensities)
-active.acts <- unique(acts$Activity)
-
-# Select a few agents at random to plot
+# Remove any agents that we're not plotting the results for. Graphs easily become overcomplicated
 agent.ids <- c() # The agents to plot
-
 if (AGENT_ID == -1) { # Plot a selection of agents chosen at random
-  all.ids <- unique(acts$Agent)
-  agent.ids <- sample(all.ids, size=10, replace=FALSE)
+  agent.ids <- sample(unique(acts$Agent), size=10, replace=FALSE) # sample from all ids
 } else {
   # Otherwise just plot the one agent
   agent.ids <- c(AGENT_ID)
 }
+agents <- agents[which(agents$Agent %in% agent.ids),]
+acts <- acts[which(acts$Agent %in% agent.ids),]
+
+
+# Also find the active activities (i.e. all not including 'none', as None doesn't have any intensities)
+active.acts <- unique(acts$Activity)
 ```
 
 
@@ -118,8 +119,11 @@ for (id in agent.ids) {
         y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='o', col=i )
     }
     # Add a vertical line when a new CurrentActivity starts (with the colour of that new activity)
-    abline(v=acts[which(acts$Activity==activity & acts$CurrentActivity==1 
-                          & dplyr::lag(acts$CurrentActivity, length(active.acts)*length(all.ids)) != 1 & acts$Agent==id),]$Iterations, col=i, lwd=2)
+    abline(v=acts[which(
+      acts$Activity==activity & acts$CurrentActivity==1 & 
+        dplyr::lag(acts$CurrentActivity, length(active.acts)*length(agent.ids)) != 1 & 
+        acts$Agent==id)
+      ,]$Iterations, col=i, lwd=2)
     i <- i + 1 # increment the colour counter (one colour per activity)
     j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
   }

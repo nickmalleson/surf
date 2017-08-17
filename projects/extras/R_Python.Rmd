@@ -1,0 +1,102 @@
+---
+title: "Example using Python and R"
+author: "Nick Malleson"
+date: "018/07/2017"
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+A small example of how to use R and Python together in the same R Markdown document
+
+This uses the [feather](https://blog.rstudio.com/2016/03/29/feather/) library that allows R and python to share data by writing binary files.
+
+## Initialise
+
+```{r init}
+library(feather) # To allow python and R to share data
+```
+
+## Create some data with R
+
+For this example we'll just create a list of random numbers to be manipulated in R and Python (code frome [here](https://stackoverflow.com/questions/19352267/r-create-a-data-frame-with-random-numbers-in-each-column)).
+
+Make a data frame with two columns and 1000 rows.
+
+```{r createData }
+
+data <- data.frame(replicate(2,sample(0:10,1000,rep=TRUE)))
+
+par(mfrow=c(2,1))
+hist(data$X1)
+hist(data$X2)
+
+```
+
+## Write the data using feather
+
+Write out the `data` dataframe using Feather so that it can be read in and manipulated by Python.
+
+```{r writeToFeatherFromR }
+
+write_feather(data, path="./data.feather")
+
+```
+
+## Read and process the data in python
+
+Now the neat bit - use python to read the data from R, do something with it (we'll just make a new column) and then write it back out.
+
+Note that in the R Markdown document, you can specify a particular python engine to use. E.g. the following would use an anaconda environment called 'py35':
+
+```
+{python engine.path="/Users/nick/anaconda2/envs/py35/bin/python"}
+```
+
+You'll have to change that to match your own setup if you want to run this script.
+
+Which ever python environment you use, you have to have the `feather` library installed. You can install it as normal, with something like: 
+
+```pip install feather-format```
+
+```{python readInPython, engine.path="/Users/nick/anaconda2/envs/py35/bin/python" }
+
+import feather
+
+# Read in the data frame
+data = feather.read_dataframe("./data.feather")
+
+# Create a new column by multiplying the first two columns:
+data.loc[:,'X3'] = data.loc[:,'X1'] * data.loc[:,'X2']
+
+# Write out the data using feather
+feather.write_dataframe(data, "./data.feather")
+
+```
+
+## Re-read the data in R
+
+Now that we've processed it in python, re-read it using R.
+
+```{r reReadData }
+
+new.data <- read_feather("./data.feather")
+
+hist(new.data$X3)
+
+```
+
+That's it!
+
+OK that's a very simple example, but the ability to use either language in the same R Markdown document, and to share data, is extremely powerful.

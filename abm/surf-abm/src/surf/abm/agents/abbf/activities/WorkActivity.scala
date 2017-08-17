@@ -40,14 +40,14 @@ case class WorkActivity(
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising WorkActivity")
+        Agent.LOG.debug(agent, "is initialising WorkActivity")
         // See if the agent is at work
         if (this.place.location.equalLocation(this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} is at work. Starting to work.")
+          Agent.LOG.debug(agent, "is at work. Starting to work.")
           currentAction = WORKING // Next iteration the agent will start to work
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at work. Travelling there.")
+          Agent.LOG.debug( agent, "iis not at work. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -56,17 +56,17 @@ case class WorkActivity(
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached their workplace. Starting to work")
+          Agent.LOG.debug(agent, "has reached their workplace. Starting to work")
           currentAction = WORKING
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is travelling to work.")
+          Agent.LOG.debug(agent, "is travelling to work.")
           agent.moveAlongPath()
         }
       }
 
       case WORKING => {
-        Agent.LOG.debug(s"${agent.toString()} is working")
+        Agent.LOG.debug(agent, "is working")
         return true
       }
 

@@ -38,15 +38,15 @@ case class ShopActivity(
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(s"${agent.toString()} is initialising ShopActivity")
+        Agent.LOG.debug(agent, "initialising ShopActivity")
         // See if the agent is in the shop
         if (this.place.location.equalLocation(
             this.agent.location())) {
-          Agent.LOG.debug(s"${agent.toString()} is in the shop. Start shopping.")
+          Agent.LOG.debug(agent, "is in the shop. Start shopping.")
           currentAction = SHOPPING // Next iteration the agent will start to shop
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is not at the shop yet. Travelling there.")
+          Agent.LOG.debug(agent, "is not at the shop yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -55,17 +55,17 @@ case class ShopActivity(
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(s"${agent.toString()} has reached the shop. Starting to shop")
+          Agent.LOG.debug(agent, "has reached the shop. Starting to shop")
           currentAction = SHOPPING
         }
         else {
-          Agent.LOG.debug(s"${agent.toString()} is travelling to the shop.")
+          Agent.LOG.debug(agent, "is travelling to the shop.")
           agent.moveAlongPath()
         }
       }
 
       case SHOPPING => {
-        Agent.LOG.debug(s"${agent.toString()} is shopping")
+        Agent.LOG.debug(agent, "is shopping")
         return true
       }
 
