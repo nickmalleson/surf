@@ -56,7 +56,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
 
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
-    // which, in turn, calls the activity's backgroundIncrease() function, which can be overidden by subclasses.
+    // which, in turn, calls the activity's backgroundIncrease() function, which can be overridden by subclasses.
     for (a <- this.activities){
       a ++ // Increase this activity
     }
@@ -65,14 +65,12 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
     // has only been working on the activity for a short while!)
     if (this.currentActivity.isDefined &&
-      this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE &&
-      this.currentActivity.get.--(simulate=true)
+      (this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE ||
+      ! this.currentActivity.get.--(simulate=true))
     )
     { // For info, log the reasons why the current activity definitely shouldn't change.
-      if ( ! this.currentActivity.isDefined ) {
-        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) is undefined.")
-      }
-      if ( this.currentActivity.get.currentIntensityDecrease() >= ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
+
+      if ( this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
         // Check that the intensity has gone down enough
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
           s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
@@ -88,6 +86,9 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     else {
       // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold,
       // or another activity is now more important. So now see if it should change.
+      if ( ! this.currentActivity.isDefined ) {
+        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) is undefined.")
+      }
       var msg = "" // Create a single log message to write out (limits nu
 
       // Now find the most intense one, given the current time.
@@ -121,7 +122,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     if (satisfied) {
       // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
       // (the '--' function just calls that)
-      highestActivity.--()
+      this._currentActivity.get.--()
     }
 
   }
@@ -208,7 +209,7 @@ object ABBFAgent {
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INSTENSITY_DECREASE = 0.1
+  private val MINIMUM_INSTENSITY_DECREASE = 0.01
 
   assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 
