@@ -113,10 +113,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     } // try
     catch {
       case ex: RoutingException => {
-        Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
       }
       case ex: Exception => {
-        Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
       }
       state.finish
     }
@@ -236,7 +236,7 @@ object UrbanAgent {
 
     // Current and destination junctions are the same. Just return a single edge as the path.
     if (currentNode eq destinationNode) {
-      Agent.LOG.warn(s"Current and destination junctions are same for the object ${caller.getOrElse("[Not Provided]")}")
+      //Agent.LOG.warn(s"Current and destination junctions are same for the object ${caller.getOrElse("[Not Provided]")}")
       return List[GeomPlanarGraphDirectedEdge](currentNode.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge])
 
     }

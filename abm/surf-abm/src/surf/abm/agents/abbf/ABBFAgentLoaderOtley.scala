@@ -69,7 +69,7 @@ object ABBFAgentLoaderOtley {
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
     //val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv"
-    val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 commuters
+    val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 combinations of OA's
     //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
     LOG.info(s"Reading agents from file: '$filename'")
     // Get line and line number as a tuple
@@ -173,7 +173,7 @@ object ABBFAgentLoaderOtley {
     )
     // Work time profile is 0 before 6 and after 10, and 1 between 10-4 with a bit of randomness thrown in
     val rnd = state.random.nextDouble() * 4d
-    // A random number between 0 and 2 (remark Tomas: shouldn't that be between 0 and 4?)
+    // A random number between 0 and 2 (remark Tomas: isn't it between 0 and 4?)
     val rndPreference = state.random.nextDouble()
     // Test with a random preference for leisure activities. Should become activity specific.
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
