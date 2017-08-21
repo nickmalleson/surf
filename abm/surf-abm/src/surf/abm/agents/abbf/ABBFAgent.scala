@@ -209,7 +209,7 @@ object ABBFAgent {
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INSTENSITY_DECREASE = 0.01
+  private val MINIMUM_INSTENSITY_DECREASE = 0.1
 
   assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 
