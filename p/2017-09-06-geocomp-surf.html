@@ -44,109 +44,347 @@
                     <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
                     <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
                     <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
-                </section>    
-
-                <section id="abstract" >
-
-                	
-                	<h2>Abstract</h2>
-                	
-                    <p class="small">Modern cities in industrialised countries are often characterised by a 'smart' approach to policy. In the 'smart city', urban characteristics are increasingly being understood and planned as a result of the analysis of data that emerge from a multitude of sensors. A key characteristic of these data is that they are produced in real-time by citizens and organisations. The volume and variety of the data, as well problems with poorly understood basses and the inherent complexity of urban processes, make it difficult to derive useful insight for the present or to forecast future urban change.</p>
-                    
-                    <p class="small">In this paper we present agent-based modelling (ABM) as a lubricant for geographic data science and policy making in the context of the 'smart city'. We will show how techniques from well-established disciplines such as meteorology can be used to allow ABMs to combine diverse data sets and create holistic <i>in silico</i> representations of the city. This will allow a better understanding of the accuracy and applicability of underlying geographical theories. By utilising the streaming characteristics of many modern data sets to produce short-term, local analyses and forecasts, this new approach can foster a more agile and responsive form of policy-making.</p>
-
-                </section>
-                
-                <section id="thanks">
-                    <h2>Thanks</h2>
-                    <h3>Alice Tapper, Jon Ward, Andy Evans</h3>
-                    <p>Ongoing work:</p>
-                    <p class="l2">Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson (2016) Dynamic Calibration of Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
                 </section>
                 
                 
+                                
+                <section data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop"
+                         id="Context-UrbanFlows">                     
+                     
+                    <div class="whitebackground2 fragment">
+                        <h3>How many people are there in Traffalgar Square right now?</h3>
+                        
+                        <p>We need to quantify the ambient population and better understand
+                        urban flows:</p>
+                        
+                        <p class="l2">Crime – how many possible victims?</p>
+                        <p class="l2">Pollution – who is being exposed? Where are the hotspots?</p>
+                        <p class="l2">Economy – can we attract more people to our city centre?</p>
+                        <p class="l2">Health - can we encourage more active travel?</p>
+                        
+                    <p>Simulating Urban Flows (surf) - 3 year research project funded by the ESRC</p>
+                    </div>
+                </section>
+                
+
                 <section id="Overview" data-background-image="../figures/people_in_street.jpg">
                     <div class="whitebackground2">
                         <h2>Overview</h2>
-
-                        <p>Background - smart cities, the data deluge, and forecasting</p>
-                        <p>ABM for geographical data science and policy making</p>
-                        <p class="l2">Major hurdle: <i>real time</i> calibration</p>
-                        <p>Dynamic data assimilation for ABM</p>
-                        <p class="l2">with an <i>ensemble Kalman filter</i> (EnKF)</p>
-                        <p>Towards a real-time city simulation</p>
+                        
+                        <p>Leeds Institute for Data Analytics (LIDA)</p>
+                        <p class="l2">Urban Analytics research stream - very broad!</p>
+                        <p class="l2">Focus on population flows and the ambient population</p>
+                        <p>Machine learning approaches</p>
+                        <p>Tracking people (HABITS)</p>
+                        <p>Towards a real-time city simulation ... </p>
+                        <p class="l2">Data assimilation</p>
+                        <p class="l2">Agent-Based modelling</p>
+                        
                     </div>
                 </section>
 
                 
 
-                <section id="smart_cities">
+
+
+                
+                
+                  <!-- *
+                     *
+                     *
+                     Using machine learning to model footfall
+                     *
+                     *
+                -->
+                
+                <section id="MachineLearningFootfall">
                     
-                    <h2>Smart cities and the data deluge</h2>
-                    <figure class="right" style="width:40%;">
-                        <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
-                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
+                    <h2>Modelling Footfall with Machine Learning</h2>
+                    <p>Aim: to better understand footfall in Leeds city centre, using computer models and footfall camera data</p>
+                    <p>Methods</p>
+                    <p class="l2">Data analysis &amp; visualisation</p>
+                    <p class="l2">Machine learning</p>
+                    <p>Outcomes</p>                    
+                    <p class="l2">Analysis of changes in footfall patterns over time</p>
+                    <p class="l2">A model of footfall, able to quantify the success of events</p>
+                    <p class="l2">Indications of most important drivers</p>
+
+                </section>
+                
+                
+                <section id="MLFootfall-data">
+                    
+                    <h2>Modelling Footfall with Machine Learning</h2>
+                    <figure class="right">
+                        <img data-src="../figures/lcc-footfall/camera_locations.png", alt="Locations of CCTV cameras"/>
+                        <figcaption>Locations of the footfall cameras in Leeds</figcaption>
                     </figure>
-
+                    <p>Aim: to better understand footfall in Leeds city centre, using computer models and footfall camera data</p>
                     
-                    <p>Abundance of data about individuals and their environment</p>
-                    <p class="l2">"Big data revolution" (Mayer-Schonberger and Cukier, 2013)</p>
-                    <p class="l2">"Data deluge" (Kitchin, 2013a)</p>
-                    <p>Smart cities</p>
-                    <p class="l2">cities that "are increasingly composed of and monitored by pervasive and ubiquitous computing" (Kitchin, 2013a)</p>
-                    <p>Large and growing literature</p>
-                </section>
-                
-                
-                <section id="forecasting">
-                    <h2>What about forecasting?</h2>  
-                    <p>Abundance of real-time analysis, but limited forecasting. E.g.:</p>
-                    <p class="l2">MassDOT Real Time Traffic Management system (Bond and Kanaan, 2015)</p>
-                    <p class="l3">Detect vehicles with Bluetooth to analyse current traffic flows</p>
-                    <p class="l2">Centro De Operacoes Prefeitura Do Rio (in Rio de Janeiro)</p>
-                    <p class="l3">Advertise some predictive ability, but sparse detail</p>
-                    <p class="l2">City dashboards</p>
-                    <p>Forecasting ability is surprisingly absent in the literature</p>
-                    <p class="l2">(<i>correct me if I'm wrong!</i>)</p>
-                </section>
-                <section id="forecasting2">    
-                    <h2>Why so little evidence of forecasting?</h2>
-                    <p>Proprietary systems? Company secrets?</p>
-                    <p>A methodological gap?</p>
-                    <p>Machine learning will probably help, but black box is a drawback</p>
-                    <p>Maybe <strong>agent-based modelling</strong> could have the answer</p>
+                    <p>8 cameras installed between 2007 and 2009</p>
+                    <p>Track movement of people through their field of vision</p>
+                    <p>Provide counts of number of passers-by per hour</p>
+                    <p>Cover a relatively small area of the city centre, not
+                    good for wider dynamics.</p>
+                    
                 
                 </section>
                 
+                <!--
+                <section id="MLFootfall-calendar">
+                    <img data-src="../figures/lcc-footfall/calendar.png", 
+                         alt="Calendar showing footfall patterns over a typical week "/>
+                
+                </section>
+                
+                <section id="MLFootfall-temporal_variation">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Side note: Temporal Change</h3>
+                    <p>Saw an change in proportion of people using the city</p>
+                    <p>Daytime (8am to 6pm) -> Evening (6pm to 9pm)</p>
+                    <p>Night time (9pm to 8am) unchanged</p>
+                    
+                    <img data-src="../figures/lcc-footfall/footfall_proportions.png", 
+                         alt="Change in proportions of people in the city at different times"/>
+                
+                </section>
 
-                
-                
-                                
-                
-                <section id="abm">
-                    <h2>Agent-Based Modelling (ABM)</h2>
-                    <img class="right" data-src="../figures/virtual_city.jpeg"/>
-                    <p>Autonomous, interacting 'agents'</p>
-                    <p>Model phenomena from the 'bottom-up'</p>
-                    <p>Advantages:</p>
-                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
-                    <p class="l2">Natural description of a system</p>
-                    <p class="l2">Bridge between verbal theories and mathematical models</p>
-                    <p class="l2">History of the evolution of the system</p>
+                -->
+
+                <section id="MLFootfall-explanatory_data">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <img class="right" data-src="../figures/lcc-footfall/people_in_the_rain.png"
+                         alt="People in the rain" />
+                    <h3>Explanatory factors</h3>
+                    <p>Bank Holidays</p>
+                    <p class="l2">What type of bank holiday?</p>
+                    <p>School and University Holidays</p>
+                    <p>The weather</p>
+                    <p class="l2">Mean temperature, wind speed and rainfall</p>
+                    <p>Day of week</p>
+                    <p>Many others (not tested yet...)</p>
+                    <p class="l2">Train prices, car parking availability, business
+                    opening times, etc.</p>
+                    
                 </section>
+                
+                <section id="MLFootfall-machine_learning">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <img class="right" data-src="../figures/lcc-footfall/model_error.png" 
+                         alt="Errors from the random forest model" />
+                
+                    <h3>Machine Learning Methods</h3>
+                    <p>LIDA Intern - Molly Asher</p>
+                    <p class="l2">Ended up supervising me  ... </p>
+                    <p>Attempted a number of different methods</p>
+                    <p class="l2">Mainly neural networks and random forests</p>
+                    <p class="l2">Random forest was most accurate</p>
+                    
+                </section>
+                
+                <section id="MLFootfall-feature_importance">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Feature Importance</h3>
+                    <div style="font-size:70%">
+                    <table>
+                        <thead>
+                            <tr><th>Variable</th><th>Relative Importance</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Mean daily temperature</td><td>1142</td></tr>
+                            <tr><td>Mean daily rainfall</td><td> 383 </td></tr>
+                            <tr><td>Monday</td><td>131</td></tr>
+                            <tr><td>2013</td><td>131</td></tr>
+                            <tr><td>Saturday</td><td>130</td></tr>
+                            <tr><td>2016</td><td>130</td></tr>
+                            <tr><td>After Trinity opened</td><td>123</td></tr>
+                            <tr><td>Thursday</td><td>122</td></tr>
+                            <tr><td>Tuesday</td><td>116</td></tr>
+                            <tr><td>School holiday</td><td>115</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                </section>
+                
+                
+                <section id="MLFootfall-predictive_analytics">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Predictive Analytics</h3>
+                    <div style="font-size:70%">
+                    <table>
+                        <thead>
+                            <tr><th>Event</th><th>Date</th><th>Real Footfall</th><th>Prediction</th><th>Difference (%)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Tour de France</td><td>5-Jul-14</td><td>346,180</td><td>217,277</td><td>-37</td></tr>
+                            <tr><td>Trinity Opening</td><td>21-Mar-13</td><td>279,473</td><td>187,381</td><td>-33</td></tr>
+                            <tr><td>Xmas lights 2013</td><td>07-Nov-13</td><td>193,441</td><td>153,750</td><td>-21</td></tr>
+                            <tr><td>Xmas lights 2015</td><td>12-Nov-15</td><td>175,126</td><td>160,105</td><td>-9</td></tr><tr>
+                            <tr><td>Light Night</td><td>06-Oct-16</td><td>225,660</td><td>198,025</td><td>-12</td></tr>
+                            
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            
+                            <tr><td>???</td><td>30-Dec-12</td><td>106,423</td><td>157,842</td><td>+48</td></tr>
+                            <tr><td>???</td><td>12-Apr-16</td><td>134,808</td><td>173,734</td><td>+29</td></tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+                </section>
+                
            
-                <section data-background-video="../videos/sim.mp4,../videos/sim.webm"
-                         data-background-video-loop="loop"
-                         id="abm-example-predictive">
-                    <h2 style="background-color: white;">ABM Example - Burglary</h2>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                      
+                <section id="MLFootfall-conclusions">
+                    
+                    <h2>Modelling Footfall with ML</h2>
+                    <h3>Conclusion</h3>
+                    
+                    <p>Still needs some refinement, but potentially a useful tool</p>
+                    <p>There are caveats, and it's not so useful for more nuanced analysis</p>
+                    <p class="l2">Easy to overfit - e.g. train with 365 days</p>
+                    <p class="l2">Not generalisable (<i>after trinity opened</i>)</p>
+                    <p class="l2">What about bank holidays that fall during other holidays?</p>
+                    <p class="l2">How should roads be re-configured to encourage pedestrians?</p>
+                    <p class="l2">Where are most visitors coming from?</p>
+                    <p class="l2">How have patterns of use in the city changed?</p>
+                    <p>For this we need more detail about individual movements...</p>
+                
                 </section>
                 
+                  <!-- *
+                     *
+                     *
+                     HABITS
+                     *
+                     *
+                -->
+                
+                <section id="HABITS">
+                    
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    
+                    <h3>Improved policy to mitigate pollutant and inactivity related health burdens
+                    through new big data</h3>
+                    
+                    <p>Aim: Take new 'Track and Trace' (T&amp;T) data generated from mobile phones to
+                        support new policies to:</p>
+                    <p class="l2">Reduce the disease burden of pollution</p>
+                    <p class="l2">Encourage active travel</p>
+                    <p>Lead by the Institute for Transport Studies, in collaboration with
+                        Newcastle City Council and funded by the ESRC</p>                    
+                    <p>A more nuanced measure of population flows?</p>
+                    
+                </section>
+                
+                <section id="HABITS-GoSmarter">
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    <img style="float:right; width:300px; height:auto"
+                         src="../figures/habits/go_smarter_logo.png" alt ="GoSmarter logo" />
+                    <h3>Go Smarter</h3>
+                    <p>Smart-phone app built in collaboration with Newcastle City Council</p>
+                    <p>Tracks peoples' journeys</p>
+                    <p class="l2">Detects when the user is moving and estimates mode of travel</p>
+                    <p>Rewards for using active / sustainable modes of travel</p>
+                    <p>Aim: Demonstrate how the linking of high-resolution location data
+                        and other databases / models can support better policy making</p>
+                </section>
+                
+                
+                <section id="HABITS-Pollution">
+                    
+                     <figure class="right">
+                        <img data-src="../figures/attribution/park-aag-pollution.png" />
+                        <figcaption>
+                            Source: Park, Yoo Min, and Mei-Po Kwan (2017). Individual Exposure Estimates May Be Erroneous When Spatiotemporal Variability of Air Pollution and Human Mobility Are Ignored. <i>Health &amp; Place</i> 43: 85–94.
+                        </figcaption>
+                    </figure>
+                    
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    
+                    <h3>Disease Burden of Pollution</h3>
+                    
+                   <p>Collaborating with the Newcastle <a href="http://www.urbanobservatory.ac.uk/">
+                       Urban Observatory</a> who are sensing the urban environment</p>
+                    <p>Aim: use T&amp;T data to model urban flows and identify the most
+                    serious pollution hotspots.</p>
+                    
+                </section>
+                
+                <section id="HABITS-Caveats">
+                    <figure class="right">
+                        <img data-src="../figures/attribution/park-aag-pollution.png" />
+                        <figcaption>
+                            Source: Park, Yoo Min, and Mei-Po Kwan (2017). Individual Exposure Estimates May Be Erroneous When Spatiotemporal Variability of Air Pollution and Human Mobility Are Ignored. <i>Health &amp; Place</i> 43: 85–94.
+                        </figcaption>
+                    </figure>
+                    <div style="text-align: left">
+                        <a href="http://habitsdata.org/">
+                            <img data-src="../figures/habits/habits_logo.png" alt="HABITS"
+                             style="align:left; width:300px; height:auto;" />
+                        </a>
+                    </div>
+                    <h3>Data Caveats</h3>
+                    <p>T&amp;T data are</p>
+                    <p class="l2">High resolution (spatio-temporal)</p>
+                    <p class="l2">Abundant</p>
+                    <p>BUT:</p>
+                    <p class="l2">How representative of the wider population?</p>
+                    <p class="l2">Abundant <i>enough?</i></p>
+                </section>
+                
+                
+         
+                
+                <!-- *
+                     *
+                     *
+                     ABM for urban flows (surf)
+                     *
+                     *
+                -->
+                
+            
+                <section id="abm-triumvant1"
+                         data-background-image="../figures/virtual_city.jpeg">
+                
+                    <div class="whitebackground2">
+                        <h2>Three pillars for modelling &amp; forecasting in urban areas</h2>
+                        <p>Big Data</p>
+                        <p>Smart Cities</p>
+                        <p>ABM?</p>
+                    </div>
+                    
+                </section>
+                
+                <section id="abm-triumvant2">
+                    <img src="../figures/paper_figures/triumvirate.png" />
+                </section>
+
+
                 <section id="problems1">
-                    <h2>ABM Problems</h2>
+                    <h2>ABM as </h2>
+                    <h3>ABM Problems</h3>
                     <p>1. Computationally Expensive</p>
                     <p class="l2">Not amenable to machine-led calibration</p>
                     <p>2. Data hungry</p>
@@ -189,66 +427,33 @@
                 </section>
                 
                 
+                <!-- *
+                     *
+                     *
+                     Data Assimilation
+                     *
+                     *
+                -->
+                
+                
                 <section id="abm-dda-overview">
                     <img data-src="../figures/paper_figures/dda.jpg" alt="Diagram of dynamic data assimilation and an ABM" />
                 </section>
                 
                 
                             
-                <section id="dda">
-                    <h2>Dynamic Data Assimilation</h2>
-                    <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
-                    <p>Try to improve estimates of the true system state by combining:</p>
-                    <p class="l2">Noisy, real-world observations</p>
-                    <p class="l2">Model estimates of the system state</p>
-                    <p>Should be more accurate than data / observations in isolation.</p>
+                <section id="dda" data-background-image="../figures/weather2.jpg" >
+                    <div class="whitebackground fragment">                    
+                        <h2>Dynamic Data Assimilation</h2>
+                        <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                        <p>Try to improve estimates of the true system state by combining:</p>
+                        <p class="l2">Noisy, real-world observations</p>
+                        <p class="l2">Model estimates of the system state</p>
+                        <p>Should be more accurate than data / observations in isolation.</p>
+                    </div>
                 </section>
                 
-                
-                
-                
-                <section id="dda2">
-                    <h2>Dynamic Data Assimilation</h2>
-                    <h3>How?</h3>
-                    <p>Particle filters</p>
-                    <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
-                    <p>Kalman Filter</p>
-                    <p class="l2">Air traffic (Chen et al., 2012)</p>
-                    <p>Ensemble Kalman Filter</p>
-                    <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
-                    <p>Sequential Monte Carlo (SMC)</p>
-                    <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
-                
-                </section>
-                
-                
-                <!--
-                <section id="enkf">
-                    
-                    <h2>Ensemble Kalman Filter (EnKF)</h2>
-                    <h3>Outline</h3>
-                    <figure>
-                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
-                        <figcaption>
-                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
-                        </figcaption>
-                    </figure>                
-                </section>
 
-                <section id="enkf-maths">
-                    <h2>Ensemble Kalman Filter (EnKF)</h2>
-                    <h3>Maths</h3>
-                    <p>Broad literature, but generally tied to mathematical models (e.g. differential equations and linear functions)</p>
-                    <p>Not applicable to ABM (inherently non-linear)</p>
-                    <p>Working with a mathematician to do the hard work!</p>
-                    <p class="l2">In all its glory: Ward et al., (2016)</p>
-                    <h3>Advantages</h3>
-                    <p>Similar to <i>Kalman Filter</i> (best in class)</p>
-                    <p>But better for nonlinear systems</p>
-                    
-                </section>
-
-                -->
                 
                 <section id="enfk-process1">
                     <h2>Ensemble Kalman Filter - Basic Process</h2>
@@ -309,48 +514,70 @@
                     <p>EnKF estimates the model parameter (<i>bleedout rate</i>) accurately :-)</p>
                 </section>
                 
-
+                
 
                 
-                <section data-background-image="../figures/surf_workplan-v2.png" id="vision-surf">
+                
+                
+                                
+                <!-- *
+                     *
+                     *
+                     Towards real-time city simulation
+                     *
+                     *
+                -->
+                
+                <section id="city-simulation" 
+                         data-background-video="../videos/skylines_mov.mp4" 
+                         data-background-video-muted 
+                         data-background-video-loop="loop">
+                    
                     <div class="whitebackground2 fragment">
-                        <h2>Conclusion and Outlook</h2>
-                        <p>Surprising lack of smart cities <i>forecasting</i></p>
-                        <p>ABM potentially able to combine 'big' data to make more reliable short-term predictions</p>
-                        <p>Lots of work needed to adapt data assimilation techniques</p>
-                        <p>Future: a holistic city model, estimating the current state <i>and</i> 
-                        predicting future states.</p>
+                        <h2>Simulating Urban Flows (surf)</h2>
+                        <p><a href="http://surf.leeds.ac.uk/">surf.leeds.ac.uk</a></p>
+                        <p>Aim: Create an agent-based model capable of representing
+                        the human flows in a real city.</p>
+                        <p>Calibrated using streaming data <i>dynamically</i></p>
+                        <p>Hoping for European Research Council funding to continue the work</p>
+                    </div>
+                </section>
+                
+                
+
+                                
+                
+
+                <!-- *
+                     *
+                     *
+                     Conclusion
+                     *
+                     *
+                -->
+
+                
+                <section id="conclusion" data-background-image="../figures/people_in_street.jpg">
+                    <div class="whitebackground2">
+                        <h2>Conclusion</h2>
+                        <p>Some work from the Simulating Urban Flows project</p>
+                        <p class="l2">Machine learning approaches</p>
+                        <p class="l2">Tracking people (HABITS)</p>
+                        <p class="l2">Dynamically calibdated ABMs</p>
+                        <p>Towards a real-time city simulation ... </p>
                     </div>
                 </section>                
                 
-                <section id="references">
-                    
-                    <h2>References</h2>
-                    
-                    
-                    <p>Bond, R., and Kanaan, A. (2015) MassDOT Real Time Traffic Management System. In Planning Support Systems and Smart Cities, S. Geertman, J. Ferreira, R. Goodspeed, and J. Stillwell, Eds. Springer International Publishing, pp. 471–488.</p>
-                    
-                    <p>Kitchin, R. (2013a). Big data and human geography Opportunities, challenges and risks. Dialogues in Human Geography, 3(3):262–267.</p>
-                    
-                    <p>Kitchin, R. (2013b). The Real-Time City? Big Data and Smart Urbanism. SSRN Electronic Journal.</p>
-                    
-                    <p>Mayer-Schonberger, V. and Cukier, K. (2013). Big Data: A Revolution That Will Transform How We Live, Work and Think. John Murray, London, UK</p>
-                    
-                    <p>Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson. 2016. Dynamic Calibration of Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
-                    
-                </section>
                 
                 <section class="title"  id="final">
                     
-                    <h3>Simulation as the Catalyst for Geographical Data Science and Urban Policy Making</h1>
+                    <h3>Simulating Urban Flows</h3>
                     <hr/>
-                    <h4><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a> &amp; Alison Heppenstall</h4>
-                    <h4>Thanks: Alice Tapper, Jon Ward, Andy Evans</h4>
+                    <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, Andy Evans, &amp; Jon Ward</h2>
+                    <h4>Schools of Geography &amp; Mathematics, University of Leeds</h4>
                     <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
                     <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
                     <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
-                    <p style="text-align:center;">Ongoing work:</p>
-                    <p style="text-align:center;" class="l2">Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson (2016) Dynamic Calibration of     Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
                     
                 </section>    
                 
