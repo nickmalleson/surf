@@ -8,6 +8,7 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
+   - [Simulating Urban Flows]({{site.baseurl}}/p/2017-09-06-geocomp-surf.html). Presentation to GeoComputation 2017, 4-7 September, Leeds, UK.
    - [Urban Analytics: Example projects from LIDA]({{site.baseurl}}/p/2017-07-27-ONS-LIDA-UrbanAnlalytics.html). Presentation to the _Office for National Statistics_, 27th July, Titchfield.
 
    - [Quantifying the Ambient Population]({{site.baseurl}}/p/2017-05-25-cdrc-quantifying_ambient.pptx). Presentation at the _CDRC Data Partner Forum_, 25th May, Leeds Institute for Data Analytics.
