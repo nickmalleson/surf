@@ -8,9 +8,9 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
-   - [Quantifying the Ambient Population using Big Data and Agent-Based Modelling]({{site.baseurl}}/p/2017-09-11-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography[ECTQG](http://www.geog.leeds.ac.uk/ectqg17/) 7-11 September, 2017, York, UK.
+   - [Quantifying the Ambient Population using Big Data and Agent-Based Modelling]({{site.baseurl}}/p/2017-09-11-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography ([ECTQG](http://www.geog.leeds.ac.uk/ectqg17/)) 7-11 September, 2017, York, UK.
 
-   - [Quantifying Personal Pollution Impacts to Inform Transport Scheme Innovation through New Generation Mobility Data]({{site.baseurl}}/p/2017-09-08-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography[ECTQG](http://www.geog.leeds.ac.uk/ectqg17/) 7-11 September, 2017, York, UK.  
+   - [Quantifying Personal Pollution Impacts to Inform Transport Scheme Innovation through New Generation Mobility Data]({{site.baseurl}}/p/2017-09-08-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography ([ECTQG](http://www.geog.leeds.ac.uk/ectqg17/)) 7-11 September, 2017, York, UK.  
 
    - [Simulating Urban Flows]({{site.baseurl}}/p/2017-09-06-geocomp-surf.html). Presentation to GeoComputation 2017, 4-7 September, Leeds, UK.
    
