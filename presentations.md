@@ -8,12 +8,17 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
+   - [Quantifying the Ambient Population using Big Data and Agent-Based Modelling]({{site.baseurl}}/p/2017-09-11-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography[ECTQG](http://www.geog.leeds.ac.uk/ectqg17/) 7-11 September, 2017, York, UK.
+
+   - [Quantifying Personal Pollution Impacts to Inform Transport Scheme Innovation through New Generation Mobility Data]({{site.baseurl}}/p/2017-09-08-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography[ECTQG](http://www.geog.leeds.ac.uk/ectqg17/) 7-11 September, 2017, York, UK.  
+
    - [Simulating Urban Flows]({{site.baseurl}}/p/2017-09-06-geocomp-surf.html). Presentation to GeoComputation 2017, 4-7 September, Leeds, UK.
+   
    - [Urban Analytics: Example projects from LIDA]({{site.baseurl}}/p/2017-07-27-ONS-LIDA-UrbanAnlalytics.html). Presentation to the _Office for National Statistics_, 27th July, Titchfield.
 
    - [Quantifying the Ambient Population]({{site.baseurl}}/p/2017-05-25-cdrc-quantifying_ambient.pptx). Presentation at the _CDRC Data Partner Forum_, 25th May, Leeds Institute for Data Analytics.
 
-   - [Simulation as the Catalyst for Geographical Data Science and Urban Policy Making]({{site.baseurl}}/p/2017-04-06-aag-sim_as_catalyst.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 4th – 8th April, Boston, as part of the Special Sessions on Geographic Data Science_
+   - [Simulation as the Catalyst for Geographical Data Science and Urban Policy Making]({{site.baseurl}}/p/2017-04-06-aag-sim_as_catalyst.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 4th – 8th April, Boston, as part of the Special Sessions on Geographic Data Science_.
 
  - 2016
 
