@@ -443,7 +443,7 @@ cameras = []
 
 def buildCameras():
     for i in range(numberOfCameras):
-        print('building a camera')
+        #print('building a camera')
         cameras.append(Camera(agents, world))
         cameras[i].setLocation(cameraplaces[i])
         
@@ -467,7 +467,7 @@ def runAgents(hourIn, bleedoutdist):
     if hourIn%60 == 0:
         buildindex = int(hourIn/60)
         buildnumber = int(dist[buildindex%24])
-        print('building!')
+        #print('building!')
     else:
         buildnumber = 0
 
@@ -486,7 +486,7 @@ def runAgents(hourIn, bleedoutdist):
             #trialnumber = random.random()
             #print(trialnumber)
             if random.random() > bleedoutrate:
-               # print('bleeding out')
+               #print('bleeding out')
                 agent.retire()
             else:
                 agent.run(hourIn)
@@ -543,7 +543,7 @@ def runProgram(bleedoutdist, numberOfIterations, agentnumberIn):
         
     t1 = time.time()
     total = t1 - t0
-    print(total)
+    #print(total)
     
     #global agents
     #print(len(agents))
@@ -569,7 +569,7 @@ def runProgram(bleedoutdist, numberOfIterations, agentnumberIn):
     global cameras
     cameras = []
     
-    print(total)
+    #print(total)
         
     
     return result
@@ -617,7 +617,7 @@ def runProgramTrue(bleedoutdist, numberOfIterations, agentnumberIn):
         
     t1 = time.time()
     total = t1 - t0
-    print(total)
+    #print(total)
     
     #global agents
     #print(len(agents))
@@ -643,7 +643,7 @@ def runProgramTrue(bleedoutdist, numberOfIterations, agentnumberIn):
     global cameras
     cameras = []
     
-    print(total)
+    #print(total)
         
     
     return result    
@@ -655,7 +655,7 @@ def runProgramTrue(bleedoutdist, numberOfIterations, agentnumberIn):
 def printCameraCounts():
     data = []
     for camera in cameras:
-        print(camera.hourlycount)
+        print("Hourly count: "+str(camera.hourlycount))
         data.append(camera.hourlycount)
     
 ## as printCameraCounts, but also saves them using the io
@@ -663,12 +663,12 @@ def saveCameraCounts():
     data = []
     columnheadings = []
     for camera in cameras:
-        print(camera.hourlycount)
+        #print(camera.hourlycount)
         data.append(camera.hourlycount)
         columnheadings.append(str(camera.lineofsight))
     io.writeCounts(data, columnheadings)
     #plotCameraCounts(1)
-    print('done')
+    #print('finished saving camera counts')
     return data
     
 def plotCameraCounts(i):
@@ -722,7 +722,7 @@ def runForecast(T, nagents, xf0, pf0, H, R, steps):
     ## build agents based on the time
 
         if t%10 == 0:    
-            print(t)
+            #print(t)
         timeIn = t      
         
         runAgents(timeIn, bleedoutrate)
