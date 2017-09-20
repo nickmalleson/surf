@@ -1,0 +1,378 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="author" content="Nick Malleson">
+        <meta name="keywords" content="ABM, dynamic data assimilation, EnKF, ensemble kalman filter">
+
+		<title>Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</title>
+
+		<link rel="stylesheet" href="reveal/css/reveal.css">
+		<link rel="stylesheet" href="reveal/css/theme/white.css">
+        
+        <!-- Some extra bits added by Nick -->
+        <link rel="stylesheet" href="reveal/css/nick.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal/css/print/pdf.css' : 'reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                
+                <!--
+                <section data-markdown id="index"
+                         data-background-image="http://surf.leeds.ac.uk/figures/cityscapes/chicago_bw.jpg">
+                -->
+                    
+                <section class="title"  id="index">
+                    
+                    <h1 style="font-size: 60px;">Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</h1>
+                    <hr/>
+                    <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, 
+                        Alice Tapper, Jon Ward, Andrew Evans</h2>
+                    <h4>Schools of Geography &amp; Mathematics, University of Leeds, UK</h4>
+                    <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                    <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
+                    <hr/>
+                    <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
+                    <p style="text-align:center;font-size:25px">Code: <a href="https://github.com/nickmalleson/surf/tree/master/abm/essa-kalman_filter">https://github.com/nickmalleson/surf</a></p>
+                    <p style="text-align:center;font-size:25px">Full paper: <a href="http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf">http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf</a></p>
+                </section>    
+
+                <section id="abstract" >
+
+                	
+                	<h2>Abstract</h2>
+                	
+                    <p class="small"><strong>Background.</strong> The `data deluge', coupled with related `smart cities' initiatives, have led to a proliferation of models that capture the current state of urban systems to a high degree of accuracy. However, their ability to <i>forecast</i> future system states appears limited. Agent-based modelling (ABM) is well suited to modelling urban systems, but at present the methodology is seriously limited in its ability to incorporate up-to-date data (such as social media contributions, mobile telephone activity, public transport use, etc.) as they arise in order to reduce uncertainty in model forecasts.</p>
+                    <p class="small"><strong>Methods.</strong> This paper presents ongoing work that adapts data assimilation techniques from fields such as meteorology in order to allow agent-based models to be optimised using streaming data <i>in real time</i>. Here, a simple example of an agent-based model used to simulate the movement of people as they travel along a street is illustrated. Importantly, the model is optimised dynamically with an ensemble Kalman filter in response to hypothetical pedestrian count data.</p>
+                    <p class="small"><strong>Findings.</strong> The data assimilation technique reliably estimates the model parameter that it is attempting to optimise. Surprisingly, however, the estimates of the `true' system state that are produced by the model combined with noisy observations are less accurate than the observations in isolation. This is likely an artefact of the specific system under study here. Ultimately, we work towards a combination of ABM and data assimilation methods that will be able to assimilate streaming `smart cities' data into models in real time. </p>
+
+                </section>
+                
+                
+                
+                <section id="Overview" data-background-image="../figures/people_in_street.jpg">
+                    <div class="whitebackground2">
+                        <h2>Overview</h2>
+
+                        <p>Background - smart cities, the data deluge, and forecasting</p>
+                        <p>ABM for geographical data science and policy making</p>
+                        <p class="l2">Major hurdle: <i>real time</i> calibration</p>
+                        <p>Dynamic data assimilation for ABM</p>
+                        <p class="l2">with an <i>ensemble Kalman filter</i> (EnKF)</p>
+                        <p>Towards a real-time city simulation</p>
+                    </div>
+                </section>
+
+                
+
+                <section id="smart_cities">
+                    
+                    <h2>Smart cities and the data deluge</h2>
+                    <figure class="right" style="width:40%;">
+                        <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
+                    </figure>
+
+                    
+                    <p>Abundance of data about individuals and their environment</p>
+                    <p class="l2">"Big data revolution" (Mayer-Schonberger and Cukier, 2013)</p>
+                    <p class="l2">"Data deluge" (Kitchin, 2013a)</p>
+                    <p>Smart cities</p>
+                    <p class="l2">cities that "are increasingly composed of and monitored by pervasive and ubiquitous computing" (Kitchin, 2013a)</p>
+                    <p>Large and growing literature</p>
+                </section>
+                
+                
+                <section id="forecasting">
+                    <h2>What about forecasting?</h2>  
+                    <p>Abundance of real-time analysis, but limited forecasting. E.g.:</p>
+                    <p class="l2">MassDOT Real Time Traffic Management system (Bond and Kanaan, 2015)</p>
+                    <p class="l3">Detect vehicles with Bluetooth to analyse current traffic flows</p>
+                    <p class="l2">Centro De Operacoes Prefeitura Do Rio (in Rio de Janeiro)</p>
+                    <p class="l3">Advertise some predictive ability, but sparse detail</p>
+                    <p class="l2">City dashboards</p>
+                    <p>Forecasting ability is surprisingly absent in the literature</p>
+                    <p class="l2">(<i>correct me if I'm wrong!</i>)</p>
+                </section>
+                <section id="forecasting2">    
+                    <h2>Why so little evidence of forecasting?</h2>
+                    <p>Proprietary systems? Company secrets?</p>
+                    <p>A methodological gap?</p>
+                    <p>Machine learning will probably help, but black box is a drawback</p>
+                    <p>Maybe <strong>agent-based modelling</strong> could have the answer</p>
+                
+                </section>
+                
+
+                
+                
+                                
+                
+                <section id="abm">
+                    <h2>Agent-Based Modelling (ABM)</h2>
+                    <img class="right" data-src="../figures/virtual_city.jpeg"/>
+                    <p>Autonomous, interacting 'agents'</p>
+                    <p>Model phenomena from the 'bottom-up'</p>
+                    <p>Advantages:</p>
+                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
+                    <p class="l2">Natural description of a system</p>
+                    <p class="l2">Bridge between verbal theories and mathematical models</p>
+                    <p class="l2">History of the evolution of the system</p>
+                </section>
+           
+                <section data-background-video="../videos/sim.mp4,../videos/sim.webm"
+                         data-background-video-loop="loop"
+                         id="abm-example-predictive">
+                    <h2 style="background-color: white;">ABM Example - Burglary</h2>
+                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                      
+                </section>
+                
+                <section id="problems1">
+                    <h2>ABM Problems</h2>
+                    <p>1. Computationally Expensive</p>
+                    <p class="l2">Not amenable to machine-led calibration</p>
+                    <p>2. Data hungry</p>
+                    <p class="l2">Need fine-grained information about individual actions and behaviours</p>
+                    <p>3. Divergent</p>
+                    <p class="l2">Usually models represent complex systems</p>
+                    <p class="l2">Projections / forecasts quickly diverge from reality</p>
+                </section>
+                
+                
+                <section id="prob-divergence" 
+                         data-background-video="../videos/BBC_Swarm_Natures_Incredible_Invasions.mp4" 
+                         data-background-video-muted 
+                         data-background-video-loop="loop">
+                    
+                    <div class="whitebackground fragment">
+                        <h2>3. Divergence</h2>
+                        <p>Complex systems</p>
+                        <p>One-shot calibration</p>
+                        <p>Nonlinear models predict near future well, but diverge over time.</p>
+                    </div>
+                </section>
+                
+                <section id="abm-calibration">
+                    
+                    <figure class="right" style="width:30%">
+                        <img data-src="../figures/modelling_process.png" alt="The process of calibration"/>
+                        <figcaption>Typical model development process</figcaption>
+                    </figure>
+                    
+                    <h2>3. Divergence</h2>
+                    <p>Drawback with the 'typical' model development process</p>
+                    <p>Waterfall-style approach is common</p>
+                    <p>Calibrate until fitness is reasonable, then make predictions</p>
+                    <p>But we can do better:</p>
+                    <p class="l2">Better computers</p>
+                    <p class="l2">More (streaming) data</p>
+                    <p>Methodological gap</p>
+                    
+                </section>
+                
+                
+                <section id="abm-dda-overview">
+                    <img data-src="../figures/paper_figures/dda.jpg" alt="Diagram of dynamic data assimilation and an ABM" />
+                </section>
+                
+                
+                            
+                <section id="dda">
+                    <h2>Dynamic Data Assimilation</h2>
+                    <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                    <p>Try to improve estimates of the true system state by combining:</p>
+                    <p class="l2">Noisy, real-world observations</p>
+                    <p class="l2">Model estimates of the system state</p>
+                    <p>Should be more accurate than data / observations in isolation.</p>
+                </section>
+                
+                
+                
+                
+                <section id="dda2">
+                    <h2>Dynamic Data Assimilation</h2>
+                    <h3>How?</h3>
+                    <p>Particle filters</p>
+                    <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
+                    <p>Kalman Filter</p>
+                    <p class="l2">Air traffic (Chen et al., 2012)</p>
+                    <p>Ensemble Kalman Filter</p>
+                    <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
+                    <p>Sequential Monte Carlo (SMC)</p>
+                    <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
+                
+                </section>
+                
+                
+                <!--
+                <section id="enkf">
+                    
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Outline</h3>
+                    <figure>
+                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
+                        <figcaption>
+                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
+                        </figcaption>
+                    </figure>                
+                </section>
+
+                <section id="enkf-maths">
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Maths</h3>
+                    <p>Broad literature, but generally tied to mathematical models (e.g. differential equations and linear functions)</p>
+                    <p>Not applicable to ABM (inherently non-linear)</p>
+                    <p>Working with a mathematician to do the hard work!</p>
+                    <p class="l2">In all its glory: Ward et al., (2016)</p>
+                    <h3>Advantages</h3>
+                    <p>Similar to <i>Kalman Filter</i> (best in class)</p>
+                    <p>But better for nonlinear systems</p>
+                    
+                </section>
+
+                -->
+                
+                <section id="enfk-process1">
+                    <h2>Ensemble Kalman Filter - Basic Process</h2>
+                    <p>1. Forecast.</p>
+                    <p class="l2">Run an ensemble of models (ABMs) forward in time.</p>
+                    <p class="l2">Calculate ensemble mean and variance</p>
+                    <p>2. Analysis.</p>
+                    <p class="l2">New 'real' data are available</p>
+                    <p class="l2">Integrate these data with the model forecasts to create estimate of model parameter(s)</p>
+                    <p class="l2">Impact of new observations depends on their accuracy</p>
+                    <p>3. Repeat</p>
+                    
+                </section>
+                <section id="enfk-process2">
+                    <h2>Ensemble Kalman Filter - Basic Process</h2>
+                    <img data-src="../figures/paper_figures/time_framework.png" alt="Diagram of DDA assimilating data" />
+                </section>
+                
+                <section id="enkf-experiment1" >
+                    <h2>Experiment with an EnFK</h2>
+                    <p>Very simple ABM</p>
+                    <p class="l2">People walking along a street</p>
+                    <p class="l2">Every hour, <i>x</i> people begin at point A</p>
+                    <p class="l2">CCTV Cameras at either end count footfall</p>
+                    <p class="l2">Some people can leave before they reach the end (<i>bleedout rate</i>)</p>
+                    <p>Aim: Estimate the number of people who will pass camera B</p>
+                    <img style="width:70%;" data-src="../figures/paper_figures/dda_model_environment.jpg" alt="Diagram of the model environment" />                
+                </section>
+                
+                
+                <section id="enkf-truth_data">
+                    <h2>Hypothetical 'Truth' Data</h2>
+                    <p>Use the model to first generate a hypothetical reality</p>
+                    <img style="Width:70%;" data-src="../figures/paper_figures/example_flow.png" alt="Results - counts at camera A and B" />
+                </section>
+
+                <section id="results">
+                    
+                    <h2>(Preliminary) Experimental Results</h2>
+                    
+                    <figure style="width:43%;" class="left">
+                        <img data-src="../figures/paper_figures/kalman_filter_results.png" alt="Results1 (see caption)" />
+                        <figcaption>Kalman filter results over 5 days</figcaption>
+                    </figure>
+                    
+                    <figure style="width:43%;" class="right">
+                        <img data-src="../figures/paper_figures/sequential_parameter_estimation.png" alt="Results1 (see caption)" />
+                        <figcaption>Sequential parameter estimation under increased observational uncertainty</figcaption>
+                    </figure>
+                
+                </section>
+                
+                <section id="results2">
+                    <h2>(Preliminary) Experimental Results</h2>
+                    <p>Forecast and analysis are barely distinguishable</p>
+                    <p>Virtual observations are closer to 'truth' than the analysis :-(</p>
+                    <p class="l2">This is probably due to the degree of randomness in the model</p>
+                    <p>EnKF estimates the model parameter (<i>bleedout rate</i>) accurately :-)</p>
+                </section>
+                
+
+
+                
+                <section data-background-image="../figures/surf_workplan-v2.png" id="vision-surf">
+                    <div class="whitebackground2 fragment">
+                        <h2>Conclusion and Outlook</h2>
+                        <p>Surprising lack of smart cities <i>forecasting</i></p>
+                        <p>ABM potentially able to combine 'big' data to make more reliable short-term predictions</p>
+                        <p>Lots of work needed to adapt data assimilation techniques</p>
+                        <p>Future: a holistic city model, estimating the current state <i>and</i> 
+                        predicting future states.</p>
+                    </div>
+                </section>                
+                
+                <section id="references">
+                    
+                    <h2>References</h2>
+                    
+                    
+                    <p>Bond, R., and Kanaan, A. (2015) MassDOT Real Time Traffic Management System. In Planning Support Systems and Smart Cities, S. Geertman, J. Ferreira, R. Goodspeed, and J. Stillwell, Eds. Springer International Publishing, pp. 471–488.</p>
+                    
+                    <p>Kitchin, R. (2013a). Big data and human geography Opportunities, challenges and risks. Dialogues in Human Geography, 3(3):262–267.</p>
+                    
+                    <p>Kitchin, R. (2013b). The Real-Time City? Big Data and Smart Urbanism. SSRN Electronic Journal.</p>
+                    
+                    <p>Mayer-Schonberger, V. and Cukier, K. (2013). Big Data: A Revolution That Will Transform How We Live, Work and Think. John Murray, London, UK</p>
+                    
+                    <p>Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson. 2016. Dynamic Calibration of Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
+                    
+                </section>
+                
+                <section class="title"  id="final">
+                    
+                    <h3>Simulation as the Catalyst for Geographical Data Science and Urban Policy Making</h1>
+                    <hr/>
+                    <h4><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a> &amp; Alison Heppenstall</h4>
+                    <h4>Thanks: Alice Tapper, Jon Ward, Andy Evans</h4>
+                    <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                    <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
+                    <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
+                    <p style="text-align:center;">Ongoing work:</p>
+                    <p style="text-align:center;" class="l2">Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson (2016) Dynamic Calibration of     Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
+                    
+                </section>    
+                
+
+                
+			</div>
+		</div>
+
+		<script src="reveal/lib/js/head.min.js"></script>
+		<script src="reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal/plugin/markdown/marked.js' },
+					{ src: 'reveal/plugin/markdown/markdown.js' },
+					{ src: 'reveal/plugin/notes/notes.js', async: true },
+					{ src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
