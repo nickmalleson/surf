@@ -9,7 +9,7 @@ import surf.abm.agents.abbf.activities.ActivityTypes.DINNER
   * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.DINNER]]) that causes the agent to
   * travel to restaurants, pubs or fast food places
   */
-class DinnerActivity (
+case class DinnerActivity (
                        override val timeProfile: TimeProfile,
                        override val agent: ABBFAgent)
   extends FlexibleActivity(DINNER, timeProfile, agent)  with Serializable

@@ -125,7 +125,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, shopGeoms, lunchGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
     /**
       * Read and configure the buildings, roads, networks and junctions.
@@ -152,6 +152,7 @@ object SurfABM extends Serializable {
         val buildings = new GeomVectorField(WIDTH, HEIGHT)
         val shops = new GeomVectorField(WIDTH, HEIGHT)
         val lunchPlaces = new GeomVectorField(WIDTH, HEIGHT)
+        val dinnerPlaces = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
@@ -202,6 +203,9 @@ object SurfABM extends Serializable {
             }
             if (buildingType == "CAFE" || buildingType == "FF") {
               lunchPlaces.addGeometry(s)
+            }
+            if (buildingType == "REST" || buildingType == "FF" || buildingType == "PUB") {
+              dinnerPlaces.addGeometry(s)
             }
           }
         }
@@ -340,6 +344,7 @@ object SurfABM extends Serializable {
         roads.setMBR(MBR)
         shops.setMBR(MBR)
         lunchPlaces.setMBR(MBR)
+        dinnerPlaces.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
@@ -370,7 +375,7 @@ object SurfABM extends Serializable {
         LOG.info("Finished initialising model environment")
 
         // Return the layers
-        (buildings, shops, lunchPlaces, b_ids, roads, network, junctions, MBR)
+        (buildings, shops, lunchPlaces, dinnerPlaces, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {
@@ -456,13 +461,23 @@ object SurfABM extends Serializable {
   def getRandomBuilding(state: SimState): SurfGeometry[Building] = {
     // Get a random building
     val o = SurfABM.buildingGeoms.getGeometries.get(state.random.nextInt(SurfABM.buildingGeoms.getGeometries().size()))
-    // cast it to a MasonGemoetry using pattern matching (throwing an error if not possible)
+    // cast it to a MasonGeometry using pattern matching (throwing an error if not possible)
     o match {
       case x: SurfGeometry[Building @unchecked] => x
       case _ => throw new ClassCastException
     }
   }
 
+  def getRandomFunctionalBuilding(state: SimState, geom: GeomVectorField): SurfGeometry[Building] = {
+    // Get a random building
+    val o = geom.getGeometries.get(state.random.nextInt(geom.getGeometries().size()))
+    // cast it to a MasonGeometry using pattern matching (throwing an error if not possible)
+    o match {
+      case x: SurfGeometry[Building @unchecked] => x
+      case _ => throw new ClassCastException
+    }
+  }
+  
   // Convenience to know how many ticks per day there are
   val ticksPerDay = 1440d / Clock.minsPerTick.toDouble
 

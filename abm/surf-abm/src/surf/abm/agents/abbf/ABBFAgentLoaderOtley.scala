@@ -140,6 +140,7 @@ object ABBFAgentLoaderOtley {
               val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
               val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
               val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](work, SurfABM.lunchGeoms)
+              val dinnerLocation: SurfGeometry[Building] = SurfABM.getRandomFunctionalBuilding(state, SurfABM.dinnerGeoms)
 
               val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
               val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
@@ -160,7 +161,6 @@ object ABBFAgentLoaderOtley {
   }
 
   /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
-  //def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
   def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building], lunchLocation: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
@@ -173,14 +173,14 @@ object ABBFAgentLoaderOtley {
     )
     // Work time profile is 0 before 6 and after 10, and 1 between 10-4 with a bit of randomness thrown in
     val rnd = state.random.nextDouble() * 4d
-    // A random number between 0 and 2 (remark Tomas: isn't it between 0 and 4?)
-    val rndPreference = state.random.nextDouble()
-    // Test with a random preference for leisure activities. Should become activity specific.
+    // A random number between 0 and 4
+    val rndLunchPreference = state.random.nextDouble()
+    // Test with a random preference for eating and leisure activities. Should become activity specific.
+    val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
-    //val workTimeProfile = TimeProfile(Array((5d, 0d), (10d, 1d), (16d, 1d), (22d, 0d))) // without randomness
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
-    // Shopping place should be a supermarket or a convenience store of OpenStreetMaps
+    // Shopping place should be a supermarket or a convenience store of OpenStreetMap
     val shoppingPlace = Place(
       location = shop,
       //location = null,
@@ -199,8 +199,13 @@ object ABBFAgentLoaderOtley {
       activityType = LUNCHING,
       openingTimes = null      // not really necessary as activity intensity will be 0 outside lunch hours
     )
-    val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndPreference), (12d + rnd/2, rndPreference), (15d, 0d)))
+    val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndLunchPreference), (12d + rnd/2, rndLunchPreference), (15d, 0d)))
     val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, place = lunchPlace)
+
+    // DINNER
+    val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19d + rnd, rndDinnerPreference), (22.5, 0d)))
+    val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a)
+
 
     // School
     /*val schoolPlace = Place(
