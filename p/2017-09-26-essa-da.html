@@ -61,6 +61,23 @@
 
                 </section>
                 
+                <section data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop"
+                         id="Context-UrbanFlows">                     
+                    <div class="whitebackground2 fragment">
+                        <h3>How many people are there in Trafalgar Square right now?</h3>
+                        
+                        <p>We need to better understand urban flows:</p>
+                        
+                        <p class="l2">Crime – how many possible victims?</p>
+                        <p class="l2">Pollution – who is being exposed? Where are the hotspots?</p>
+                        <p class="l2">Economy – can we attract more people to our city centre?</p>
+                        <p class="l2">Health - can we encourage more active travel?</p>
+                        
+                    <p>Simulating Urban Flows (surf) - 3 year research project funded by the ESRC</p>
+                    </div>
+                </section>
+                
                 
                 
                 <section id="Overview" data-background-image="../figures/people_in_street.jpg">
@@ -68,11 +85,13 @@
                         <h2>Overview</h2>
 
                         <p>Background - smart cities, the data deluge, and forecasting</p>
-                        <p>ABM for geographical data science and policy making</p>
+                        <p>ABM for geographical simulating urban flows</p>
                         <p class="l2">Major hurdle: <i>real time</i> calibration</p>
                         <p>Dynamic data assimilation for ABM</p>
                         <p class="l2">with an <i>ensemble Kalman filter</i> (EnKF)</p>
                         <p>Towards a real-time city simulation</p>
+                        <hr/>
+                        <p>Help and advice please!</p>
                     </div>
                 </section>
 
@@ -111,7 +130,9 @@
                     <h2>Why so little evidence of forecasting?</h2>
                     <p>Proprietary systems? Company secrets?</p>
                     <p>A methodological gap?</p>
-                    <p>Machine learning will probably help, but black box is a drawback</p>
+                    <p>Machine learning will probably help</p>
+                    <p class="l2">E.g. short-term traffic forecasting (Vlahogianni et al. 2014)</p>
+                    <p class="l2">But black box is a drawback - How to run diverse scenarios?</p>
                     <p>Maybe <strong>agent-based modelling</strong> could have the answer</p>
                 
                 </section>
@@ -120,7 +141,7 @@
                 
                 
                                 
-                
+                <!--
                 <section id="abm">
                     <h2>Agent-Based Modelling (ABM)</h2>
                     <img class="right" data-src="../figures/virtual_city.jpeg"/>
@@ -142,7 +163,8 @@
                     <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
                       
                 </section>
-                
+                -->
+
                 <section id="problems1">
                     <h2>ABM Problems</h2>
                     <p>1. Computationally Expensive</p>
@@ -186,22 +208,24 @@
                     
                 </section>
                 
+            
+                
+                            
+                <section id="dda" data-background-image="../figures/weather2.jpg" >
+                    <div class="whitebackground fragment">
+                        <h2>Dynamic Data Assimilation</h2>
+                        <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                        <p>Try to improve estimates of the true system state by combining:</p>
+                        <p class="l2">Noisy, real-world observations</p>
+                        <p class="l2">Model estimates of the system state</p>
+                        <p>Should be more accurate than data / observations in isolation.</p>
+                    </div>
+                </section>
+                
                 
                 <section id="abm-dda-overview">
                     <img data-src="../figures/paper_figures/dda.jpg" alt="Diagram of dynamic data assimilation and an ABM" />
                 </section>
-                
-                
-                            
-                <section id="dda">
-                    <h2>Dynamic Data Assimilation</h2>
-                    <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
-                    <p>Try to improve estimates of the true system state by combining:</p>
-                    <p class="l2">Noisy, real-world observations</p>
-                    <p class="l2">Model estimates of the system state</p>
-                    <p>Should be more accurate than data / observations in isolation.</p>
-                </section>
-                
                 
                 
                 
@@ -212,32 +236,20 @@
                     <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
                     <p>Kalman Filter</p>
                     <p class="l2">Air traffic (Chen et al., 2012)</p>
-                    <p>Ensemble Kalman Filter</p>
+                    <p>Ensemble Kalman Filter (EnKF)</p>
                     <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
                     <p>Sequential Monte Carlo (SMC)</p>
                     <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
-                
+                    <p>Approximate Bayesian Computation</p>
+                    <p class="l2">?</p>
                 </section>
-                
-                
-                <!--
-                <section id="enkf">
-                    
-                    <h2>Ensemble Kalman Filter (EnKF)</h2>
-                    <h3>Outline</h3>
-                    <figure>
-                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
-                        <figcaption>
-                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
-                        </figcaption>
-                    </figure>                
-                </section>
+
 
                 <section id="enkf-maths">
                     <h2>Ensemble Kalman Filter (EnKF)</h2>
                     <h3>Maths</h3>
                     <p>Broad literature, but generally tied to mathematical models (e.g. differential equations and linear functions)</p>
-                    <p>Not applicable to ABM (inherently non-linear)</p>
+                    <!--<p>Not applicable to ABM (inherently non-linear)</p>-->
                     <p>Working with a mathematician to do the hard work!</p>
                     <p class="l2">In all its glory: Ward et al., (2016)</p>
                     <h3>Advantages</h3>
@@ -246,7 +258,6 @@
                     
                 </section>
 
-                -->
                 
                 <section id="enfk-process1">
                     <h2>Ensemble Kalman Filter - Basic Process</h2>
@@ -260,57 +271,106 @@
                     <p>3. Repeat</p>
                     
                 </section>
+                
+                <section id="enkf-darsos_diagram">
+                    
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Outline</h3>
+                    <figure>
+                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
+                        <figcaption>
+                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
+                        </figcaption>
+                    </figure>                
+                </section>
+                
+                <!--
                 <section id="enfk-process2">
                     <h2>Ensemble Kalman Filter - Basic Process</h2>
                     <img data-src="../figures/paper_figures/time_framework.png" alt="Diagram of DDA assimilating data" />
                 </section>
+                -->
                 
                 <section id="enkf-experiment1" >
-                    <h2>Experiment with an EnFK</h2>
-                    <p>Very simple ABM</p>
-                    <p class="l2">People walking along a street</p>
+                    <h2>Experiment with an EnKF</h2>
+                    <p>Very simple ABM - people walking along a street</p>
                     <p class="l2">Every hour, <i>x</i> people begin at point A</p>
                     <p class="l2">CCTV Cameras at either end count footfall</p>
                     <p class="l2">Some people can leave before they reach the end (<i>bleedout rate</i>)</p>
+                    <p class="l2">Complete model state can be captured in a state vector.</p>
                     <p>Aim: Estimate the number of people who will pass camera B</p>
-                    <img style="width:70%;" data-src="../figures/paper_figures/dda_model_environment.jpg" alt="Diagram of the model environment" />                
+                    <img style="width:80%;" data-src="../figures/paper_figures/dda_model_environment.jpg" alt="Diagram of the model environment" />                
                 </section>
                 
                 
                 <section id="enkf-truth_data">
                     <h2>Hypothetical 'Truth' Data</h2>
                     <p>Use the model to first generate a hypothetical reality</p>
-                    <img style="Width:70%;" data-src="../figures/paper_figures/example_flow.png" alt="Results - counts at camera A and B" />
+                    <img style="Width:100%;" data-src="../figures/paper_figures/dda-essa/example_flow2.png" alt="Results - counts at camera A and B" />
                 </section>
 
-                <section id="results">
+        
+                <section id="results1">
                     
                     <h2>(Preliminary) Experimental Results</h2>
+                    <h3>Summary</h3>
+                    <p>Number of agents who pass camera B:</p>
+                    <p class="l2">forecast, analysis, virtual observations, truth</p>
                     
-                    <figure style="width:43%;" class="left">
-                        <img data-src="../figures/paper_figures/kalman_filter_results.png" alt="Results1 (see caption)" />
-                        <figcaption>Kalman filter results over 5 days</figcaption>
-                    </figure>
-                    
-                    <figure style="width:43%;" class="right">
-                        <img data-src="../figures/paper_figures/sequential_parameter_estimation.png" alt="Results1 (see caption)" />
-                        <figcaption>Sequential parameter estimation under increased observational uncertainty</figcaption>
+                    <figure style="width:100%;">
+                        <img data-src="../figures/paper_figures/dda-essa/results_summary.png" alt="Results (see caption)" />
+                        <figcaption>Number of agents who pass camera B measured using
+                        the forecast, analysis, virtual observations, and truth data.
+                        There is little to distinguish between the model states before and
+                        after data assimilation.</figcaption>
                     </figure>
                 
                 </section>
                 
                 <section id="results2">
+                    
                     <h2>(Preliminary) Experimental Results</h2>
-                    <p>Forecast and analysis are barely distinguishable</p>
-                    <p>Virtual observations are closer to 'truth' than the analysis :-(</p>
-                    <p class="l2">This is probably due to the degree of randomness in the model</p>
+                    <h3>Summary</h3>
+                    <p>Number of agents who pass camera B</p>                    
+                    <figure style="width:100%;">
+                        <img data-src="../figures/paper_figures/dda-essa/results_summary-zoom.png" alt="Results (see caption)" />
+                        <figcaption>Number of agents who pass camera B, focusing on a short time period.</figcaption>
+                    </figure>
+                    <p>In short: data assimilation only marginally changed the system state.</p>
+                </section>
+                
+                <section id="results3">
+                    
+                    <h2>(Preliminary) Experimental Results</h2>
+                    <h3>Parameter Estimation</h3>
+                    <p>Model parameters can be included in the model state vector.</p>
+                    <p>Can the EnKF find the single model parameter? (The <i>bleedout rate</i>).</p>                    
+                    <figure style="width:100%;">
+                        <img data-src="../figures/paper_figures/dda-essa/results-bleedout_rate.png" alt="Results (see caption)" />
+                        <figcaption>How quickly the EnKF finds the model parameter (<i>bleedout rate</i>).
+                        Happily it finds the 'true' parameter value reasonably quickly.</figcaption>
+                    </figure>
+                
+                </section>
+                
+            
+                
+                <section id="resultsX">
+                    <h2>(Preliminary) Experimental Results</h2>
+                    <h3>Quantifying Error (RMSE)</h3>
+                    <p>Forecast: 9.5; Analysis: 6.5; Observation: 3.0.</p>
+                    <p>Surprising because we would expect Analysis &lt; Observation</p>
+                    <p class="l2">Virtual observations are closer to 'truth' than the analysis :-(</p>
+                    <p class="l2">This is probably due to the degree of randomness in the model - 
+                    intelligent guesses will rarely be closer to reality than observations 
+                        (even noisy observations).</p>
                     <p>EnKF estimates the model parameter (<i>bleedout rate</i>) accurately :-)</p>
                 </section>
                 
 
 
                 
-                <section data-background-image="../figures/surf_workplan-v2.png" id="vision-surf">
+                <section data-background-image="../figures/surf_workplan-v2.png" id="conclusions1">
                     <div class="whitebackground2 fragment">
                         <h2>Conclusion and Outlook</h2>
                         <p>Surprising lack of smart cities <i>forecasting</i></p>
@@ -319,7 +379,36 @@
                         <p>Future: a holistic city model, estimating the current state <i>and</i> 
                         predicting future states.</p>
                     </div>
+                </section>
+                
+                <section data-background-image="../figures/surf_workplan-v2.png" id="conclusions2">
+                    <div class="whitebackground2">
+                        <h2>Conclusion and Outlook</h2>
+                        <p>Lots that we can borrow from the hard sciences</p>
+                        <p>Emulators</p>
+                        <p class="l2">Simplified versions of a computationally-expensive model that can 
+                            be executed quickly</p>
+                        <p class="l2">Good for exploring the parameter space</p>
+                        <p>Uncertainty</p>
+                        <p class="l2">Improved methods for quantifying and visualising uncertainty.</p>
+                        <img src="../figures/paper_figures/dda-essa/ensemble_uncertainty.png" 
+                             alt="Uncertainty in weather forecasts" />
+                    </div>
+                </section>
+                
+                
+                <section data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg"
+                         id="dust">
+                    <div class="whitebackground2">
+                        <h2>Future Work: DUST</h2>
+                        <p>Data Assimilation for Agent Based Models: Applications to Civil Emergencies</p>
+                        <p>Recently funded by the ERC (Starting Grant), €1.5M over 5 years</p>
+                        <p>For more information:</p>
+                        <p class="l2"><a href="https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects">
+                            https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects</a></p>
+                    </div>
                 </section>                
+                
                 
                 <section id="references">
                     
@@ -340,15 +429,18 @@
                 
                 <section class="title"  id="final">
                     
-                    <h3>Simulation as the Catalyst for Geographical Data Science and Urban Policy Making</h1>
+                    
+                    <h1 style="font-size: 60px;">Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</h1>
                     <hr/>
-                    <h4><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a> &amp; Alison Heppenstall</h4>
-                    <h4>Thanks: Alice Tapper, Jon Ward, Andy Evans</h4>
+                    <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, 
+                        Alice Tapper, Jon Ward, Andrew Evans</h2>
+                    <h4>Schools of Geography &amp; Mathematics, University of Leeds, UK</h4>
                     <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
                     <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
-                    <p style="text-align:center">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
-                    <p style="text-align:center;">Ongoing work:</p>
-                    <p style="text-align:center;" class="l2">Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson (2016) Dynamic Calibration of     Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
+                    <hr/>
+                    <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
+                    <p style="text-align:center;font-size:25px">Code: <a href="https://github.com/nickmalleson/surf/tree/master/abm/essa-kalman_filter">https://github.com/nickmalleson/surf</a></p>
+                    <p style="text-align:center;font-size:25px">Full paper: <a href="http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf">http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf</a></p>
                     
                 </section>    
                 
