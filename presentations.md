@@ -8,6 +8,8 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
+   - [Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling]({{site.baseurl}}/p/2017-09-26-essa-da.html). Presentation to the [Social Simulation Conference](https://www.sim2017.com/about/) - the 13th Annual Conference of the European Social Simulation Association (ESSA). 25-29 September 2017, Dublin, Ireland.
+
    - [Quantifying the Ambient Population using Big Data and Agent-Based Modelling]({{site.baseurl}}/p/2017-09-11-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography ([ECTQG](http://www.geog.leeds.ac.uk/ectqg17/)) 7-11 September, 2017, York, UK.
 
    - [Quantifying Personal Pollution Impacts to Inform Transport Scheme Innovation through New Generation Mobility Data]({{site.baseurl}}/p/2017-09-08-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography ([ECTQG](http://www.geog.leeds.ac.uk/ectqg17/)) 7-11 September, 2017, York, UK.  
