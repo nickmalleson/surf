@@ -113,10 +113,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     } // try
     catch {
       case ex: RoutingException => {
-        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exiting.", ex)
       }
       case ex: Exception => {
-        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exiting.", ex)
       }
       state.finish
     }
