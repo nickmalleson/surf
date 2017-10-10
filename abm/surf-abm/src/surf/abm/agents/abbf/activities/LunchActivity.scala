@@ -88,7 +88,7 @@ case class LunchActivity(
     * @return
     */
   override def backgroundIncrease(): Double = {
-    return 1d / (10d * SurfABM.ticksPerDay)
+    return 1d / (15d * SurfABM.ticksPerDay)
   }
 
   /**
@@ -96,6 +96,6 @@ case class LunchActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 100d / (3d * SurfABM.ticksPerDay)
+    return 80d / (3d * SurfABM.ticksPerDay)
   }
 }

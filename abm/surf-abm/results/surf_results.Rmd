@@ -29,8 +29,8 @@ AGENT_ID <- -1
 #AGENT_ID <- 1
 
 # When running this script directly in R(Studio) we need to specify the current working directory
-CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
-#CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
+#CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
+CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
 setwd(CURRENT_DIRECTORY) # This is only required when running directly in R(Studio)
 
 # Find the most recent run of that scenario

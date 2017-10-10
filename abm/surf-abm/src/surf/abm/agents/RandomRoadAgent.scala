@@ -31,8 +31,10 @@ class RandomRoadAgent(state:SurfABM, home:SurfGeometry[Building]) extends UrbanA
     }
     catch {
       case ex: RoutingException => {
+        
         Agent.LOG.error(this, "Routing error, Exitting.", ex)
         state.finish
+        
       }
     }
   }
