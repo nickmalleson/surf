@@ -203,7 +203,7 @@ object ABBFAgentLoaderOtley {
     val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, place = lunchPlace)
 
     // DINNER
-    val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19d + rnd, rndDinnerPreference), (22.5, 0d)))
+    val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19.5 + rnd/2, rndDinnerPreference), (22.5, 0d)))
     val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a)
 
 
