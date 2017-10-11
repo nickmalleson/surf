@@ -5,6 +5,3 @@ package surf.abm.environment
   */
 case class Building (val id:Int)
 
-//object Building {
-  //def apply(id:Int) : Building = new Building(id)
-//}

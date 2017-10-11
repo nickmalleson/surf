@@ -12,8 +12,8 @@ import sim.engine.SimState
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.Bag
-import sim.util.geo.{GeomPlanarGraph, MasonGeometry}
-import surf.abm.environment.{Building, Junction}
+import sim.util.geo.MasonGeometry
+import surf.abm.environment.{Building, GeomPlanarGraphSurf, Junction, Road}
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
@@ -134,7 +134,7 @@ object SurfABM extends Serializable {
       * @return
       */
     private def _readEnvironmentData()
-    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
+    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraphSurf, GeomVectorField, Envelope)
     = {
 
       try {
@@ -225,20 +225,36 @@ object SurfABM extends Serializable {
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... finished creating map for ${b_ids.size} buildings")
 
-
         // We want to save the MBR so that we can ensure that all GeomFields
         // cover identical area.
         MBR = buildings.getMBR() // Minimum envelope surrounding whole world
 
+        LOG.debug("Finished reading buildings data.");
+
 
         // Read roads
-        val roads = new GeomVectorField(WIDTH, HEIGHT)
+        val roadsTemp = new GeomVectorField(WIDTH, HEIGHT)
         val roadsURI = new File("data/" + dataDir + "/roads.shp").toURI().toURL()
         LOG.debug(s"Reading roads file: ${roadsURI} ...")
-        ShapeFileImporter.read(roadsURI, roads);
-        LOG.debug(s"\t... read ${roads.getGeometries().size()} roads")
+        ShapeFileImporter.read(roadsURI, roadsTemp);
+        LOG.debug(s"\t... read ${roadsTemp.getGeometries().size()} roads")
+        // Cast the roads to SurfGeometry objects
+        val roads = new GeomVectorField(WIDTH, HEIGHT)
+        val roadIDCol = "ID" // the name of the ID column in the roads shapefile
+        for (o <- roadsTemp.getGeometries()) {
+          val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
+          val roadID = try {
+            g.getIntegerAttribute("ID")
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
+              format(roadIDCol,roadIDCol ), e)
+            throw e
+          }
+          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID)))
+        }
         MBR.expandToInclude(roads.getMBR())
-        LOG.debug("Finished reading roads and buildings data.");
+        LOG.debug("Finished reading roads data.");
 
 
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
@@ -250,7 +266,7 @@ object SurfABM extends Serializable {
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
-        val network = new GeomPlanarGraph()
+        val network = new GeomPlanarGraphSurf()
         val junctions = new GeomVectorField(WIDTH, HEIGHT) // nodes for intersections
 
         SurfABM.LOG.debug("Creating road network")
