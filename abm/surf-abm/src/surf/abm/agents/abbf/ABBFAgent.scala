@@ -56,72 +56,68 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
 
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
-    // which, in turn, calls the activity's backgroundIncrease() function, which can be overidden by subclasses.
+    // which, in turn, calls the activity's backgroundIncrease() function, which can be overridden by subclasses.
     for (a <- this.activities){
       a ++ // Increase this activity
+      // Remark Tomas: is this necessary for the current activity? Probably not...
     }
 
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
     // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
     // has only been working on the activity for a short while!)
-    if (this.currentActivity.isDefined &&
-      this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE &&
-      this.currentActivity.get.--(simulate=true)
-    )
-    { // For info, log the reasons why the current activity definitely shouldn't change.
-      if ( ! this.currentActivity.isDefined ) {
+    if (this.currentActivity.isDefined && ! this.currentActivity.get.--(simulate=true) ) {
+      // The activity is almost zero and can't be reduced
+      Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
+      s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+    }
+    else {
+      if (! this.currentActivity.isDefined) {
+        // There is no activity at the moment.
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) is undefined.")
       }
-      if ( this.currentActivity.get.currentIntensityDecrease() >= ABBFAgent.MINIMUM_INSTENSITY_DECREASE )  {
-        // Check that the intensity has gone down enough
-        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-          s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
-      }
-      if ( ! this.currentActivity.get.--(simulate=true) ) { // Check that the intensity can be reduced
-        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-          s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
-      }
-
-    }
-
-
-    else {
-      // Either there is no activity at the moment, or it has been worked on sufficiently to decrease intensity by a threshold,
+      // Either the activity has been worked on sufficiently to decrease intensity by a threshold,
       // or another activity is now more important. So now see if it should change.
+
+      // Perform the action to satisfy the current activity
+      //val satisfied = highestActivity.performActivity() // THis is wrong! Don't want to perform the highest activity as it might not be the current one.
+      if (this.currentActivity.isDefined) {
+        val satisfied = this._currentActivity.get.performActivity()
+        if (satisfied) {
+          // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
+          // (the '--' function just calls that)
+          this._currentActivity.get.--()
+        }
+      }
+
       var msg = "" // Create a single log message to write out (limits nu
+      if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE) {
+        // The intensity has not gone down enough
+        Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
+        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+      } else {
+        // Now find the most intense one, given the current time.
+        val highestActivity: Activity = this.highestActivity()
+        msg += s"Highest activity: ${highestActivity.toString()}. "
+        //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
-      // Now find the most intense one, given the current time.
-      val highestActivity: Activity = this.highestActivity()
-      msg += s"Highest activity: ${highestActivity.toString()}. "
-      //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
+        // Is the highest activity high enough to take control?
+        if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+          // If not, then make the current activity None
+          msg += s"Not high enough (${this.highestActivity().intensity()}, setting to None."
+          this._changeActivity(None)
+          //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
+          return // No point in continuing
+        }
 
-      // Is the highest activity high enough to take control?
-      if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
-        // If not, then make the current activity None
-        msg += s"Not high enough (${this.highestActivity().intensity()}, setting to None."
-        this._changeActivity(None)
-        //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
-        return // No point in continuing
+        // See if the activity needs to change (taking into account that there might not be a current activity)
+        if (highestActivity != this.currentActivity.getOrElse(None)) {
+          msg += s"Changing from ${this.currentActivity.getOrElse(None)} to ${Some(highestActivity)}. "
+          this._changeActivity(Some(highestActivity))
+          //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
+        }
       }
-
-      // See if the activity needs to change (taking into account that there might not be a current activity)
-      if (highestActivity != this.currentActivity.getOrElse(None)) {
-        msg += s"Changing from ${this.currentActivity.getOrElse(None)} to ${Some(highestActivity)}. "
-        this._changeActivity(Some(highestActivity))
-        //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
-      }
-
       Agent.LOG().debug(this, msg)
 
-    }
-
-    // Perform the action to satisfy the current activity
-    //val satisfied = highestActivity.performActivity() // THis is wrong! Don't want to perform the highest activity as it might not be the current one.
-    val satisfied = this._currentActivity.get.performActivity()
-    if (satisfied) {
-      // Decrease the activity. See the activity.reduceActivityAmout() function to see how much it will go down by
-      // (the '--' function just calls that)
-      highestActivity.--()
     }
 
   }
@@ -208,7 +204,7 @@ object ABBFAgent {
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INSTENSITY_DECREASE = 0.1
+  private val MINIMUM_INSTENSITY_DECREASE = 0.15
 
   assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 

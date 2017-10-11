@@ -722,8 +722,13 @@ def runForecast(T, nagents, xf0, pf0, H, R, steps):
     ## build agents based on the time
 
         if t%10 == 0:    
+<<<<<<< HEAD
+            pass
+            #print(t)
+=======
              #print(t)
              pass
+>>>>>>> 7f970caa29ed55e75b88532bbd2671960efff0c2
         timeIn = t      
         
         runAgents(timeIn, bleedoutrate)

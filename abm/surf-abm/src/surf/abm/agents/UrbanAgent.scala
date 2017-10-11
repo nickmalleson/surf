@@ -92,7 +92,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
           }
 
           // In some cases, where the origin and destination are the same, the segment will be null here,
-          // as the agent has already reached their destination without actually creating a path.
+          // as the agent has already reached its destination without actually creating a path.
           // Check for this. If it is not the case, then just move along the path as normal.
           if (this._atDestination) {
             return
@@ -106,17 +106,17 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
         }
 
-        // If no destination, then thrown an exception
+        // If no destination, then throw an exception
         case None => throw new Exception(s"${this.toString()} cannot move along their path because no destination has been set")
       }
 
     } // try
     catch {
       case ex: RoutingException => {
-        Agent.LOG.error("Error routing agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exiting.", ex)
       }
       case ex: Exception => {
-        Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exitting.", ex)
+        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exiting.", ex)
       }
       state.finish
     }
@@ -236,7 +236,7 @@ object UrbanAgent {
 
     // Current and destination junctions are the same. Just return a single edge as the path.
     if (currentNode eq destinationNode) {
-      Agent.LOG.warn(s"Current and destination junctions are same for the object ${caller.getOrElse("[Not Provided]")}")
+      //Agent.LOG.warn(s"Current and destination junctions are same for the object ${caller.getOrElse("[Not Provided]")}")
       return List[GeomPlanarGraphDirectedEdge](currentNode.getOutEdges.getEdges.get(0).asInstanceOf[GeomPlanarGraphDirectedEdge])
 
     }
