@@ -3,8 +3,8 @@ package surf.abm.agents
 
 import com.vividsolutions.jts.geom.{Coordinate, LineString}
 import com.vividsolutions.jts.linearref.LengthIndexedLine
-import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
-import surf.abm.environment.{Building, Junction}
+import sim.util.geo.GeomPlanarGraphDirectedEdge
+import surf.abm.environment.{Building, GeomPlanarGraphEdgeSurf, Junction, Road}
 import surf.abm.exceptions.RoutingException
 import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 
@@ -113,10 +113,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     } // try
     catch {
       case ex: RoutingException => {
-        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exiting.", ex)
+        Agent.LOG.error(this,"Error routing agent. Exiting.", ex)
       }
       case ex: Exception => {
-        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exiting.", ex)
+        Agent.LOG.error(this,"Exception in MoveAlongPath for agent. Exiting.", ex)
       }
       state.finish
     }
@@ -129,7 +129,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     * @param edge the GeomPlanarGraphEdge to traverse next
     *
     */
-  private def setupEdge(edge: GeomPlanarGraphEdge) {
+  private def setupEdge(edge: GeomPlanarGraphEdgeSurf[Road]) {
     val line: LineString = edge.getLine
     this.segment = new LengthIndexedLine(line)
     this.startIndex = this.segment.getStartIndex
@@ -156,6 +156,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   private def transitionToNextEdge(residualMove: Double): Boolean = {
     assert(this._path != null, s"The path shouldn't be null ${this.toString()}")
 
+
+
     indexOnPath += pathDirection
     // See if the agent has reached the end of the path. If so, reset the counters and return true.
     if ((this.pathDirection > 0 && this.indexOnPath >= this._path.size) ||
@@ -177,11 +179,15 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     }
 
     // move to the next edge in the path
-    val edge: GeomPlanarGraphEdge = this._path(indexOnPath).getEdge.asInstanceOf[GeomPlanarGraphEdge]
+    val edge: GeomPlanarGraphEdgeSurf[Road] = this._path(indexOnPath).getEdge.asInstanceOf[GeomPlanarGraphEdgeSurf[Road]]
     assert(edge != null)
     this.setupEdge(edge)
     val speed: Double = residualMove * linkDirection
     currentIndex += speed
+
+    // XXXX TESTING
+    AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
+    print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
 
     // check to see if the progress has taken the current index beyond its goal
     // given the direction of movement. If so, proceed to the next edge

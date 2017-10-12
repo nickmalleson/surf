@@ -12,8 +12,8 @@ import sim.engine.SimState
 import sim.field.geo.GeomVectorField
 import sim.io.geo.ShapeFileImporter
 import sim.util.Bag
-import sim.util.geo.{GeomPlanarGraph, MasonGeometry}
-import surf.abm.environment.{Building, Junction}
+import sim.util.geo.MasonGeometry
+import surf.abm.environment.{Building, GeomPlanarGraphSurf, Junction, Road}
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
@@ -127,6 +127,8 @@ object SurfABM extends Serializable {
   // Spatial layers. One function to read them all
   val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
+  LOG.info("Finished initialising model environment")
+
     /**
       * Read and configure the buildings, roads, networks and junctions.
       * This is written as a function so that it can be tested elsewhere.
@@ -134,7 +136,7 @@ object SurfABM extends Serializable {
       * @return
       */
     private def _readEnvironmentData()
-    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraph, GeomVectorField, Envelope)
+    //: (GeomVectorField, GeomVectorField, Map[Int, SurfGeometry], GeomVectorField, GeomPlanarGraphSurf, GeomVectorField, Envelope)
     = {
 
       try {
@@ -219,124 +221,43 @@ object SurfABM extends Serializable {
         LOG.debug("Creating id -> buildings map")
         println("Found "+b_ids.size+" buildings and "+shops.getGeometries.size()+" shops.")
 
-
-
-
         assert(buildings.getGeometries.size() == b_ids.size )
 
-
-        // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
-        // Use a for comprehension to create a temp array of (Int, SurfGeometry) then use that as input to a map
-        // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
-        // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
-
-       // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
-/*
-
-        val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
-          {
-            for (o <- buildings.getGeometries())  yield {
-              val g = o.asInstanceOf[SurfGeometry[Building]] // Convert the geometry to a SurfGeometry
-              val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
-              // Check if the ID has been added already or not
-              if (tempIDs.contains(id)) {
-                println("The ID "+id+" has been found already")
-              }
-              else {
-                tempIDs += id
-              }
-              id -> g // This bit means return a mapping from the ID to the geometry
-            }
-          }.to[collection.immutable.Seq]: _*) // Splat the array with :_*
-*/
-        // The next section is a not yet working attempt to solve problems that might be caused by the previous section.
-        /* val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
-          {
-            for (o <- tempBuildings.getGeometries()) yield {
-              val g: MasonGeometry = o.asInstanceOf[MasonGeometry]
-              val buildingID = try {
-                g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)
-              }
-              catch {
-                case e: NullPointerException => {
-                  LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
-                    format(BUILDING_FIELDS.BUILDINGS_ID.toString, BUILDING_FIELDS.BUILDINGS_ID.toString), e)
-                  throw e
-                }
-              }
-              val buildingType = try {
-                g.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
-              }
-              catch {
-                case e: NullPointerException =>
-                  LOG.error("Cannot find a field called '%s' in the buildings file. Does it have a column called '%s'?".
-                    format(BUILDING_FIELDS.BUILDINGS_TYPE.toString, BUILDING_FIELDS.BUILDINGS_TYPE.toString), e)
-                  throw e
-              }
-              val id = Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
-              // Check if the ID has been added already or not
-              if (tempIDs.contains(id)) {
-                println("Warning: The building ID " + id + " has been found more than once!")
-              }
-              else {
-                tempIDs += id
-                val building = Building(buildingID)
-                val s = SurfGeometry(g, building)
-                buildings.addGeometry(s)
-                if (buildingType == "SHOP") {
-                  shops.addGeometry(s)
-                }
-              }
-              val gBuilding = o.asInstanceOf[SurfGeometry[Building]]
-              id -> gBuilding // This bit means return a mapping from the ID to the geometry
-            }
-          }.to[collection.immutable.Seq]: _*)
-        //buildings.updateSpatialIndex()
-        //println("Geometries", buildings.getGeometries.size())
-
-        LOG.debug("Creating id -> buildings map")
-        // Keep a link between the building IDs and their geometries (ID -> geometry). This makes for quick building lookups
-        // Use a for comprehension to create a temp array of (Int, SurfGeometry) then use that as input to a map
-        // Note, to go 'backwards' (i.e. from a location to an ID) do: origMap.map(_.swap)
-        // (https://stackoverflow.com/questions/2338282/elegant-way-to-invert-a-map-in-scala)
-
-        // val tempArray: collection.immutable.Seq[(Int, SurfGeometry)] =
-
-        /*tempIDs.empty
-        val b_ids: Map[Int, SurfGeometry[Building]] = scala.collection.immutable.Map[Int, SurfGeometry[Building]](
-          {
-            for (o <- buildings.getGeometries())  yield {
-              val g = o.asInstanceOf[SurfGeometry[Building]] // Convert the geometry to a SurfGeometry
-              val id =  Int.unbox(g.getIntegerAttribute(BUILDING_FIELDS.BUILDINGS_ID.toString)) // Get the ID (convert from a string)
-              // Check if the ID has been added already or not
-              if (tempIDs.contains(id)) {
-                println("The ID "+id+" has been found already")
-              }
-              else {
-                tempIDs += id
-              }
-              id -> g // This bit means return a mapping from the ID to the geometry
-            }
-          }.to[collection.immutable.Seq]: _*) // Splat the array with :_* */ */
-
-        printf("Number of buildings is %d and number of IDs is %d \n", buildings.getGeometries.size(), b_ids.size)
+        SurfABM.LOG.debug(s"Number of buildings is %d and number of IDs is %d \n", buildings.getGeometries.size(), b_ids.size)
         assert(buildings.getGeometries.size() == b_ids.size)
         SurfABM.LOG.debug(s"\t ... finished creating map for ${b_ids.size} buildings")
-
 
         // We want to save the MBR so that we can ensure that all GeomFields
         // cover identical area.
         MBR = buildings.getMBR() // Minimum envelope surrounding whole world
 
+        LOG.debug("Finished reading buildings data.");
+
 
         // Read roads
-        val roads = new GeomVectorField(WIDTH, HEIGHT)
+        val roadsTemp = new GeomVectorField(WIDTH, HEIGHT)
         val roadsURI = new File("data/" + dataDir + "/roads.shp").toURI().toURL()
         LOG.debug(s"Reading roads file: ${roadsURI} ...")
-        ShapeFileImporter.read(roadsURI, roads);
-        LOG.debug(s"\t... read ${roads.getGeometries().size()} roads")
+        ShapeFileImporter.read(roadsURI, roadsTemp);
+        LOG.debug(s"\t... read ${roadsTemp.getGeometries().size()} roads")
+        // Cast the roads to SurfGeometry objects
+        val roads = new GeomVectorField(WIDTH, HEIGHT)
+        val roadIDCol = "ID" // the name of the ID column in the roads shapefile
+        for (o <- roadsTemp.getGeometries()) {
+          val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
+          val roadID = try {
+            g.getIntegerAttribute("ID")
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
+              format(roadIDCol,roadIDCol ), e)
+            throw e
+          }
+          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID)))
+        }
         MBR.expandToInclude(roads.getMBR())
-        LOG.debug("Finished reading roads and buildings data.");
+        SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()));
+        //SurfABM.LOG.debug("Road IDs are: %s".format( roads.getGeometries.map( o => o.asInstanceOf[SurfGeometry[Road]].theObject.id ) ) )
 
 
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
@@ -348,7 +269,7 @@ object SurfABM extends Serializable {
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
-        val network = new GeomPlanarGraph()
+        val network = new GeomPlanarGraphSurf()
         val junctions = new GeomVectorField(WIDTH, HEIGHT) // nodes for intersections
 
         SurfABM.LOG.debug("Creating road network")
@@ -370,9 +291,6 @@ object SurfABM extends Serializable {
 
 
         SurfABM.LOG.info("Finished creating network and junctions")
-
-
-        LOG.info("Finished initialising model environment")
 
         // Return the layers
         (buildings, shops, lunchPlaces, dinnerPlaces, b_ids, roads, network, junctions, MBR)
