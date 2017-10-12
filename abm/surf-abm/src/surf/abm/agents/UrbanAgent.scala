@@ -113,10 +113,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     } // try
     catch {
       case ex: RoutingException => {
-        //Agent.LOG.error("Error routing agent " + this.toString() + ". Exiting.", ex)
+        Agent.LOG.error(this,"Error routing agent. Exiting.", ex)
       }
       case ex: Exception => {
-        //Agent.LOG.error("Exception in MoveAlongPath for agent " + this.toString() + ". Exiting.", ex)
+        Agent.LOG.error(this,"Exception in MoveAlongPath for agent. Exiting.", ex)
       }
       state.finish
     }
@@ -187,6 +187,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
     // XXXX TESTING
     AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
+    print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
 
     // check to see if the progress has taken the current index beyond its goal
     // given the direction of movement. If so, proceed to the next edge

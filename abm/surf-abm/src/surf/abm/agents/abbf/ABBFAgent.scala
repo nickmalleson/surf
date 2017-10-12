@@ -1,11 +1,11 @@
 package surf.abm.agents.abbf
 
 import sim.engine.SimState
-import sim.util.geo.{GeomPlanarGraphDirectedEdge, GeomPlanarGraphEdge}
+import sim.util.geo.{GeomPlanarGraphDirectedEdge}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
 import surf.abm.agents.abbf.activities._
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.environment.Building
+import surf.abm.environment.{Building, GeomPlanarGraphEdgeSurf}
 import surf.abm.exceptions.RoutingException
 import surf.abm.main.{Clock, SurfABM, SurfGeometry}
 
@@ -48,9 +48,13 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
   override def step(state: SimState): Unit = {
 
+    // A break point for a particular agent
     //if (this.id()==1 && this.state.schedule.getSteps > 163) {
     //  print("BREAK POINT")
     //}
+
+    // A break point for all agents
+    //print("BREAK POINT for AGENT %s".format(this.toString()))
 
     //println(s"\n******  ${Clock.getTime.toString} ********* \n")
     //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
@@ -171,7 +175,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       val path: List[GeomPlanarGraphDirectedEdge] = UrbanAgent.findNewPath(this.home, act.place.location)
       // Calculate its length (at least between the junctions)
       var length = 0d // The total length of their commute
-      path.foreach( length += _.getEdge.asInstanceOf[GeomPlanarGraphEdge].getLine.getLength)
+      path.foreach( length += _.getEdge.asInstanceOf[GeomPlanarGraphEdgeSurf[_]].getLine.getLength)
       // Calculate new move rate. If it is less than the default move rate, then just use that
       val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
       val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes

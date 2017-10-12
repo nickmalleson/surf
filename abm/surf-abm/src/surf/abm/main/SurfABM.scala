@@ -127,6 +127,8 @@ object SurfABM extends Serializable {
   // Spatial layers. One function to read them all
   val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
+  LOG.info("Finished initialising model environment")
+
     /**
       * Read and configure the buildings, roads, networks and junctions.
       * This is written as a function so that it can be tested elsewhere.
@@ -254,7 +256,8 @@ object SurfABM extends Serializable {
           roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID)))
         }
         MBR.expandToInclude(roads.getMBR())
-        LOG.debug("Finished reading roads data.");
+        SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()));
+        //SurfABM.LOG.debug("Road IDs are: %s".format( roads.getGeometries.map( o => o.asInstanceOf[SurfGeometry[Road]].theObject.id ) ) )
 
 
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
@@ -288,9 +291,6 @@ object SurfABM extends Serializable {
 
 
         SurfABM.LOG.info("Finished creating network and junctions")
-
-
-        LOG.info("Finished initialising model environment")
 
         // Return the layers
         (buildings, shops, lunchPlaces, dinnerPlaces, b_ids, roads, network, junctions, MBR)
