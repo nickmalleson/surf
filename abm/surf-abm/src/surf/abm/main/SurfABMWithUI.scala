@@ -166,7 +166,7 @@ class BuildingLabelPortrayal(child : SimplePortrayal2D, paint : Paint)
     }
 
   }
-} // BuldingLabelPortrayal class
+} // BuildingLabelPortrayal class
 object BuildingLabelPortrayal {
   private val LOG: Logger = Logger.getLogger(this.getClass)
 }
