@@ -188,6 +188,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     // XXXX TESTING
     AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
     print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
+    AgentLog.info(this, "Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
+    print("Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
 
     // check to see if the progress has taken the current index beyond its goal
     // given the direction of movement. If so, proceed to the next edge

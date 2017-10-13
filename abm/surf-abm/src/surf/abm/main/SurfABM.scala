@@ -243,17 +243,26 @@ object SurfABM extends Serializable {
         // Cast the roads to SurfGeometry objects
         val roads = new GeomVectorField(WIDTH, HEIGHT)
         val roadIDCol = "ID" // the name of the ID column in the roads shapefile
+        val cameraIDCol = "cameraID" // the name of the camera_ID column in the roads shapefile
         for (o <- roadsTemp.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
           val roadID = try {
-            g.getIntegerAttribute("ID")
+            g.getIntegerAttribute(roadIDCol)
           }
           catch { case e: NullPointerException =>
             LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
               format(roadIDCol,roadIDCol ), e)
             throw e
           }
-          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID)))
+          val cameraID = try {
+            g.getIntegerAttribute(cameraIDCol)
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
+              format(cameraIDCol,cameraIDCol ), e)
+            throw e
+          }
+          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID, cameraID)))
         }
         MBR.expandToInclude(roads.getMBR())
         SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()));
