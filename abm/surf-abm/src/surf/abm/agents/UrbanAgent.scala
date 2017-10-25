@@ -39,6 +39,10 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   private var _path: List[GeomPlanarGraphDirectedEdge] = null
   protected def path(): List[GeomPlanarGraphDirectedEdge] = _path // Protected accessor
 
+  // A list of cameras that the agent has passed by on his path
+  private var _cameras: List[Int] = null
+  def cameras(): List[Int] = _cameras // Accessor to cameras. Necessary??
+
   private var indexOnPath = 0
   private var pathDirection = 1
   private var linkDirection = 1
@@ -51,6 +55,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   def newDestination(newDest:Option[SurfGeometry[_]]) = {
     this._destination = newDest
     this._atDestination = false
+    this._cameras = null // start with empty list of cameras
     // Make a new path
     // Check that we have a destination to head to:
     val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
@@ -186,10 +191,14 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     currentIndex += speed
 
     // XXXX TESTING
-    AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
-    print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
-    AgentLog.info(this, "Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
-    print("Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
+    //AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
+    //print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
+    if (edge.getGeometry.theObject.cameraID != -1 && !this._cameras.contains(edge.getGeometry.theObject.cameraID)) {
+      // TESTING
+      AgentLog.info(this, "Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
+      print("Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
+      this._cameras.add(edge.getGeometry.theObject.cameraID)
+    }
 
     // check to see if the progress has taken the current index beyond its goal
     // given the direction of movement. If so, proceed to the next edge

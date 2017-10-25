@@ -44,7 +44,7 @@ case class LunchActivity(
         // See if the agent is in a lunch place
         if (this.place.location.equalLocation(
           this.agent.location())) {
-          Agent.LOG.debug(agent, "as reached a lunch place. Starting lunch.")
+          Agent.LOG.debug(agent, "has reached a lunch place. Starting lunch.")
           currentAction = LUNCHING // Next iteration the agent will start to have lunch.
         }
         else {

@@ -198,7 +198,7 @@ object AgentLabelPortrayal {
 }
 
 /**
-  * DEPRICATED
+  * DEPRECATED
   * A special portrayal for agents. They are displayed as circles, given a unique colour depending on their ID, and
   * report their 'toString' method if inspected.
   * Note: see the Mason manual (section 9.3.4, page 222) for a definitions of the different

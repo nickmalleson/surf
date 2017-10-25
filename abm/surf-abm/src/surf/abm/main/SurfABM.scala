@@ -343,7 +343,7 @@ object SurfABM extends Serializable {
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
         //SurfABM.agentGeoms.addGeometry(new MasonGeometry(a.location().getGeometry()))
         state.schedule.scheduleRepeating(a)
-        //agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
+        //agentArray += ( (a.location, a) ) // Need two parentheses to make a tuple?
       }
 
       // Now store the agents and their geometries in a map so we can get back to the
