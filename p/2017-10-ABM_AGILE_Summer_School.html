@@ -103,7 +103,6 @@
                         <p class="l2">Pros &amp; Cons of ABM</p>
                         <p>Complexity and Emergence</p>
                         <p>Interactions and Behaviour</p>
-                        <p>Building Models</p>
                         <p>Conclusion</p>
                         <p>NetLogo</p>
                     </div>
@@ -217,7 +216,7 @@
                     <p class="l2">Account for system behaviour directly</p>
                 </section>
                 
-                <section id="IntroToABM4" data-background-video="../videos/skylines_mov-short.jpg">
+                <section id="IntroToABM4" >
                     <div class="whitebackground2">
                         <img class="right" style="width:40%" data-src="../figures/sims.png"
                          alt="Diagram of the sims" />
@@ -239,7 +238,7 @@
                     
                 </section>
 
-                <section id="IntroToABM5" data-background-video="../videos/skylines_mov-short.jpg">
+                <section id="IntroToABM5" >
                     <div class="whitebackground2">
                         <h2>Introduction to ABM</h2>
                         <h3>Example: Wolf-Sheep predation</h3>
@@ -338,39 +337,174 @@
                      ************* Complexity and Emergence  *************************
                      ***************************************************************** -->
 
+                <section id="Emergence">
+                    <figure class="right">
+                        <img src="../figures/attribution/termite_mound.jpg" />
+                        <figcaption>A termite mound.<br/>Attribution: <a href="http://www.flickr.com/people/93452909@N00">JBrew</a> (<a href="https://en.wikipedia.org/wiki/en:Creative_Commons" class="extiw" title="w:en:Creative Commons">Creative Commons</a> <a href="//creativecommons.org/licenses/by-sa/2.0/deed.en">Attribution-Share Alike 2.0 Generic</a>).</figcaption>
+                    </figure>
+                    <h2>Emergence</h2>
+                    <p>One of the main attractions for ABM. But what is it?</p>
+                    
+                    <p>"A property of a collection of simple sub-units that comes about through the interactions of the sub units and is not a property of any single sub unit"</p>
+                    <p class="l2">Gary Flake</p>
+                    <p>"The whole is greater than the sum of its parts."</p>
+                    <p class="l2">Aristotle (?)</p>
                 
+                </section>
                 
+                <section id="EmergenceQuiz">
+                    <h2>Emergence - Quiz</h2>
+                    <p>When watching the video (from <a href="http://www.pbs.org/wgbh/nova/nature/emergence.html">
+                        Nova Science</a>, up to 4:50), think about:</p>
+                    <p class="l2">If there is no leader, how are flocks etc. controlled?</p>
+                    <p class="l2">List some of the organisms that demonstrate emergent behaviour.</p>
+                    <p class="l2">Can you think of any other examples of emergent phenomena?</p>
+                    
+                    <iframe class="youtube-player" src="http://www.youtube.com/embed/aEaZHWXmbRw"></iframe>
+                    
+                </section>
+                
+                <section id="Emergence2">
+                    <figure class="right" style="width:40%;">
+                        <img src="../figures/attribution/termite_mound.jpg" />
+                        <figcaption>A termite mound.<br/>Attribution: <a href="http://www.flickr.com/people/93452909@N00">JBrew</a> (<a href="https://en.wikipedia.org/wiki/en:Creative_Commons" class="extiw" title="w:en:Creative Commons">Creative Commons</a> <a href="//creativecommons.org/licenses/by-sa/2.0/deed.en">Attribution-Share Alike 2.0 Generic</a>).</figcaption>
+                    </figure>
+                    <h2>Emergence</h2>
+
+                    <p> Simple rules &#8594; complex outcomes</p>
+                    <p class="l2">In the past, we have assumed that complex phenomena are driven by a complex mechanism</p>
+                    <p class="l2">This is not always the case</p>
+                    <p class="l2">E.g. who plans the air-conditioning in termite mounds?</p>
+                    <p>Possible to prove the with simple computer programs</p>
+                    <p class="l2">Agent-based models are one example, as well as others ... </p>
+                    <p class="l2">If you're interested, look up 'Conway's Game of Life'</p>
+                </section>
+                
+                <section id="Emergence-WhyImportant">
+                    <h2>Emergence</h2>
+                    <h3>Why is it important?</h3>
+                    <p><strong>Key message</strong>: Complex structures can emerge from simple rules</p>
+                    <p>Emergence is hard to anticipate, and cannot be deduced from solely analysis
+                        of individuals’ behaviour</p>
+                    <p class="l2">You could not work out what a termite mound would look like
+                    by dissecting a termite.</p>
+                    <p>Emergence is a characteristic of <i>complex systems</i></p>
+                    <p>Individual-level modelling is focused on understanding how macro-level patterns emerge from micro-level through the process of simulation.</p>
+                </section>
+
+                
+                <section id="Emergence-segregation">
+                    <h2>Emergence</h2>
+                    <h3>Example: Segregation</h3>
+                    <img class="right" src="../figures/netlogo/netlogo-segregation-website.png" 
+                         alt="Screenshot of Schelling NetLogo website"/>
+                    <p>Thomas Schelling (Harvard) looked at racial segregation. He designed a model:</p>
+                    <p class="l2">Individuals have a preference for being surrounded by neighbours of a
+                    similar type.</p>
+                    <p class="l2">If they are unhappy with their neighbours, then they move to an empty cell</p>
+                    <p>What do you think happens when 35%, 50% and 80% preferences are selected?</p>
+                </section>
+                    
+
                 <!-- *****************************************************************
                      ************* Interactions and Behaviour *************************************
                      ***************************************************************** -->
                 
-                <!-- *****************************************************************
-                     ************* Building Models  **********************************
-                     ***************************************************************** -->
                 
+                <section id="Interataction-GlobalLocal">
+                    
+                    <h2>Interactions</h2>
+                    <h3>Global and Local</h3>
+                    <p>Interactions are a key part of agent-based models</p>
+                    <p class="l2">One of the most powerful elements for modelling complex systems</p>
+                    <p>Global interactions</p>
+                    <p class="l2">Can result in immediate massive changes on  all agents</p>
+                    <p class="l2">E.g. A new policy on migration; climate change; limits on number 
+                        of children couples allowed to have</p>
+                    <p>Local interactions</p>
+                    <p class="l2">Interactions that occur at the micro or meso level.</p>
+                    <p class="l2">Only affect those in the local vicinity.</p>
+
+                </section>
                 
-                <section id="XXXXdgfhfgh">
+                <section id="Interataction2">
                     
-                    <p></p>
-                    <p class="l2"></p>
-                    <p class="l2"></p>
-                    <p class="l2"></p>
+                    <h2>Interactions</h2>
                     
+                    <p>Interactions can be spatially constrained:</p>
+                    <p class="l2">Neighbourhood feuds</p>
+                    <p class="l2">Car crashes</p>
+                    <p class="l2"></p>
+                      <p>Or a-spatially (e.g. across social networks):</p>
+                    <p class="l2">Exchange of information between students about a new course</p>
+                    <p class="l2">Twitter</p>
+                    <p>From interactions, new information, new interactions etc emerge.</p>
+                    <p>Interactions add to the complexity of the system.</p>
+                    <p>Getting the interactions correct is crucial.</p>
+                </section>
+
+                <section id="Interataction-Types">
+                    
+                    <h2>Types of Interactions</h2>
+                    <p>Direct interaction:</p>
+                    <p class="l2">agents directly interacting with each other affect each other 
+                        e.g. exchanging information.</p>
+                    <p>Mediated or indirect interaction:</p>
+                    <p class="l2">agents interact indirectly via a mediating resource e.g. competition for a shared resource.</p>
+                </section>
+                
+                <section id="Behaviour">
+                    <h2>Modelling Behaviour</h2>
+                    <p>Great advantage of ABM!</p>
+                    <p>But lots of important decisions about what to include in a model (and how).</p>
+                    <div class="fragment">
+                        <p>Quiz: Choose a number between 1 and 4</p>
+                        <p class="l2">Write it down (or just remember it and don't cheat!).</p>
+                        <p class="l2 fragment">How will the choice of numbers be spread across the population?</p>
+                    </div>
+                    <p class="fragment">Result: Humans are not random! "They (we) are strange and wonderful” (Kennedy, 2012)</p>
+                </section>
+                
+                <section id="KISSKIDS">
+                    <h2>Modelling Behaviour</h2>
+                    <h3>So how do we model an organism's behaviour?</h3>
+                    <p>Two broad approaches (and lots of disagreement):</p>
+                    <p class="l2">Keep it descriptive, stupid (KIDS)</p>
+                    <p class="l2">Keep it simple, stupid (KISS)</p>
+                    <h3>And how do you know which behaviours are important?</h3>
+                    <div class="twocol">
+                        <p class="l2">Published literature</p>
+                        <p class="l2">Talking to the experts</p>
+                        <p class="l2">Numerical experimentation</p>
+                        <p class="l2">Rigorous data analysis</p>
+                        <p class="l2">Black magic!</p>
+                    </div>
+                </section>
+                
+                <section id="Behaviour-Techniques">
+                    <h2>Modelling Behaviour</h2>
+                    <h3>Techniques</h3>
+                    <p>Simple rule-based systems</p>
+                    <p><code>IF &lt;hunger&gt; is below &lt;hungerThreshold1&gt; <br/>
+                        THEN agent-dies.</code></p>
+                    <p><code>IF &lt;hunger&gt; is above &lt;hungerThreshold2&gt; <br/>
+                        THEN address-another-goal.</code></p>
+                    <p><code>IF &lt;hunger&gt; is between &lt;hungerThreshold1&gt; and &lt;hungerThreshold2&gt; THEN search-for-food.</code></p>
+                    <p>Others: PECS, Beliefs Desires Intentions (BDI), ..</p>
                 </section>
                 
                 
-                
-                <section id="abm-summary">
+                  <section id="abm-summary" >
                     
-                    <h2>ABM: Summary</h2>
-                    
-                    <p>XXXX Summarise stuff so far, before doing NetLogo</p>
-                
+                    <h2>Summary so far</h2>
+                        <p>Why Simulate?</p>
+                        <p>An Introduction to Agent-Based Modelling</p>
+                        <p class="l2">What is an agent?</p>
+                        <p class="l2">Pros &amp; Cons of ABM</p>
+                        <p>Complexity and Emergence</p>
+                        <p>Interactions and Behaviour</p>
+                    <h2>Now: NetLogo</h2>
                 </section>
-                
-                
-                
-                
                 
                 
                 
@@ -379,14 +513,7 @@
                      ************* NetLogo!  **********************************
                      ***************************************************************** -->
     
-                
-                
-                
-                
-                
-                
-                
-                
+            
                 <section id="Programming4">    
                     <!-- <a href="http://www.youtube.com/watch?v=GuBt63f2I78">
                         <iframe src="http://www.youtube.com/embed/GuBt63f2I78"></iframe>
@@ -434,7 +561,6 @@
 
                 <section id="Libraries">
                     <h2>Computer code ('libraries')</h2>
-                    <img class=right src="./figures/code.png" />
                     <p>Researchers write software to perform useful functions:</p>
                     <p class="l2">Draw graphs</p>
                     <p class="l2">Visualise the model</p>
