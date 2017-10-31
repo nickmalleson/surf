@@ -1,0 +1,1192 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="author" content="Nick Malleson">
+        <meta name="keywords" content="ABM, dynamic data assimilation, EnKF, ensemble kalman filter">
+
+		<title>Agent-Based Modelling</title>
+
+		<link rel="stylesheet" href="reveal/css/reveal.css">
+		<link rel="stylesheet" href="reveal/css/theme/white.css">
+        
+        <!-- Some extra bits added by Nick -->
+        <link rel="stylesheet" href="reveal/css/nick.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal/css/print/pdf.css' : 'reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+    </head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+                
+                <!--
+                <section data-markdown id="index"
+                         data-background-image="http://surf.leeds.ac.uk/figures/cityscapes/chicago_bw.jpg">
+                -->
+                    
+                <section class="title"  id="index" data-background-image="../figures/virtual_city.jpeg">
+>
+                    <div class="whitebackground2">
+                        <h1 style="font-size: 60px;">Agent-Based Modelling</h1>
+                        <hr/>
+                        <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a></h2>
+
+                        <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                        <h4>With thanks to Alison Heppenstall, Andrew Crooks, and Andy Evans</h4>
+                        <hr/>
+                        <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/2017-10-ABM_AGILE_Summer_School.html">http://surf.leeds.ac.uk/2017-10-ABM_AGILE_Summer_School.html</a></p>
+                    </div>
+                </section>
+                
+                <section id="intro">
+                    
+                    <iframe class="youtube-player" src="http://www.youtube.com/embed/ixJiHx7jGx8"></iframe>
+                </section>
+                
+                <section id="WhyABM" data-background-video="../videos/skylines_mov-short.mp4" 
+                         data-background-video-muted 
+                         data-background-video-loop="loop">
+                    
+                    <div class="whitebackground fragment">
+                        <h2>Why Agent-Based Modelling?</h2>
+                    </div>
+                    
+                    <div class="whitebackground2 fragment">
+                        <p>Social systems are <i>complex</i></p>
+                        <p class="l2">To understand how they behave, we need to capture the behaviour and interactions
+                        of the <i>individual</i> units that drive the system's behaviour</p>
+                        <p>Aggregate techniques (e.g. regression) high lower-level detail</p>
+                        <p>Agent-based models simulate the behaviour of individual <i>agents</i> (e.g. people)
+                        and <i>grow</i> the phenomena of interest from the bottom-up.</p>
+                    </div>
+                    
+                </section>
+                
+                
+                <section id="schedule" >
+                    
+                    <h2>Rough schedule for the day</h2>
+                    
+                    <div id="columns">
+                        <div class="left column" style="width: 250px"><p>13:30 - 15:00</p></div>
+                        <div class="right column " style="width: 600px">
+                            <p>Mostly lecture (with some practical work)</p>
+                        </div>
+                        <div class="left column" style="width: 250px"><p>15:30 - 17:30</p></div>
+                        <div class="right column" style="width: 600px">
+                            <p>All practical work</p>
+                        </div>
+                    </div>
+                
+                </section>
+                
+                <section id="outline" >
+                    
+                    <h2>Outline for the lecture</h2>
+                    
+                    <div class="twocol">
+                        <p>Why Simulate?</p>
+                        <p>An Introduction to Agent-Based Modelling</p>
+                        <p class="l2">What is an agent?</p>
+                        <p class="l2">Pros &amp; Cons of ABM</p>
+                        <p>Complexity and Emergence</p>
+                        <p>Interactions and Behaviour</p>
+                        <p>Conclusion</p>
+                        <p>NetLogo</p>
+                    </div>
+                
+                </section>
+                
+                
+                <!-- *****************************************************************
+                     ************* Why Simulate? *************************************
+                     ***************************************************************** -->
+
+                <section id="whysimulate1">
+                    
+                    <h2>(Social) Simulation</h2>
+                    
+                    <p>The idea of simulation is relatively new - started in 1960s but
+                    didn't take of until 1990s</p>
+                    <p>Early failures (e.g. Club of Rome, 1974) made it unattractive</p>
+                    <p>Emergence of Artificial Intelligence ideas in 1990s rekindled enthusiasm
+                    in individual-level approaches (e.g. cellular-automata and ABM).</p>
+                    
+                </section>
+                
+                
+                <section id="UsesOfSimulation1">
+                    
+                    <h2>Uses of Simulation</h2>
+                    <p>Understanding</p>
+                    <p class="l2">Experimentation: Can we gain new insights and understanding of the world? </p>
+                    <p class="l2">Test theories in a <i>virtual laboratory</i></p>
+                    <p class="l2">AKA <i>exploratory</i> approaches</p>
+                    <p>Prediction</p>
+                    <p class="l2">If we can accurately replicate the dynamics of behaviour – 
+                        we can predict what will happen in the future (?)</p>
+                    <p class="l2">However, the further ahead we predict, the less accurate we become. </p>
+                    <p class="l2">Also known as <i>predictive</i> approaches</p>
+                    
+                    
+                </section>
+                
+                <section id="UsesOfSimulation2">
+                    
+                    <h2>Uses of Simulation</h2>
+
+                    <p>Substitute</p>
+                    <p class="l2">If we can simulate the expertise of a doctor (expert systems),
+                        does this remove the need for the human expert?</p>
+                    <img class="right" data-src="https://www.n8equipment.org.uk/img/equipment/leeds-advanced-driving-simulator-16827.jpg" alt="Image of the UoL driving simulator"/>
+                    <p>Training</p>
+                    <p class="l2">Creation of programs/environments to train experts e.g. 
+                        virtual car and flight simulators</p>
+                    <p>Discovery and Formalisation</p>
+                    <p class="l2">Discover new processes and knowledge about the phenomenon we are 
+                        simulating through experimentation</p>
+                    <p class="l2">Formalise this into new theories</p>
+
+                    
+                </section>
+                    
+
+                <section id="UsesOfSimulation3"  >
+                    <h2>Uses of Simulation</h2>
+                    <h3>Entertainment</h3>
+                    <iframe class="youtube-player" src="http://www.youtube.com/embed/3FuahvrXNkk"></iframe>
+
+                </section>
+                
+                
+                
+                <!-- *****************************************************************
+                     ************* Intro to ABM  *************************************
+                     ***************************************************************** -->
+                
+                <section id="IntroToABM" >
+                    <img class="right" data-src="../figures/regression.png"
+                         alt="Diagram of regression" />
+                    <h2>Introduction to ABM</h2>
+                    <h3>Aggregate v.s. Individual</h3>
+                    <p>'Traditional' modelling methods work at an aggregate level, from the <i>top-down</i></p>
+                    <p class="l2">E.g. Regression, spatial interaction modelling, location-allocation, etc.</p>
+                    <p>Aggregate models work very well in some situations</p>
+                    <p class="l2">Homogeneous individuals</p>
+                    <p class="l2">Interactions not important</p>
+                    <p class="l2">Very large systems (e.g. pressure-volume gas relationship)</p>
+                </section>
+                
+
+                <section id="IntroToABM2" >
+                    <img class="right" data-src="../figures/regression.png"
+                         alt="Diagram of regression" />
+                    <h2>Introduction to ABM</h2>
+                    <h3>Aggregate v.s. Individual</h3>
+                    <p>But they miss some important things:</p>
+                    <p class="l2">Low-level dynamics, i.e. “smoothing out” (Batty, 2005)</p>
+                    <p class="l2">Interactions and emergence (more on these later)</p>
+                    <p>Unsuitable for modelling <i>complex systems</i></p>
+
+                </section>
+                
+                <section id="IntroToABM3" >
+                    <img class="right" data-src="../figures/sims.png"
+                         alt="Diagram of the sims" />
+                    <h2>Introduction to ABM</h2>
+                    <h3>Aggregate v.s. Individual</h3>
+                    
+                    <p>Systems are driven by individuals</p>
+                    <p class="l2">(cars, people, ants, trees, whatever)</p>
+                    <p>Bottom-up modelling</p>
+                    <p class="l2">An alternative approach to modelling</p>
+                    <p class="l2">Rather than controlling from the top, try to represent the individuals</p>
+                    <p class="l2">Account for system behaviour directly</p>
+                </section>
+                
+                <section id="IntroToABM4" >
+                    <div class="whitebackground2">
+                        <img class="right" style="width:40%" data-src="../figures/sims.png"
+                         alt="Diagram of the sims" />
+                        <h2>Introduction to ABM</h2>
+                        <p>Autonomous, interacting agents</p>
+                        <p>Represent individuals or groups</p>
+                        <p>Situated in a virtual environment</p>
+                        <div class="fragment">
+                            <p>Example application areas:</p>
+                        </div>
+                        <div class="fragment">
+                            <p class="l2">Business - stock markets, store location</p>
+                            <p class="l2">Transport - modelling traffic</p>
+                            <p class="l2">Ecology - modelling animal populations</p>
+                            <p class="l2">Crime - modelling offender behaviour</p>
+                            <p class="l2">...</p>
+                        </div>
+                    </div>
+                    
+                </section>
+
+                <section id="IntroToABM5" >
+                    <div class="whitebackground2">
+                        <h2>Introduction to ABM</h2>
+                        <h3>Example: Wolf-Sheep predation</h3>
+                        <img style="width:50%;" src="http://ccl.northwestern.edu/netlogo/models/models/Sample%20Models/Biology/Wolf%20Sheep%20Predation.png" />
+                    </div>
+                    
+                </section>
+                
+
+                
+                <!-- *****************************************************************
+                     ************* What is an Agent? *************************************
+                     ***************************************************************** -->
+                
+                <section id="WhatIsAnAgent">
+                    <img class="right"  data-src="../figures/sims.png"
+                         alt="Diagram of the sims" />
+                    <h2>What is an agent?</h2>
+                    <h3>Some common characteristics</h3>
+                    
+                    <p>Heterogeneous</p>
+                    <p>Reactive</p>
+                    <p>Bounded Rationality</p>
+                    <p>Interactive</p>
+                    <p>Mobile</p>
+                    <p>Learning / adaption</p>                
+                </section>
+                
+                <!-- *****************************************************************
+                     ************* Pros & Cons  *************************************
+                     ***************************************************************** -->
+                
+                <section id="appeal">
+                    <h2>Appeal of ABM</h2>
+                    <p>A <strong>natural</strong> way to think about social systems</p>
+                    <p class="l2">Individuals drive the system</p>
+                    <p class="l2">Program behavioural theories <i>directly</i>, no need
+                    to approximate group behaviour</p>
+                    <p>Modelling <strong>emergence</strong></p>
+                    <p class="l2">"A phenomenon is emergent when it can only be described and characterised using terms and measurements that are inappropriate or impossible to apply to the component units" - Gilbert (2004) page 3. </p>
+                    <p class="l2">Impossible (?) to capture using aggregate models</p>
+                </section>
+                
+                <section id="appeal2">
+                    <img class="right" data-src="../figures/mastermap_topography.png" alt="Example of MasterMap GIS" />
+                    <h2>Appeal of ABM</h2>
+                    <p>Can include <strong>physical space</strong> and <strong>social processes</strong></p>
+                    <p>Designed at abstract level: <strong>easy to change scale</strong></p>
+                    <p class="l2">E.g. scale up from village to city by adding more agents
+                    and changing the environment</p>
+                    <p>Bridge between <strong>verbal theories</strong> and <strong>mathematical models</strong></p>
+                    
+                </section>
+                
+                <section id="appeal3" data-background-image="../figures/burglar_behaviour-geotime.jpg" > 
+                    <!--<img class="right" src="../figures/burglar_behaviour-geotime.jpg" 
+                         alt="3D agent movements through time and space"/>-->
+                    <div class="fragment whitebackground2">
+                        <h2>Appeal of ABM</h2>
+                        <p>Can produce a <strong>dynamic history</strong> of the evolution of the system</p>
+                    </div>    
+                </section>
+                
+                <section id="disadvantages">
+                    <h2>Disadvantages of ABM</h2>
+                    <figure class="right">
+                        <img  src="../figures/jacobs_choice.png" alt="Child deciding between two toys" />
+                        <figcaption>Will I play with the truck, or the duck? <br/><br/>
+                        <i>(Actually, he played with his trains).</i></figcaption>
+                    </figure>
+                    <p>Known unknowns</p>
+                     <p class="l2">We don’t know exactly what someone will do.</p>
+                     <p class="l2">So we guess - e.g. there is a 30% chance of choosing the truck </p>
+                    <p>Models that use randomness like this are probabilistic</p>
+                    <p>The need to run many times to ensure robust results</p>
+                    <p>Example: Wolf-Sheep model</p>                
+                </section>
+                
+                
+                
+                <section id="disadvantages2">
+                    <h2>Disadvantages of ABM</h2>
+                    <p>Computationally expensive</p>
+                    <p class="l2">Complicated agent decisions</p>
+                    <p class="l2">Lots of decisions!</p>
+                    <p class="l2">Multiple model runs (robustness)</p>
+                    <p>Modelling "soft" human factors</p>
+                    <p class="l2">Benefit that we can include complex psychology</p>
+                    <p class="l2">But this is really hard!</p>
+                    <p>Potential to over-complicate</p>
+                    <p class="l2">Need to think carefully about what to include</p>
+                </section>
+                
+                
+                <!-- *****************************************************************
+                     ************* Complexity and Emergence  *************************
+                     ***************************************************************** -->
+
+                <section id="Emergence">
+                    <figure class="right">
+                        <img src="../figures/attribution/termite_mound.jpg" />
+                        <figcaption>A termite mound.<br/>Attribution: <a href="http://www.flickr.com/people/93452909@N00">JBrew</a> (<a href="https://en.wikipedia.org/wiki/en:Creative_Commons" class="extiw" title="w:en:Creative Commons">Creative Commons</a> <a href="//creativecommons.org/licenses/by-sa/2.0/deed.en">Attribution-Share Alike 2.0 Generic</a>).</figcaption>
+                    </figure>
+                    <h2>Emergence</h2>
+                    <p>One of the main attractions for ABM. But what is it?</p>
+                    
+                    <p>"A property of a collection of simple sub-units that comes about through the interactions of the sub units and is not a property of any single sub unit"</p>
+                    <p class="l2">Gary Flake</p>
+                    <p>"The whole is greater than the sum of its parts."</p>
+                    <p class="l2">Aristotle (?)</p>
+                
+                </section>
+                
+                <section id="EmergenceQuiz">
+                    <h2>Emergence - Quiz</h2>
+                    <p>When watching the video (from <a href="http://www.pbs.org/wgbh/nova/nature/emergence.html">
+                        Nova Science</a>, up to 4:50), think about:</p>
+                    <p class="l2">If there is no leader, how are flocks etc. controlled?</p>
+                    <p class="l2">List some of the organisms that demonstrate emergent behaviour.</p>
+                    <p class="l2">Can you think of any other examples of emergent phenomena?</p>
+                    
+                    <iframe class="youtube-player" src="http://www.youtube.com/embed/aEaZHWXmbRw"></iframe>
+                    
+                </section>
+                
+                <section id="Emergence2">
+                    <figure class="right" style="width:40%;">
+                        <img src="../figures/attribution/termite_mound.jpg" />
+                        <figcaption>A termite mound.<br/>Attribution: <a href="http://www.flickr.com/people/93452909@N00">JBrew</a> (<a href="https://en.wikipedia.org/wiki/en:Creative_Commons" class="extiw" title="w:en:Creative Commons">Creative Commons</a> <a href="//creativecommons.org/licenses/by-sa/2.0/deed.en">Attribution-Share Alike 2.0 Generic</a>).</figcaption>
+                    </figure>
+                    <h2>Emergence</h2>
+
+                    <p> Simple rules &#8594; complex outcomes</p>
+                    <p class="l2">In the past, we have assumed that complex phenomena are driven by a complex mechanism</p>
+                    <p class="l2">This is not always the case</p>
+                    <p class="l2">E.g. who plans the air-conditioning in termite mounds?</p>
+                    <p>Possible to prove the with simple computer programs</p>
+                    <p class="l2">Agent-based models are one example, as well as others ... </p>
+                    <p class="l2">If you're interested, look up 'Conway's Game of Life'</p>
+                </section>
+                
+                <section id="Emergence-WhyImportant">
+                    <h2>Emergence</h2>
+                    <h3>Why is it important?</h3>
+                    <p><strong>Key message</strong>: Complex structures can emerge from simple rules</p>
+                    <p>Emergence is hard to anticipate, and cannot be deduced from solely analysis
+                        of individuals’ behaviour</p>
+                    <p class="l2">You could not work out what a termite mound would look like
+                    by dissecting a termite.</p>
+                    <p>Emergence is a characteristic of <i>complex systems</i></p>
+                    <p>Individual-level modelling is focused on understanding how macro-level patterns emerge from micro-level through the process of simulation.</p>
+                </section>
+
+                
+                <section id="Emergence-segregation">
+                    <h2>Emergence</h2>
+                    <h3>Example: Segregation</h3>
+                    <img class="right" src="../figures/netlogo/netlogo-segregation-website.png" 
+                         alt="Screenshot of Schelling NetLogo website"/>
+                    <p>Thomas Schelling (Harvard) looked at racial segregation. He designed a model:</p>
+                    <p class="l2">Individuals have a preference for being surrounded by neighbours of a
+                    similar type.</p>
+                    <p class="l2">If they are unhappy with their neighbours, then they move to an empty cell</p>
+                    <p>What do you think happens when 35%, 50% and 80% preferences are selected?</p>
+                </section>
+                    
+
+                <!-- *****************************************************************
+                     ************* Interactions and Behaviour *************************************
+                     ***************************************************************** -->
+                
+                
+                <section id="Interataction-GlobalLocal">
+                    
+                    <h2>Interactions</h2>
+                    <h3>Global and Local</h3>
+                    <p>Interactions are a key part of agent-based models</p>
+                    <p class="l2">One of the most powerful elements for modelling complex systems</p>
+                    <p>Global interactions</p>
+                    <p class="l2">Can result in immediate massive changes on  all agents</p>
+                    <p class="l2">E.g. A new policy on migration; climate change; limits on number 
+                        of children couples allowed to have</p>
+                    <p>Local interactions</p>
+                    <p class="l2">Interactions that occur at the micro or meso level.</p>
+                    <p class="l2">Only affect those in the local vicinity.</p>
+
+                </section>
+                
+                <section id="Interataction2">
+                    
+                    <h2>Interactions</h2>
+                    
+                    <p>Interactions can be spatially constrained:</p>
+                    <p class="l2">Neighbourhood feuds</p>
+                    <p class="l2">Car crashes</p>
+                    <p class="l2"></p>
+                      <p>Or a-spatially (e.g. across social networks):</p>
+                    <p class="l2">Exchange of information between students about a new course</p>
+                    <p class="l2">Twitter</p>
+                    <p>From interactions, new information, new interactions etc emerge.</p>
+                    <p>Interactions add to the complexity of the system.</p>
+                    <p>Getting the interactions correct is crucial.</p>
+                </section>
+
+                <section id="Interataction-Types">
+                    
+                    <h2>Types of Interactions</h2>
+                    <p>Direct interaction:</p>
+                    <p class="l2">agents directly interacting with each other affect each other 
+                        e.g. exchanging information.</p>
+                    <p>Mediated or indirect interaction:</p>
+                    <p class="l2">agents interact indirectly via a mediating resource e.g. competition for a shared resource.</p>
+                </section>
+                
+                <section id="Behaviour">
+                    <h2>Modelling Behaviour</h2>
+                    <p>Great advantage of ABM!</p>
+                    <p>But lots of important decisions about what to include in a model (and how).</p>
+                    <div class="fragment">
+                        <p>Quiz: Choose a number between 1 and 4</p>
+                        <p class="l2">Write it down (or just remember it and don't cheat!).</p>
+                        <p class="l2 fragment">How will the choice of numbers be spread across the population?</p>
+                    </div>
+                    <p class="fragment">Result: Humans are not random! "They (we) are strange and wonderful” (Kennedy, 2012)</p>
+                </section>
+                
+                <section id="KISSKIDS">
+                    <h2>Modelling Behaviour</h2>
+                    <h3>So how do we model an organism's behaviour?</h3>
+                    <p>Two broad approaches (and lots of disagreement):</p>
+                    <p class="l2">Keep it descriptive, stupid (KIDS)</p>
+                    <p class="l2">Keep it simple, stupid (KISS)</p>
+                    <h3>And how do you know which behaviours are important?</h3>
+                    <div class="twocol">
+                        <p class="l2">Published literature</p>
+                        <p class="l2">Talking to the experts</p>
+                        <p class="l2">Numerical experimentation</p>
+                        <p class="l2">Rigorous data analysis</p>
+                        <p class="l2">Black magic!</p>
+                    </div>
+                </section>
+                
+                <section id="Behaviour-Techniques">
+                    <h2>Modelling Behaviour</h2>
+                    <h3>Techniques</h3>
+                    <p>Simple rule-based systems</p>
+                    <p><code>IF &lt;hunger&gt; is below &lt;hungerThreshold1&gt; <br/>
+                        THEN agent-dies.</code></p>
+                    <p><code>IF &lt;hunger&gt; is above &lt;hungerThreshold2&gt; <br/>
+                        THEN address-another-goal.</code></p>
+                    <p><code>IF &lt;hunger&gt; is between &lt;hungerThreshold1&gt; and &lt;hungerThreshold2&gt; THEN search-for-food.</code></p>
+                    <p>Others: PECS, Beliefs Desires Intentions (BDI), ..</p>
+                </section>
+                
+                
+                  <section id="abm-summary" >
+                    
+                    <h2>Summary so far</h2>
+                        <p>Why Simulate?</p>
+                        <p>An Introduction to Agent-Based Modelling</p>
+                        <p class="l2">What is an agent?</p>
+                        <p class="l2">Pros &amp; Cons of ABM</p>
+                        <p>Complexity and Emergence</p>
+                        <p>Interactions and Behaviour</p>
+                    <h2>Now: NetLogo</h2>
+                </section>
+                
+                
+                
+                
+                <!-- *****************************************************************
+                     ************* NetLogo!  **********************************
+                     ***************************************************************** -->
+    
+            
+                <section id="Programming4">    
+                    <!-- <a href="http://www.youtube.com/watch?v=GuBt63f2I78">
+                        <iframe src="http://www.youtube.com/embed/GuBt63f2I78"></iframe>
+                    </a> -->
+                    <iframe src="http://www.youtube.com/embed/otiMil1kt1Y"></iframe>
+                </section>
+                
+                <section id="Programming5">
+
+                <p style="color:red">
+                    Don't panic! At times you will find NetLogo programming frustrating, but
+                        there is lots of help available.</p>
+                </section>
+                
+                <section id="outline-netlogo">
+                    <h2>Outline</h2>
+                    <div class="twocol">
+                        <p><a href="#/Tools">Tools for individual-level modelling</a></p>
+                        <p><a href=#/NetlogoIntro>Introduction to NetLogo</a></p>
+                        <p><a href=#/TheProgram>The Program</a></p>
+                        <p><a href=#/TurtlesPatches>Turtles and Patches</a></p>
+                        <p><a href=#/Variables>Variables</a></p>
+                        <p><a href=#/FlowControl>Flow Control</a></p>
+                        <p><a href=#/WritingCode>Writing Nice Code</a></p>
+                        <p><a href=#/Summary>Summary</a></p>
+                    </div>
+                </section>
+
+                
+                
+                
+                <section id="Tools">
+                    <h2>Software Tools / Platforms</h2>
+                    <img class=top src="../figures/software_tools.png" alt="Different types of ABM software"/>
+                    <p>What are they?</p>
+                    <p class="l2">Pieces of software to help people build models</p>
+                    <p>Wide range of tools</p>
+                    <div class="twocol">
+                        <p class="l2">Computer code ('libraries')</p>
+                        <p class="l2">Entire graphical environment</p>
+                        <p class="l2">Somewhere in the middle</p>
+                        <p class="l2">... and somewhere else ...</p>
+                    </div>
+                </section>
+
+                <section id="Libraries">
+                    <h2>Computer code ('libraries')</h2>
+                    <p>Researchers write software to perform useful functions:</p>
+                    <p class="l2">Draw graphs</p>
+                    <p class="l2">Visualise the model</p>
+                    <p class="l2">Manage the schedule</p>
+                    <p>Great for programmers</p>
+                    <p class="l2">Less time spend worrying about admin, more time on
+                    modelling</p>
+                    <p>Examples:</p>
+                    <div class="twocol">
+                        <p class="l2"><a href="http://cs.gmu.edu/~eclab/projects/mason/">MASON</a></p>
+                        <p class="l2"><a href="http://repast.sourceforge.net/">Repast Simphony</a></p>
+                        <p class="l2"><a href="https://sites.google.com/site/mageosim/">Mageo</a></p>
+                        <p class="l2">Loads of others listed <a
+                        href="http://en.wikipedia.org/wiki/Comparison_of_agent-based_modeling_software"
+                        >here</a></p>
+                    </div>
+                </section>
+                
+                <section id="Graphical">
+                    <h2>Graphical Environments</h2>
+                    <!-- <a href="http://visualbots.com/"><img class=right src="http://visualbots.com/Images/tree2.gif"/></a> -->
+                        <figure class="right" >
+                            <a href="http://repast.sourceforge.net/docs.html">
+                            <img src="../figures/repast-behavior_editor_example.png" alt="Repast behaviour editor"/>
+                            </a>
+                            <figcaption>Repast behaviour editor</figcaption>
+                    </figure>
+                    <p>Entirely visual - no programming needed</p>
+                    <p>Most useful for non-programmers</p>
+                    <p>Examples</p>
+                    <p class="l2"><a href="http://www.agentsheets.com/">Agent Sheets</a></p>
+                    <p class="l2"><a href="http://visualbots.com/">VisualBots</a></p>
+                    <p class="l2"><a href="http://repast.sourceforge.net/">Repast Simphony</a></p>
+                    <p class="l2"><a href="http://m.modelling4all.org/">Modelling4All</a></p>
+                </section>
+                
+                
+                <section id="Middle">
+                    <h2>Somewhere in the middle</h2>
+                    <img class="right" src="../figures/netlogo/netlogo-gui.png" alt="NetLogo GUI"/>
+                    <p>Some code writing, some visual development</p>
+                    <p>More powerful than purely visual tools, but easier to use.</p>
+                    <p>Save time having to learn to do simple tasks and concentrate on model
+                    behaviour</p>
+                    <p>e.g. NetLogo</p>
+                </section>
+
+                
+                <section id="NetlogoIntro">                
+                    <a href="http://ccl.northwestern.edu/netlogo/">
+                        <!-- <img class=top src="http://ccl.northwestern.edu/netlogo/images/netlogo-title-wide-60.jpg"></img> -->
+                        <img class=top src="../figures/netlogo/netlogo-title-wide-60.jpg"/>
+                    </a>
+                    
+                    <a href="http://www.youtube.com/watch?v=8wU6NdjTVTA">
+                        <iframe class="youtube-player-right" type="text/html"
+                            src="http://www.youtube.com/embed/8wU6NdjTVTA">
+                        </iframe>
+                    </a>
+                    
+                    <p>Base on <strong>Star Logo</strong>.</p>
+                    <p>Popular teaching tool</p>
+                    <p>Designed to be used by children</p>
+                    <p>But also powerful</p>
+                </section>
+                
+                <section id="NetlogoIntro2">
+                
+                    <a href="http://ccl.northwestern.edu/netlogo/">
+                        <!-- <img class=top src="http://ccl.northwestern.edu/netlogo/images/netlogo-title-wide-60.jpg"></img> -->
+                        <img class=top src="../figures/netlogo/netlogo-title-wide-60.jpg"/>
+                    </a>
+                    
+                    <p>Developed by The Center for Connected Learning (CCL) and Computer-Based Modeling at Northwestern University</p>
+                    <p>Free!</p>
+                    <p>Uses Java in the background</p>
+                    <p class="l2">Multi platform; can be converted into applets (and embedded in websites)</p>
+                    <p>Great for quickly putting a model together and thinking through ideas</p>
+                    <p class="l2">Easy to: build;  interact with models; 
+                        extract data and create plots</p>
+                    
+                    <p>Excellent documentation: <a href="http://ccl.northwestern.edu/netlogo/docs/">http://ccl.northwestern.edu/netlogo/docs/</a></p>
+                </section>
+                
+                <section id="Examples1">
+                    <h2>Example - Segregation (Schelling)</h2>
+                    <a href="http://ccl.northwestern.edu/netlogo/models/Segregation" target="_blank">
+                        <img class=top src="../figures/netlogo/netlogo-segregation-website.png" />
+                    </a>
+                </section>
+                
+                <section id="Examples2">
+                    <h2>Example - Ants</h2>
+                    <a href="http://ccl.northwestern.edu/netlogo/models/Ants" target="_blank">
+                        <img class=top src="../figures/netlogo/netlogo-ants-website.png" alt="NetLogo Ants example" />
+                    </a>
+                </section>
+                
+                                
+                <section id="TheProgram">
+                    <h2>The Program</h2>
+                    <P>NetLogo is "somewhere in the middle"</P>
+                    <p class="l2">Graphical part (<strong>Interface</strong>) with sliders, graphs, buttons and a map</p>
+                    <p class="l2">Scripting part (<strong>Procedures</strong>) which contains instructions (code)</p>
+                    <img src="../figures/netlogo/netlogo-program.png" alt="NetLogo program"/>
+                </section>
+                
+                
+                
+                <section id="Program-Interface">
+                    <h2>The Interface</h2>
+                    <img style="width:70%" src="../figures/netlogo/netlogo-interface.png" alt="NetLogo interface" />
+                </section>
+                
+                <section id="InterfaceComponents">
+                    <h2>Interface Components</h2>
+                    <table>
+                        <tr>
+                            <td>Switch</td>
+                            <td><img src="../figures/netlogo/netlogo_components/switch.png" alt="a NetLogo switch"/></td>
+                            <td>Slider</td>
+                            <td><img src="../figures/netlogo/netlogo_components/slider.png" alt="a NetLogo slider"/></td>
+                        </tr>
+                        <tr>
+                            <td>Button</td>
+                            <td><img src="../figures/netlogo/netlogo_components/button.png" alt="a NetLogo button"/></td>
+                            <td>Monitor</td>
+                            <td><img src="../figures/netlogo/netlogo_components/monitor.png" alt="a NetLogo monitor"/></td>
+                        </tr>
+                        <tr>
+                            <td>Graph</td>
+                            <td><img src="../figures/netlogo/netlogo_components/graph.png" alt="a NetLogo graph"/></td>
+                        </tr>
+                    </table>
+                </section>
+                                
+                <section id="Program-Information">
+                    <h2>The Information Tab</h2>
+                    <img style="width:80%" src="../figures/netlogo/netlogo-info.png" alt="NetLogo info" />
+                </section>
+                
+                
+                <section id="Program-Code">
+                    <h2>The Program - Code</h2>
+                    <img style="width:80%"  src="../figures/netlogo/netlogo-code.png" alt="NetLogo code tab" />
+                    
+                </section>
+                
+                
+                <section id="TurtlesPatches">
+                                      
+                    <h2>Turtles, Patches and the Observer</h2>
+                    
+                    <img class=right src="../figures/netlogo/turtles-patches-god.png" alt="turtles and patches"/>
+                    
+                    <p>There are two types of objects in NetLogo: <strong>turtles</strong>
+                    and <strong>patches</strong>.</p>
+                    <p>Both are <i>agents</i></p>
+                    <p class="l2">They have rules that determine their behaviour</p>
+                    <p class="l2">They can interact with other agents</p>
+                    <p class="l2"></p>
+                    
+                    <p>Main differences:</p>
+                    <p class="l2">Patches cannot move</p>
+                    <p class="l2">You can create different types of 'turtle' (e.g. person,
+                    dog, cat, car, etc.)</p>
+                    <p>Why turtles?</p>                
+                </section>
+                
+                <section id="TurtlesPatches2">
+                    
+                   
+                    <h2>Turtles, Patches and the Observer</h2>
+                    
+                    <img class=right src="../figures/netlogo/turtles-patches-god.png" alt="turtles and patches"/>
+                    
+                   
+                    <p>Also important: the <strong>observer</strong></p>
+                    <p class="l2">The 'god' of a model</p>
+                    <p class="l2">Oversea everything that happens, give orders to turtles or patches,
+                    control other things like data input/output, virtual time, etc.</p>
+                    
+                </section>
+                
+            
+                
+                <section id="Variables">
+                    <h2>Variables</h2>
+                    
+                    <p>In programming, variables are a way of storing information. E.g.</p>
+                    <p class="l2"><code>my-name = "Nick"</code></p>
+                    <p class="l2"><code>seconds-per-minute = 60</code></p>
+                    <p class="l2"><code>pi = 3.142</code></p>
+                    <p class="l2"><code>infected = True</code></p>
+                    <p class="l2"><code></code></p>
+                    <p>Variables can <i>belong</i> to different objects in the model.</p>
+                </section>
+                
+                <section id="Variables1b">
+                    <h2>Variables</h2>
+                    
+
+                    
+                    <p>Examples:</p>
+                    
+                    <div class="box">
+                    
+                        <p class="l2"><strong>Turtle variables</strong>: e.g. <code>name</code>, <code>age</code>,
+                        <code>occupation</code>, <code>wealth</code>, <code>energy</code></p>
+                        
+                        <p class="l2"><strong>Patch variables</strong>: e.g. <code>height-above-sea</code>,
+                        <code>amount-of-grain</code>, <code>building-security</code>,
+                        <code>deprivation</code></p>
+                        
+                        <p class="l2"><strong>Observer variables</strong>: e.g. <code>total-wealth</code>, <code>weather</code>,
+                        <code>time-of-day</code>, <code>pi</code></p>
+                    
+                    </div>
+                    
+                    <p>Different objects can have different <i>variable values</i></p>
+            
+                </section>
+                
+                <!--
+                <section id="Variables2" data-state="question">
+                    
+                    <a href="http://www.youtube.com/watch?v=TERNE7a-A4E">
+                        <iframe class="right" src="http://www.youtube.com/embed/TERNE7a-A4E"></iframe>
+                    </a>
+                    
+                    <h2>Which variables?</h2>
+                    <div class="footnote">
+                        <p>Scenario: You are building a model of car traffic and need to decide how
+                        to implement the behaviour of your drivers and configure the environment.</p>
+                        <p>What are the most important things that need to be included?</p>
+                        <p>These will determine the <strong>variables</strong> that need to be included
+                        in a model</p>
+                    </div>                    
+                    
+                    <span id="activity_box" >
+                    <p class="l2" style="font-family:'Times New Roman', Times, serif">
+                        Current Speed<br/>
+                        Driver's Age<br/>
+                        Road Quality<br/>
+                        ...</p>
+                    </span>
+                    
+                    <aside class="notes">
+                        <p>On the whiteboard, we will group the variables that you suggest into
+                        three different categories, depending on that part of the model that they
+                        belong to: <strong>Agent, Road, World</strong>.</p>
+                        
+                        This is a video produced by the
+                    <a href="http://vision-traffic.ptvgroup.com/en-uk/products/ptv-vissim/">
+                        PTV Vissim</a>
+                    </asside>
+                    
+                    
+                </section>
+                -->
+                
+                
+                <section id="Commands">
+                    <h2>NetLogo Commands</h2>
+                    
+                    <p>Commands are the way of telling NetLogo what we want it to do</p>
+                    
+                    <p>Some examples</p>
+                    <p class="l2">(don't worry, these will be explained properly in the
+                        <a href="../../practicals/practical1/2_basics.php">first practical</a>): </p>
+                    
+                    
+                    <table style="font-size:0.7em;">
+                        <tr>
+                            <td><code><strong>show</strong> "Hello World"</code></td><td>Prints something to the screen</td>
+                        </tr>
+                        <tr>
+                            <td><code><strong>set</strong> my-age 13</code></td><td>Sets the value of a variable</td>
+                        </tr>
+                        <tr>
+                            <td><code><strong>ask</strong> turtles [ ... ]</code></td><td>Ask the turtles to do something</td>
+                        </tr>
+                        <tr>
+                            <td><code><strong>ask</strong> turtles [ <strong>set</strong> color blue ]</code></td>
+                            <td>Asks the turtles to turn blue</td>
+                        </tr>
+                    </table>
+                    
+                    
+                    <p>Commands are very <a href="http://ccl.northwestern.edu/netlogo/docs/tutorial2.html">
+                    well documented</a></p>
+                    
+                </section>
+                
+                <section id="Brackets">
+                    <h2>Brackets</h2>
+                    
+                    <p>NetLogo uses both square <code>[ ]</code> and round <code>( )</code> brackets.</p>
+                    
+                    <p>Round brackets are used to set the <i>order of operations</i>. E.g.:</p>
+                    <p class="l2"><code>&nbsp;2 + 3&nbsp;&nbsp;× 4 = 14</code></p>
+                    <p class="l2"><code>(2 + 3) × 4 = 20</code></p>
+                    
+                    <p>Square brackets are used to split up commands. E.g.:</p>
+                    <p class="l2"><code>ask turtles [ ... ]</code></p>
+                    <p class="l2">the <code>ask</code> command
+                    expects to find some more commands inside the brackets.</p>
+                    
+                </section>
+                
+                
+                <section id="Contexts">
+                    <h2>Contexts</h2>
+                    
+                    <img class="right" src="../figures/netlogo/contexts.png"
+                    alt="Contexts and variables" />
+                    
+                    <p>Contexts are NetLogo's way of controlling where commands are sent.</p>
+                    <p>There are three contexts:</p>
+                    <ol class="l2">
+                        <li>Observer</li>
+                        <li>Turtle</li>
+                        <li>Patch</li>
+                    </ol>
+                    
+                    <p><span style="color:red;">Don't Panic</span>: Lots of opportunity to understand these during the practicals..</p>
+                    
+                </section>
+                
+                <section id="FlowControl">
+                    
+                    <img class="right" src="../figures/ramsay.jpg"/>
+                    
+                    <h2>Flow Control</h2>
+                    
+                    <p>Programs are recipes</p>
+                    <p>And computers are really, really stupid cooks.</p>
+                    <p>Programmers need to tell the computer <i>exactly</i> what to do, and in what
+                    order</p>
+                    <p>Geek joke:</p>
+                    <div class="box">
+                        <p class="fragment l2">Q: How do you keep a programmer in the shower forever?</p>
+                        <p class="fragment l2">A: Give them a bottle of shampoo that says "lather, rinse, repeat".</p>
+                    </div>
+                    
+                </section>
+                
+                <section id="Logic">
+                    
+                    <h2>Flow Control and Logic</h2>
+                    
+                    <!-- I don't like the following diagram
+                    <img class="right" src="./figures/flow_control.png" alt="Flow control with 'if' statements" />
+                    -->
+                    
+                    <p>Usually, NetLogo will run through your code, one line after the other.</p>
+                    
+                    <p><strong>But!</strong> Sometimes there are two or more possibilities for what
+                    to do next.</p>
+                    
+                    <p><code>if</code> statements are one example:</p>
+                    
+                    <div class="box footnote">
+                        <p>
+                            <code><i>... start here ... </i></code><br/><br/>
+                            <code>if ( age < 18 )</code><br/>
+                            <code>&nbsp;&nbsp[ <i>.. do something ..</i> ]</code><br/><br/>
+                            <code>if ( age > 18 ) </code><br/>
+                            <code>&nbsp;&nbsp[ <i>.. do something else ..</i> ]</code><br/><br/>
+                            <code><i>... now continue ...</i></code>
+                            
+                        </p>
+                    </div>
+                    
+                    
+                </section>
+                
+                
+                <section id="WritingCode">
+                    <h2>Finally: Writing Nice Code</h2>
+                    
+                    <p>Computers don't care what code looks like</p>
+                    <p>But there are some good conventions that we can use to make our code easier
+                    to understand by humans</p>
+                    
+                    <p>Indentation</p>
+                    <p class="l2">New blocks of code should be <i>indented</i> (moved to the right)</p>
+                    <p class="l2">E.g. the <code>if</code> statements on previous slide</p>
+                    
+                    <p>White space</p>
+                    <p class="l2">Different sections of code can be separated by lots of white space</p>
+                    
+                    <p>Comments</p>
+                    <p class="l2">Comments are special parts of code that NetLogo will ignore.</p>
+                    <p class="l2">Anything after a <code>;</code> is ignored.</p>
+                    <p class="l2">Use comments to explain what your computer code does.</p>
+                </section>
+                
+                <style>
+                    
+
+                    
+                    </style>
+                
+                <section id="Code-Indentation">
+                    
+                    <h2>Indentation</h2>
+                    
+                    <div id="columns">
+                        <div class="left column">
+                            <p style="color:green;">Good</p>
+                            <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                    if age = 15 [<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 0 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 1 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 5 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 5 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  ]
+                                </code></p>
+                            </div>
+                        </div>
+                            
+                        <div class="right column">
+                            <p style="color:red;">Bad</p>
+                                <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                  if age = 15 [<br/><br/>
+                                  if count friends > 0 [<br/>
+                                  set happiness ( happiness + 1 )<br/>
+                                  ]<br/><br/>
+                                  if count friends > 5 [<br/>
+                                  set happiness ( happiness + 5 )<br/>
+                                  ]<br/><br/>
+                                  ]
+                                </code></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="Code-Whitespace">
+                    
+                    <h2>Whitespace</h2>
+                    
+                    <div id="columns">
+                        <div class="left column">
+                            <p style="color:green;">Good</p>
+                                <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                    if age = 15 [<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 0 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 1 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 5 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 5 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  ]
+                                </code></p>
+                            </div>
+                            
+                        </div>
+                            
+                        <div class="right column">
+                            
+                            <p><span style="color:red;">Bad</span> (well, not too bad, but ..)</p>
+                                <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                    if age = 15 [<br/>
+                                  &nbsp;&nbsp;if count friends > 0 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 1 )<br/>
+                                  &nbsp;&nbsp;]<br/>
+                                  &nbsp;&nbsp;if count friends > 5 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 5 )<br/>
+                                  &nbsp;&nbsp;]<br/>
+                                  ]
+                                </code></p>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    
+                </section>
+                
+                <section id="Code-Comments">
+                    
+                    <h2>Comments</h2>
+                    
+                    <div id="columns">
+                        <div class="left column">
+                            <p style="color:green;">Good</p>
+                                <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                    if age = 15 [<br/><br/>
+                                  &nbsp;&nbsp;; This happens if the agent is 15 years old<br/>
+                                  &nbsp;&nbsp;if count friends > 0 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;; If at least 1 friend, then they're happy<br>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 1 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 5 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;; If they have 5, then even more happy<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 5 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  ]
+                                </code></p>
+                            </div>
+                        </div>
+                            
+                        <div class="right column">
+                            
+                            <p style="color:red;">Bad</p>
+                            <div class="box" style="font-size: 0.5em;">
+                                <p><code>
+                                    if age = 15 [<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 0 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 1 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  &nbsp;&nbsp;if count friends > 5 [<br/>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;set happiness ( happiness + 5 )<br/>
+                                  &nbsp;&nbsp;]<br/><br/>
+                                  ]
+                                </code></p>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    
+                </section>
+                
+                <section id="summary-netlogo">
+                    <h2>Summary: NetLogo</h2>
+                    <div class="twocol">
+                        <p><a href="#/Tools">Tools for individual-level modelling</a></p>
+                        <p><a href=#/NetlogoIntro>Introduction to NetLogo</a></p>
+                        <p><a href=#/TheProgram>The Program</a></p>
+                        <p><a href=#/TurtlesPatches>Turtles and Patches</a></p>
+                        <p><a href=#/Variables>Variables</a></p>
+                        <p><a href=#/FlowControl>Flow Control</a></p>
+                        <p><a href=#/WritingCode>Writing Nice Code</a></p>
+                    </div>
+                </section>
+                                
+                <section id="resources">
+                    
+                    <h2>Resources</h2>
+                    
+                    <p style="font-size:small">Lots of good text books are available:</p>
+                    <p class="l2" style="font-size:small">Railsback, Steven F., and Volker Grimm. Agent-Based and Individual-Based Modeling: A Practical Introduction. Princeton: Princeton University Press, 2011.</p>
+                    <p class="l2" style="font-size:small">O’Sullivan, D., and G. L. Perry. Spatial Simulation: Exploring Pattern and Process. Chichester, UK: John Wiley &amp; Sons, 2013.</p>
+                    <p class="l2" style="font-size:small">Gilbert, N., and K. G. Troitzsch. Simulation for the Social Scientist. 2nd Edition. Milton Keynes, UK: Open University Press, 2005.</p>
+                    <p class="l2" style="font-size:small">Heppenstall, Alison J, Andrew T Crooks, Linda M See, and Michael Batty, eds. Agent-Based Models of Geographical Systems. New York, NY: Springer, 2012.</p>
+                    
+                    <p style="font-size:small">And some nice, introductory papers:</p>
+                    <p class="l2" style="font-size:small">Crooks, A. and Heppenstall, A.J (2012) Introduction to Agent-based modelling.  In Heppenstall, A.J., Crooks, A.T., See, L.M. and Batty, M. (2012) Agent-based models of Geographical Systems. Springer: Dordrecht. </p>
+                    <p class="l2" style="font-size:small">Macal, C. M., &amp; North, M. J. (2010). Tutorial on agent-based modelling and simulation. Journal of Simulation, 4(3), 151–162</p>
+                    <p class="l2" style="font-size:small">Bonabeau, E. (2002). Agent-based modeling: Methods and techniques for simulating human systems. Proceedings of the National Academy of Sciences, 99(90003), 7280–7287.</p>
+                    <p class="l2" style="font-size:small">O’Sullivan &amp; Haklay (2000), Agent-based models and individualism: is the world agent-based?, Environment and Planning A (32), 1409-25</p>
+                    <p class="l2" style="font-size:small">Castle, C. J. E. and Crooks, A. T. (2006). Principles and concepts of agent-based modelling for developing geospatial simulations. UCL Working Papers Series, Paper 110, Centre For Advanced Spatial Analysis, University College London.</p>                
+                    <p style="font-size:small">Undergraduate module (material online): <a href="http://www.geog.leeds.ac.uk/courses/level3/geog3150/home/home/index.php">GIS, Geocomputation and Geoplanning</a></p>
+                
+                </section>
+                
+                <section id="other_resources">
+                    
+                    <h2>Other Resources</h2>
+                    
+                    <p>Prof. Bruce Edmonds is one of the big names in agent-based modelling. He has two videos that provide excellent introductions to the methodology</p>
+                    <p class="l2">A short one: <a href="http://www.youtube.com/watch?v=JANTkSa4hmA">http://www.youtube.com/watch?v=JANTkSa4hmA</a></p>
+                    <p class="l2">A longer version from a conference presentation: <a href="http://www.youtube.com/watch?v=9nEPxb2J73w">http://www.youtube.com/watch?v=9nEPxb2J73w</a></p>
+
+                </section>
+                
+                
+
+                <section id="OverToYou">
+                    <h2>Over To You .... </h2>
+                    <p>For the remainder of this session, work through the NetLogo Music Festival
+                        practicals here: </p>
+                    <p class="l2"><a target="_blank" href="http://www.geog.leeds.ac.uk/courses/level3/geog3150/netlogo_festival">
+                        http://www.geog.leeds.ac.uk/courses/level3/geog3150/netlogo_festival</a></p>
+                    <p>See if you can finish practical 3, but don't worry if you don't get
+                    that far (this would take undergraduates about 4-6 hours).</p>
+                    
+                </section>
+                
+                
+
+               
+                
+                <section class="title"  id="final" data-background-image="../figures/virtual_city.jpeg">
+>
+                    <div class="whitebackground2">
+                        <h1 style="font-size: 60px;">Agent-Based Modelling</h1>
+                        <hr/>
+                        <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a></h2>
+
+                        <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
+                        <h4>With thanks to Alison Heppenstall, Andrew Crooks, and Andy Evans</h4>
+                        <hr/>
+                        <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/2017-10-ABM_AGILE_Summer_School.html">http://surf.leeds.ac.uk/2017-10-ABM_AGILE_Summer_School.html</a></p>
+                    </div>
+                </section>
+                
+
+                
+			</div>
+		</div>
+
+		<script src="reveal/lib/js/head.min.js"></script>
+		<script src="reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal/plugin/markdown/marked.js' },
+					{ src: 'reveal/plugin/markdown/markdown.js' },
+					{ src: 'reveal/plugin/notes/notes.js', async: true },
+					{ src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

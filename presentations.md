@@ -67,6 +67,10 @@ tagline: Presentations about, or relating to, the surf project
 
    - [Crime / Fear in Space and Time]({{site.baseurl}}/announce/2015/09/30/AAG2016-CrimeSpaceTime.html). _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 29th March – 2nd April, San Francisco._
 
- - 2015
 
-   - 
+### Other material
+
+ - 2017
+
+   - AGILE PhD School 2017: [Agent-Based Modelling]({{site.baseurl}}/p/2017-10-ABM_AGILE_Summer_School.html).
+
