@@ -17,6 +17,7 @@ import surf.abm.environment.{Building, GeomPlanarGraphSurf, Junction, Road}
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -54,6 +55,9 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
     // Create the outputter that is in charge of writing out results etc.
     OutputFactory(this)
+
+    // Create the object that will initialise and collect data from the camera
+    CameraRecorder.create(this)
 
     // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
     // AgentType are created at random buildings
@@ -160,11 +164,11 @@ object SurfABM extends Serializable {
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL()
-        LOG.debug("Reading buildings  from file: " + bldgURI + " ... ")
+        LOG.debug("Reading buildings from file: " + bldgURI + " ... ")
         ShapeFileImporter.read(bldgURI, tempBuildings, attributes)
         //LOG.debug("...read %d buildings".format(tempBuildings.getGeometriesSize))
 
-        // Now cast all buildings from MasonGeometrys to SurfGeometrys
+        // Now cast all buildings from MasonGeometries to SurfGeometries
         LOG.debug("Casting buildings to SurfGeometry objects")
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
         val tempIDMap = scala.collection.mutable.Map[Int, SurfGeometry[Building]]()

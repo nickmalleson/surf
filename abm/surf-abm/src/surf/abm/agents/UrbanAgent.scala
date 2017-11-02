@@ -6,7 +6,8 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine
 import sim.util.geo.GeomPlanarGraphDirectedEdge
 import surf.abm.environment.{Building, GeomPlanarGraphEdgeSurf, Junction, Road}
 import surf.abm.exceptions.RoutingException
-import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry, Clock, CameraRecorder}
+import scala.collection.mutable.ListBuffer
 
 import scala.collection.JavaConversions._ // TODO: this won't be necessary once I have re-written A* Path
 
@@ -40,8 +41,12 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   protected def path(): List[GeomPlanarGraphDirectedEdge] = _path // Protected accessor
 
   // A list of cameras that the agent has passed by on his path
+  var tempCameras = new ListBuffer[Int]()
+  var tempCameraHours = new ListBuffer[Int]()
   private var _cameras: List[Int] = null
   def cameras(): List[Int] = _cameras // Accessor to cameras. Necessary??
+  private var _cameraHours: List[Int] = null
+  def cameraHours(): List[Int] = _cameraHours // Accessor to cameraHours. Necessary??
 
   private var indexOnPath = 0
   private var pathDirection = 1
@@ -55,7 +60,6 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
   def newDestination(newDest:Option[SurfGeometry[_]]) = {
     this._destination = newDest
     this._atDestination = false
-    this._cameras = null // start with empty list of cameras
     // Make a new path
     // Check that we have a destination to head to:
     val dest : SurfGeometry[_] = this.destination() match { // Check that destination is not None
@@ -171,14 +175,28 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       // (nasty way of checking that destination!=null before calling moveToCoordinate)
       this.destination() match { // Check that destination is not None
         case Some(_) => this.moveToCoordinate(this.destination().get.getGeometry.getCoordinate())
-        case None => throw new RoutingException("Cannot transitiontoNextEdge - destination is None")
+        case None => throw new RoutingException("Cannot transitionToNextEdge - destination is None")
       }
 //      this.moveToCoordinate(this.destination.get.getGeometry.getCoordinate)
+
+      this._cameras = tempCameras.toList
+      this._cameraHours = tempCameraHours.toList
+
+      //this._cameras.foreach()
+      //for (c <- this._cameras) {
+
+      //}
+      CameraRecorder.step(state)
+
+
+      tempCameras.clear()
       this.startIndex = -1.0
       this.endIndex = -1.0
       this.currentIndex = -1.0
       this._destination = None
       this._path = null
+      this._cameras = null
+      this._cameraHours = null
       this.indexOnPath = -1
       return true
     }
@@ -190,14 +208,13 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     val speed: Double = residualMove * linkDirection
     currentIndex += speed
 
-    // XXXX TESTING
-    //AgentLog.info(this, "Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
-    //print("Found road ID: %s".format( edge.getGeometry.theObject.id  ) )
-    if (edge.getGeometry.theObject.cameraID != -1 && !this._cameras.contains(edge.getGeometry.theObject.cameraID)) {
+    // Save ListBuffer of cameras passed by (+ according time)
+    if (edge.getGeometry.theObject.cameraID != -1 && (tempCameras == null || !tempCameras.contains(edge.getGeometry.theObject.cameraID))) {
       // TESTING
-      AgentLog.info(this, "Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
-      print("Found camera ID: %s".format( edge.getGeometry.theObject.cameraID  ) )
-      this._cameras.add(edge.getGeometry.theObject.cameraID)
+      //AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
+      //AgentLog.info(this, "Found camera ID: %s\n".format( edge.getGeometry.theObject.cameraID  ) )
+      tempCameras += edge.getGeometry.theObject.cameraID
+      tempCameraHours += Clock.currentHour().toInt
     }
 
     // check to see if the progress has taken the current index beyond its goal
