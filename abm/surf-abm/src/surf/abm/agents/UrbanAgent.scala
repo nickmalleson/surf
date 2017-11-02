@@ -186,7 +186,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       //for (c <- this._cameras) {
 
       //}
-      CameraRecorder.step(state)
+      //CameraRecorder.step(state)
+      CameraRecorder.add(this._cameras, this._cameraHours)
 
 
       tempCameras.clear()
@@ -211,8 +212,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     // Save ListBuffer of cameras passed by (+ according time)
     if (edge.getGeometry.theObject.cameraID != -1 && (tempCameras == null || !tempCameras.contains(edge.getGeometry.theObject.cameraID))) {
       // TESTING
-      //AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
-      //AgentLog.info(this, "Found camera ID: %s\n".format( edge.getGeometry.theObject.cameraID  ) )
+      AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
+      AgentLog.info(this, "Found camera ID: %s\n".format( edge.getGeometry.theObject.cameraID  ) )
       tempCameras += edge.getGeometry.theObject.cameraID
       tempCameraHours += Clock.currentHour().toInt
     }

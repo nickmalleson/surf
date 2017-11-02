@@ -18,6 +18,8 @@ object CameraRecorder extends Steppable{
 
   private val LOG: Logger = Logger.getLogger(this.getClass)
 
+  private var tempCameraMaps : scala.collection.mutable.Map[Int, ListBuffer[Int]] = null
+
 
   /**
     * Needs to be called to initialise the CameraRecorder
@@ -30,7 +32,7 @@ object CameraRecorder extends Steppable{
 
 
     // Init code goes here
-    val tempCameraMaps : scala.collection.mutable.Map[Int, ListBuffer[Int]] = null
+    this.tempCameraMaps = null
 
     this.state = state
 
@@ -54,6 +56,18 @@ object CameraRecorder extends Steppable{
 
   }
 
+  def add(cameras: List[Int], cameraHours: List[Int]): Unit = {
+    //for (c <- cameras) {
+      //val camIndex = cameras.zipWithIndex.map{ c => cameras(c) }
+      //val camIndex = List.tabulate(cameras.length){ i => cameras(i) }.head
+      //LOG.info("camIndex is %d\n".format(camIndex))
+      //if (this.tempCameraMaps(c).exists() ) {
+
+      // this.tempCameraMaps(camIndex).update(hour, tempCameraMaps(camIndex).apply(hour)+1)
+     // } else {
+      //}
+   // }
+  }
 
 
 }
