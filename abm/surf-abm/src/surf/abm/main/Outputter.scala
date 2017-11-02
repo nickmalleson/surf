@@ -53,7 +53,7 @@ object OutputFactory  {
     * Initialise the Output and schedule its step method
     *
     * @param state
-    * @return A new Outputter, or the one created prviously if this method has already been called.
+    * @return A new Outputter, or the one created previously if this method has already been called.
     *
     */
   def apply(state: SurfABM) : Outputter = {

@@ -145,7 +145,7 @@ object TimeProfile {
     for ((i, j) <- profile) {
       if (i < 0.0 || i >= 24.0) {
         //LOG.error(profile)
-        throw new IllegalArgumentException("Times must be in range [0,24). See previous log message for the profile.")
+        throw new IllegalArgumentException("Times must be in range [0,24]. See previous log message for the profile.")
       }
     }
 

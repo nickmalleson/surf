@@ -68,8 +68,8 @@ object ABBFAgentLoaderOtley {
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 commuters
-    LOG.info("ABBFAGENTLOADEROTLEY is temporarily only createing a few agents")
+    val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
+    LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
     //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
     LOG.info(s"Reading agents from file: '$filename'")
     // Get line and line number as a tuple

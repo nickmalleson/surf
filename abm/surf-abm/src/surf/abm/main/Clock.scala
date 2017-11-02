@@ -17,6 +17,8 @@ object Clock extends Steppable {
 
   private var clock : Clock = null // Clock is not defined until it has been created with create()
 
+  private var state : SimState = null // This will point to the sim state (useful)
+
   /**  The number of simulated minutes that elapse after each tick/iteration.  */
   val minsPerTick: Int = SurfABM.conf.getInt(SurfABM.ModelConfig+".MinsPerTick")
   if (minsPerTick < 1) {
@@ -38,6 +40,7 @@ object Clock extends Steppable {
       throw new Exception("Cannot create more than one Clock instance")
     }
     this.clock = new Clock(startTime)
+    this.state = state
     state.schedule.scheduleRepeating(this)
     LOG.info(s"Simulation clock initialised to ${this.clock.currentTime}")
   }
@@ -50,6 +53,16 @@ object Clock extends Steppable {
   def getTime () = {
     check()
     clock.currentTime
+  }
+
+  /**
+    * Get the number of iterations
+    *
+    * @return The number of iterations from the state object
+    */
+  def getIterations() : Long = {
+    check()
+    return this.state.schedule.getSteps
   }
 
   /**

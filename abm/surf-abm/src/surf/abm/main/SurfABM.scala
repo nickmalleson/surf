@@ -17,6 +17,7 @@ import surf.abm.environment.{Building, GeomPlanarGraphSurf, Junction, Road}
 import surf.abm.surfutil.Util
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -54,6 +55,9 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
     // Create the outputter that is in charge of writing out results etc.
     OutputFactory(this)
+
+    // Create the object that will initialise and collect data from the camera
+    CameraRecorder.create(this)
 
     // Decide how to load agents. Configurations can set their own loader, or just use the default (NumAgents of type
     // AgentType are created at random buildings
@@ -160,11 +164,11 @@ object SurfABM extends Serializable {
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
         // Read the shapefile (path relative from 'surf' directory)
         val bldgURI = new File("data/" + dataDir + "/buildings.shp").toURI().toURL()
-        LOG.debug("Reading buildings  from file: " + bldgURI + " ... ")
+        LOG.debug("Reading buildings from file: " + bldgURI + " ... ")
         ShapeFileImporter.read(bldgURI, tempBuildings, attributes)
         //LOG.debug("...read %d buildings".format(tempBuildings.getGeometriesSize))
 
-        // Now cast all buildings from MasonGeometrys to SurfGeometrys
+        // Now cast all buildings from MasonGeometries to SurfGeometries
         LOG.debug("Casting buildings to SurfGeometry objects")
         //val sgoms = scala.collection.mutable.ListBuffer.empty[SurfGeometry[Building]]
         val tempIDMap = scala.collection.mutable.Map[Int, SurfGeometry[Building]]()
@@ -243,17 +247,26 @@ object SurfABM extends Serializable {
         // Cast the roads to SurfGeometry objects
         val roads = new GeomVectorField(WIDTH, HEIGHT)
         val roadIDCol = "ID" // the name of the ID column in the roads shapefile
+        val cameraIDCol = "cameraID" // the name of the camera_ID column in the roads shapefile
         for (o <- roadsTemp.getGeometries()) {
           val g : MasonGeometry = o.asInstanceOf[MasonGeometry]
           val roadID = try {
-            g.getIntegerAttribute("ID")
+            g.getIntegerAttribute(roadIDCol)
           }
           catch { case e: NullPointerException =>
             LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
               format(roadIDCol,roadIDCol ), e)
             throw e
           }
-          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID)))
+          val cameraID = try {
+            g.getIntegerAttribute(cameraIDCol)
+          }
+          catch { case e: NullPointerException =>
+            LOG.error("Cannot find a field called '%s' in the roads file. Does it have a column called '%s'?".
+              format(cameraIDCol,cameraIDCol ), e)
+            throw e
+          }
+          roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID, cameraID)))
         }
         MBR.expandToInclude(roads.getMBR())
         SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()));
@@ -334,7 +347,7 @@ object SurfABM extends Serializable {
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
         //SurfABM.agentGeoms.addGeometry(new MasonGeometry(a.location().getGeometry()))
         state.schedule.scheduleRepeating(a)
-        //agentArray += ( (a.location, a) ) // Need two  parantheses to make a tuple?
+        //agentArray += ( (a.location, a) ) // Need two parentheses to make a tuple?
       }
 
       // Now store the agents and their geometries in a map so we can get back to the
