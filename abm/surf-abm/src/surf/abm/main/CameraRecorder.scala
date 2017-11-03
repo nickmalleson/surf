@@ -56,14 +56,17 @@ object CameraRecorder extends Steppable{
 
   }
 
-  def add(cameras: List[Int], cameraHours: List[Int]): Unit = {
+  def add(cameraID: Int): Unit = {
     //for (c <- cameras) {
       //val camIndex = cameras.zipWithIndex.map{ c => cameras(c) }
       //val camIndex = List.tabulate(cameras.length){ i => cameras(i) }.head
       //LOG.info("camIndex is %d\n".format(camIndex))
       //if (this.tempCameraMaps(c).exists() ) {
 
-      // this.tempCameraMaps(camIndex).update(hour, tempCameraMaps(camIndex).apply(hour)+1)
+      val cameraList = this.tempCameraMaps(cameraID)
+    val currentVal = cameraList.last
+
+    this.tempCameraMaps(cameraID).update(cameraList.size - 1, currentVal+1)
      // } else {
       //}
    // }

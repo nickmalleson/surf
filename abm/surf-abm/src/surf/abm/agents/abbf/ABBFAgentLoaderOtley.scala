@@ -197,7 +197,8 @@ object ABBFAgentLoaderOtley {
     val lunchPlace = Place(
       location = lunchLocation,
       activityType = LUNCHING,
-      openingTimes = null      // not really necessary as activity intensity will be 0 outside lunch hours
+      openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
+      // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
     )
     val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndLunchPreference), (12d + rnd/2, rndLunchPreference), (15d, 0d)))
     val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, place = lunchPlace)
