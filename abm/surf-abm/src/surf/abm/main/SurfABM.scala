@@ -73,7 +73,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
       val methodStr = split(1)
       SurfABM.LOG.info(s"Will attempt to load agents using method '${methodStr}' in class '{$classStr}'.")
 
-      // Call the method using Java reflection. (I looked at Scala reflection but it was absoultely incomprehensible!)
+      // Call the method using Java reflection. (I looked at Scala reflection but it was absolutely incomprehensible!)
       // https://stackoverflow.com/questions/160970/how-do-i-invoke-a-java-method-when-given-the-method-name-as-a-string
       val cls : Class[_] = Class.forName(classStr)
       val method : Method = cls.getMethod(methodStr, this.getClass) // Note: the method should receive one parameter: the model state
