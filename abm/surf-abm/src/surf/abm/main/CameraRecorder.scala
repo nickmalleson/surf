@@ -32,6 +32,7 @@ object CameraRecorder extends Steppable{
 
 
     // Init code goes here
+    //val cameraList: List[Integer] = SurfABM.conf.getIntList(SurfABM.ModelConfig+".CameraList")
     this.tempCameraMaps = null
 
     this.state = state
@@ -52,24 +53,20 @@ object CameraRecorder extends Steppable{
     LOG.debug("CameraRecorder.step() has been called")
 
     // Cameras and footfall counts in the model
+    for (c <- cameraList) {
+      this.tempCameraMaps
+    }
 
 
   }
 
   def add(cameraID: Int): Unit = {
-    //for (c <- cameras) {
-      //val camIndex = cameras.zipWithIndex.map{ c => cameras(c) }
-      //val camIndex = List.tabulate(cameras.length){ i => cameras(i) }.head
-      //LOG.info("camIndex is %d\n".format(camIndex))
-      //if (this.tempCameraMaps(c).exists() ) {
 
-      val cameraList = this.tempCameraMaps(cameraID)
-    val currentVal = cameraList.last
+    val hoursList = this.tempCameraMaps(cameraID)
+    val currentVal = hoursList.last
 
-    this.tempCameraMaps(cameraID).update(cameraList.size - 1, currentVal+1)
-     // } else {
-      //}
-   // }
+    this.tempCameraMaps(cameraID).update(hoursList.size - 1, currentVal+1)
+
   }
 
 
