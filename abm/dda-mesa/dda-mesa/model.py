@@ -124,22 +124,25 @@ class DDAModel(Model):
             self._reset_cameras()
             # Calculate the number of agents to activate
             num_to_activate = int(self._agent_dist[int((s / 60) % 24)])
+            print("\tActivating {} agents on hour {}".format(num_to_activate, s % 60))
+
         else:
             num_to_activate = 0
-        print("\tNum to activate: {}".format(num_to_activate))
+            
         assert num_to_activate >= 0, \
             "The number of agents to activate should be greater or equal to 0, not {}".format(num_to_activate)
-
-        # Choose some agents that are currently retired to activate.
-        retired_agents = [a for a in self.schedule.agents if a.state == AgentStates.RETIRED]
-        assert len(retired_agents) >= num_to_activate, \
-            "Too few agents to activate (have {}, need {})".format(len(retired_agents), num_to_activate)
-
-        to_activate = np.random.choice(retired_agents, size=num_to_activate, replace=False)
-
-        for a in to_activate:
-            a.activate()
-
+            
+        if num_to_activate > 0:
+            # Choose some agents that are currently retired to activate.
+            retired_agents = [a for a in self.schedule.agents if a.state == AgentStates.RETIRED]
+            assert len(retired_agents) >= num_to_activate, \
+                "Too few agents to activate (have {}, need {})".format(len(retired_agents), num_to_activate)
+    
+            to_activate = np.random.choice(retired_agents, size=num_to_activate, replace=False)
+            print("\t\tActivating agents: {}".format(to_activate))
+    
+            for a in to_activate:
+                a.activate()
 
 
         #        XXXX HERE - see line 477 om wprlomgca,eras/py
