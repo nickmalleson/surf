@@ -212,8 +212,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     // Save ListBuffer of cameras passed by (+ according time)
     if (edge.getGeometry.theObject.cameraID != -1 && (tempCameras == null || !tempCameras.contains(edge.getGeometry.theObject.cameraID))) {
       // TESTING
-      AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
-      AgentLog.info(this, "Found camera ID: %s\n".format( edge.getGeometry.theObject.cameraID  ) )
+      //AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
+      //AgentLog.info(this, "Found camera ID: %s at iteration %d\n".format( edge.getGeometry.theObject.cameraID, Clock.getIterations()  ) )
       val camID = edge.getGeometry.theObject.cameraID
       tempCameras += camID
       //tempCameraHours += Clock.currentHour().toInt

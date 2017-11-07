@@ -2,7 +2,9 @@ package surf.abm.main
 
 import java.io.File
 import java.lang.reflect.{Constructor, Method}
+import java.time.{LocalDate, LocalDateTime}
 
+import collection.JavaConverters._
 import _root_.surf.abm.agents.Agent
 import com.typesafe.config.ConfigException
 import com.vividsolutions.jts.geom.{Envelope, GeometryFactory}
@@ -51,7 +53,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 
     // Initialise the clock. Currently using a default time period, but this could just as easily be defined
     // by configuration parameters.
-    Clock.create(this)
+    Clock.create(this, SurfABM.startTime)
 
     // Create the outputter that is in charge of writing out results etc.
     OutputFactory(this)
@@ -121,6 +123,18 @@ object SurfABM extends Serializable {
   val WIDTH = conf.getInt("WIDTH");
   val HEIGHT = conf.getInt("HEIGHT");
 
+  // Useful to define the order that methods should be called when they are scheduled to run
+  // at the same tick. (Lower order happens first)
+  val AGENTS_STEP = 1
+  val UPDATE_SPATIAL_INDEX = 100
+  val CAMERA_RECORDER_STEP = 200
+  val OUTPUTTER_STEP = 500
+  val CLOCK_STEP = 1000
+
+  private val startTimeList: List[Integer] = SurfABM.conf.getIntList(SurfABM.ModelConfig+".StartTime").asScala.toList
+  val startDate: LocalDate = LocalDate.of(startTimeList(0), startTimeList(1), startTimeList(2))
+  val startTime: LocalDateTime = LocalDateTime.of(startTimeList(0), startTimeList(1), startTimeList(2), startTimeList(3), 0)
+  val startHour: Int = startTimeList(3)
 
   // A list of all the agent geometries
   val agentGeoms = new GeomVectorField(WIDTH, HEIGHT);
@@ -346,7 +360,7 @@ object SurfABM extends Serializable {
         val a: Agent = c.newInstance(state, SurfABM.getRandomBuilding(state))
         SurfABM.agentGeoms.addGeometry(SurfGeometry[Agent](a.location, a))
         //SurfABM.agentGeoms.addGeometry(new MasonGeometry(a.location().getGeometry()))
-        state.schedule.scheduleRepeating(a)
+        state.schedule.scheduleRepeating(a, SurfABM.AGENTS_STEP, 1)
         //agentArray += ( (a.location, a) ) // Need two parentheses to make a tuple?
       }
 
@@ -369,7 +383,7 @@ object SurfABM extends Serializable {
 
       // Ensure that the spatial index is made aware of the new agent
       // positions.  Scheduled to guaranteed to run after all agents moved.
-      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, SurfABM.UPDATE_SPATIAL_INDEX, 1.0)
 
     }
     catch {

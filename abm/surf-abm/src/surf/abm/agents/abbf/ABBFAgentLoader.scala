@@ -78,10 +78,10 @@ object ABBFAgentLoader {
       // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
 
       SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
-      state.schedule.scheduleRepeating(a)
+      state.schedule.scheduleRepeating(a, SurfABM.AGENTS_STEP, 1)
 
       SurfABM.agentGeoms.setMBR(SurfABM.mbr)
-      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+      state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, SurfABM.AGENTS_STEP, 1.0)
 
     }
 
