@@ -123,7 +123,7 @@
                     <h3>Aggregate v.s. Individual</h3>
                     <p>But they miss some important things:</p>
                     <p class="l2">Low-level dynamics, i.e. “smoothing out” (Batty, 2005)</p>
-                    <p class="l2">Interactions and emergence (more on these later)</p>
+                    <p class="l2">Interactions and emergence</p>
                     <p>Unsuitable for modelling <i>complex systems</i></p>
 
                 </section>
@@ -146,37 +146,51 @@
                     </div>
                     
                 </section>
-            
                 
-                
-                <section id="creating-abm">
+                <section id="Emergence">
+                    <figure class="right">
+                        <img data-src="../figures/attribution/termite_mound.jpg" />
+                        <figcaption>A termite mound.<br/>Attribution: <a href="http://www.flickr.com/people/93452909@N00">JBrew</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/deed.en">CC BY-SA 2.0</a>).</figcaption>
+                    </figure>
+                    <h2>Emergence</h2>
+                    <p>One of the main attractions for ABM</p>
                     
-                    <video style="float:right; width:50%;" autoplay controls>
-                        <source src="../videos/skylines_mov-long.mp4" type="video/mp4"/>
-                         Your browser does not support the video tag.
-                    </video>
-                    <h2>Crating an ABM</h2>
+                    <p>"The whole is greater than the sum of its parts." (Aristotle?)</p>
+                    
+                    <p> Simple rules &#8594; complex outcomes</p>
+                    <p class="l2">E.g. who plans the air-conditioning in termite mounds?</p>
+                    
+                    <p>Possible to prove the with simple computer programs</p>
+                    <p class="l2">Conways 'Game of Life'</p>
 
-                    <!-- <img class="right" data-src="../figures/virtual_city.jpeg"/> -->
-                    <p>Create an urban (or other) environment in a computer model.</p>
-                    <p>Stock it with buildings, roads, houses, etc.</p>
-                    <p>Create individuals to represent offenders, victims, guardians.</p>
-                    <p>Give them backgrounds and drivers.</p>
-                    <p>See what happens.</p>
+
+                
                 </section>
                 
-                                                
+                
+                <section id="Emergence-WhyImportant" data-background-image="../figures/attribution/termite_mound.jpg">
+                    <div class="whitebackground2">
+                        <h2>Emergence</h2>
+                        <h3>Why is it important?</h3>
+                        <p><strong>Key message</strong>: Complex structures can emerge from simple rules</p>
+                        <p>Emergence is hard to anticipate, and cannot be deduced from solely analysis
+                            of individuals’ behaviour</p>
+                        <p class="l2">You could not work out what a termite mound would look like
+                        by dissecting a termite.</p>
+                        <p>Emergence is a characteristic of <i>complex systems</i></p>
+                        <p>Individual-level modelling is focused on understanding how macro-level patterns emerge from micro-level through the process of simulation.</p>
+                        <p>How is this relevant to crime?</p>
+                    </div>
+                </section>
+            
                 <section id="BetterTheory">
-                    <h2>Better Representations of Theory</h2>                    
+                    <h2>Better Representations of Theory?</h2>                    
                     <p>Environmental Criminology theories emphasise importance of</p>
                     <p class="l2">Individual behaviour (offenders, victims guardians)</p>
                     <p class="l2">Individual geographical awareness</p>
                     <p class="l2">Environmental backcloth</p>
                     <img src="../figures/crime_theories.png"/>
                 </section>
-
-                
-                
            
 
                 
@@ -188,19 +202,7 @@
                     <p>Bridge between verbal theories and mathematical models</p>
                     <p>Produces a history of the evolution of the system</p>
                 </section>
-                
-                <!--
-                <section id="BetterTheory">
-                    <h2>Agent-Based Modelling - Appeal (II)</h2>
-                    <h3>Better Representations of (Criminology) Theory</h3> 
-                    <p>Theories emphasise importance of</p>
-                    <p class="l2">Individual behaviour (offenders, victims guardians)</p>
-                    <p class="l2">Individual geographical awareness</p>
-                    <p class="l2">Environmental backcloth</p>
-                    <img src="../figures/crime_theories.png"/>
-                </section>
-                -->
-                
+                                
                 <section id="abm-Disadvantages">
                     <h2>Agent-Based Modelling</h2>
                     <figure class="right" >
@@ -219,6 +221,24 @@
                     <p class="l2">Need detailed, high-resolution, individual-level data</p>
 
                 </section>
+                
+                
+                <section id="creating-abm">
+                    
+                    <video style="float:right; width:50%;" autoplay controls>
+                        <source src="../videos/skylines_mov-long.mp4" type="video/mp4"/>
+                         Your browser does not support the video tag.
+                    </video>
+                    <h2>Crating an ABM</h2>
+
+                    <!-- <img class="right" data-src="../figures/virtual_city.jpeg"/> -->
+                    <p>Create an urban (or other) environment in a computer model.</p>
+                    <p>Stock it with buildings, roads, houses, etc.</p>
+                    <p>Create individuals to represent offenders, victims, guardians.</p>
+                    <p>Give them backgrounds and drivers.</p>
+                    <p>See what happens.</p>
+                </section>
+                
                 
                 <section id="lit-review">
                     <h2>Who else is doing this?</h2>
@@ -312,12 +332,16 @@
                       
                 </section>
                 
+                                
+                <section id="DidItWork1" >
+                    <h2>Did it work?</h2>
+                    <h3>Aggregate results</h3>
+                    <img style="width:70%;"  src="../figures/burgd-calibration.png" alt="Results of model calibration" />
+                </section>
                 
-                
-                <section data-background-video="../videos/sim.mp4,../videos/sim.webm"
-                         data-background-video-loop="loop"
-                         id="abm-halton_mooor">
-                    <h2 style="background-color: white;">ABM Burglary Results</h2>
+                <section id="abm-halton_mooor" >
+                    <h2 style="background-color: white;">Did it work?</h2>
+                    <h3>Halton Moor</h3>
                     <figure>
                         <img  style="width:50%" data-src="../figures/hotspots-halton_moore.png" />
                         <figcaption style="background-color: white;">
@@ -332,14 +356,9 @@
                 </section>
                 
                 
-                <section id="DidItWork1">
-                    <h2>Did it work?</h2>
-                    <img style="width:70%;"  src="../figures/burgd-calibration.png" alt="Results of model calibration" />
-                </section>
-                
-                
                 <section id="DidItWork2">
                     <h2>Did it work?</h2>
+                    <h3>Journey to Crime</h3>
                     <img src="../figures/burgd-jtc.png" alt="Results of model calibration" />
                 </section>
                 
@@ -361,10 +380,87 @@
                      ***************************************************************** -->
                 
                 
+         
                 
+                
+                <section id="ModellingEveyone"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="fragment whitebackground2">
+                        <h2>Other Uses: Modeling Everyone</h2>
+                        <h3>Quantifying the Ambient population</h3>
+                        <p>Daily flows of people have a significant impact on crime rates </p>
+                        <p>But usually have to fall back on <i>residential</i> populatin for want of data</p>
+                    <blockquote>
+                        “The general patterns of movement towards and away from activity nodes such as work or school locations, major shopping areas, entertainment districts or bedroom suburbs provide a very general image of where crimes will concentrate” (Kinney et al., 2008)
+                    </blockquote>
+
+                    </div>
+                </section>
+                
+                <section id="AmbientPop"  data-transition="fade"
+                         data-background-image="../figures/people_in_street.jpg">
+                    
+                    <div class="whitebackground2">
+                        <h2>We need better models of the ambient population!</h2>
+                    </div>
+                </section>
+                
+                <section id="Ambient-Crime2a" data-transition="zoom-out slide-in">
+                    
+                    <figure >
+                        <figcaption>
+                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-A.png" alt="Hotspot disappearing from the city centre"/>
+                    </figure>
+                </section>
+                
+                <section id="Ambient-Crime2b" data-transition="zoom-in slide-out">
+                    
+                    <figure >
+                        <figcaption>
+                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
+                        </figcaption>
+                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-B.png" alt="Hotspot disappearing from the city centre"/>
+                    </figure>
+                </section>
+                
+                <section id="AC3"  >
+                    
+                    <figure>
+                        <figcaption>
+                            Malleson, N., and Andresen, M.A. (2016) Exploring the impact of ambient population measures on London crime hotspots. <i>Journal of Criminal Justice</i> 46 pp 52-63
+                        </figcaption>
+                        <img class="left"  src="../figures/paper_figures/data_overview.png" />
+                        <img class="right" src="../figures/paper_figures/clustering-overview2b.png" />
+                    </figure>
+                </section>
+                
+                
+                <section data-background-image="../figures/surf_workplan-v2.png" id="surf">
+                        
+                    <div class="fragment whitebackground2">
+                        
+                        <h2>surf</h2>                        
+                        <h3>Big Data, ABM, Smart Cities, Ambient Populations</h3>
+
+                        <p>A city-wide dynamic ABM, constantly re-calibrated to streaming data</p>
+                        
+                        <p>New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
+                        
+                        <p><a href="http://surf.leeds.ac.uk/">surf.leeds.ac.uk/</a></p>
+
+                    </div>
+                    
+                </section>
+                
+                       
                 <section id="DUST">
                     
                     <h2>XXXX A slide or two on SURF &amp; DUST</h2>
+                    
+                    <h2>See 2016-09-30-crime_mapping.html#/ModellingEveyone </h2>
                 
                 </section>
                 
