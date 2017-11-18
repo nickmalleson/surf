@@ -192,9 +192,20 @@
                     <img src="../figures/crime_theories.png"/>
                 </section>
                 
+                                <!--
+                <section id="BetterSpace" data-background-image="../figures/mastermap_topography.png">
+                    <div class="whitebackground2">
+                        <h2>Better Representations of Space?</h2>
+                        <p>Lots of research points to importance of micro-level environment</p>
+                        <p class="l2">Brantinghams' <i>environmental backcloth</i></p>
+                        <p class="l2"><i>Crime at places</i> research (e.g. Eck and Weisburd, 1995; Weisburd and Amram, 2014; Andresen et al., 2016)</p>
+                    </div>
+                </section>-->
+                
             
                 <section id="BetterSpace">
-                    <h2>Better Representations of Space?</h2>                    
+                    <h2>Better Representations of Space?</h2>
+                    <img class="right" data-src="../figures/mastermap_topography.png" alt="Example of GIS data" />
                     <p>Lots of research points to importance of micro-level environment</p>
                     <p class="l2">Brantinghams' <i>environmental backcloth</i></p>
                     <p class="l2"><i>Crime at places</i> research (e.g. Eck and Weisburd, 1995; Weisburd and Amram, 2014; Andresen et al., 2016)</p>
@@ -294,52 +305,50 @@
                     
                 </section>
                 
-                <section id="lit-review2"> 
-                    <img class="right" src="../figures/artificial_crime_analysis_systems.jpeg" />
-                </section>
-                
                   <!-- *****************************************************************
                      ************* Explanatory Example**********************************
                      ***************************************************************** -->
     
                 
                 
-                <section id="abm-example-explanatory">
+                <section id="abm-example-explanatory1">
                     <h2>ABM Explanatory Example (Birks 2012)</h2>
                     <img class="right" data-src="../figures/birks-environment.png" alt="Birks (2012) model environment" />
                     <p><i>Explanatory:</i> exploring theory</p>
                     <p>Randomly generated abstract environments</p>
-                    
-                    <p>Theoretical 'switches'</p>
-                    <p class="l2">Rational choice perspective</p>
-                    <p class="l2">Routine activity theory</p>
-                    <p class="l2">Geometric theory of crime</p>
-                    
-                    <img class="right" data-src="../figures/crime_theories_diagram.png" alt="Example crime theories" />
-                    
-                    <p>Validation against <i>stylized facts</i>:</p>
-                    <p class="l2">Spatial crime concentration</p>
-                    <p class="l2">Repeat victimisation</p>
-                    <p class="l2">Journey to crime curve</p>
+                    <p class="l2">Navigation nodes (proxy for transport network)</p>
+                    <p class="l2">Potential targets (houses)</p>                    
                 </section>
                 
                 <section id="abm-example-explanatory2">
-                    <h2>XXXX MORE ON THIS. E.g. from ORE chapter:</h2>
-                    <p>The Birks et al. (2012) model attempts to simulate residential burglary and consists of a virtual environment that contains navigational nodes (a proxy for a transport network) and potential targets (houses). Every time the model is executed, the environment is randomly re-generated. This minimises the environment-specific impacts on the results (Birks et al., 2012). The model contains one type of agent: potential offenders. The behaviour of the agents has been designed so that they are consistent with three fundamental environmental criminology theories. These rules dictate how they move and encounter targets (routine activities), choose to offend (rational choice), and learn about their environment (crime pattern theory). Importantly, each of these behaviours can be deactivated, so that the agents no longer behave in line with the specification for a particular theory. If the results of the model no longer share the characteristics of real-world burglary patterns, then the model has provided some evidence that the theories are a necessary part of the offender behaviour and thus reliable. On the other hand, if a theory is deactivated and the results are still plausible, then perhaps the theory is not an important aspect of the underlying behaviour of the burglars.
-To quantify the reliability of the model results (i.e. to determine how similar the results are to real burglary patterns) the authors compare three characteristics of real and simulated burglary data: 
-1.	Degree of spatial clustering using the Nearest Neighbour Index; 
-2.	Distribution of repeat victimisation using the Gini coefficient; 
-3.	Journey to crime distances using the journey to crime curve. 
-A model that accurately captures the dynamics of the real burglary system will produce data that share similar characteristics (as defined by the three statistics above) with real world burglary data. Ultimately the authors find that although each theory improves the accuracy of the model, rational choice has a lower influence than routine activities or crime pattern theory. Therefore although the model environment does not represent a real place, and the results could not directly be used to inform crime prevention strategies, the use of an abstract environment reduces the additional complexity afforded by a complicated (realistic) spatial environment and allowed the authors to concentrate entirely on the theoretical mechanisms.
-</p>
+                    <h2>ABM Explanatory Example (Birks 2012)</h2>
+                    <p>One type of agent: <i>potential offenders</i></p>
+                    <p>Behaviour is controlled by theoretical 'switches'</p>
+                    <img class="right" data-src="../figures/crime_theories_diagram.png" alt="Example crime theories" />
+                    <p class="l2">Rational choice perspective (decision to offend)</p>
+                    <p class="l2">Routine activity theory (how they move and encounter targets)</p>
+                    <p class="l2">Geometric theory of crime (how they learn about their environment)</p>
                 </section>
+                
+                <section id="abm-example-explanatory3">
+                    <h2>ABM Explanatory Example (Birks 2012)</h2>
+                    <p>Validation against <i>stylized facts</i>:</p>
+                    <p class="l2">Spatial crime concentration (Nearest Neighbour Index)</p>
+                    <p class="l2">Repeat victimisation (Gini coefficient)</p>
+                    <p class="l2">Journey to crime curve (journey to crime curve)</p>
+                    <p>Results: </p>
+                    <p class="l2">All theories increase accuracy of the model</p>
+                    <p class="l2">Rational choice had a lower influence than the others</p>
+                    <p>Simple / abstract model:</p>
+                    <p class="l2">Not <i>directly applicable to practice</i></p>
+                    <p class="l2">But simplicity allows authors to concentrate on theoretical mechanisms</p>
+                    <p class="l2">Reaslisic backcloth might over-complicate model (Elffers and van Baal, 2008)</p>
+                </section>
+                
 
                 
-                
-                
-                
                 <!-- *****************************************************************
-                     ************* Predictive Exampl *********************************
+                     ************* Predictive Example ********************************
                      ***************************************************************** -->
                 
                 
@@ -434,13 +443,14 @@ A model that accurately captures the dynamics of the real burglary system will p
                 </section>
                 
                 
+                <!--
                 <section id="BurglarBehavior1">
                     <h2>Behavioural Trends in Burglars</h2>                    
                     <p>Analysis of Modus Operandi.</p>
                     <p>Interviews with prisoners.</p>
                     <p>Risk for areas of different MOs and target characteristics.</p>
                 </section>
-
+                -->
                 
              
                 
@@ -561,6 +571,8 @@ A model that accurately captures the dynamics of the real burglary system will p
                     <p>Particularly relevant in the 'big data' / 'smart cities' era</p>
                     
                     <p>XXXX THIS RELEVANT?  There are undoubtedly complicated ethical implications associated with the use of ABM to simulate criminal phenomena. The most obvious implication arrises from the question: “if an agent-based model is good enough, can it tell me where someone will commit their next crime?”. In other words, if an agent-based model is sufficiently realistic, and the agents represent real people, could it be possible to predict if/where/when they will commit crime? There has already been some (albeit limited) interest in this possibility in the media (e.g. Arthur, 2010). Whilst agent-based crime models are a long way from such a level of accuracy, it is important for modellers to clearly set the limits to what they deem as ethically acceptable. Interestingly, there are no established ethical frameworks that modellers can draw on explicitly for agent-based modelling work, although there are attempts to begin creating some (Evans, 2012). Although standard data protection legislation will limit academic research in some countries (such the UK) that utilises individual-level data and has policy implications, there are often clauses that permit research with police data. Instead, it is down to the modellers to make it clear that some areas of work, even if they were possible, would be highly ethically dubious. Broadly, university research ethics committees are probably well suited to evaluating these risks. 
+                        
+                        
 These ethical risks are also becoming particularly pertinent in the ‘age of big data’. Sources that are typically used to derive information about individuals (such as mobile phone use, social media activity, loyalty card use, etc.) are possibly predicated on relatively weak consent. Although many people will agree to the terms and conditions when they use a service, it is not clear that they have read the documentation, let alone understood it. Similarly, if the biasses in the data are not properly understood and accounted for, models run the risk of being wrong at best, and at worst exacerbating existing biassed. For example, there is evidence that PredPol, the well known predictive policing algorithm used by a number of forces across the United States, inadvertently exacerbates existing biasses in police data (Lum and Isaac, 2016). Fortunately the methodologies that underpin PredPol are publicly available, but many others are closed, commercial secrets. It is imperative that agent-based crime models are open source so that the assumptions can be clearly understood and there can be no confusion about what the results show, the context in which they were created, and the limits to their applicability.
 </p>
                     
@@ -598,6 +610,8 @@ These ethical risks are also becoming particularly pertinent in the ‘age of bi
                     <p style="font-size:small">Dray, A., Mazerolle, L., Perez, P., and Ritter, A. (2008). Policing Australiaâ’s heroin drought: using an agent-based model to simulate alternative outcomes. Journal of Experimental Criminology, 4(3):267–287.</p>
                     
                     <p style="font-size:small">Eck, J. and Weisburd, D. (1995). Crime places in crime theory. In Eck, J. and Weisburd, D., editors, Crime and Place, pages 1–33. Criminal Justice Press.</p>
+                    
+                    <p style="font-size:small">Elffers, H., and P. van Baal. 2008. “Realistic Spatial Backcloth Is Not That Important in Agent Based Simulation Research: An Illustration from Simulating Perceptual Deterrence.” In Artificial Crime Analysis Systems: Using Computer Simulations and Geographic Information Systems, 19–34. Hershey, PA: Information Science Reference.</p>
                     
                   
                     <p style="font-size:small">Groff, E. (2007a). Situating Simulation to Model Human Spatio Temporal Interactions: An Example Using Crime Events. Transactions in GIS, 11(4):507–530.</p>
