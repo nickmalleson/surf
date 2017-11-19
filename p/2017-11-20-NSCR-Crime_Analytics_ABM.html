@@ -52,14 +52,13 @@
                 
                   <section id="Overview">
                       <h2>Overview</h2>
-
                       <p>Dynamic Simulation - Agent Based Modelling</p>
-                      <p><i>Explanatory</i> Agent-Based Crime Models</p>
-                      <p><i>Predictive</i> Agent-Based Crime Models</p>
+                      <p class="l2"><i>Explanatory</i> Agent-Based Crime Models</p>
+                      <p class="l2"><i>Predictive</i> Agent-Based Crime Models</p>
+                      <p>Predictive Policing (?) &amp; Ethical Implications</p>
                       <p>Modelling Broader Urban Dynamics</p>
-                      <p>Predictive Policing (?)</p>
-                      <p>Ethical Implications</p>
-
+                      <p class="l2">Quantifying ambient Populations</p>
+                      <p class="l2">Dynamic Data Assimilation</p>
                 </section>
                 
                 
@@ -223,13 +222,12 @@
                 </section>
                                 
                 <section id="abm-Disadvantages">
-                    <h2>Agent-Based Modelling</h2>
+                    <h2>Agent-Based Modelling - Difficulties</h2>
                     <figure class="right" >
                         <img data-src="../figures/jacobs_choice.png" />
-                        <figcaption>Will I play with the truck, or the duck?<br/><br/>Both!</figcaption>
+                        <figcaption>Will I play with the truck, or the duck?<br/><br/>
+                            (<i>actually he played with his trains...</i>)</figcaption>
                     </figure>
-
-                    <h3>Difficulties:</h3>
                     
                     <p>Tendency towards minimal behavioural complexity</p>
                     <p>Stochasticity</p>
@@ -246,8 +244,8 @@
                 
                 <section id="creating-abm">
                     
-                    <video style="float:right; width:50%;" autoplay controls>
-                        <source src="../videos/skylines_mov-long.mp4" type="video/mp4"/>
+                    <video style="float:right; padding:5px;f width:50%;" autoplay controls>
+                        <source src="../videos/skylines_mov-short.mp4" type="video/mp4"/>
                          Your browser does not support the video tag.
                     </video>
                     <h2>Crating an ABM</h2>
@@ -272,7 +270,7 @@
                         <h2>Modelling agent behaviours</h2>
                         <p>Many behaviours are hard / impossible to model</p>
                         <p class="l2">Choose those that are the most important</p>
-                        <p>Some can be very simple (e.g. threshold-based rules (Kennedy, 2012))</p>
+                        <p>Some can be very simple - e.g. threshold-based rules (Kennedy, 2012)</p>
                         <p class="l2"><code style="font-size:80%; text-align:left;">
                             IF hunger IS ABOVE hunger_threshold THEN search_for_food<br/>
                             OTHERWISE do_something_else
@@ -292,8 +290,6 @@
                     <h2>Who else is doing this?</h2>
                     
                     <img class="right" src="../figures/artificial_crime_analysis_systems.jpeg" />
-
-                    <p>A few eaxmples of other relevant ABMs from  Place-Based Simulation Modeling: Agent-Based Modeling and Virtual Environments</p>
                     
                     <p>Small, but growing, literature</p>
                     <p class="l2">(apologies to the many who are missing!)</p>
@@ -301,6 +297,7 @@
                     <p class="l2">Groff 2007a,b; Hayslett-McCall, 2008</p>
                     <p class="l2">Liu et al. (2005) </p>
                     <p class="l2">Me! (Malleson et. al ...)</p>
+                    <p class="l2">A special issue of the <i>Journal of Experimental Criminology</i> entitled "Simulated Experiments in Criminology and Criminal Justice" (Groff and Mazerolle, 2008b)</p>
 
                     
                 </section>
@@ -316,8 +313,8 @@
                     <img class="right" data-src="../figures/birks-environment.png" alt="Birks (2012) model environment" />
                     <p><i>Explanatory:</i> exploring theory</p>
                     <p>Randomly generated abstract environments</p>
-                    <p class="l2">Navigation nodes (proxy for transport network)</p>
-                    <p class="l2">Potential targets (houses)</p>                    
+                    <p>Navigation nodes (proxy for transport network)</p>
+                    <p>Potential targets (houses)</p>                    
                 </section>
                 
                 <section id="abm-example-explanatory2">
@@ -452,7 +449,47 @@
                 </section>
                 -->
                 
-             
+                <!-- *****************************************************************
+                     ************* Ethical Implications ******************************
+                     ***************************************************************** -->
+                
+                <section id="IntelligentPolicing">
+                    <h2><s>Predictive</s> Intelligent Policing</h2>
+                    <p>This <strong>is not</strong> predictive policing</p>
+                    <p class="l2">It could be, in the future, maybe, but not yet</p>
+                    <p>This <strong>is</strong> a useful tool for exploring the <i>crime system</i>.</p>
+                    <p>It might lead to a better understanding of:</p>
+                    <p class="l2">How different behavioural characteristics (offender, victim, or guardian) influence crime outcomes</p>
+                    <p class="l2">How the physical infrastructure can be organised to discourage crime</p>
+                    <p class="l2">How patrol routes might be most effective in circumstances</p>
+                    <p class="l2"><i>Etc.</i></p>
+                </section>
+                
+
+                <section id="Ethics">
+                
+                    <figure class="right">
+                        <a href="https://www.theguardian.com/technology/2010/jun/16/minority-report-technology-comes-true">
+                            <img data-src="../figures/guardian_minority_report.png" alt="Guardian article"/>
+                        </a>
+                        <figcaption>Arthur, C. (2010) Why Minority Report was spot on. <i>The Guardian</i> Wednesday 16 June 2010</figcaption>
+                    </figure>
+                    
+                    <h2>Ethics</h2>
+                    
+                    <p>This is not minority report!</p>
+                    <p class="l2">Police have asked: "if an agent-based model is good enough, can it tell me where someone will commit their next crime?"</p>
+                    <p class="l2">We can't (and wouldn't want to!) predict when/where/who will commit a crime.</p>
+                                        
+                    <p>Academics have a role to set the boundaries on what is  ethically acceptable</p>
+                    <p class="l2">Dynamic simulation models have great potential, we need to make the case that they can be used responsibly</p>
+                    <p class="l2">Particularly relevant in the 'big data' / 'smart cities' era (e.g. <i>informed consent)</i></p>
+                    <p class="l2">Data protection / privacy legislation might not be sufficient
+                    (often there are clauses for research with crime data)</p>                    
+                </section>
+                
+
+                
                 
                 
                             
@@ -465,7 +502,8 @@
                 
                 
                 <section id="ModellingEveyone"  data-transition="fade"
-                         data-background-image="../figures/people_in_street.jpg">
+                         data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop">
                     
                     <div class="fragment whitebackground2">
                         <h2>Other Uses: Modeling Everyone</h2>
@@ -480,7 +518,8 @@
                 </section>
                 
                 <section id="AmbientPop"  data-transition="fade"
-                         data-background-image="../figures/people_in_street.jpg">
+                         data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop">
                     
                     <div class="whitebackground2">
                         <h2>We need better models of the ambient population!</h2>
@@ -519,11 +558,90 @@
                 </section>
                 
                 
+                <section id="abm-calibration">
+                    
+                    <figure class="right" style="width:30%">
+                        <img data-src="../figures/modelling_process.png" alt="The process of calibration"/>
+                        <figcaption>Typical model development process</figcaption>
+                    </figure>
+                    
+                    <h2>Agent-Based Models of the Ambient Population</h2>
+                    <p>Agent-based modelling could do better?</p>
+                    <p class="l2">Could combine diverse, up-to-date data with a model to create
+                    the most accurate estimate of the real world</p>
+                    <p>But: </p>
+                    <p class="l2">Urban systems are complex</p>
+                    <p class="l2">They will <strong>diverge</strong> rapidly from model forecasts</p>
+                    <p>ABM development typically uses 'waterfall' approach</p>
+                    <p>We lack tools to calibrate models <i>dynamically</i></p>
+                </section>
+                
+            
+                
+                            
+                <section id="dda" data-background-image="../figures/weather2.jpg" >
+                    <div class="whitebackground fragment">
+                        <h2>Dynamic Data Assimilation</h2>
+                        <p>Used in meteorology and hydrology to constrain models closer to reality.</p>
+                        <p>Try to improve estimates of the true system state by combining:</p>
+                        <p class="l2">Noisy, real-world observations</p>
+                        <p class="l2">Model estimates of the system state</p>
+                        <p>Should be more accurate than data / observations in isolation.</p>
+                    </div>
+                </section>
+                
+                
+                <section id="abm-dda-overview">
+                    <img data-src="../figures/paper_figures/dda.jpg" alt="Diagram of dynamic data assimilation and an ABM" />
+                </section>
+                
+                
+
+                <section id="enkf-maths">
+                    <h2>Early prototype: <br/>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Maths</h3>
+                    <p>Broad literature, but generally tied to mathematical models (e.g. differential equations and linear functions)</p>
+                    <!--<p>Not applicable to ABM (inherently non-linear)</p>-->
+                    <p>Working with a mathematician to do the hard work!</p>
+                    <p class="l2">In all its glory: Ward et al., (2016)</p>
+                    <h3>Advantages</h3>
+                    <p>Similar to <i>Kalman Filter</i> (best in class)</p>
+                    <p>But better for nonlinear systems</p>
+                    
+                </section>
+
+                
+                <section id="enfk-process1">
+                    <h2>Ensemble Kalman Filter - Basic Process</h2>
+                    <p>1. Forecast.</p>
+                    <p class="l2">Run an ensemble of models (ABMs) forward in time.</p>
+                    <p class="l2">Calculate ensemble mean and variance</p>
+                    <p>2. Analysis.</p>
+                    <p class="l2">New 'real' data are available</p>
+                    <p class="l2">Integrate these data with the model forecasts to create estimate of model parameter(s)</p>
+                    <p class="l2">Impact of new observations depends on their accuracy</p>
+                    <p>3. Repeat</p>                    
+                </section>
+                
+                <section id="enkf-darsos_diagram">
+                    
+                    <h2>Ensemble Kalman Filter (EnKF)</h2>
+                    <h3>Outline</h3>
+                    <figure>
+                        <img data-src="../figures/paper_figures/darsos-fig2a.png"/>
+                        <figcaption>
+                            Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]
+                        </figcaption>
+                    </figure>                
+                </section>
+                
+                
+                
                 <section data-background-image="../figures/surf_workplan-v2.png" id="surf">
                         
                     <div class="fragment whitebackground2">
                         
-                        <h2>surf</h2>                        
+                        <h2>Simulating Urban Flows (surf)</h2>                        
                         <h3>Big Data, ABM, Smart Cities, Ambient Populations</h3>
 
                         <p>A city-wide dynamic ABM, constantly re-calibrated to streaming data</p>
@@ -536,69 +654,44 @@
                     
                 </section>
                 
+                
+                
                        
-                <section id="DUST">
-                    
-                    <h2>XXXX A slide or two on SURF &amp; DUST</h2>
-                    
-                    <h2>See 2016-09-30-crime_mapping.html#/ModellingEveyone </h2>
+                <section data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg"
+                         id="dust">
+                    <div class="whitebackground2">
+                        <h2>Future Work: DUST</h2>
+                        <p>Data Assimilation for Agent Based Models: Applications to Civil Emergencies</p>
+                        <p>Recently funded by the ERC (Starting Grant), €1.5M over 5 years</p>
+                        <p>Starts on 1st January 2018</p>
+                        <p>For more information:</p>
+                        <p class="l2"><a href="https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects">
+                            https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects</a></p>
+                    </div>
+                </section>                
                 
+                
+                
+                
+                
+                
+                <section id="summary" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
+                      <h2>Summary</h2>
+                      <p>Dynamic Simulation - Agent Based Modelling</p>
+                      <p class="l2"><i>Explanatory</i> Agent-Based Crime Models</p>
+                      <p class="l2"><i>Predictive</i> Agent-Based Crime Models</p>
+                      <p>Predictive Policing (?) &amp; Ethical Implications</p>
+                      <p>Modelling Broader Urban Dynamics</p>
+                      <p class="l2">Quantifying ambient Populations</p>
+                      <p class="l2">Dynamic Data Assimilation</p>
+                    </div>
                 </section>
-                
-                
-                
-                            
-                <!-- *****************************************************************
-                     ************* Ethical Implications ******************************
-                     ***************************************************************** -->
-                
 
-                <section id="Ethics">
-                    <h2>Ethical Implications</h2>
-                    
-                    <figure class="right">
-                        <a href="https://www.theguardian.com/technology/2010/jun/16/minority-report-technology-comes-true">
-                            <img data-src="../figures/guardian_minority_report.png" alt="Guardian article"/>
-                        </a>
-                        <figcaption>Arthur, C. (2010) Why Minority Report was spot on. <i>The Guardian</i> Wednesday 16 June 2010</figcaption>
-                    </figure>
-                    
-                    <p>This is not minority report!</p>
-                    <p class="l2">We can't (and wouldn't want to!) predict when/where/who will commit a crime.</p>
-                                        
-                    <p>Academics have a role to set the boundaries on what is  ethically acceptable</p>
-                    <p>Dynamic simulation models have great potential, we need to make the case that they can be used responsibly</p>
-                    <p>Particularly relevant in the 'big data' / 'smart cities' era</p>
-                    
-                    <p>XXXX THIS RELEVANT?  There are undoubtedly complicated ethical implications associated with the use of ABM to simulate criminal phenomena. The most obvious implication arrises from the question: “if an agent-based model is good enough, can it tell me where someone will commit their next crime?”. In other words, if an agent-based model is sufficiently realistic, and the agents represent real people, could it be possible to predict if/where/when they will commit crime? There has already been some (albeit limited) interest in this possibility in the media (e.g. Arthur, 2010). Whilst agent-based crime models are a long way from such a level of accuracy, it is important for modellers to clearly set the limits to what they deem as ethically acceptable. Interestingly, there are no established ethical frameworks that modellers can draw on explicitly for agent-based modelling work, although there are attempts to begin creating some (Evans, 2012). Although standard data protection legislation will limit academic research in some countries (such the UK) that utilises individual-level data and has policy implications, there are often clauses that permit research with police data. Instead, it is down to the modellers to make it clear that some areas of work, even if they were possible, would be highly ethically dubious. Broadly, university research ethics committees are probably well suited to evaluating these risks. 
-                        
-                        
-These ethical risks are also becoming particularly pertinent in the ‘age of big data’. Sources that are typically used to derive information about individuals (such as mobile phone use, social media activity, loyalty card use, etc.) are possibly predicated on relatively weak consent. Although many people will agree to the terms and conditions when they use a service, it is not clear that they have read the documentation, let alone understood it. Similarly, if the biasses in the data are not properly understood and accounted for, models run the risk of being wrong at best, and at worst exacerbating existing biassed. For example, there is evidence that PredPol, the well known predictive policing algorithm used by a number of forces across the United States, inadvertently exacerbates existing biasses in police data (Lum and Isaac, 2016). Fortunately the methodologies that underpin PredPol are publicly available, but many others are closed, commercial secrets. It is imperative that agent-based crime models are open source so that the assumptions can be clearly understood and there can be no confusion about what the results show, the context in which they were created, and the limits to their applicability.
-</p>
-                    
-                </section>
-                
-                <section id="IntelligentPolicing">
-                    <h2><s>Predictive</s> Intelligent Policing</h2>
-                    <p>This <strong>is not</strong> predictive policing</p>
-                    <p class="l2">It could be, in the future, maybe, but not yet</p>
-                    <p>This <strong>is</strong> a useful tool for exploring the <i>crime system</i>.</p>
-                    <p>It might lead to a better understanding of:</p>
-                    <p class="l2">How different behavioural characteristics (offender, victim, or guardian) influence crime outcomes</p>
-                    <p class="l2">How the physical infrastructure can be organised to discourage crime</p>
-                    <p class="l2">How patrol routes might be most effective in circumstances</p>
-                    <p class="l2">Etc.</p>
-                </section>
-                
                 
                 <section id="references">
                     
                     <h2>References</h2>
-                    
-                    <p>XXXX Do references</p>
-                    
-
-
                     
                     <p style="font-size:small">Andresen, M. A., Linning, S. J., and Malleson, N. (2016). Crime at Places and Spatial Concentrations: Exploring the Spatial Stability of Property Crime in Vancouver BC, 2003–2013. Journal of Quantitative Criminology, pages 1–21.</p>
                     
@@ -631,6 +724,7 @@ These ethical risks are also becoming particularly pertinent in the ‘age of bi
 
                     <p style="font-size:small">Malleson, Nick, Linda See, Andrew Evans, and Alison Heppenstall. “Optimising an Agent-Based Model to Explore the Behaviour of Simulated Burglars.” In Theories and Simulations of Complex Social Systems, edited by Vahid Dabbaghian and Vijay Kumar Mago, 179–204. Intelligent Systems Reference Library 52. Springer Berlin Heidelberg, 2014. </p>
 
+                    <p style="font-size:small">Ward, J., A. Evans, N. Malleson (2016) Dynamic calibration of agent-based models using data assimilation. <i>Royal Society Open Science</i>. 3:150703. (open access). [DOI: <a href="https://dx.doi.org/10.1098/rsos.150703">10.1098/rsos.150703</a>]</p>
                     
                     <p style="font-size:small">Weisburd, D. and Amram, S. (2014). The law of concentrations of crime at place: the case of Tel Aviv-Jaffa. Police Practice and Research, 15(2):101–114.</p>
                 
