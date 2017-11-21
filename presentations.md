@@ -8,6 +8,8 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
+   - [Crime Analytics and the Role of Dynamic Simulation Models]({{site.baseurl}}/p/2017-11-20-NSCR-Crime_Analytics_ABM.html). Invited presentation to the [Netherlands Institute for the Study of Crime and Law Enforcement (NSRC)](https://www.nscr.nl/en/) - 21st November, 2017, Amsterdam.
+
    - [Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling]({{site.baseurl}}/p/2017-09-26-essa-da.html). Presentation to the [Social Simulation Conference](https://www.sim2017.com/about/) - the 13th Annual Conference of the European Social Simulation Association (ESSA). 25-29 September 2017, Dublin, Ireland.
 
    - [Quantifying the Ambient Population using Big Data and Agent-Based Modelling]({{site.baseurl}}/p/2017-09-11-ectqg-surf.pdf). Presentation to the European Colloquium on Theoretical and Quantitative Geography ([ECTQG](http://www.geog.leeds.ac.uk/ectqg17/)) 7-11 September, 2017, York, UK.
@@ -16,7 +18,7 @@ tagline: Presentations about, or relating to, the surf project
 
    - [Simulating Urban Flows]({{site.baseurl}}/p/2017-09-06-geocomp-surf.html). Presentation to GeoComputation 2017, 4-7 September, Leeds, UK.
    
-   - [Urban Analytics: Example projects from LIDA]({{site.baseurl}}/p/2017-07-27-ONS-LIDA-UrbanAnlalytics.html). Presentation to the _Office for National Statistics_, 27th July, Titchfield.
+   - [Urban Analytics: Example projects from LIDA]({{site.baseurl}}/p/2017-07-27-ONS-LIDA-UrbanAnlalytics.html). Invited presentation to the _Office for National Statistics_, 27th July, Titchfield.
 
    - [Quantifying the Ambient Population]({{site.baseurl}}/p/2017-05-25-cdrc-quantifying_ambient.pptx). Presentation at the _CDRC Data Partner Forum_, 25th May, Leeds Institute for Data Analytics.
 
@@ -24,9 +26,9 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2016
 
-   - [Dynamic, data-driven, agent-based modelling for simulating cities: Understanding Crime and Pollution]({{site.baseurl}}/p/2016-12-01-ONS_Data_Campus.html) Presentation to the Office for National Statistics (ONS) Big Data Campus, Titchfield. 1 December 2016.
+   - [Dynamic, data-driven, agent-based modelling for simulating cities: Understanding Crime and Pollution]({{site.baseurl}}/p/2016-12-01-ONS_Data_Campus.html) Invited presentation to the Office for National Statistics (ONS) Big Data Campus, Titchfield. 1 December 2016.
 
-   - [Crime Mapping, Crime Predictors, and Crime Simulation]({{site.baseurl}}/p/2016-11-15-HomeOffice-CrimeMapping.html) Presentation to the Crime and Policing Analysis group at the Home Office, London. 15th November 2016.
+   - [Crime Mapping, Crime Predictors, and Crime Simulation]({{site.baseurl}}/p/2016-11-15-HomeOffice-CrimeMapping.html) Invited presentation to the Crime and Policing Analysis group at the Home Office, London. 15th November 2016.
 
    - [Crime Analytics and the Role of Dynamic Simulation Models]({{site.baseurl}}/p/2016-10-20-LIDA_Crime_Analytics.html) Presentation as part of the [Crime Analytics](http://lida.leeds.ac.uk/event/crime-analytics/) [LIDA Seminar](http://lida.leeds.ac.uk/latest/lida-seminar-series/). 20th October 2016.
      
@@ -54,7 +56,6 @@ tagline: Presentations about, or relating to, the surf project
    - Also Chair of [Geographic Data Science](https://geographicdatascience.com/2016/10/12/special-sessions-on-geographic-data-science-aag-2017-boston/) Panel Session. The panelists were: David O'Sullivan; Alex Singleton; Luc Anselin; Daniel Arribas-Bel; Mark Birkin; Cheng Zhong; Andrew Crooks; Ran Wei.
 
    - Symposium on Human Dynamics in Smart and Connected Communities: [Agents - the 'atomic unit' of social systems?](http://nickmalleson.co.uk/2016/10/aag-2017-call-for-papers-agents-the-atomic-unit-of-social-systems/). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
-
 
 
  - 2016
