@@ -196,6 +196,8 @@ object ABBFAgentLoaderOtley {
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
 
     // LUNCHING
+    //val lunchLocationRnd = state.random.nextDouble()
+    //val lunchLocation: SurfGeometry[Building] = GISFunctions.findRandomObject[Building](work, SurfABM.lunchGeoms)
     val lunchPlace = Place(
       location = lunchLocation,
       activityType = LUNCHING,

@@ -4,13 +4,13 @@ import java.time.LocalDateTime
 
 import surf.abm.agents.abbf.activities.ActivityTypes
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
-import surf.abm.main.SurfGeometry
+import surf.abm.main.{SurfABM, SurfGeometry}
 
 
 /**
   * A places where an activities can be undertaken.
   *
-  * ==Examplse==
+  * ==Example==
   * The following creates an activity that can be done between 9:30am and 5pm on the 1st of Jan 2015.
   *
   * {{{
@@ -51,12 +51,12 @@ object Place {
   //def apply(location:SurfGeometry[_], activityType: ActivityType, openingTimes: Array[(LocalDateTime, LocalDateTime)]) =
    // new Place(location, activityType, openingTimes)
 
-  def YEAR = 2005
-  def MONTH = 1
-  def DAY = 1
+  //def YEAR = 2005
+  //def MONTH = 1
+  //def DAY = 1
 
   /**
-    * Convenience method to make a time interval from an openning and closing time specified as decimal hours.
+    * Convenience method to make a time interval from an opening and closing time specified as decimal hours.
     * Year, month, and day are constant.
     *
     * @param open Opening time. E.g. 09:30 = 9.5
@@ -64,8 +64,8 @@ object Place {
     * @return A tuple of [[java.time.LocalDateTime]] constructed from the opening and closing times.
     */
   def makeOpeningTimes(open:Double, closed:Double) : (LocalDateTime, LocalDateTime) = {
-    val t1 = LocalDateTime.of(YEAR, MONTH, DAY, open.toInt, ((open - open.toInt)*60).toInt)
-    val t2 = LocalDateTime.of(YEAR, MONTH, DAY, closed.toInt, ((closed - closed.toInt)*60).toInt)
+    val t1 = LocalDateTime.of(SurfABM.startDate.getYear, SurfABM.startDate.getMonth, SurfABM.startDate.getDayOfMonth, open.toInt, ((open - open.toInt)*60).toInt)
+    val t2 = LocalDateTime.of(SurfABM.startDate.getYear, SurfABM.startDate.getMonth, SurfABM.startDate.getDayOfMonth, closed.toInt, ((closed - closed.toInt)*60).toInt)
     (t1,t2)
   }
 

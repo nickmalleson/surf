@@ -61,7 +61,7 @@ object ABBFAgentLoader {
       for (j <- 1.until((rnd * 30).toInt) ) {
         atHomeActivity.++()
         if(i % 10 == 0 && j % 10 == 0) {
-          printf("Activ for agent %d at iteration %d increased to %5.3f",i,j,atHomeActivity)
+          printf("Active for agent %d at iteration %d increased to %5.3f",i,j,atHomeActivity)
         }
       }
 
