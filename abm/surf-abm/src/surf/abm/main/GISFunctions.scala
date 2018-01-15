@@ -31,7 +31,7 @@ object GISFunctions {
     *
     * Note that the function also starts with a relatively small radius and allows it to increase as needed.
     */
-  def findNearestObject[T](centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry[T] = {
+  def findNearestObject[T](centre: SurfGeometry[_], geom: GeomVectorField, randomise: Boolean = false) : SurfGeometry[T] = {
 
     numCalls+=1 // Increment the number of times this function has been called
 
