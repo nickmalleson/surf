@@ -1,8 +1,11 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.DINNER
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.environment.Building
 
 
 /**
@@ -11,19 +14,26 @@ import surf.abm.agents.abbf.activities.ActivityTypes.DINNER
   */
 case class DinnerActivity (
                        override val timeProfile: TimeProfile,
-                       override val agent: ABBFAgent)
+                       override val agent: ABBFAgent,
+                       state: SimState)
   extends FlexibleActivity(DINNER, timeProfile, agent)  with Serializable
 {
 
-  // These variables define the different things that the agent could be doing in order to satisfy the work activity
-  // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
-  // more efficient)
+  // These variables define the different things that the agent could be doing in order to satisfy the dinner activity
 
-  private val EATING = 1
+  private val HAVING_DINNER = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
-  private val place : Place = null // start with a null place
+
+  val dinnerLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.dinnerGeoms, true, state)
+
+  private val place = Place(
+    location = dinnerLocation,
+    activityType = DINNER,
+    openingTimes = Array(Place.makeOpeningTimes(17.0, 23.0))
+    // TimeIntensity of dinner is 0 outside dinner hours, but not BackgroundIntensity, so might be necessary anyway
+  )
 
   /**
     * This makes the agent actually perform the activity.
@@ -43,7 +53,7 @@ case class DinnerActivity (
           this.agent.location())) {
           Agent.LOG.debug(agent, "has reached a restaurant. Starting dinner.")
           //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a restaurant/pub. Starting dinner.")
-          currentAction = EATING // Next iteration the agent will start to have dinner.
+          currentAction = HAVING_DINNER // Next iteration the agent will start to have dinner.
         }
         else {
           Agent.LOG.debug(agent, "is not at a restaurant yet. Travelling there.")
@@ -58,7 +68,7 @@ case class DinnerActivity (
         if (this.agent.atDestination()) {
           Agent.LOG.debug(agent, "has reached a restaurant. Starting dinner")
           //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]$${agent.toString()} has reached a restaurant/pub. Starting dinner")
-          currentAction = EATING
+          currentAction = HAVING_DINNER
         }
         else {
           Agent.LOG.debug(agent, "is travelling to a restaurant.")
@@ -67,7 +77,7 @@ case class DinnerActivity (
         }
       }
 
-      case EATING => {
+      case HAVING_DINNER => {
         Agent.LOG.debug(agent, "is having dinner")
         //Agent.LOG.debug(s"[${agent.state.schedule.getTime()}]${agent.toString()} is having dinner")
         return true
@@ -82,6 +92,22 @@ case class DinnerActivity (
   override def activityChanged(): Unit = {
     this.currentAction = INITIALISING
     this._currentIntensityDecrease = 0d
+  }
+
+  /**
+    * The amount that the dinner activity should increase at each iteration
+    * @return
+    */
+  override def backgroundIncrease(): Double = {
+    return 1d / (15d * SurfABM.ticksPerDay)
+  }
+
+  /**
+    * The amount that the dinner activity will go down by if an agent is having dinner.
+    * @return
+    */
+  override def reduceActivityAmount(): Double = {
+    return 20d / (3d * SurfABM.ticksPerDay)
   }
 
 }

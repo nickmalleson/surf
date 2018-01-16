@@ -1,9 +1,10 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.LUNCHING
-import surf.abm.main.{SurfABM, GISFunctions, SurfGeometry}
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 import surf.abm.environment.Building
 
 /**
@@ -12,27 +13,21 @@ import surf.abm.environment.Building
   */
 case class LunchActivity(
                          override val timeProfile: TimeProfile,
-                         override val agent: ABBFAgent)
+                         override val agent: ABBFAgent,
+                         state: SimState)
   extends FlexibleActivity(LUNCHING, timeProfile, agent)  with Serializable
-// for initial tests: fixed activity most nearby to work
-// should be flexible activity in the future
 {
 
-  // These variables define the different things that the agent could be doing in order to satisfy the work activity
-  // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
-  // more efficient)
+  // These variables define the different things that the agent could be doing in order to satisfy the lunch activity
 
   private val HAVING_LUNCH = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
-  //private val place : Place = null // start with a null place
 
-  //val lunchLocationRnd = state.random.nextDouble()
-  val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.lunchGeoms)
-  // this is nearest, should be random (maybe add optional boolean parameter true/false, maybe this thing below for dinner can be useful too...
-  //val dinnerLocation: SurfGeometry[Building] = SurfABM.getRandomFunctionalBuilding(state, SurfABM.dinnerGeoms)
-  val lunchPlace = Place(
+  val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.lunchGeoms, true, state)
+
+  private val place = Place(
     location = lunchLocation,
     activityType = LUNCHING,
     openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
@@ -52,7 +47,7 @@ case class LunchActivity(
       case INITIALISING => {
         Agent.LOG.debug(agent, "is initialising LunchActivity")
         // See if the agent is in a lunch place
-        if (lunchPlace.location.equalLocation(
+        if (this.place.location.equalLocation(
           this.agent.location())) {
           Agent.LOG.debug(agent, "has reached a lunch place. Starting lunch.")
           currentAction = HAVING_LUNCH // Next iteration the agent will start to have lunch.

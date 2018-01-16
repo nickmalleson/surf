@@ -21,7 +21,7 @@ case class ShopActivity(
   // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
   // more efficient)
 
-  private val SHOPPING = 1
+  private val IN_THE_SHOP = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
@@ -43,7 +43,7 @@ case class ShopActivity(
         if (this.place.location.equalLocation(
             this.agent.location())) {
           Agent.LOG.debug(agent, "is in the shop. Start shopping.")
-          currentAction = SHOPPING // Next iteration the agent will start to shop
+          currentAction = IN_THE_SHOP // Next iteration the agent will start to shop
         }
         else {
           Agent.LOG.debug(agent, "is not at the shop yet. Travelling there.")
@@ -56,7 +56,7 @@ case class ShopActivity(
       case TRAVELLING => {
         if (this.agent.atDestination()) {
           Agent.LOG.debug(agent, "has reached the shop. Starting to shop")
-          currentAction = SHOPPING
+          currentAction = IN_THE_SHOP
         }
         else {
           Agent.LOG.debug(agent, "is travelling to the shop.")
@@ -64,7 +64,7 @@ case class ShopActivity(
         }
       }
 
-      case SHOPPING => {
+      case IN_THE_SHOP => {
         Agent.LOG.debug(agent, "is shopping")
         return true
       }

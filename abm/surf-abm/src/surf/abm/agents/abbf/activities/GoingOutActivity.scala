@@ -19,7 +19,7 @@ class GoingOutActivity (
   // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
   // more efficient)
 
-  private val GOING_OUT = 1
+  private val AT_THE_EVENT = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
@@ -41,7 +41,7 @@ class GoingOutActivity (
         if (this.place.location.equalLocation(
           this.agent.location())) {
           Agent.LOG.debug(agent, "has reached a pub/bar. GoingOut starts.")
-          currentAction = GOING_OUT // Next iteration the agent will start going out.
+          currentAction = AT_THE_EVENT // Next iteration the agent will start going out.
         }
         else {
           Agent.LOG.debug(agent, "is not at a bar/pub yet. Travelling there.")
@@ -54,7 +54,7 @@ class GoingOutActivity (
       case TRAVELLING => {
         if (this.agent.atDestination()) {
           Agent.LOG.debug(agent, "has reached a bar/pub. GoingOut starts.")
-          currentAction = GOING_OUT
+          currentAction = AT_THE_EVENT
         }
         else {
           Agent.LOG.debug(agent, "is travelling to a bar/pub.")
@@ -62,7 +62,7 @@ class GoingOutActivity (
         }
       }
 
-      case GOING_OUT => {
+      case AT_THE_EVENT => {
         Agent.LOG.debug(agent, "is going out.")
         return true
       }
