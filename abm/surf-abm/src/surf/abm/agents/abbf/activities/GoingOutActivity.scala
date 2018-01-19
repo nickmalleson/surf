@@ -4,13 +4,15 @@ import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.GOING_OUT
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.environment.Building
 
 
 /**
   * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.GOING_OUT]]) that causes the agent to
   * travel to bars or pubs
   */
-class GoingOutActivity (
+case class GoingOutActivity (
                        override val timeProfile: TimeProfile,
                        override val agent: ABBFAgent,
                        state: SimState)
@@ -79,5 +81,19 @@ class GoingOutActivity (
     this.currentAction = INITIALISING
     this._currentIntensityDecrease = 0d
   }
+  /**
+    * The amount that the dinner activity should increase at each iteration
+    * @return
+    */
+  override def backgroundIncrease(): Double = {
+    return 1d / (25d * SurfABM.ticksPerDay)
+  }
 
+  /**
+    * The amount that the dinner activity will go down by if an agent is having dinner.
+    * @return
+    */
+  override def reduceActivityAmount(): Double = {
+    return 7d / (3d * SurfABM.ticksPerDay)
+  }
 }

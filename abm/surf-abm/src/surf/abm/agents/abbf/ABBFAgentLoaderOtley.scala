@@ -179,23 +179,22 @@ object ABBFAgentLoaderOtley {
     val rndLunchPreference = state.random.nextDouble()
     // Test with a random preference for eating and leisure activities. Should become activity specific.
     val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
-    val rndGoingOutPreference = state.random.nextDouble()
+    val rndGoingOutPreference = state.random.nextDouble() / 2d
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
+    // SHOPPING
     // Shopping place should be a supermarket or a convenience store of OpenStreetMap
-    val shoppingPlace = Place(
+    /*val shoppingPlace = Place(
       location = shop,
       //location = null,
       activityType = SHOPPING,
       openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
-    )
+    )*/
 
-    // SHOPPING
     //val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
     val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11d + rnd, 1d), (17d + rnd, 0.3), (22d, 0d)))
-    // Was before a constant, low intensity. Is now a test with higher intensities in late afternoon and early evening.
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
+    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, state)
 
     // LUNCHING
     //val lunchLocationRnd = state.random.nextDouble()
@@ -241,7 +240,7 @@ object ABBFAgentLoaderOtley {
 
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
-    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity )
+    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity, goingOutActivity )
     //val activities = Set[Activity](workActivity, atHomeActivity)
 
     // Finally tell the agent about them

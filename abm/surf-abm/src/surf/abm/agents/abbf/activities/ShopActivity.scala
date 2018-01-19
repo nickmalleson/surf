@@ -1,9 +1,11 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
-import surf.abm.main.SurfABM
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.environment.Building
 
 
 /**
@@ -13,8 +15,8 @@ import surf.abm.main.SurfABM
 case class ShopActivity(
                      override val timeProfile: TimeProfile,
                      override val agent: ABBFAgent,
-                     override val place: Place)
-  extends FixedActivity(SHOPPING, timeProfile, agent, place)  with Serializable
+                     state: SimState)
+  extends FlexibleActivity(SHOPPING, timeProfile, agent)  with Serializable
 {
 
   // These variables define the different things that the agent could be doing in order to satisfy the work activity
@@ -26,6 +28,14 @@ case class ShopActivity(
   private val INITIALISING = 3
   private var currentAction = INITIALISING
   //private val place : Place = null // start with a null place
+
+  val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
+
+  private val place = Place(
+    location = shoppingLocation,
+    activityType = SHOPPING,
+    openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
+  )
 
   /**
     * This makes the agent actually perform the activity.
