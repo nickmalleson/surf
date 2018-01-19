@@ -179,6 +179,7 @@ object ABBFAgentLoaderOtley {
     val rndLunchPreference = state.random.nextDouble()
     // Test with a random preference for eating and leisure activities. Should become activity specific.
     val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+    val rndGoingOutPreference = state.random.nextDouble()
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
@@ -191,7 +192,8 @@ object ABBFAgentLoaderOtley {
     )
 
     // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
+    //val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
+    val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11d + rnd, 1d), (17d + rnd, 0.3), (22d, 0d)))
     // Was before a constant, low intensity. Is now a test with higher intensities in late afternoon and early evening.
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
 
@@ -210,6 +212,10 @@ object ABBFAgentLoaderOtley {
     // DINNER
     val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19.5 + rnd/2, rndDinnerPreference), (22.5, 0d)))
     val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a, state)
+
+    // GOING OUT
+    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
+    val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = a, state)
 
 
     // School

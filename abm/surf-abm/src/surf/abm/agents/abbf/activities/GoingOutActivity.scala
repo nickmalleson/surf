@@ -1,5 +1,6 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.GOING_OUT
@@ -11,7 +12,8 @@ import surf.abm.agents.abbf.activities.ActivityTypes.GOING_OUT
   */
 class GoingOutActivity (
                        override val timeProfile: TimeProfile,
-                       override val agent: ABBFAgent)
+                       override val agent: ABBFAgent,
+                       state: SimState)
   extends FlexibleActivity(GOING_OUT, timeProfile, agent)  with Serializable
 {
 
