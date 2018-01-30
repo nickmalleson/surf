@@ -42,11 +42,11 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
 
   // A list of cameras that the agent has passed by on his path
   var tempCameras = new ListBuffer[Int]()
-  var tempCameraHours = new ListBuffer[Int]()
-  private var _cameras: List[Int] = null
-  def cameras(): List[Int] = _cameras // Accessor to cameras. Necessary??
-  private var _cameraHours: List[Int] = null
-  def cameraHours(): List[Int] = _cameraHours // Accessor to cameraHours. Necessary??
+  //var tempCameraHours = new ListBuffer[Int]()
+  //private var _cameras: List[Int] = null
+  //def cameras(): List[Int] = _cameras // Accessor to cameras. Necessary??
+  //private var _cameraHours: List[Int] = null
+  //def cameraHours(): List[Int] = _cameraHours // Accessor to cameraHours. Necessary??
 
   private var indexOnPath = 0
   private var pathDirection = 1
@@ -179,15 +179,15 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       }
 //      this.moveToCoordinate(this.destination.get.getGeometry.getCoordinate)
 
-      this._cameras = tempCameras.toList
-      this._cameraHours = tempCameraHours.toList
+      //this._cameras = tempCameras.toList
+      //this._cameraHours = tempCameraHours.toList
 
       //this._cameras.foreach()
       //for (c <- this._cameras) {
 
       //}
       //CameraRecorder.step(state)
-      CameraRecorder.add(this._cameras, this._cameraHours)
+      //CameraRecorder.add(this._cameras, this._cameraHours)
 
 
       tempCameras.clear()
@@ -196,8 +196,8 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
       this.currentIndex = -1.0
       this._destination = None
       this._path = null
-      this._cameras = null
-      this._cameraHours = null
+      //this._cameras = null
+      //this._cameraHours = null
       this.indexOnPath = -1
       return true
     }
@@ -212,10 +212,12 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
     // Save ListBuffer of cameras passed by (+ according time)
     if (edge.getGeometry.theObject.cameraID != -1 && (tempCameras == null || !tempCameras.contains(edge.getGeometry.theObject.cameraID))) {
       // TESTING
-      AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
-      AgentLog.info(this, "Found camera ID: %s\n".format( edge.getGeometry.theObject.cameraID  ) )
-      tempCameras += edge.getGeometry.theObject.cameraID
-      tempCameraHours += Clock.currentHour().toInt
+      //AgentLog.info(this, "Found road ID: %s\n".format( edge.getGeometry.theObject.id  ) )
+      //AgentLog.info(this, "Found camera ID: %s at iteration %d\n".format( edge.getGeometry.theObject.cameraID, Clock.getIterations()  ) )
+      val camID = edge.getGeometry.theObject.cameraID
+      tempCameras += camID
+      //tempCameraHours += Clock.currentHour().toInt
+      CameraRecorder.add(camID)
     }
 
     // check to see if the progress has taken the current index beyond its goal

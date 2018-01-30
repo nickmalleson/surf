@@ -68,7 +68,9 @@ object ABBFAgentLoaderOtley {
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
+    val filename = "./data/" + dataDir + "/oa_flows-study_area.csv" // All output areas
+    //val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
+    //val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 output areas
     LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
     //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
     LOG.info(s"Reading agents from file: '$filename'")
@@ -139,8 +141,8 @@ object ABBFAgentLoaderOtley {
               val home: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(homeID)
               val work: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(workID)
               val shop: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](home, SurfABM.shopGeoms)
-              val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](work, SurfABM.lunchGeoms)
-              val dinnerLocation: SurfGeometry[Building] = SurfABM.getRandomFunctionalBuilding(state, SurfABM.dinnerGeoms)
+              //val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](work, SurfABM.lunchGeoms)
+              //val dinnerLocation: SurfGeometry[Building] = SurfABM.getRandomFunctionalBuilding(state, SurfABM.dinnerGeoms)
 
               val nearestJunctionToCurrent: SurfGeometry[Junction] = GISFunctions.findNearestObject[Junction](home, SurfABM.junctions)
               val currentNode = SurfABM.network.findNode(nearestJunctionToCurrent.getGeometry.getCoordinate)
@@ -148,7 +150,7 @@ object ABBFAgentLoaderOtley {
               //val shop: SurfGeometry[Building] = SurfABM.buildingIDGeomMap(shopID)
 
               //makeAgent(state, home, work)
-              makeAgent(state, home, work, shop, lunchLocation)
+              makeAgent(state, home, work, shop)
             }
           }
         }
@@ -161,7 +163,7 @@ object ABBFAgentLoaderOtley {
   }
 
   /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
-  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building], lunchLocation: SurfGeometry[Building]): Unit = {
+  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building], shop: SurfGeometry[Building]): Unit = {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
 
@@ -177,34 +179,42 @@ object ABBFAgentLoaderOtley {
     val rndLunchPreference = state.random.nextDouble()
     // Test with a random preference for eating and leisure activities. Should become activity specific.
     val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+    val rndGoingOutPreference = state.random.nextDouble() / 2d
     val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
+    // SHOPPING
     // Shopping place should be a supermarket or a convenience store of OpenStreetMap
-    val shoppingPlace = Place(
+    /*val shoppingPlace = Place(
       location = shop,
       //location = null,
       activityType = SHOPPING,
       openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
-    )
+    )*/
 
-    // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((6d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
-    // Was before a constant, low intensity. Is now a test with higher intensities in late afternoon and early evening.
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, place = shoppingPlace)
+    //val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
+    val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11d + rnd, 1d), (17d + rnd, 0.3), (22d, 0d)))
+    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, state)
 
     // LUNCHING
-    val lunchPlace = Place(
+    //val lunchLocationRnd = state.random.nextDouble()
+    //val lunchLocation: SurfGeometry[Building] = GISFunctions.findRandomObject[Building](work, SurfABM.lunchGeoms)
+    /*val lunchPlace = Place(
       location = lunchLocation,
       activityType = LUNCHING,
-      openingTimes = null      // not really necessary as activity intensity will be 0 outside lunch hours
-    )
+      openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
+      // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
+    )*/
     val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndLunchPreference), (12d + rnd/2, rndLunchPreference), (15d, 0d)))
-    val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, place = lunchPlace)
+    val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, state)
 
     // DINNER
     val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19.5 + rnd/2, rndDinnerPreference), (22.5, 0d)))
-    val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a)
+    val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a, state)
+
+    // GOING OUT
+    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
+    val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = a, state)
 
 
     // School
@@ -220,7 +230,7 @@ object ABBFAgentLoaderOtley {
 
     // SLEEPING (high between 11pm and 6am)
     val atHomePlace = Place(home, SLEEPING, null)
-    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (9d, 0d), (23d, 1d))), agent = a)
+    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (12d, 0d), (23d, 1d))), agent = a)
     //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
@@ -230,8 +240,7 @@ object ABBFAgentLoaderOtley {
 
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
-    // TODO ADD IN SHOPPING ACTIVITY
-    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity )
+    val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity, goingOutActivity )
     //val activities = Set[Activity](workActivity, atHomeActivity)
 
     // Finally tell the agent about them
@@ -241,10 +250,10 @@ object ABBFAgentLoaderOtley {
     // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
 
     SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
-    state.schedule.scheduleRepeating(a)
+    state.schedule.scheduleRepeating(a, SurfABM.AGENTS_STEP, 1)
 
     SurfABM.agentGeoms.setMBR(SurfABM.mbr)
-    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, Integer.MAX_VALUE, 1.0)
+    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, SurfABM.AGENTS_STEP, 1.0)
   }
 
 }

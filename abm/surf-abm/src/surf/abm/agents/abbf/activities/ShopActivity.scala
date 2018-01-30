@@ -1,9 +1,11 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
-import surf.abm.main.SurfABM
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.environment.Building
 
 
 /**
@@ -13,19 +15,27 @@ import surf.abm.main.SurfABM
 case class ShopActivity(
                      override val timeProfile: TimeProfile,
                      override val agent: ABBFAgent,
-                     override val place: Place)
-  extends FixedActivity(SHOPPING, timeProfile, agent, place)  with Serializable
+                     state: SimState)
+  extends FlexibleActivity(SHOPPING, timeProfile, agent)  with Serializable
 {
 
   // These variables define the different things that the agent could be doing in order to satisfy the work activity
   // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
   // more efficient)
 
-  private val SHOPPING = 1
+  private val IN_THE_SHOP = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
   //private val place : Place = null // start with a null place
+
+  val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
+
+  private val place = Place(
+    location = shoppingLocation,
+    activityType = SHOPPING,
+    openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
+  )
 
   /**
     * This makes the agent actually perform the activity.
@@ -43,7 +53,7 @@ case class ShopActivity(
         if (this.place.location.equalLocation(
             this.agent.location())) {
           Agent.LOG.debug(agent, "is in the shop. Start shopping.")
-          currentAction = SHOPPING // Next iteration the agent will start to shop
+          currentAction = IN_THE_SHOP // Next iteration the agent will start to shop
         }
         else {
           Agent.LOG.debug(agent, "is not at the shop yet. Travelling there.")
@@ -56,7 +66,7 @@ case class ShopActivity(
       case TRAVELLING => {
         if (this.agent.atDestination()) {
           Agent.LOG.debug(agent, "has reached the shop. Starting to shop")
-          currentAction = SHOPPING
+          currentAction = IN_THE_SHOP
         }
         else {
           Agent.LOG.debug(agent, "is travelling to the shop.")
@@ -64,7 +74,7 @@ case class ShopActivity(
         }
       }
 
-      case SHOPPING => {
+      case IN_THE_SHOP => {
         Agent.LOG.debug(agent, "is shopping")
         return true
       }

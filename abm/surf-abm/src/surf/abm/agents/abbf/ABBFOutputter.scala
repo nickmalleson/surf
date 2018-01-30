@@ -1,11 +1,15 @@
 package surf.abm.agents.abbf
 
 import java.io.{BufferedWriter, File, FileWriter}
+import java.time.temporal.TemporalAmount
 
 import org.apache.log4j.Logger
+import org.scalatest.time.Days
 import sim.engine.{SimState, Steppable}
 import surf.abm.agents.abbf.activities.{Activity, ShopActivity, SleepActivity, WorkActivity}
 import surf.abm.main._
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * An outputter written specifically for the ABBF agents. To use this, include the following in the configuation file:<br/>
@@ -20,6 +24,7 @@ object ABBFOutputter extends Outputter with Serializable {
   // BufferedWriters to write the output
   private var agentMainBR : BufferedWriter = null
   private var agentActivitiesBR : BufferedWriter = null
+  private var cameraCountsBR: BufferedWriter = null
 
   def apply() : Outputter = {
 
@@ -27,6 +32,7 @@ object ABBFOutputter extends Outputter with Serializable {
 
     val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Activity,x,y\n" // Main csv file; one line per agent
     val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
+    val CAMERA_COUNTS_HEADER = "Camera,Date,Hour,Count\n" // Camera counts of agents passing by every hour
 
     // Make a new directory for this model
     val dir = new File("./results/out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
@@ -37,10 +43,13 @@ object ABBFOutputter extends Outputter with Serializable {
     // Create the output files
     this.agentMainBR = new BufferedWriter( new FileWriter ( new File(dir.getAbsolutePath+"/agents.csv")))
     this.agentActivitiesBR = new BufferedWriter( new FileWriter ( new File(dir.getAbsolutePath+"/agent-activities.csv")))
+    this.cameraCountsBR = new BufferedWriter( new FileWriter( new File(dir.getAbsolutePath+"/camera-counts.csv")))
+
 
     // Write the headers
     agentMainBR.write(AGENT_MAIN_HEADER)
     agentActivitiesBR.write(AGENT_ACTIVITY_HEADER)
+    cameraCountsBR.write(CAMERA_COUNTS_HEADER)
 
     return this
 
@@ -95,12 +104,28 @@ object ABBFOutputter extends Outputter with Serializable {
 
   /**
     * This should be scheduled to be called at the end of the model to write the output files and (maybe) spawn a
-    * knitr session to anayse them
+    * knitr session to analyse them
     */
   def finish() : Unit  = {
+
+    // Write the camera count file
+    val camCounts: Map[Int, ListBuffer[Int]] = collection.immutable.Map(CameraRecorder.tempCameraMaps.toSeq: _*)
+
+    for (c <- camCounts) {
+      val camCountsIndex = c._2.zipWithIndex
+
+      for (h <- camCountsIndex) {
+        val extraDays: Int = (Clock.getStartHour + h._2) / 24
+        this.cameraCountsBR.write(s"${c._1},${Clock.getStartDate.plusDays(extraDays)},${(Clock.getStartHour + h._2) % 24},${h._1}\n") // cameraID (key of map), date, hour (index of list mod 24), count (value of list)
+      }
+
+    }
+
+    // Close files
     LOG.info("Closing output files")
     this.agentActivitiesBR.close()
     this.agentMainBR.close()
+    this.cameraCountsBR.close()
     // Start knitr and generate the output file
     // TODO this should generate outputs in the same directory as the results, not the same directory as the script
     /*try {

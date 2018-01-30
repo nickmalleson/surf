@@ -1,10 +1,12 @@
 package surf.abm.main
 
 import org.apache.log4j.Logger
+import sim.engine.SimState
 import sim.field.geo.GeomVectorField
 import sim.util.Bag
 import surf.abm.exceptions.RoutingException
 import surf.abm.surfutil.Util
+
 
 /**
   * Created by nick on 21/05/2016.
@@ -30,14 +32,17 @@ object GISFunctions {
     * be satisfied, and it will only need to be increased on occasion.
     *
     * Note that the function also starts with a relatively small radius and allows it to increase as needed.
+    *
+    * A randomise parameter has been added to pick a random object within the search radius rather than the actual most
+    * nearby one. This parameter can be set to True to choose a location for flexible activities.
     */
-  def findNearestObject[T](centre: SurfGeometry[_], geom: GeomVectorField) : SurfGeometry[T] = {
+  def findNearestObject[T](centre: SurfGeometry[_], geom: GeomVectorField, randomise: Boolean = false, state:SimState = null) : SurfGeometry[T] = {
 
     numCalls+=1 // Increment the number of times this function has been called
 
     var radius: Double = SurfABM.mbr.getArea / GISFunctions.MIN_SEARCH_RADIUS_DENOMINATOR
     var closest: SurfGeometry[T] = null // The closest object
-    var minDist = Double.MaxValue // The distance to the closest objet
+    var minDist = Double.MaxValue // The distance to the closest object
 
     // Find the nearest object, increasing the search radius if necessary
 
@@ -73,22 +78,38 @@ object GISFunctions {
         }
 
         else { // Have found some objects. Work out which is closest
-          var dist = 0.0
-          for (o <- closeObjects) {
-            // Cast the object to a SurfGeometryGeometry
-            val sg = o match {
-              case x: SurfGeometry[T @unchecked] => x
+
+          if (randomise) { // choose any of the nearby objects for Flexible Activities (and call it "closest" even though it's not necessarily the closest one)
+            val rnd = (state.random.nextDouble() * closeObjects.length).toInt
+            closest = closeObjects.apply(rnd) match {
+              case x: SurfGeometry[T@unchecked] => x
               case _ => throw new ClassCastException
             }
-            if (sg != centre) { // Ignore the geometry if it is actually the centre point that we're searching around
-              dist = centre.geometry.distance(sg.geometry) // Calculate the distance to the object
-              if (dist < minDist) { // If it is the closest one so far:
-                closest = sg
-                minDist = dist
-              }
+            if (closest != centre) {
+              minDist = centre.geometry.distance(closest.geometry)
             }
-          } // for close objects
-        } // else
+          }
+
+          else { // most nearby object for nearest junction to point, or for location of Fixed Activities
+            var dist = 0.0
+            for (o <- closeObjects) {
+              // Cast the object to a SurfGeometryGeometry
+              val sg = o match {
+                case x: SurfGeometry[T@unchecked] => x
+                case _ => throw new ClassCastException
+              }
+              if (sg != centre) { // Ignore the geometry if it is actually the centre point that we're searching around
+                dist = centre.geometry.distance(sg.geometry) // Calculate the distance to the object
+                if (dist < minDist) { // If it is the closest one so far:
+                  closest = sg
+                  minDist = dist
+                }
+              }
+            } // for close objects
+
+          } // else randomise
+
+        } // else closeObjects.isEmpty
 
     } // while searchRadius
 

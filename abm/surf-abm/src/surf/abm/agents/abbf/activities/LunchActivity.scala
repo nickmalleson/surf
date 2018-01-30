@@ -1,10 +1,11 @@
 package surf.abm.agents.abbf.activities
 
+import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.LUNCHING
-import surf.abm.main.SurfABM
-
+import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
+import surf.abm.environment.Building
 
 /**
   * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.LUNCHING]]) that causes the agent to
@@ -13,21 +14,25 @@ import surf.abm.main.SurfABM
 case class LunchActivity(
                          override val timeProfile: TimeProfile,
                          override val agent: ABBFAgent,
-                         override val place: Place)
-  extends FixedActivity(LUNCHING, timeProfile, agent, place)  with Serializable
-// for initial tests: fixed activity most nearby to work
-// should be flexible activity in the future
+                         state: SimState)
+  extends FlexibleActivity(LUNCHING, timeProfile, agent)  with Serializable
 {
 
-  // These variables define the different things that the agent could be doing in order to satisfy the work activity
-  // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
-  // more efficient)
+  // These variables define the different things that the agent could be doing in order to satisfy the lunch activity
 
-  private val LUNCHING = 1
+  private val HAVING_LUNCH = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
-  //private val place : Place = null // start with a null place
+
+  val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.lunchGeoms, true, state)
+
+  private val place = Place(
+    location = lunchLocation,
+    activityType = LUNCHING,
+    openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
+    // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
+  )
 
   /**
     * This makes the agent actually perform the activity.
@@ -45,7 +50,7 @@ case class LunchActivity(
         if (this.place.location.equalLocation(
           this.agent.location())) {
           Agent.LOG.debug(agent, "has reached a lunch place. Starting lunch.")
-          currentAction = LUNCHING // Next iteration the agent will start to have lunch.
+          currentAction = HAVING_LUNCH // Next iteration the agent will start to have lunch.
         }
         else {
           Agent.LOG.debug(agent, "is not at a lunch place yet. Travelling there.")
@@ -58,7 +63,7 @@ case class LunchActivity(
       case TRAVELLING => {
         if (this.agent.atDestination()) {
           Agent.LOG.debug(agent, "has reached a lunch place. Starting lunch")
-          currentAction = LUNCHING
+          currentAction = HAVING_LUNCH
         }
         else {
           Agent.LOG.debug(agent, "is travelling to a lunch place.")
@@ -66,7 +71,7 @@ case class LunchActivity(
         }
       }
 
-      case LUNCHING => {
+      case HAVING_LUNCH => {
         Agent.LOG.debug(agent, "is having lunch")
         return true
       }

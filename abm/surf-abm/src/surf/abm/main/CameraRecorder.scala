@@ -1,10 +1,11 @@
 package surf.abm.main
 
+import java.io.{BufferedWriter, File, FileWriter}
+
 import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
-import surf.abm.main.Clock
-import surf.abm.main.DefaultOutputter.LOG
 
+import collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -18,13 +19,15 @@ object CameraRecorder extends Steppable{
 
   private val LOG: Logger = Logger.getLogger(this.getClass)
 
-  private var tempCameraMaps : scala.collection.mutable.Map[Int, ListBuffer[Int]] = null
+  val tempCameraMaps = scala.collection.mutable.Map[Int, ListBuffer[Int]]()
+
+  private val cameraList: List[Integer] = SurfABM.conf.getIntList(SurfABM.ModelConfig+".CameraList").asScala.toList
 
 
   /**
     * Needs to be called to initialise the CameraRecorder
     */
-  def create(state:SurfABM) = {
+  def create(state:SurfABM): Unit = {
 
     if (initialised) {
       throw new Exception("ERROR! CameraRecorder has already been initialised")
@@ -32,14 +35,19 @@ object CameraRecorder extends Steppable{
 
 
     // Init code goes here
-    this.tempCameraMaps = null
+    for (c <- cameraList) {
+      var b = new ListBuffer[Int]()
+      b += 0
+      this.tempCameraMaps.put(c,b)
+     // LOG.info("camera %d gets a listBuffer\n".format(c))
+    }
 
     this.state = state
 
     this.initialised = true
 
     // Schedule the step method
-    this.state.schedule.scheduleRepeating(this, Int.MinValue, 1)
+    this.state.schedule.scheduleRepeating(this, SurfABM.CAMERA_RECORDER_STEP, 60.0/Clock.minsPerTick)
 
 
   }
@@ -51,22 +59,30 @@ object CameraRecorder extends Steppable{
     // Code to do stuff with the cameras goes here
     LOG.debug("CameraRecorder.step() has been called")
 
-    // Cameras and footfall counts in the model
+    // Every hour, a new element has to be added to the camera counts, starting with value zero.
+    for (c <- cameraList) {
+      this.tempCameraMaps(c) += 0
+      //LOG.info("new element added to camera %d\n".format(c))
+    }
 
 
   }
 
-  def add(cameras: List[Int], cameraHours: List[Int]): Unit = {
-    //for (c <- cameras) {
-      //val camIndex = cameras.zipWithIndex.map{ c => cameras(c) }
-      //val camIndex = List.tabulate(cameras.length){ i => cameras(i) }.head
-      //LOG.info("camIndex is %d\n".format(camIndex))
-      //if (this.tempCameraMaps(c).exists() ) {
+  /**
+    * Can be called by an agent if the agent has passed by a camera
+    */
+  def add(cameraID: Int): Unit = {
 
-      // this.tempCameraMaps(camIndex).update(hour, tempCameraMaps(camIndex).apply(hour)+1)
-     // } else {
-      //}
-   // }
+    if(!this.tempCameraMaps.contains(cameraID)){
+      throw new Exception ("ERROR! This camera was not initialised! It was probably not defined in the configuration file.")
+    }
+
+    val hoursList = this.tempCameraMaps(cameraID)
+    val currentVal = hoursList.last
+
+    this.tempCameraMaps(cameraID).update(hoursList.size - 1, currentVal+1)
+    //LOG.info("camera %d at index %d, hour %d, time %s and iteration %d is passed by %d agents\n".format(cameraID,hoursList.size -1, Clock.currentHour().toInt, Clock.getTime().toString, Clock.getIterations(), this.tempCameraMaps(cameraID).last))
+
   }
 
 

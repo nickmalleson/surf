@@ -1,6 +1,6 @@
 package surf.abm.main
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import org.apache.log4j.Logger
 import sim.engine.{SimState, Steppable}
@@ -41,7 +41,7 @@ object Clock extends Steppable {
     }
     this.clock = new Clock(startTime)
     this.state = state
-    state.schedule.scheduleRepeating(this)
+    state.schedule.scheduleRepeating(this, SurfABM.CLOCK_STEP, 1)
     LOG.info(s"Simulation clock initialised to ${this.clock.currentTime}")
   }
 
@@ -63,6 +63,26 @@ object Clock extends Steppable {
   def getIterations() : Long = {
     check()
     return this.state.schedule.getSteps
+  }
+
+  /**
+    * Get the start date
+    *
+    * @return The start date
+    */
+  def getStartDate : LocalDate = {
+    check()
+    SurfABM.startDate
+  }
+
+  /**
+    * Get the start hour
+    *
+    * @return The start hour
+    */
+  def getStartHour : Int = {
+    check()
+    SurfABM.startHour
   }
 
   /**

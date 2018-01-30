@@ -71,14 +71,14 @@ object OutputFactory  {
         val applyMethod: Method = cls.getMethod("apply");
         val o = applyMethod.invoke(null).asInstanceOf[Outputter];
         this._outputter = o
-        state.schedule.scheduleRepeating(this._outputter, Int.MinValue, 1)
+        state.schedule.scheduleRepeating(this._outputter, SurfABM.OUTPUTTER_STEP, 1)
 
       }
       catch {
         case e: ConfigException.Missing => {
           // No outputter, create a default
           this._outputter = DefaultOutputter()
-          state.schedule.scheduleRepeating(this._outputter, Int.MinValue, 1)
+          state.schedule.scheduleRepeating(this._outputter, SurfABM.OUTPUTTER_STEP, 1)
         }
         case e: Exception => {
           // Some other exception with reflection
