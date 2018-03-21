@@ -128,4 +128,21 @@ case class SleepActivity(
     this.currentAction = Initialising()
     this._currentIntensityDecrease = 0d
   }
+
+  /**
+    * The amount that the sleep activity should increase at each iteration
+    * @return
+    */
+  override def backgroundIncrease(): Double = {
+    return 1d / SurfABM.ticksPerDay
+  }
+
+  /**
+    * The amount that the sleep activity will go down by if an agent is at home.
+    * @return
+    */
+  override def reduceActivityAmount(): Double = {
+    return 5d / (2d * SurfABM.ticksPerDay)
+  }
+
 }
