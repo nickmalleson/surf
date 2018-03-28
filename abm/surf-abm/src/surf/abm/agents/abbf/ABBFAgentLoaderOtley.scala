@@ -234,7 +234,7 @@ object ABBFAgentLoaderOtley {
     //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
-    for (i <- 1.until((rnd * 30).toInt) ) {
+    for (i <- 1.until(48 +(rnd * 25).toInt) ) {
       atHomeActivity.++()
     }
 
