@@ -77,33 +77,47 @@
                 </section>
                 
                 <section>
+                    <h2>Results</h2>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                </section>
+
+                
+                <section id="current_research1">
                     
+                    <h2>Agent-Based Urban Modelling</h2>
+                    <a href="https://esrc.ukri.org/">
+                        <img class="right" style="width:200px;" src="../figures/LOGO_ESRC.jpg" alt="ESRC Logo"/></a>
                     <h3>Current Research</h3>
-                    <p>Simulating Urban Flows (<a href="http://surf.leeds.ac.uk">surf</a>)</p>
-                    XXXX ESRC LOGO
+                    <p>Simulating Urban Flows (<a href="http://surf.leeds.ac.uk">surf</a>)</p>                    
                     <p class="l2">3 year research project funded by the UK ESRC</p>
                     <p class="l2">One of the aims: <strong>calibrate an urban ABM using streaming data</strong></p>
-                    <a href="https://erc.europa.eu/">
-                        <img class="right" style="width:200px;" src="../figures/LOGO_ERC.jpg" alt="ERC Logo"/></a>
-                    <p class="l2">Turns out this is really hard!</p>
-                    
-                    <p>New project: Data Assimilation for Agent-Based Models (<a href="http://dust.leeds.ac.uk">dust</a>)</p>
-                    <p class="l2">5 year research project funded by the European Research Council</p>
-                    
-                    <p></p>
+                    <p class="l2">Turns out this is really hard!</p>            
+                </section>
+                
+                <section id="current_research2-dust" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
+                        <h2>Agent-Based Urban Modelling</h2>
+                        <a href="https://erc.europa.eu/">
+                            <img class="right" style="width:200px;" src="../figures/LOGO_ERC.jpg" alt="ESRC Logo"/></a>
+                        <p>New project: <strong>Data Assimilation for Agent-Based Models</strong> (<a href="http://dust.leeds.ac.uk">dust</a>)</p>
+                        <p class="l2">5-year research project</p>
+                        <p class="l2">Funded by the European Research Council (Starting Grant)</p>
+                        <p class="l2">Started in January</p>
+                        <p>Main aim: create a new method for dynamically assimilating data into agent-based models.</p>
+                    </div>
                 
                 </section>
                 
                 
-                XXXX HERE
-                
-                
-                
+                              
                 <section id="Overview" data-background-image="../figures/people_in_street.jpg">
                     <div class="whitebackground2">
                         <h2>Overview</h2>
 
-                        <p>Background - smart cities, the data deluge, and forecasting</p>
                         <p>ABM for a geographical simulation of urban flows</p>
                         <p class="l2">Major hurdle: <i>real time</i> calibration</p>
                         <p>Dynamic data assimilation for ABM</p>
@@ -115,85 +129,6 @@
                 </section>
 
                 
-
-                <section id="smart_cities">
-                    
-                    <h2>Smart cities and the data deluge</h2>
-                    <figure class="right" style="width:40%;">
-                        <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
-                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
-                    </figure>
-
-                    
-                    <p>Abundance of data about individuals and their environment</p>
-                    <p class="l2">"Big data revolution" (Mayer-Schonberger and Cukier, 2013)</p>
-                    <p class="l2">"Data deluge" (Kitchin, 2013a)</p>
-                    <p>Smart cities</p>
-                    <p class="l2">cities that "are increasingly composed of and monitored by pervasive and ubiquitous computing" (Kitchin, 2013a)</p>
-                    <p>Large and growing literature</p>
-                </section>
-                
-                
-                <section id="forecasting">
-                    <h2>What about forecasting?</h2>  
-                    <p>Abundance of real-time analysis, but limited forecasting. E.g.:</p>
-                    <p class="l2">MassDOT Real Time Traffic Management system (Bond and Kanaan, 2015)</p>
-                    <p class="l3">Detect vehicles with Bluetooth to analyse current traffic flows</p>
-                    <p class="l2">Centro De Operacoes Prefeitura Do Rio (in Rio de Janeiro)</p>
-                    <p class="l3">Advertise some predictive ability, but sparse detail</p>
-                    <p class="l2">City dashboards</p>
-                    <p>Forecasting ability is surprisingly absent in the literature</p>
-                    <p class="l2">(<i>correct me if I'm wrong!</i>)</p>
-                </section>
-                <section id="forecasting2">    
-                    <h2>Why so little evidence of forecasting?</h2>
-                    <p>Proprietary systems? Company secrets?</p>
-                    <p>A methodological gap?</p>
-                    <p>Machine learning will probably help</p>
-                    <p class="l2">E.g. short-term traffic forecasting (Vlahogianni et al. 2014)</p>
-                    <p class="l2">But black box is a drawback - How to run diverse scenarios?</p>
-                    <p>Maybe <strong>agent-based modelling</strong> could have the answer</p>
-                
-                </section>
-                
-
-                
-                
-                                
-                <!--
-                <section id="abm">
-                    <h2>Agent-Based Modelling (ABM)</h2>
-                    <img class="right" data-src="../figures/virtual_city.jpeg"/>
-                    <p>Autonomous, interacting 'agents'</p>
-                    <p>Model phenomena from the 'bottom-up'</p>
-                    <p>Advantages:</p>
-                    <p class="l2">Modelling complexity, non-linearity, emergence</p>
-                    <p class="l2">Natural description of a system</p>
-                    <p class="l2">Bridge between verbal theories and mathematical models</p>
-                    <p class="l2">History of the evolution of the system</p>
-                </section>
-           
-                <section data-background-video="../videos/sim.mp4,../videos/sim.webm"
-                         data-background-video-loop="loop"
-                         id="abm-example-predictive">
-                    <h2 style="background-color: white;">ABM Example - Burglary</h2>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                      
-                </section>
-                -->
-
-                <section id="problems1">
-                    <h2>ABM Problems</h2>
-                    <p>1. Computationally Expensive</p>
-                    <p class="l2">Not amenable to machine-led calibration</p>
-                    <p>2. Data hungry</p>
-                    <p class="l2">Need fine-grained information about individual actions and behaviours</p>
-                    <p>3. Divergent</p>
-                    <p class="l2">Usually models represent complex systems</p>
-                    <p class="l2">Projections / forecasts quickly diverge from reality</p>
-                </section>
                 
                 
                 <section id="prob-divergence" 
@@ -247,26 +182,11 @@
                 </section>
                 
                 
-                
-                <section id="dda2">
-                    <h2>Dynamic Data Assimilation</h2>
-                    <h3>How?</h3>
-                    <p>Particle filters</p>
-                    <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
-                    <p>Kalman Filter</p>
-                    <p class="l2">Air traffic (Chen et al., 2012)</p>
-                    <p>Ensemble Kalman Filter (EnKF)</p>
-                    <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
-                    <p>Sequential Monte Carlo (SMC)</p>
-                    <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
-                    <p>Approximate Bayesian Computation</p>
-                    <p class="l2">?</p>
-                </section>
 
 
-                <section id="enkf-maths">
-                    <h2>Ensemble Kalman Filter (EnKF)</h2>
-                    <h3>Maths</h3>
+                <section id="enkf">
+                    <h2>DDA: How? </h2>
+                    <h3>One example: Ensemble Kalman Filter (EnKF)</h3>
                     <p>Broad literature, but generally tied to mathematical models (e.g. differential equations and linear functions)</p>
                     <!--<p>Not applicable to ABM (inherently non-linear)</p>-->
                     <p>Working with a mathematician to do the hard work!</p>
@@ -333,9 +253,7 @@
                     
                     <h2>(Preliminary) Experimental Results</h2>
                     <h3>Summary</h3>
-                    <p>Number of agents who pass camera B:</p>
-                    <p class="l2">forecast, analysis, virtual observations, truth</p>
-                    
+                    <p>Number of agents who pass camera B:</p>                
                     <figure style="width:100%;">
                         <img data-src="../figures/paper_figures/dda-essa/results_summary.png" alt="Results (see caption)" />
                         <figcaption>Number of agents who pass camera B measured using
@@ -343,20 +261,9 @@
                         There is little to distinguish between the model states before and
                         after data assimilation.</figcaption>
                     </figure>
-                
-                </section>
-                
-                <section id="results2">
-                    
-                    <h2>(Preliminary) Experimental Results</h2>
-                    <h3>Summary</h3>
-                    <p>Number of agents who pass camera B</p>                    
-                    <figure style="width:100%;">
-                        <img data-src="../figures/paper_figures/dda-essa/results_summary-zoom.png" alt="Results (see caption)" />
-                        <figcaption>Number of agents who pass camera B, focusing on a short time period.</figcaption>
-                    </figure>
                     <p>In short: data assimilation only marginally changed the system state.</p>
                 </section>
+                
                 
                 <section id="results3">
                     
@@ -389,8 +296,8 @@
 
 
                 
-                <section data-background-image="../figures/surf_workplan-v2.png" id="conclusions1">
-                    <div class="whitebackground2 fragment">
+                <section id="conclusions1" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
                         <h2>Conclusion and Outlook</h2>
                         <p>Surprising lack of smart cities <i>forecasting</i></p>
                         <p>ABM potentially able to combine 'big' data to make more reliable short-term predictions</p>
@@ -400,7 +307,7 @@
                     </div>
                 </section>
                 
-                <section data-background-image="../figures/surf_workplan-v2.png" id="conclusions2">
+                <section id="conclusions2" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
                     <div class="whitebackground2">
                         <h2>Conclusion and Outlook</h2>
                         <p>Lots that we can borrow from the hard sciences</p>
@@ -416,17 +323,7 @@
                 </section>
                 
                 
-                <section data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg"
-                         id="dust">
-                    <div class="whitebackground2">
-                        <h2>Future Work: DUST</h2>
-                        <p>Data Assimilation for Agent Based Models: Applications to Civil Emergencies</p>
-                        <p>Recently funded by the ERC (Starting Grant), €1.5M over 5 years</p>
-                        <p>For more information:</p>
-                        <p class="l2"><a href="https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects">
-                            https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects</a></p>
-                    </div>
-                </section>                
+           
                 
                 
                 <section id="references">
@@ -448,19 +345,17 @@
                 
                 <section class="title"  id="final">
                     
-                    
                     <h1 style="font-size: 60px;">Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</h1>
                     <hr/>
                     <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, 
-                        Alice Tapper, Jon Ward, Andrew Evans</h2>
+                        Tomas Crols, Jon Ward, Andrew Evans</h2>
                     <h4>Schools of Geography &amp; Mathematics, University of Leeds, UK</h4>
                     <h4><a href="http://nickmalleson.co.uk">nickmalleson.co.uk</a></h4>
                     <h4><a href="http://surf.leeds.ac.uk">surf.leeds.ac.uk</a></h4>
+                    <h4><a href="http://dust.leeds.ac.uk">dust.leeds.ac.uk</a></h4>
                     <hr/>
                     <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
                     <p style="text-align:center;font-size:25px">Code: <a href="https://github.com/nickmalleson/surf/tree/master/abm/essa-kalman_filter">https://github.com/nickmalleson/surf</a></p>
-                    <p style="text-align:center;font-size:25px">Full paper: <a href="http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf">http://surf.leeds.ac.uk/p/2017-09-26-essa-da.pdf</a></p>
-                    
                 </section>    
                 
 
