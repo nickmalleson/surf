@@ -8,7 +8,7 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2018
 
-   - [Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling]({{site.baseurl}}/p/2018-04-12-aag-da.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 10th – 15th April, New Orleans, as part of the Special Sessions on [Innovations in Urban Analytics]({{site.baseurl}}/announce/2018/04/04/AAG2018-Innovations_in_Urban_Analytics-Sessions.html)_.
+   - [Forecasting Short-Term Urban Dynamics: Emerging Research and Challenges]({{site.baseurl}}/p/2018-04-12-aag-da.html). Presentation to the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), 10th – 15th April, New Orleans, as part of the Special Sessions on [Innovations in Urban Analytics]({{site.baseurl}}/announce/2018/04/04/AAG2018-Innovations_in_Urban_Analytics-Sessions.html)_.
 
  - 2017
 

@@ -37,7 +37,9 @@
                     
                 <section class="title"  id="index">
                     
-                    <h1 style="font-size: 60px;">Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</h1>
+                    <h1 style="font-size: 20px;"><strike>Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</strike></h1>
+                    <h1 style="font-size: 50px;">Forecasting Short-Term Urban Dynamics: 
+                    Emerging Research and Challenges</h1>
                     <hr/>
                     <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, 
                         Tomas Crols, Jon Ward, Andrew Evans</h2>
@@ -47,9 +49,9 @@
                     <h4><a href="http://dust.leeds.ac.uk">dust.leeds.ac.uk</a></h4>
                     <hr/>
                     <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
-                    <p style="text-align:center;font-size:25px">Code: <a href="https://github.com/nickmalleson/surf/tree/master/abm/essa-kalman_filter">https://github.com/nickmalleson/surf</a></p>
                 </section>    
 
+                <!--
                 <section id="abstract" >
 
                 	
@@ -58,6 +60,7 @@
                     <p class="small">The 'data deluge', coupled with related 'smart cities' initiatives, have led to a proliferation of models that capture the current state of urban systems to a high degree of accuracy. However, they are typically 'black box' in nature, which makes it difficult to use them to better understand the fundamental dynamics that drive the systems under study. Furthermore, many example models of 'smart cities' appear limited in their ability to *forecast* future system states. Agent-based modelling (ABM) is well suited to modelling urban systems, but is limited in its ability to incorporate up-to-date data as they arise in order to reduce uncertainty in model forecasts. This limits the usefulness of ABM a forecasting tool. This paper presents ongoing work that adapts data assimilation techniques from fields such as meteorology (specifically the 'ensmble Kalman Filter') in order to allow agent-based models to be optimised using streaming data in real time. Here, a simple example of an agent-based model used to simulate the movement of people as they travel along a street is illustrated. Importantly, the model is optimised dynamically in response to hypothetical data streams. The paper will also demonstrate some important secondary uses of the technique as a means of capturing model uncertainty. Ultimately, we work towards a combination of ABM and data assimilation methods that will be able to assimilate streaming ‘smart cities’ data into models in real time. </p>
 
                 </section>
+-->
                 
                 <section data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
                          data-background-video-loop="loop"
@@ -71,20 +74,89 @@
                         <p class="l2">Pollution – who is being exposed? Where are the hotspots?</p>
                         <p class="l2">Economy – can we attract more people to our city centre?</p>
                         <p class="l2">Health - can we encourage more active travel?</p>
-                        <p>Achieve this through agent-based modelling?</p>
+                        <p>Achieve this through agent-based modelling &nbsp; smart cities?</p>
                         
                     </div>
                 </section>
                 
                 <section>
                     <h2>Results</h2>
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
-                    <p>&nbsp;</p>
+                    <div class="fragment">
+                        <p> ... but: lots of exciting developments at Leeds</p>
+                        <h3>Outline</h3>
+                        <p>Emerging research initiatives</p>
+                        <p>What we see as the main chllenges</p>
+                        <p>Would like feedback...</p>
+                    </div>
                 </section>
+                
+                <section id="LIDA">
+                    
+                    <h2>Leeds Institute for Data Analytics (LIDA)</h2>
+                    <p>Established 2014. 31 centres, programmes and projects (&pound;43.2M)</p>
+                    <p>Over 150 researchers and data scientists</p>
+                    <p>Aspiring to be the premier data analytics centre in the UK</p>
+                    <p>Overarching themes:</p>
+                    <p class="l2">Understanding health and human behaviour</p>
+                    <p class="l2">Social and environmental problems</p>
 
+                    <img src="../figures/LIDA/mark1.png" alt="Mark Birkin & LIDA"/>
+                
+                </section>
+                
+                <section id="ATI" >
+                    
+                    <a href="https://www.turing.ac.uk/"><img src="../figures/LIDA/ATI-website.png" alt="Turing website" /></a>
+                
+                </section>
+                
+                
+                <section id="ATI-partners" >
+                    
+                    <img src="../figures/LIDA/ATI.png" alt="Turing partners" />
+                
+                </section>
+                
+               
+                <section id="ATI-SmartCities" >
+                    
+                    <h2>Smart Cities Hub</h2>
+                    
+                    <h3>Understanding and Quantifying Uncertainty in Individual-Based Models for Smart City Forecasts</h3>
+                    
+                    <img  src="../figures/ensemble_uncertainty.png" />
+                    
+                    
+                </section>
+                <section id="ATI-SmartCities2" >
+                    
+                    <h2>Smart Cities Hub</h2>
+                    
+                    <h3>Understanding and Quantifying Uncertainty in Individual-Based Models for Smart City Forecasts</h3>
+                    
+                    <img  src="../figures/good_bad_ensembles.png" />
+                    
+                </section>
+                    
+                <section id="ATI-SmartCities-Intern" data-background-image="../figures/skylines-night1.jpg">
+                    
+                    <div class="whitebackground2">
+                        <h2>Smart Cities Hub</h2>
+
+                        <h3>Understanding Input Data Requirements for Successfully Modelling Cities</h3>
+
+                        <p>How much information about a city do we need to simulate it within
+                        acceptable levels of uncertainty?</p>
+
+                        <p>Method:</p>
+                        <p class="l2">Simple hypothetical city ABM</p>
+                        <p class="l2">Generate 'truth' data</p>
+                        <p class="l2">Take noisy samples from 'truth'</p>
+                        <p class="l2">How much data do we need?</p>
+                    </div>
+                    
+                
+                </section>
                 
                 <section id="current_research1">
                     
@@ -94,6 +166,8 @@
                     <h3>Current Research</h3>
                     <p>Simulating Urban Flows (<a href="http://surf.leeds.ac.uk">surf</a>)</p>                    
                     <p class="l2">3 year research project funded by the UK ESRC</p>
+                    <p class="l2">Modelling a small town, using real footfall counters
+                    (more on this next...)</p>
                     <p class="l2">One of the aims: <strong>calibrate an urban ABM using streaming data</strong></p>
                     <p class="l2">Turns out this is really hard!</p>            
                 </section>
@@ -104,29 +178,14 @@
                         <a href="https://erc.europa.eu/">
                             <img class="right" style="width:200px;" src="../figures/LOGO_ERC.jpg" alt="ESRC Logo"/></a>
                         <p>New project: <strong>Data Assimilation for Agent-Based Models</strong> (<a href="http://dust.leeds.ac.uk">dust</a>)</p>
-                        <p class="l2">5-year research project</p>
+                        <p class="l2">5-year research project (&euro;1.5M)</p>
                         <p class="l2">Funded by the European Research Council (Starting Grant)</p>
                         <p class="l2">Started in January</p>
-                        <p>Main aim: create a new method for dynamically assimilating data into agent-based models.</p>
+                        <p>Main aim: create new methods for dynamically assimilating data into agent-based models.</p>
                     </div>
                 
                 </section>
                 
-                
-                              
-                <section id="Overview" data-background-image="../figures/people_in_street.jpg">
-                    <div class="whitebackground2">
-                        <h2>Overview</h2>
-
-                        <p>ABM for a geographical simulation of urban flows</p>
-                        <p class="l2">Major hurdle: <i>real time</i> calibration</p>
-                        <p>Dynamic data assimilation for ABM</p>
-                        <p class="l2">with an <i>ensemble Kalman filter</i> (EnKF)</p>
-                        <p>Towards a real-time city simulation</p>
-                        <hr/>
-                        <p>Help and advice please!</p>
-                    </div>
-                </section>
 
                 
                 
@@ -137,7 +196,7 @@
                          data-background-video-loop="loop">
                     
                     <div class="whitebackground fragment">
-                        <h2>3. Divergence</h2>
+                        <h2>Divergence</h2>
                         <p>Complex systems</p>
                         <p>One-shot calibration</p>
                         <p>Nonlinear models predict near future well, but diverge over time.</p>
@@ -151,7 +210,7 @@
                         <figcaption>Typical model development process</figcaption>
                     </figure>
                     
-                    <h2>3. Divergence</h2>
+                    <h2>Divergence</h2>
                     <p>Drawback with the 'typical' model development process</p>
                     <p>Waterfall-style approach is common</p>
                     <p>Calibrate until fitness is reasonable, then make predictions</p>
@@ -223,129 +282,49 @@
                     </figure>                
                 </section>
                 
-                <!--
-                <section id="enfk-process2">
-                    <h2>Ensemble Kalman Filter - Basic Process</h2>
-                    <img data-src="../figures/paper_figures/time_framework.png" alt="Diagram of DDA assimilating data" />
-                </section>
-                -->
-                
-                <section id="enkf-experiment1" >
-                    <h2>Experiment with an EnKF</h2>
-                    <p>Very simple ABM - people walking along a street</p>
-                    <p class="l2">Every hour, <i>x</i> people begin at point A</p>
-                    <p class="l2">CCTV Cameras at either end count footfall</p>
-                    <p class="l2">Some people can leave before they reach the end (<i>bleedout rate</i>)</p>
-                    <p class="l2">Complete model state can be captured in a state vector.</p>
-                    <p>Aim: Estimate the number of people who will pass camera B</p>
-                    <img style="width:80%;" data-src="../figures/paper_figures/dda_model_environment.jpg" alt="Diagram of the model environment" />                
-                </section>
-                
-                
-                <section id="enkf-truth_data">
-                    <h2>Hypothetical 'Truth' Data</h2>
-                    <p>Use the model to first generate a hypothetical reality</p>
-                    <img style="Width:100%;" data-src="../figures/paper_figures/dda-essa/example_flow2.png" alt="Results - counts at camera A and B" />
-                </section>
-
-        
-                <section id="results1">
-                    
-                    <h2>(Preliminary) Experimental Results</h2>
-                    <h3>Summary</h3>
-                    <p>Number of agents who pass camera B:</p>                
-                    <figure style="width:100%;">
-                        <img data-src="../figures/paper_figures/dda-essa/results_summary.png" alt="Results (see caption)" />
-                        <figcaption>Number of agents who pass camera B measured using
-                        the forecast, analysis, virtual observations, and truth data.
-                        There is little to distinguish between the model states before and
-                        after data assimilation.</figcaption>
-                    </figure>
-                    <p>In short: data assimilation only marginally changed the system state.</p>
-                </section>
-                
-                
-                <section id="results3">
-                    
-                    <h2>(Preliminary) Experimental Results</h2>
-                    <h3>Parameter Estimation</h3>
-                    <p>Model parameters can be included in the model state vector.</p>
-                    <p>Can the EnKF find the single model parameter? (The <i>bleedout rate</i>).</p>                    
-                    <figure style="width:100%;">
-                        <img data-src="../figures/paper_figures/dda-essa/results-bleedout_rate.png" alt="Results (see caption)" />
-                        <figcaption>How quickly the EnKF finds the model parameter (<i>bleedout rate</i>).
-                        Happily it finds the 'true' parameter value reasonably quickly.</figcaption>
-                    </figure>
-                
-                </section>
-                
-            
-                
-                <section id="resultsX">
-                    <h2>(Preliminary) Experimental Results</h2>
-                    <h3>Quantifying Error (RMSE)</h3>
-                    <p>Forecast: 9.5; Analysis: 6.5; Observation: 3.0.</p>
-                    <p>Surprising because we would expect Analysis &lt; Observation</p>
-                    <p class="l2">Virtual observations are closer to 'truth' than the analysis :-(</p>
-                    <p class="l2">This is probably due to the degree of randomness in the model - 
-                    intelligent guesses will rarely be closer to reality than observations 
-                        (even noisy observations).</p>
-                    <p>EnKF estimates the model parameter (<i>bleedout rate</i>) accurately :-)</p>
-                </section>
-                
-
-
+              
+           
                 
                 <section id="conclusions1" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
                     <div class="whitebackground2">
-                        <h2>Conclusion and Outlook</h2>
-                        <p>Surprising lack of smart cities <i>forecasting</i></p>
-                        <p>ABM potentially able to combine 'big' data to make more reliable short-term predictions</p>
-                        <p>Lots of work needed to adapt data assimilation techniques</p>
-                        <p>Future: a holistic city model, estimating the current state <i>and</i> 
-                        predicting future states.</p>
+                        <h2>Challenges</h2>
+                        <p>Data Wrangling (standardising and automating datasets)</p>
+                        <p>Recognising and understanding patterns</p>
+                        <p>Supporting decision-making and risk management through simulation (developing applications)</p>
+                        <p>Human and machine interaction in the city</p>
+                        <p>Ethical and social implications of Smart Technologies</p>
                     </div>
                 </section>
+                
+                
                 
                 <section id="conclusions2" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
                     <div class="whitebackground2">
-                        <h2>Conclusion and Outlook</h2>
-                        <p>Lots that we can borrow from the hard sciences</p>
-                        <p>Emulators</p>
-                        <p class="l2">Simplified versions of a computationally-expensive model that can 
-                            be executed quickly</p>
-                        <p class="l2">Good for exploring the parameter space</p>
-                        <p>Uncertainty</p>
-                        <p class="l2">Improved methods for quantifying and visualising uncertainty.</p>
-                        <img src="../figures/paper_figures/dda-essa/ensemble_uncertainty.png" 
-                             alt="Uncertainty in weather forecasts" />
+                        <h2>Conclusion</h2>
+                        <p>Lots of new smart cities / agent-based modelling work</p>
+                        <p class="l2">Leeds Institute for Data Analytics</p>
+                        <p class="l2">Alan Turing Institute</p>
+                        <p>A couple of examples...</p>
                     </div>
                 </section>
                 
-                
+                <section id="PhDs" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
+                        <h2>Opportunity: Fully-Funded PhD Scholarships</h2>
+                        <p>Deadline: 16 April 2018. Start: October 2018</p>
+                        <p>Fully-funded (fees and stipend) for four years</p>
+                        <p>1. Developing Model Ensembles and Emulators for Next-Generation City Simulation</p>
+                        <p>2. Agent-Based Modelling of Smart Cities</p>
+                        <p><a href="http://surf.leeds.ac.uk/blog.html">http://surf.leeds.ac.uk/blog.html</a></p>
+                    </div>
+                </section>
            
                 
                 
-                <section id="references">
-                    
-                    <h2>References</h2>
-                    
-                    
-                    <p>Bond, R., and Kanaan, A. (2015) MassDOT Real Time Traffic Management System. In Planning Support Systems and Smart Cities, S. Geertman, J. Ferreira, R. Goodspeed, and J. Stillwell, Eds. Springer International Publishing, pp. 471–488.</p>
-                    
-                    <p>Kitchin, R. (2013a). Big data and human geography Opportunities, challenges and risks. Dialogues in Human Geography, 3(3):262–267.</p>
-                    
-                    <p>Kitchin, R. (2013b). The Real-Time City? Big Data and Smart Urbanism. SSRN Electronic Journal.</p>
-                    
-                    <p>Mayer-Schonberger, V. and Cukier, K. (2013). Big Data: A Revolution That Will Transform How We Live, Work and Think. John Murray, London, UK</p>
-                    
-                    <p>Ward, Jonathan A., Andrew J. Evans, and Nicolas S. Malleson. 2016. Dynamic Calibration of Agent-Based Models Using Data Assimilation. <i>Open Science</i> 3 (4). doi:10.1098/rsos.150703.</p>
-                    
-                </section>
-                
                 <section class="title"  id="final">
-                    
-                    <h1 style="font-size: 60px;">Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</h1>
+                    <h1 style="font-size: 20px;"><strike>Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling</strike></h1>
+                    <h1 style="font-size: 50px;">Forecasting Short-Term Urban Dynamics: 
+                    Emerging Research and Challenges</h1>
                     <hr/>
                     <h2 style="font-size: 40px;"><a href="http://www.geog.leeds.ac.uk/people/n.malleson/">Nick Malleson</a>, 
                         Tomas Crols, Jon Ward, Andrew Evans</h2>
@@ -355,7 +334,6 @@
                     <h4><a href="http://dust.leeds.ac.uk">dust.leeds.ac.uk</a></h4>
                     <hr/>
                     <p style="text-align:center;font-size:25px">These slides: <a href="http://surf.leeds.ac.uk/presentations.html">http://surf.leeds.ac.uk/presentations.html</a></p>
-                    <p style="text-align:center;font-size:25px">Code: <a href="https://github.com/nickmalleson/surf/tree/master/abm/essa-kalman_filter">https://github.com/nickmalleson/surf</a></p>
                 </section>    
                 
 
