@@ -162,6 +162,7 @@ Estimating Energy Consumption Through Smart Meter and Socio-demographic Datasets
 <tr><td>Boyana Buyuklieva, Centre for Advanced Spatial Analysis, University College London</td></tr>
 <tr><td>Tuuli Toivonen, University of Helsinki</td></tr>
 <tr><td>Moira Zellner, University of Illinois at Chicago</td></tr>
+<tr><td>Tom Redfern, University of Leeds</td></tr>
 </tbody>
 </table>
 
