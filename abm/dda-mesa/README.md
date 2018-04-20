@@ -4,7 +4,7 @@ A simple ABM, implemented in [mesa](https://github.com/projectmesa/mesa/), used 
 
 Heavily dependent on Alice Tapper's work during her internship at Leeds
 
-The code is in (dda-mesa)[./dda-mesa/].
+The code is in [dda-mesa](./dda-mesa/).
 
 ## Dependencies
 

@@ -55,8 +55,6 @@ class SurfABM(seed: Long) extends SimState(seed) {
     // by configuration parameters.
     Clock.create(this, SurfABM.startTime)
 
-    // Create the outputter that is in charge of writing out results etc.
-    OutputFactory(this)
 
     // Create the object that will initialise and collect data from the camera
     CameraRecorder.create(this)
@@ -93,6 +91,8 @@ class SurfABM(seed: Long) extends SimState(seed) {
       }
     }
 
+    // Create the outputter that is in charge of writing out results etc.
+    OutputFactory(this)
   }
 
   override def finish(): Unit = {
@@ -135,6 +135,7 @@ object SurfABM extends Serializable {
   val startDate: LocalDate = LocalDate.of(startTimeList(0), startTimeList(1), startTimeList(2))
   val startTime: LocalDateTime = LocalDateTime.of(startTimeList(0), startTimeList(1), startTimeList(2), startTimeList(3), 0)
   val startHour: Int = startTimeList(3)
+
 
   // A list of all the agent geometries
   val agentGeoms = new GeomVectorField(WIDTH, HEIGHT);

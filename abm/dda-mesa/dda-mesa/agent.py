@@ -14,7 +14,7 @@ class DDAAgent(Agent):
         # Each should have a colour for display (doesn't affect the analysis)
         self.colour = random.choice(["red", "blue", "green", "yellow", "orange", "pink", "green", "purple"])
 
-        print("\tCreated agent {}".format(unique_id))
+        #print("\tCreated agent {}".format(unique_id))
 
     def step(self):
         """Step the agent"""

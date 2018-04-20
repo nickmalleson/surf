@@ -6,7 +6,9 @@ import java.time.temporal.TemporalAmount
 import org.apache.log4j.Logger
 import org.scalatest.time.Days
 import sim.engine.{SimState, Steppable}
+import surf.abm.agents.abbf.ABBFOutputter.AgentsToOutput
 import surf.abm.agents.abbf.activities.{Activity, ShopActivity, SleepActivity, WorkActivity}
+import surf.abm.main.SurfABM.conf
 import surf.abm.main._
 
 import scala.collection.mutable.ListBuffer
@@ -21,13 +23,30 @@ import scala.collection.mutable.ListBuffer
   */
 object ABBFOutputter extends Outputter with Serializable {
 
+  private val LOG: Logger = Logger.getLogger(this.getClass);
+
   // BufferedWriters to write the output
   private var agentMainBR : BufferedWriter = null
   private var agentActivitiesBR : BufferedWriter = null
   private var cameraCountsBR: BufferedWriter = null
 
+  // Might only write information for some agents. This will be populated shortly
+  private var AgentsToOutput : List[Int] = null
+
+
   def apply() : Outputter = {
 
+    // See if we are going to write information for some agents, or all
+    val NumAgentsToOutput = SurfABM.conf.getInt(SurfABM.ModelConfig+".NumAgentsToOutput");
+    // Make a list of all agent IDs
+    val agentIDs : List[Int] = { for (i <- 0 until SurfABM.agentGeoms.getGeometries().size()) yield {
+      SurfABM.agentGeoms.getGeometries.get(i).asInstanceOf[SurfGeometry[ABBFAgent]].theObject.id()
+    } }.toList
+    ABBFOutputter.AgentsToOutput = { // Choose which IDs to write about (all, or a random sample)
+      if (NumAgentsToOutput < 0) agentIDs
+      else scala.util.Random.shuffle(agentIDs).take(NumAgentsToOutput)
+    }
+    LOG.info(s"ABBFOutputter will write information about the following agents: "+AgentsToOutput.toString())
 
 
     val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Activity,x,y\n" // Main csv file; one line per agent
@@ -64,7 +83,9 @@ object ABBFOutputter extends Outputter with Serializable {
 
     val ticks = state.schedule.getTime()
     val time = Clock.getTime
-    for (i <- 0 until SurfABM.agentGeoms.getGeometries().size()) {
+    //for (i <- 0 until SurfABM.agentGeoms.getGeometries().size()) {
+    for (i <- AgentsToOutput) { // Only iterate over the agents who we are outputting
+      //LOG.info(i)
       val agentGeom = SurfABM.agentGeoms.getGeometries.get(i).asInstanceOf[SurfGeometry[ABBFAgent]]
       val agent = agentGeom.theObject // The object that is represented by the SurfGeometry
       val coord = agent.location().geometry.getCoordinate // The agent's location
@@ -151,6 +172,5 @@ object ABBFOutputter extends Outputter with Serializable {
   }
 
 
-  private val LOG: Logger = Logger.getLogger(this.getClass);
 
 }
