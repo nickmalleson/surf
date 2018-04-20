@@ -3,6 +3,7 @@ package surf.abm.agents.abbf.activities
 import surf.abm.agents.abbf.activities.ActivityTypes.WORKING
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
+import surf.abm.main.SurfABM
 
 
 /**
@@ -80,6 +81,20 @@ case class WorkActivity(
     this._currentIntensityDecrease = 0d
   }
 
+  /**
+    * The amount that work activity should increase at each iteration
+    * @return
+    */
+  override def backgroundIncrease(): Double = {
+    return 1d / SurfABM.ticksPerDay
+  }
 
+  /**
+    * The amount that work activity will go down by if an agent is working.
+    * @return
+    */
+  override def reduceActivityAmount(): Double = {
+    return 5d / (2d * SurfABM.ticksPerDay)
+  }
 
 }

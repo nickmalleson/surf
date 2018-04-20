@@ -106,7 +106,7 @@ case class ShopActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 10d / (1d * SurfABM.ticksPerDay)
+    return 25d / (1d * SurfABM.ticksPerDay)
   }
 
 }

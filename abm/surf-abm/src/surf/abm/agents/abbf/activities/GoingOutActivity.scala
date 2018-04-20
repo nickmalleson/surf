@@ -27,7 +27,15 @@ case class GoingOutActivity (
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
-  private val place : Place = null // start with a null place
+  //private val place : Place = null // start with a null place
+
+  val goingOutLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.goingOutGeoms, true, state)
+
+  private val place = Place(
+    location = goingOutLocation,
+    activityType = GOING_OUT,
+    openingTimes = null // Assume it's open all the time
+  )
 
   /**
     * This makes the agent actually perform the activity.

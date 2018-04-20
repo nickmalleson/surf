@@ -84,9 +84,9 @@ class SurfABM(seed: Long) extends SimState(seed) {
       case _ : ConfigException.Missing => { // If no loader has been specified
         SurfABM.LOG.info("No agent loader defined, use default")
         // Number of agents
-        val numAgents: Int = SurfABM.conf.getInt(SurfABM.ModelConfig+".NumAgents");
+        val numAgents: Int = SurfABM.conf.getInt(SurfABM.ModelConfig+".NumAgents")
         val agentClassName: String = SurfABM.conf.getString(SurfABM.ModelConfig+".AgentType")
-        SurfABM.LOG.info(s"Will create $numAgents agents of type $agentClassName using the default method.");
+        SurfABM.LOG.info(s"Will create $numAgents agents of type $agentClassName using the default method.")
         SurfABM.createDefaultAgents(this, numAgents, agentClassName)
       }
     }
@@ -108,7 +108,7 @@ class SurfABM(seed: Long) extends SimState(seed) {
 object SurfABM extends Serializable {
 
   // Initialise the logger
-  private val LOG: Logger = Logger.getLogger(this.getClass);
+  private val LOG: Logger = Logger.getLogger(this.getClass)
 
   // ****** Initialise the model ******
 
@@ -120,8 +120,8 @@ object SurfABM extends Serializable {
   val ModelConfig = conf.getString("ModelConfig")
 
   // Not sure why these are necessary. Probably just for initialisation
-  val WIDTH = conf.getInt("WIDTH");
-  val HEIGHT = conf.getInt("HEIGHT");
+  val WIDTH = conf.getInt("WIDTH")
+  val HEIGHT = conf.getInt("HEIGHT")
 
   // Useful to define the order that methods should be called when they are scheduled to run
   // at the same tick. (Lower order happens first)
@@ -261,7 +261,7 @@ object SurfABM extends Serializable {
         val roadsTemp = new GeomVectorField(WIDTH, HEIGHT)
         val roadsURI = new File("data/" + dataDir + "/roads.shp").toURI().toURL()
         LOG.debug(s"Reading roads file: ${roadsURI} ...")
-        ShapeFileImporter.read(roadsURI, roadsTemp);
+        ShapeFileImporter.read(roadsURI, roadsTemp)
         LOG.debug(s"\t... read ${roadsTemp.getGeometries().size()} roads")
         // Cast the roads to SurfGeometry objects
         val roads = new GeomVectorField(WIDTH, HEIGHT)
@@ -288,7 +288,7 @@ object SurfABM extends Serializable {
           roads.addGeometry(new SurfGeometry[Road](g, new Road(roadID, cameraID)))
         }
         MBR.expandToInclude(roads.getMBR())
-        SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()));
+        SurfABM.LOG.debug("Finished reading roads data. Read %s roads.".format(roads.getGeometries.size()))
         //SurfABM.LOG.debug("Road IDs are: %s".format( roads.getGeometries.map( o => o.asInstanceOf[SurfGeometry[Road]].theObject.id ) ) )
 
 
@@ -307,7 +307,7 @@ object SurfABM extends Serializable {
 
         SurfABM.LOG.debug("Creating road network")
         network.createFromGeomField(roads)
-        val fact = new GeometryFactory();
+        val fact = new GeometryFactory()
         // Now add the associated junctions to the junctions geometry.
         network.getNodes().foreach( x => {
           val node = x match { // cast the object x to a Node
