@@ -71,7 +71,7 @@ object Agent extends Serializable {
   private val _baseMoveRate = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BaseMoveRate")
 
   /** A unique ID that can be given to each agent */
-  private var _uniqueID : Int= 0
+  private var _uniqueID : Int= -1 // First ID is now zero.
   private def uniqueID() : Int = {
     _uniqueID+=1
     _uniqueID
