@@ -68,10 +68,10 @@ object ABBFAgentLoaderOtley {
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv" // All output areas
-    val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
+    val filename = "./data/" + dataDir + "/oa_flows-study_area.csv" // All output areas
+    //val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
     //val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 output areas
-    LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
+    //LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
     //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
     LOG.info(s"Reading agents from file: '$filename'")
     // Get line and line number as a tuple
@@ -230,11 +230,11 @@ object ABBFAgentLoaderOtley {
 
     // SLEEPING (high between 11pm and 6am)
     val atHomePlace = Place(home, SLEEPING, null)
-    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (12d, 0d), (23d, 1d))), agent = a)
+    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d, 1d), (12d, 0d), (23d, 1d))), agent = a)
     //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
-    for (i <- 1.until(48 +(rnd * 25).toInt) ) {
+    for (i <- 1.until(72 +(rnd * 25).toInt) ) {
       atHomeActivity.++()
     }
 
