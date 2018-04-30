@@ -142,7 +142,7 @@ case class SleepActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 5d / (2d * SurfABM.ticksPerDay)
+    return 4d / (2d * SurfABM.ticksPerDay)
   }
 
 }
