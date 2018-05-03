@@ -35,6 +35,8 @@ __pycache__/
 abm/surf-abm/results/out/*
 abm/surf-abm/results/surf_results_files
 abm/surf-abm/results/surf_results.html
+abm/surf-abm/results/noggin_data.feather
+abm/surf-abm/results/temp.RData
 
 # Logs
 surfabm.log*
