@@ -175,7 +175,7 @@ ggplot(cameras, aes(Hour, Count)) +
   #geom_point() + 
   geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
-  ggtitle( "Total footfall count from all cameras over all model runs")
+  ggtitle( "Total footfall count from all cameras over all model runs (two different smoothing algorithms)")
 
 
 ```
@@ -197,7 +197,7 @@ ggplot(cameras, aes(Hour, Count, col=Camera)) +
 
 Compare these to the real data
 
-```{r compare.plots, fig.width=9, fig.height=5 }
+```{r plot.real.data, fig.width=11, fig.height=5 }
 
 plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
   geom_hex(bins=20) +
@@ -206,7 +206,7 @@ plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
   ggtitle( "Total footfall count from all cameras (real data)")
 
 plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
-  geom_point() + 
+  #geom_point() + 
   geom_smooth(se=TRUE, level=0.99) + #GAM
   ggtitle( "Total footfall count per cameras (real data)")
 
@@ -223,8 +223,61 @@ grid.arrange(plot1, plot2, ncol=2)
 
 # Plot Differences Between the Model and the Real Data
 
-```{r}
+XXXX HERE NEED TO WORK OUT HOW TO TAKE ONE PLOT AWAY FROM THE OTHER. MIGHT NEED TO INDEX TO 100 FIRST (OR WHATEVER)
 
+```{r compare.plots.aggregate}
+
+# MODEL
+
+# plot1 <- ggplot(cameras, aes(Hour, Count)) +
+#   geom_hex(bins=20) +
+#   #geom_point() + 
+#   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
+#   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
+#   ggtitle( "Total footfall count from all cameras over all model runs")
+
+
+
+
+#NOGGIN
+ggplot() +
+  #geom_hex(bins=20, data = noggin, aes(HourOfDay, Count)) +
+  #geom_hex(bins=20, data = cameras, aes(HourOfDay, Count)) +
+  #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
+  geom_smooth(method="loess", se=TRUE, level=0.99, color="purple", data=noggin, aes(HourOfDay, Count)) + #GAM
+  geom_smooth(method="loess", se=TRUE, level=0.99, color="purple", data=cameras, aes(Hour, Count)) + #GAM
+  ggtitle( "Total footfall count from all cameras (real data)")
+
+
+```
+
+
+
+
+```{r compare.plots.all.cameras}
+
+plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
+  #geom_point() + 
+  geom_smooth(se=TRUE, level=0.99) + #GAM
+  ggtitle( "Total footfall count per cameras (real data)")
+
+ggplot(cameras, aes(Hour, Count, col=Camera)) +
+  #geom_hex(bins=20) +
+  geom_point() + 
+  #geom_smooth(method="loess", se=TRUE, level=0.99) + #loess
+  geom_smooth(se=TRUE, level=0.99) + 
+  ggtitle( "Footfall counts per camera over all model runs")
+
+```
+
+
+
+
+
+
+
+
+```{r}
 # Summarise per camera and hour
 #cameras.agg = aggregate(Count~Camera + HourOfDay, data=camera, FUN=sum)
 #aggModelDf$RelCount = aggModelDf$Count / sum(aggModelDf$Count)
@@ -257,26 +310,9 @@ active.acts <- unique(acts$Activity)
 
 ```
 
-Look at the footfall at different cameras across all of the runs.
-
-XXXX HERE. 
-
-```{r plotCameraCounts-hexbin}
 
 
 
-```
-
-```{r plotCameraCounts-hexbin}
-
-ggplot(cameras, aes(Hour, Count)) +
-  geom_hex(bins=20) + 
-  geom_smooth() + 
-  ggtitle( "Footfall counts over all runs")
-
-
-
-```
 
 
 
