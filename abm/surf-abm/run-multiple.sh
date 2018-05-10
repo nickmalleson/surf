@@ -14,7 +14,7 @@ scala -cp ../resources/mason/mason/build/:\
 ./lib/*:\
 ./build/:\
 ../resources/config/classes/\
- surf.abm.main.SurfABM -for 1000 -time 100 -seed 1 &
+ surf.abm.main.SurfABM -for 2000 -time 500 -seed 1 &
 sleep 5;
 done
 
