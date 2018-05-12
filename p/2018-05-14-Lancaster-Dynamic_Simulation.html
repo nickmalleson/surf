@@ -47,13 +47,9 @@
                     </div>
                 </section>
                 
-                <section id="brexit" data-background-image="https://www.corbettreport.com/wp-content/uploads/2016/06/brexit-800x500.jpg">
-                </section>
-                
-                
                   <section id="Overview">
                       <h2>Overview</h2>
-                      <p>Dynamic Simulation - Agent Based Modelling</p>
+                      <p>Crime Simulation with Agent Based Modelling</p>
                       <p class="l2"><i>Explanatory</i> Agent-Based Crime Models</p>
                       <p class="l2"><i>Predictive</i> Agent-Based Crime Models</p>
                       <p>Modelling Broader Urban Dynamics</p>
@@ -68,6 +64,9 @@
                      ************* Intro to modelling and ABM **************************
                      ***************************************************************** -->
                 
+                <section id="part1" >    
+                    <h2>Part 2: Agent-based Crime Modelling</h2>
+                </section>
                 
                 
 
@@ -123,13 +122,14 @@
                     <p>But they miss some important things:</p>
                     <p class="l2">Low-level dynamics, i.e. “smoothing out” (Batty, 2005)</p>
                     <p class="l2">Interactions and emergence</p>
+                    <p class="l2">Individual heterogeneity</p>
                     <p>Unsuitable for modelling <i>complex systems</i></p>
 
                 </section>
                 
-                
-                <section id="IntroToABM4" >
-                    <div class="whitebackground2">
+                <section id="IntroToABM4" data-background-video="../videos/skylines_mov-long.mp4"
+                         data-background-video-loop="loop">
+                    <div class="whitebackground2 fragment">
                         <img class="right" style="width:40%" data-src="../figures/sims.png"
                          alt="Diagram of the sims" />
                         <h2>Introduction to ABM</h2>
@@ -244,20 +244,20 @@
                 </section>
                 
                 
-                <section id="creating-abm">
+                <section id="creating-abm" data-background-video="../videos/skylines_mov-short.mp4"
+                         data-background-video-loop="loop">
                     
-                    <video style="float:right; padding:5px; width:50%;" autoplay controls>
-                        <source src="../videos/skylines_mov-short.mp4" type="video/mp4"/>
-                         Your browser does not support the video tag.
-                    </video>
-                    <h2>Crating an ABM</h2>
-
-                    <!-- <img class="right" data-src="../figures/virtual_city.jpeg"/> -->
-                    <p>Create an urban (or other) environment in a computer model.</p>
-                    <p>Stock it with buildings, roads, houses, etc.</p>
-                    <p>Create individuals to represent offenders, victims, guardians.</p>
-                    <p>Give them backgrounds and drivers.</p>
-                    <p>See what happens.</p>
+                    <div class="whitebackground2">
+                        <h2>Creating an ABM</h2>
+                    </div>
+                    <div class="fragment whitebackground2">
+                            <!-- <img class="right" data-src="../figures/virtual_city.jpeg"/> -->
+                            <p>Create an urban (or other) environment in a computer model.</p>
+                            <p>Stock it with buildings, roads, houses, etc.</p>
+                            <p>Create individuals to represent offenders, victims, guardians.</p>
+                            <p>Give them backgrounds and drivers.</p>
+                            <p>See what happens.</p>
+                    </div>
                 </section>
                 
                 
@@ -287,7 +287,20 @@
                 </section>
 
 
+                <section id="Behaviour-Experiment" 
+                         data-background-image="../figures/attribution/human_brain.png">
+                    
+                    <div class="whitebackground2">
 
+                        <h2>An experiment:</h2>
+
+                        <p>Choose a number between 1 and 4 (inclusive)</p>
+
+                        <p class="fragment">Were you able to chose a number at random?</p>
+                        <p class="fragment">Or did most people choose the number 3?</p>
+                    </div>                
+                
+                </section>
                 
                 <section id="lit-review">
                     <h2>Who else is doing this?</h2>
@@ -459,57 +472,6 @@
                     </figure>
                 </section>
                 
-                <!--
-                <section id="BurglarBehavior1">
-                    <h2>Behavioural Trends in Burglars</h2>                    
-                    <p>Analysis of Modus Operandi.</p>
-                    <p>Interviews with prisoners.</p>
-                    <p>Risk for areas of different MOs and target characteristics.</p>
-                </section>
-                -->
-                
-                <!-- *****************************************************************
-                     ************* Ethical Implications ******************************
-                     ***************************************************************** -->
-                
-                <section id="IntelligentPolicing">
-                    <h2><s>Predictive</s> Intelligent Policing</h2>
-                    <p>This <strong>is not</strong> predictive policing</p>
-                    <p class="l2">It could be, in the future, maybe, but not yet</p>
-                    <p>This <strong>is</strong> a useful tool for exploring the <i>crime system</i>.</p>
-                    <p>It might lead to a better understanding of:</p>
-                    <p class="l2">How different behavioural characteristics (offender, victim, or guardian) influence crime outcomes</p>
-                    <p class="l2">How the physical infrastructure can be organised to discourage crime</p>
-                    <p class="l2">How patrol routes might be most effective</p>
-                    <p class="l2"><i>Etc.</i></p>
-                </section>
-                
-
-                <section id="Ethics">
-                
-                    <figure class="right">
-                        <a href="https://www.theguardian.com/technology/2010/jun/16/minority-report-technology-comes-true">
-                            <img data-src="../figures/guardian_minority_report.png" alt="Guardian article"/>
-                        </a>
-                        <figcaption>Arthur, C. (2010) Why Minority Report was spot on. <i>The Guardian</i> Wednesday 16 June 2010</figcaption>
-                    </figure>
-                    
-                    <h2>Ethics</h2>
-                    
-                    <p>This is not minority report!</p>
-                    <p class="l2">"if an agent-based model is good enough, can it tell me where someone will commit their next crime?"</p>
-                    <p class="l2">We can't (and wouldn't want to!) predict when/where/who will commit a crime.</p>
-                                        
-                    <p>Academics have a role to set the boundaries on what is  ethically acceptable</p>
-                    <p class="l2">Dynamic simulation models have great potential, we need to make the case that they can be used responsibly</p>
-                    <p class="l2">Particularly relevant in the 'big data' / 'smart cities' era (e.g. <i>informed consent)</i></p>
-                    <p class="l2">Data protection / privacy legislation might not be sufficient
-                    (often there are clauses for research with crime data)</p>                    
-                </section>
-                
-
-                
-                
                 
                             
                 <!-- *****************************************************************
@@ -517,64 +479,72 @@
                      ***************************************************************** -->
                 
                 
-         
-                
-                
-                <section id="ModellingEveyone"  data-transition="fade"
-                         data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
-                         data-background-video-loop="loop">
+        
+                <section id="part2" >
                     
-                    <div class="fragment whitebackground2">
-                        <h2>Other Uses: Modelling Everyone</h2>
-                        <h3>Quantifying the Ambient population</h3>
-                        <p>Daily flows of people have a significant impact on crime rates </p>
-                        <p>But usually have to fall back on <i>residential</i> population for want of data</p>
-                    <blockquote>
-                        “The general patterns of movement towards and away from activity nodes such as work or school locations, major shopping areas, entertainment districts or bedroom suburbs provide a very general image of where crimes will concentrate” (Kinney et al., 2008)
-                    </blockquote>
+                    <h2>Part 2: Modelling Urban Dynamics</h2>
+                    
+                </section>
+                
+                
+                <section data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
+                         data-background-video-loop="loop"
+                         id="Context-UrbanFlows">                     
+                    <div class="whitebackground2 fragment">
+                        <h3>How many people are there in Trafalgar Square right now?</h3>
+                        
+                        <p>We need to better understand urban flows:</p>
+                        
+                        <p class="l2">Crime – how many possible victims?</p>
+                        <p class="l2">Pollution – who is being exposed? Where are the hotspots?</p>
+                        <p class="l2">Economy – can we attract more people to our city centre?</p>
+                        <p class="l2">Health - can we encourage more active travel?</p>
+                        
+                    </div>
+                </section>
+                
+                                
+                <section id="smart_cities">
+                    
+                    <h2>Smart cities and the data deluge</h2>
+                    <figure class="right" style="width:40%;">
+                        <img data-src="../figures/paper_figures/census_mobile-correlation-map.png" alt="Comparing census daytime populations to aggregate mobile phone estimates" />
+                        <figcaption>Evaluating aggregate mobile phone population accuracy</figcaption>
+                    </figure>
 
-                    </div>
+                    
+                    <p>Abundance of data about individuals and their environment</p>
+                    <p class="l2">"Big data revolution" (Mayer-Schonberger and Cukier, 2013)</p>
+                    <p class="l2">"Data deluge" (Kitchin, 2013a)</p>
+                    <p>Smart cities</p>
+                    <p class="l2">cities that "are increasingly composed of and monitored by pervasive and ubiquitous computing" (Kitchin, 2013a)</p>
+                    <p>Large and growing literature</p>
                 </section>
                 
-                <section id="AmbientPop"  data-transition="fade"
-                         data-background-video="../videos/trafalgar_timelapse-1280×720.mp4"
-                         data-background-video-loop="loop">
-                    
-                    <div class="whitebackground2">
-                        <h2>We need better models of the ambient population!</h2>
-                    </div>
+                
+                <section id="forecasting">
+                    <h2>What about forecasting?</h2>  
+                    <p>Abundance of real-time analysis, but limited forecasting. E.g.:</p>
+                    <p class="l2">MassDOT Real Time Traffic Management system (Bond and Kanaan, 2015)</p>
+                    <p class="l3">Detect vehicles with Bluetooth to analyse current traffic flows</p>
+                    <p class="l2">Centro De Operacoes Prefeitura Do Rio (in Rio de Janeiro)</p>
+                    <p class="l3">Advertise some predictive ability, but sparse detail</p>
+                    <p class="l2">City dashboards</p>
+                    <p>Forecasting ability is surprisingly absent in the literature</p>
+                    <p class="l2">(<i>correct me if I'm wrong!</i>)</p>
+                </section>
+                <section id="forecasting2">    
+                    <h2>Why so little evidence of forecasting?</h2>
+                    <p>Proprietary systems? Company secrets?</p>
+                    <p>A methodological gap?</p>
+                    <p>Machine learning will probably help</p>
+                    <p class="l2">E.g. short-term traffic forecasting (Vlahogianni et al. 2014)</p>
+                    <p class="l2">But black box is a drawback - How to run diverse scenarios?</p>
+                    <p>Maybe <strong>agent-based modelling</strong> could have the answer</p>
+                
                 </section>
                 
-                <section id="Ambient-Crime2a" data-transition="zoom-out slide-in">
-                    
-                    <figure >
-                        <figcaption>
-                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
-                        </figcaption>
-                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-A.png" alt="Hotspot disappearing from the city centre"/>
-                    </figure>
-                </section>
                 
-                <section id="Ambient-Crime2b" data-transition="zoom-in slide-out">
-                    
-                    <figure >
-                        <figcaption>
-                            Malleson, N. and M. Andresen (2015) The impact of using social media data in crime rate calculations: shifting hot spots and changing spatial patterns. <i>Cartography and Geographic Information Science</i> 42(2)
-                        </figcaption>
-                        <img data-src="../figures/paper_figures/gam-combined_centroid2-forGISRUK-B.png" alt="Hotspot disappearing from the city centre"/>
-                    </figure>
-                </section>
-                
-                <section id="AC3"  >
-                    
-                    <figure>
-                        <figcaption>
-                            Malleson, N., and Andresen, M.A. (2016) Exploring the impact of ambient population measures on London crime hotspots. <i>Journal of Criminal Justice</i> 46 pp 52-63
-                        </figcaption>
-                        <img class="left"  data-src="../figures/paper_figures/data_overview.png" />
-                        <img class="right" data-src="../figures/paper_figures/clustering-overview2b.png" />
-                    </figure>
-                </section>
                 
                 
                 <section id="abm-calibration">
@@ -594,6 +564,26 @@
                     <p>ABM development typically uses 'waterfall' approach</p>
                     <p>We lack tools to calibrate models <i>dynamically</i></p>
                 </section>
+                
+                
+                
+                
+                
+                <section id="prob-divergence" 
+                         data-background-video="../videos/BBC_Swarm_Natures_Incredible_Invasions.mp4" 
+                         data-background-video-muted 
+                         data-background-video-loop="loop">
+                    
+                    <div class="whitebackground fragment">
+                        <h2>Divergence</h2>
+                        <p>Complex systems</p>
+                        <p>One-shot calibration</p>
+                        <p>Nonlinear models predict near future well, but diverge over time.</p>
+                    </div>
+                </section>
+                
+
+            
                 
             
                 
@@ -615,6 +605,21 @@
                 </section>
                 
                 
+                <section id="dda2">
+                    <h2>Dynamic Data Assimilation</h2>
+                    <h3>How?</h3>
+                    <p>Particle filters</p>
+                    <p class="l2">Indoor footfall (Rai and Hu, 2013.; Wang and Hu, 2015)</p>
+                    <p>Kalman Filter</p>
+                    <p class="l2">Air traffic (Chen et al., 2012)</p>
+                    <p>Ensemble Kalman Filter (EnKF)</p>
+                    <p class="l2">Pedestrian footfall (Ward et al., 2016)</p>
+                    <p>Sequential Monte Carlo (SMC)</p>
+                    <p class="l2">Wildfire (Hu, 2011; Mandel et al., 2012)</p>
+                    <p>Approximate Bayesian Computation</p>
+                    <p class="l2">?</p>
+                </section>
+
 
                 <section id="enkf-maths">
                     <h2>Early prototype: <br/>Ensemble Kalman Filter (EnKF)</h2>
@@ -656,53 +661,88 @@
                 
                 
                 
-                <section data-background-image="../figures/surf_workplan-v2.png" id="surf">
-                        
-                    <div class="fragment whitebackground2">
-                        
-                        <h2>Simulating Urban Flows (surf)</h2>                        
-                        <h3>Big Data, ABM, Smart Cities, Ambient Populations</h3>
-
-                        <p>A city-wide dynamic ABM, constantly re-calibrated to streaming data</p>
-                        
-                        <p>New insights into <strong>urban mobility patterns</strong> and <strong>footfall estimates</strong>.</p>
-                        
-                        <p><a href="http://surf.leeds.ac.uk/">surf.leeds.ac.uk/</a></p>
-
-                    </div>
+               
+                <section id="ATI-SmartCities" >
+                    
+                    <h2>Related Projects</h2>
+                    
+                    <h3>Understanding and Quantifying Uncertainty in Individual-Based Models for Smart City Forecasts</h3>
+                    
+                    <img  data-src="../figures/ensemble_uncertainty.png" />
+                    
                     
                 </section>
-                
-                
-                
-                       
-                <section data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg"
-                         id="dust">
+                <section id="ATI-SmartCities2" >
+                    
+                    <h2>Related Projects</h2>
+                    
+                    <h3>Understanding and Quantifying Uncertainty in Individual-Based Models for Smart City Forecasts</h3>
+                    
+                    <img  data-src="../figures/good_bad_ensembles.png" />
+                    
+                </section>
+                    
+                <section id="ATI-SmartCities-Intern" data-background-image="../figures/skylines-night1.jpg">
+                    
                     <div class="whitebackground2">
-                        <h2>Future Work: DUST</h2>
-                        <p>Data Assimilation for Agent Based Models: Applications to Civil Emergencies</p>
-                        <p>Recently funded by the ERC (Starting Grant), €1.5M over 5 years</p>
-                        <p>Starts on 1st January 2018</p>
-                        <p>For more information:</p>
-                        <p class="l2"><a href="https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects">
-                            https://erc.europa.eu/news/erc-2017-starting-grants-highlighted-projects</a></p>
+                        <h2>Related Projects</h2>
+
+                        <h3>Understanding Input Data Requirements for Successfully Modelling Cities</h3>
+
+                        <p>How much information about a city do we need to simulate it within
+                        acceptable levels of uncertainty?</p>
+
+                        <p>Method:</p>
+                        <p class="l2">Simple hypothetical city ABM</p>
+                        <p class="l2">Generate 'truth' data</p>
+                        <p class="l2">Take noisy samples from 'truth'</p>
+                        <p class="l2">How much data do we need?</p>
                     </div>
-                </section>                
+                    
                 
-                <section id="lida" data-background-image="../figures/big-data.jpg" >
-                    <div class="whitebackground2">
-                        <h2>Shameless Advertising</h2>
-                        <h3>The Leeds Institute for Data Analytics</h3>
-                        <a href="http://lida.leeds.ac.uk/">
-                            <img style="width:50%;" src="../figures/leeds/LIDA-logo.png"/></a>
-                        <p><a href="http://lida.leeds.ac.uk/">http://lida.leeds.ac.uk/</a></p>
-                        <p>New, ~ &pound;10M investment in a multidisciplinary centre for data analytics</p>
-                        <p>Big role for agent-based modelling and crime science</p>
-                        <p class="l2">E.g. <a href="http://lida.leeds.ac.uk/event/difficulties-reproducible-data-analytics-pitfalls-predictive-policing/">forthcoming seminar:</a>
-                        <i>Difficulties with reproducible data analytics: Pitfalls in predictive policing</i></p>
-                    </div>
                 </section>
                 
+                <section id="current_research1">
+                    
+                    <h2>Agent-Based Urban Modelling</h2>
+                    <a href="https://esrc.ukri.org/">
+                        <img class="right" style="width:200px;" data-src="../figures/LOGO_ESRC.jpg" alt="ESRC Logo"/></a>
+                    <h3>Current Research</h3>
+                    <p>Simulating Urban Flows (<a href="http://surf.leeds.ac.uk">surf</a>)</p>                    
+                    <p class="l2">3 year research project funded by the UK ESRC</p>
+                    <p class="l2">Modelling a small town, using real footfall counters
+                    (more on this next...)</p>
+                    <p class="l2">One of the aims: <strong>calibrate an urban ABM using streaming data</strong></p>
+                    <p class="l2">Turns out this is really hard!</p>            
+                </section>
+                
+                <section id="current_research2-dust" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
+                        <h2>Agent-Based Urban Modelling</h2>
+                        <a href="https://erc.europa.eu/">
+                            <img class="right" style="width:200px;" data-src="../figures/LOGO_ERC.jpg" alt="ESRC Logo"/></a>
+                        <p>New project: <strong>Data Assimilation for Agent-Based Models</strong> (<a href="http://dust.leeds.ac.uk">dust</a>)</p>
+                        <p class="l2">5-year research project (&euro;1.5M)</p>
+                        <p class="l2">Funded by the European Research Council (Starting Grant)</p>
+                        <p class="l2">Started in January</p>
+                        <p>Main aim: create new methods for dynamically assimilating data into agent-based models.</p>
+                    </div>
+                
+                </section>
+                
+             
+                
+                <section id="PhDs" data-background-image="https://erc.europa.eu/sites/default/files/content/pages/images/DUST_illustration_copyright-Shutterstock.jpg">
+                    <div class="whitebackground2">
+                        <h2>Opportunity: Fully-Funded PhD Scholarships</h2>
+                        <p>Start: October 2018</p>
+                        <p>Fully-funded (fees and stipend) for four years</p>
+                        <p>1. Developing Model Ensembles and Emulators for Next-Generation City Simulation</p>
+                        <p>2. Agent-Based Modelling of Smart Cities</p>
+                        <p><a href="http://surf.leeds.ac.uk/blog.html">http://surf.leeds.ac.uk/blog.html</a></p>
+                    </div>
+                </section>
+           
                 
                 
                 
@@ -713,7 +753,6 @@
                       <p>Dynamic Simulation - Agent Based Modelling</p>
                       <p class="l2"><i>Explanatory</i> Agent-Based Crime Models</p>
                       <p class="l2"><i>Predictive</i> Agent-Based Crime Models</p>
-                      <p>Predictive Policing (?) &amp; Ethical Implications</p>
                       <p>Modelling Broader Urban Dynamics</p>
                       <p class="l2">Quantifying ambient Populations</p>
                       <p class="l2">Dynamic Data Assimilation</p>
