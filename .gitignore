@@ -36,7 +36,7 @@ abm/surf-abm/results/out/*
 abm/surf-abm/results/surf_results_files
 abm/surf-abm/results/surf_results.html
 abm/surf-abm/results/noggin_data.feather
-abm/surf-abm/results/temp.RData
+abm/surf-abm/results/merge_results.RData
 
 # Logs
 surfabm.log*

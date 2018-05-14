@@ -74,7 +74,7 @@ object CameraRecorder extends Steppable{
   def add(cameraID: Int): Unit = {
 
     if(!this.tempCameraMaps.contains(cameraID)){
-      throw new Exception ("ERROR! This camera was not initialised! It was probably not defined in the configuration file.")
+      throw new Exception ("ERROR! Camera "+cameraID+" was not initialised! It was probably not defined in the configuration file.")
     }
 
     val hoursList = this.tempCameraMaps(cameraID)

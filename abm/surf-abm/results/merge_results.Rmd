@@ -145,7 +145,7 @@ noggin[which(noggin$Location=="20"),]$Location = "17" # rename location 20 to lo
 #aggnoggin = aggregate(Count~Location + HourOfDay, data=noggin, FUN=sum)
 #aggnoggin$RelCount = aggnoggin$Count / sum(aggnoggin$Count)
 
-save.image("temp.RData")
+save.image("merge_results.RData")
 
 ```
 
@@ -158,7 +158,7 @@ XXXX CHOOSE DAY 5/6 - but need to do longer runs.
 # Sanity check
 stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
 
-analysis.day <- as.Date("2011-01-03")
+analysis.day <- as.Date("2011-01-06")
 
 cameras <- cameras[date(cameras$date)==analysis.day,]
 acts    <-    acts[date(acts$date)   ==analysis.day,]
@@ -172,33 +172,44 @@ stopifnot(length(unique(date(cameras$date)))==1)
 
 Plot the total average hourly footfall count and 99% confidence intervals. Note that the confidence intervals are so small that they are not visible.
 
-```{r plot.hourly.total, fig.width=9, fig.height=5}
+```{r model.hourly.total, fig.width=9, fig.height=5}
 #ggplot(cameras, aes(Hour, Count, color=Camera)) + # Colouring points by camera id (doesn't work)
 #ggplot(cameras[sample(1:nrow(cameras), 1000),], aes(Hour, Count)) + # Sampling N points from the cameras shows wider confidence interval (obviously)
 ggplot(cameras, aes(Hour, Count)) +
-  geom_hex(bins=20) +
+  geom_hex(bins=15) +
   #geom_point() + 
   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
-  ggtitle( "Total footfall count from all cameras over all model runs (two different smoothing algorithms)")
+  ylab("Number of agents")+
+  ggtitle( "Total footfall count from all sensors over all model runs")
+
+ggsave("model_hourly_total.pdf", device="pdf", path="./merge_results-figs/", width=9, height=4)
 
 ```
 
 Plot the average hourly count per camera, again with confindence intervals.
 
-```{r plot.hourly.cameras, fig.width=9, fig.height=5 }
+```{r model.hourly.sensors, fig.width=9, fig.height=5 }
 
-plot1 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
-  geom_point() + 
+plot1 <- ggplot(cameras, aes(Hour, Count, colour=Camera)) +
+  geom_point(size=1) + 
+  guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   geom_smooth(se=TRUE, level=0.99) + 
-  ggtitle( "Footfall counts per camera over all\nmodel runs (smoothing with GAM)")
+  scale_colour_manual(values=cols)+
+  ylab("Number of agents")+
+  ggtitle( "Total footfall count from for each sensor over all model runs")
+plot1
 
-plot2 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
-  geom_point() + 
-  geom_smooth(method="loess", se=TRUE, level=0.99) +
-  ggtitle( "Footfall counts per camera over all\n model runs (smoothing with loess)")
+# Uncomment below to see loess as well
 
-grid.arrange(plot1, plot2, ncol=2)
+#plot2 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
+#  geom_point() + 
+#  geom_smooth(method="loess", se=TRUE, level=0.99) +
+#  ggtitle( "Footfall counts per camera over all\n model runs (smoothing with loess)")
+
+#grid.arrange(plot1, plot2, ncol=2)
+
+ggsave("model_hourly_sensors.pdf", device="pdf", path="./merge_results-figs/", width=9, height=4)
 
 ```
 
@@ -206,20 +217,26 @@ grid.arrange(plot1, plot2, ncol=2)
 
 Compare these to the real data
 
-```{r plot.real.data, fig.width=11, fig.height=5 }
+```{r plot.real.data, fig.width=9, fig.height=9 }
 
 plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
-  geom_hex(bins=20) +
-  geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
+  geom_hex(bins=15) +
+  #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
-  ggtitle( "Total footfall count from all cameras (real data)")
+  ylab("Number of people")+
+  ggtitle( "Average weekday footfall count from all sensors (real data)")
 
-plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
-  #geom_point() + 
-  geom_smooth(se=TRUE, level=0.99) + #GAM
-  ggtitle( "Total footfall count per cameras (real data)")
+plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
+  #geom_point(size=2) + 
+  guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
+  geom_smooth(se=TRUE, level=0.99)+
+  scale_colour_manual(values=cols)+
+  ylab("Number of people")+
+  ggtitle( "Average weekday footfall count per sensor (real data)")
 
-grid.arrange(plot1, plot2, ncol=2)
+g <- grid.arrange(plot1, plot2, nrow=2)
+
+ggsave("plot_real_data.pdf", plot=g, device="pdf", path="./merge_results-figs/", width=9, height=9)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -236,11 +253,13 @@ grid.arrange(plot1, plot2, ncol=2)
 plot1 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
   #geom_point() + 
   geom_smooth(se=TRUE, level=0.99) + 
+  scale_colour_manual(values=cols)+
   ggtitle( "Total footfall counts per camera (models)")
 
 plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
   #geom_point() + 
   geom_smooth(se=TRUE, level=0.99) + #GAM
+  scale_colour_manual(values=cols)+
   ggtitle( "Total footfall counts per camera (real data)")
 
 grid.arrange(plot1, plot2, ncol=2)
@@ -254,7 +273,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 
 
-```{r compare.plots.aggregate2, fig.width=11, fig.height=5}
+```{r compare.plots2, fig.width=11, fig.height=5}
 # Colours for the cameras 
 cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
 names(cols) <- unique(cameras$Camera)
@@ -263,9 +282,12 @@ ggplot() +
   #geom_point() + 
   geom_smooth(se=TRUE, level=0.99, data=cameras, aes(Hour, Count, col=Camera), linetype="dotted" ) + 
   geom_smooth(se=TRUE, level=0.99, data=noggin,  aes(HourOfDay, Count, col=Location)) + 
+  guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   #scale_colour_manual("Set3")+
   scale_colour_manual(values=cols)+
-  ggtitle( "Total footfall counts per camera (models)")
+  ggtitle( "Comparing ")
+
+ggsave("compare_plots2.pdf", device="pdf", path="./merge_results-figs/", width=9, height=5)
 
 ```
 
