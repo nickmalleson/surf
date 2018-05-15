@@ -190,6 +190,9 @@ ggsave("model_hourly_total.pdf", device="pdf", path="./merge_results-figs/", wid
 Plot the average hourly count per camera, again with confindence intervals.
 
 ```{r model.hourly.sensors, fig.width=9, fig.height=5 }
+# Colours for the cameras 
+cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
+names(cols) <- unique(cameras$Camera)
 
 plot1 <- ggplot(cameras, aes(Hour, Count, colour=Camera)) +
   geom_point(size=1) + 
@@ -274,9 +277,6 @@ grid.arrange(plot1, plot2, ncol=2)
 
 
 ```{r compare.plots2, fig.width=11, fig.height=5}
-# Colours for the cameras 
-cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
-names(cols) <- unique(cameras$Camera)
 
 ggplot() +
   #geom_point() + 
@@ -385,7 +385,6 @@ points(model.avg.scaled, col="blue", type="b")
 legend("topleft", legend=c("Real data", "Simulated data"), col=c("black","blue"), lty=1 )
 
 ```
-
 
 
 
