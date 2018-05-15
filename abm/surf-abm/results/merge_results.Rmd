@@ -145,20 +145,20 @@ noggin[which(noggin$Location=="20"),]$Location = "17" # rename location 20 to lo
 #aggnoggin = aggregate(Count~Location + HourOfDay, data=noggin, FUN=sum)
 #aggnoggin$RelCount = aggnoggin$Count / sum(aggnoggin$Count)
 
-save.image("temp.RData")
+save.image("merge_results.RData")
 
 ```
 
 
-Choose one day from which to do the remaining analysis.
-
-XXXX CHOOSE DAY 5/6 - but need to do longer runs.
+Choose one day from which to do the remaining analysis. The fifth day is chosen
 
 ```{r choose.day}
 # Sanity check
 stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
 
-analysis.day <- as.Date("2011-01-03")
+print(unique(date(cameras$date)))
+
+analysis.day <- as.Date("2011-01-05")
 
 cameras <- cameras[date(cameras$date)==analysis.day,]
 acts    <-    acts[date(acts$date)   ==analysis.day,]
@@ -187,15 +187,20 @@ ggplot(cameras, aes(Hour, Count)) +
 Plot the average hourly count per camera, again with confindence intervals.
 
 ```{r plot.hourly.cameras, fig.width=9, fig.height=5 }
+# Consistent olours for the cameras in the graphs
+cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
+names(cols) <- unique(cameras$Camera)
 
 plot1 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
   geom_point() + 
   geom_smooth(se=TRUE, level=0.99) + 
+  scale_colour_manual(values=cols)+
   ggtitle( "Footfall counts per camera over all\nmodel runs (smoothing with GAM)")
 
 plot2 <- ggplot(cameras, aes(Hour, Count, col=Camera)) +
   geom_point() + 
   geom_smooth(method="loess", se=TRUE, level=0.99) +
+  scale_colour_manual(values=cols)+
   ggtitle( "Footfall counts per camera over all\n model runs (smoothing with loess)")
 
 grid.arrange(plot1, plot2, ncol=2)
@@ -216,10 +221,12 @@ plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
 
 plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
   #geom_point() + 
-  geom_smooth(se=TRUE, level=0.99) + #GAM
-  ggtitle( "Total footfall count per cameras (real data)")
+  geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
+  scale_colour_manual(values=cols)+
+  ggtitle( "Total footfall count per camera (real data)")
 
 grid.arrange(plot1, plot2, ncol=2)
+rm(plot1, plot2)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -244,6 +251,7 @@ plot2 <- ggplot(noggin, aes(HourOfDay, Count, col=Location)) +
   ggtitle( "Total footfall counts per camera (real data)")
 
 grid.arrange(plot1, plot2, ncol=2)
+rm(plot1, plot2)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -255,9 +263,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 
 ```{r compare.plots.aggregate2, fig.width=11, fig.height=5}
-# Colours for the cameras 
-cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
-names(cols) <- unique(cameras$Camera)
+
 
 ggplot() +
   #geom_point() + 
