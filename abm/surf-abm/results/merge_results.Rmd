@@ -152,7 +152,6 @@ save.image("merge_results.RData")
 
 Choose one day from which to do the remaining analysis.
 
-XXXX CHOOSE DAY 5/6 - but need to do longer runs.
 
 ```{r choose.day}
 # Sanity check
