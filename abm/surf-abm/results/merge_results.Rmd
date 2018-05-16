@@ -247,8 +247,38 @@ ggsave("plot_real_data.pdf", plot=g, device="pdf", path="./merge_results-figs/",
 ```
 
 
+# Compare differences in absolute footfall counts
+
+Make a box plot. (_Not going to use this in the paper_)
+
+```{r compare.absolute.footdall, fig.width=11, fig.height=5}
+
+#x <- cbind(aggregate(formula = Count ~ Hour, data = cameras, FUN=mean),
+#  aggregate(formula = Count ~ HourOfDay, data = noggin, FUN=mean))
+
+
+boxplot( 
+  aggregate(formula = Count ~ Hour, data = cameras, FUN=mean, label="asd"),
+  aggregate(formula = Count ~ HourOfDay, data = noggin, FUN=mean),
+  horizontal = TRUE
+)
+
+#ggplot() +  
+#  geom_boxplot(data=aggregate(formula = Count ~ Hour, data = cameras, FUN=mean), 
+#               aes(Hour, Count, group="Simulated Data")) 
+
+  #geom_boxplot(data=noggin,  aes(HourOfDay, Count, group="Real-World Data"))
+  # Plot for all sensors
+  #geom_boxplot(data=cameras, aes(Hour, Count, col=Camera)) + 
+  #geom_boxplot(data=noggin,  aes(HourOfDay, Count, col=Location))
+
+
+```
+
 
 # Plot Differences Between the Model and the Real Data
+
+On two separate plots (_this isn't being used in the paper_)
 
 ```{r compare.plots, fig.width=11, fig.height=5 }
 
@@ -274,6 +304,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 
 
+On the same plot:
 
 ```{r compare.plots2, fig.width=11, fig.height=5}
 
@@ -284,7 +315,7 @@ ggplot() +
   guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   #scale_colour_manual("Set3")+
   scale_colour_manual(values=cols)+
-  ggtitle( "Comparing ")
+  ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
 ggsave("compare_plots2.pdf", device="pdf", path="./merge_results-figs/", width=9, height=5)
 
