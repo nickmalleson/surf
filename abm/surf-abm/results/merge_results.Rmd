@@ -119,11 +119,12 @@ gc()
 # Camera dates need to have date plus number of hours as these are stored in different columns (don't bother with parallel)
 cameras$date <- as.POSIXct(as.Date(cameras$Date)) + ( 3600 * cameras$Hour )
 # Cameras also need some extra date columns to make them easier to work with
-cameras$Day = as.POSIXct(round(cameras$date, units="days" ))
+cameras$Day <-     as.POSIXct(round(cameras$date, units="days" ))
+cameras$DayNum <-  yday(cameras$date) # Number of day in yaer
 #hour = as.POSIXct(round(modelDf$datetime, units="hours"))
-cameras$Week =    week(cameras$date) # (from lubridate library)
-cameras$Month =   month(cameras$date)
-cameras$Weekday = weekdays(cameras$date)
+cameras$Week <-    week(cameras$date) # (from lubridate library)
+cameras$Month <-   month(cameras$date)
+cameras$Weekday <- weekdays(cameras$date)
 
 # Make the camera ID a string so that ggplot2 treats it as cetegorical
 cameras$Camera <- paste0("",cameras$Camera)
@@ -134,6 +135,7 @@ noggin <- read_feather("noggin_data.feather")
 noggin$datetime <- as.POSIXct(noggin$Timestamp)
 noggin$Location <- paste0("",noggin$Location) # ID -> String
 noggin$Day   <-   as.POSIXct(round(noggin$datetime, units="days" ))
+noggin$DayNum <-  yday(noggin$datetime) # Number of day in year
 noggin$Hour  <-   as.POSIXct(round(noggin$datetime, units="hours"))
 noggin$Week  <-   floor_date(noggin$datetime, "week") # (from lubridate library)
 noggin$Month <-   floor_date(noggin$datetime, "month")
@@ -154,6 +156,7 @@ Choose one day from which to do the remaining analysis.
 
 
 ```{r choose.day}
+print(table(date(cameras$date)))
 # Sanity check
 stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
 
@@ -337,6 +340,9 @@ stopifnot(nrow(site.locations)==length(unique(cameras$Camera)))
 sites <- SpatialPointsDataFrame( coords = cbind(site.locations$Lon, site.locations$Lat), 
                                  data = site.locations,
                                  proj4string = WGS)
+
+# Make a shapefile too
+#writeOGR(sites, dsn="~/mapping/projects/frl/otley/noggin_data/Otley Raw to End July 2017", layer = "site_locations", driver = "ESRI Shapefile")
 ```
 
 ```{r map.locations, fig.width=9, fig.height=9 }
@@ -381,7 +387,7 @@ At the moment we're not interested in the absolute counts. We would need more in
 ```{r compare.plots.aggregate}
 
 # First aggregate
-cameras.avg <- aggregate(Count~ Hour,      data=cameras, FUN=sum)
+cameras.avg <- aggregate(Count~ Day + Hour,      data=cameras, FUN=sum)
 noggin.avg  <- aggregate(Count~ HourOfDay, data=noggin,  FUN=sum)
 
 # Get rid of zeros (these break the scaling)
