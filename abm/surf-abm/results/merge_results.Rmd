@@ -75,6 +75,10 @@ WGS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 # Find the directories of all the model runs
 scenarios <- sort(list.files(paste0("./out/",SCENARIO))) # The IDs of each run
 scenarios.dirs <- vapply(X = scenarios, FUN = function(x) {paste(paste0("./out/",SCENARIO), "/", x, sep="") }, FUN.VALUE = character(1))
+
+# If I have saved the results before, then load them. Calculating dates takes an unusually long amount of time
+# After loading skip to 'choose.day' cell
+#load('merge_results.RData')
 ```
 
 Will analyse the `r length(scenarios)` scenarios in `r SCENARIO`
@@ -182,8 +186,8 @@ ggplot(cameras, aes(Hour, Count)) +
   #geom_point() + 
   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
-  ylab("Number of agents")+
-  ggtitle( "Total footfall count from all sensors over all model runs")
+  ylab("Number of agents")
+  #ggtitle( "Total footfall count from all sensors over all model runs")
 
 ggsave("model_hourly_total.pdf", device="pdf", path="./merge_results-figs/", width=9, height=4)
 
@@ -201,8 +205,8 @@ plot1 <- ggplot(cameras, aes(Hour, Count, colour=Camera)) +
   guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   geom_smooth(se=TRUE, level=0.99) + 
   scale_colour_manual(values=cols)+
-  ylab("Number of agents")+
-  ggtitle( "Total footfall count from for each sensor over all model runs")
+  ylab("Number of agents")
+  #ggtitle( "Total footfall count from for each sensor over all model runs")
 plot1
 
 # Uncomment below to see loess as well
@@ -229,7 +233,8 @@ plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
   geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
   ylab("Number of people")+
-  ggtitle( "Average weekday footfall count from all sensors (real data)")
+  xlab("Hour")
+  #ggtitle( "Average weekday footfall count from all sensors (real data)")
 
 plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
   #geom_point(size=2) + 
@@ -237,7 +242,8 @@ plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
   geom_smooth(se=TRUE, level=0.99)+
   scale_colour_manual(values=cols)+
   ylab("Number of people")+
-  ggtitle( "Average weekday footfall count per sensor (real data)")
+  xlab("Hour")
+  #ggtitle( "Average weekday footfall count per sensor (real data)")
 
 g <- grid.arrange(plot1, plot2, nrow=2)
 
@@ -318,7 +324,7 @@ ggplot() +
   guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   #scale_colour_manual("Set3")+
   scale_colour_manual(values=cols)+
-  ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
+  #ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
 ggsave("compare_plots2.pdf", device="pdf", path="./merge_results-figs/", width=9, height=5)
 
