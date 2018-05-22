@@ -189,7 +189,8 @@ ggplot(cameras, aes(Hour, Count)) +
   ylab("Number of agents")
   #ggtitle( "Total footfall count from all sensors over all model runs")
 
-ggsave("model_hourly_total.pdf", device="pdf", path="./merge_results-figs/", width=9, height=4)
+ggsave("model_hourly_total.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=4)
+ggsave("model_hourly_total.tiff", device="tiff", path="./merge_results-figs/", width=9, height=4)
 
 ```
 
@@ -218,7 +219,8 @@ plot1
 
 #grid.arrange(plot1, plot2, ncol=2)
 
-ggsave("model_hourly_sensors.pdf", device="pdf", path="./merge_results-figs/", width=9, height=4)
+ggsave("model_hourly_sensors.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=4)
+ggsave("model_hourly_sensors.tiff", device="tiff", path="./merge_results-figs/", width=9, height=4)
 
 ```
 
@@ -247,7 +249,8 @@ plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
 
 g <- grid.arrange(plot1, plot2, nrow=2)
 
-ggsave("plot_real_data.pdf", plot=g, device="pdf", path="./merge_results-figs/", width=9, height=9)
+ggsave("plot_real_data.pdf",  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=9)
+ggsave("plot_real_data.tiff", plot=g, device="tiff", path="./merge_results-figs/", width=9, height=9)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -326,7 +329,8 @@ ggplot() +
   scale_colour_manual(values=cols)+
   #ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
-ggsave("compare_plots2.pdf", device="pdf", path="./merge_results-figs/", width=9, height=5)
+ggsave("compare_plots2.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=5)
+ggsave("compare_plots2.tiff", device="tiff", path="./merge_results-figs/", width=9, height=5)
 
 ```
 
