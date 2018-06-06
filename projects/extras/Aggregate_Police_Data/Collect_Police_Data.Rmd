@@ -1,0 +1,75 @@
+---
+title: "Aggregaete UK Crime Data"
+author: "Nick Malleson"
+date: '`r format(Sys.time(), "%d %B, %Y (%H:%M)")`'
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+A script to read police data from [data.police.uk/](https://data.police.uk/), save it as a single file, and then aggregate it to a few different spatial boundaries:
+ 
+ - local authority districts
+ - countys
+ - regions
+ 
+
+```{r init}
+WORKING_DIR <- '~/research_not_syncd/git_projects/surf/projects/extras/Collect_Police_Data'
+setwd(WORKING_DIR)
+
+library(GISTools)
+#library(rgeos)    # For things like gIntersects
+#library(rgdal)     # For reading shapefiles
+#library(raster)    # For creating regular grids
+#library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+#library(classInt) # Jenks natural breaks
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+#library(RColorBrewer) # For making nice colour themes
+#library(rgl)       # For 3D space-time cube
+#library(plot3D)    # For 3D space-time cube
+#library(dplyr)     # To look up fields in tables (e.g. N rows higher --> lag)
+#library(parallel)
+#library(pbapply)  # For progress bar in parallel
+#no_cores <- detectCores() / 2  # Detect the number of cores that are available and use half (often CPUs simulate 2 threads per core)
+#Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
+#options("mc.cores"=no_cores) # is correct).
+#library(lubridate)
+#library(hexbin)   # For hex bins
+#library(ggplot2)  # ditto
+#library(gridExtra) # For arranging two grids side by side
+#library(feather)  # For reading data prepared by python
+#library(leaflet) # For doing interactive maps
+```
+
+# Get the data
+
+Do this yourself! Go to https://data.police.uk/, download the data you want, and save it in the `police_data` directory.
+
+
+
+
+
+
+
+
+
+

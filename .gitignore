@@ -119,6 +119,18 @@ temp_nltk_stuff/
 # The uncompressed footfall data
 projects/footfall/lcc-machine-learning/footfall_data/footfall.csv
 
+# ********** Police data stuff **********
+# (note htat there are .gitignore files in these directories so that the directories 
+# themselves can exist)
+projects/extras/Aggregate_Police_Data/boundaries/*
+projects/extras/Aggregate_Police_Data/output_data/*
+projects/extras/Aggregate_Police_Data/police_data/*
+
+#
+#
+#
+# ********** **********
+# ********** **********
 # ********** **********
 # ********** **********
 # ********** **********
