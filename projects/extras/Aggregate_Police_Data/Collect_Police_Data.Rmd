@@ -60,9 +60,10 @@ library(GISTools)
 #library(leaflet) # For doing interactive maps
 ```
 
-# Get the data
+# Get and Read the Data
 
 Do this yourself! Go to https://data.police.uk/, download the data you want, and save it in the `police_data` directory.
+
 
 
 
