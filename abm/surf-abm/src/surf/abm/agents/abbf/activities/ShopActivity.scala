@@ -32,11 +32,8 @@ case class ShopActivity(
   private var currentAction = INITIALISING
   //private val place : Place = null // start with a null place
 
-  val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
-  //LOG.info(s"\tSelected shop building ${shoppingLocation} while agent is currently at ${this.agent.location()} ") // this doesn't work since these locations are objects
-
   private val place = Place(
-    location = shoppingLocation,
+    location = null,
     activityType = SHOPPING,
     openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
   )
@@ -53,6 +50,8 @@ case class ShopActivity(
 
       case INITIALISING => {
         Agent.LOG.debug(agent, "initialising ShopActivity")
+        val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
+        this.place.location = shoppingLocation
         // See if the agent is in the shop
         if (this.place.location.equalLocation(
             this.agent.location())) {
