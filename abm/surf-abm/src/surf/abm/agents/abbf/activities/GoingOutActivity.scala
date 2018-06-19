@@ -29,10 +29,8 @@ case class GoingOutActivity (
   private var currentAction = INITIALISING
   //private val place : Place = null // start with a null place
 
-  val goingOutLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.goingOutGeoms, true, state)
-
   private val place = Place(
-    location = goingOutLocation,
+    location = null,
     activityType = GOING_OUT,
     openingTimes = null // Assume it's open all the time
   )
@@ -49,6 +47,8 @@ case class GoingOutActivity (
 
       case INITIALISING => {
         Agent.LOG.debug(agent, "is initialising GoingOut")
+        val goingOutLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.goingOutGeoms, true, state)
+        this.place.location = goingOutLocation
         // See if the agent is in a pub/bar
         if (this.place.location.equalLocation(
           this.agent.location())) {

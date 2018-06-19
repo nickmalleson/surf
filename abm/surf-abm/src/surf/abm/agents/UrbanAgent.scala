@@ -90,6 +90,7 @@ abstract class UrbanAgent (state:SurfABM, home:SurfGeometry[Building]) extends A
           // There is a destination
 
           this.currentIndex += (moveRate * linkDirection)
+          //Agent.LOG().info(this,s"moveRate is $moveRate")
 
           // check to see if the progress has taken the current index beyond its goal
           // given the direction of movement. If so, proceed to the next edge

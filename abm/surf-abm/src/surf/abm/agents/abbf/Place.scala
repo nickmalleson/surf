@@ -39,7 +39,7 @@ import surf.abm.main.{SurfABM, SurfGeometry}
   *                     time (default)
   */
 case class Place (
-              val location:SurfGeometry[_],
+              var location:SurfGeometry[_],
               val activityType:ActivityType,
               val openingTimes: Array[(LocalDateTime, LocalDateTime)] = Array.empty[(LocalDateTime, LocalDateTime)] ) {
 

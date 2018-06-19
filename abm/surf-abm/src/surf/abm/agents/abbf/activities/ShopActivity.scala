@@ -1,5 +1,6 @@
 package surf.abm.agents.abbf.activities
 
+import org.apache.log4j.Logger
 import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
@@ -23,16 +24,16 @@ case class ShopActivity(
   // (Note: in SleepActivity, these are defined as case classes that extend a sealed trait, but this way is probably
   // more efficient)
 
+  private val LOG: Logger = Logger.getLogger(this.getClass)
+
   private val IN_THE_SHOP = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
   //private val place : Place = null // start with a null place
 
-  val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
-
   private val place = Place(
-    location = shoppingLocation,
+    location = null,
     activityType = SHOPPING,
     openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
   )
@@ -49,6 +50,8 @@ case class ShopActivity(
 
       case INITIALISING => {
         Agent.LOG.debug(agent, "initialising ShopActivity")
+        val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
+        this.place.location = shoppingLocation
         // See if the agent is in the shop
         if (this.place.location.equalLocation(
             this.agent.location())) {
