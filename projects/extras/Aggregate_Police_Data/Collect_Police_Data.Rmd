@@ -80,16 +80,18 @@ for (i in 1:length(file.names)) {
   print(paste("Opened",f,"Found",length(zipfile),"files inside."))
   
   # Loop through every csv file contained within the zip file
-  for (i in 1:length(zipfile)) {
-    csvfile <- zipfile[j]
+  for (j in 1:length(zipfile)) {
     # Read the csv file
-    csv <- read.csv(csvfile)
+    csvfile <- zipfile[j] # get the name of the csv file
+    csv <- read.csv(csvfile) # read it
     if (i==1 & j==1) { # If this is the first file to be opened, set up the dataframe
       all.crime <- csv
     } else { # Otherwise append the new rows
       all.crime <- rbind(all.crime, csv)
     }
+    print(paste("\t Found",nrow(csv),"crimes in",csvfile))
   }
+  
 }
 
 print(paste("Found",nrow(all.crime),"crimes in total "))
@@ -100,7 +102,15 @@ unlink(zipfile)
 ```
 
 
+# Write out a complete csv file
 
+Now we could just write all the data out and do something else with it. To do this, uncomment the line below
+
+```{r writeCSV }
+
+write.csv(all.crime, file="./all_crime.csv")
+
+```
 
 
 
