@@ -25,10 +25,8 @@ case class LunchActivity(
   private val INITIALISING = 3
   private var currentAction = INITIALISING
 
-  val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.lunchGeoms, true, state)
-
   private val place = Place(
-    location = lunchLocation,
+    location = null,
     activityType = LUNCHING,
     openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
     // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
@@ -46,6 +44,8 @@ case class LunchActivity(
 
       case INITIALISING => {
         Agent.LOG.debug(agent, "is initialising LunchActivity")
+        val lunchLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.lunchGeoms, true, state)
+        this.place.location = lunchLocation
         // See if the agent is in a lunch place
         if (this.place.location.equalLocation(
           this.agent.location())) {
