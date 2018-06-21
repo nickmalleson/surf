@@ -125,6 +125,8 @@ projects/footfall/lcc-machine-learning/footfall_data/footfall.csv
 projects/extras/Aggregate_Police_Data/boundaries/*
 projects/extras/Aggregate_Police_Data/output_data/*
 projects/extras/Aggregate_Police_Data/police_data/*
+projects/extras/Aggregate_Police_Data/all_crime*
+
 
 #
 #

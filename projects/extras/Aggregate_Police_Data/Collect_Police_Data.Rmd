@@ -26,10 +26,16 @@ A script to read police data from [data.police.uk/](https://data.police.uk/), sa
  
 
 ```{r init}
+# Set the working directory
 WORKING_DIR <- "/Users/nick/research_not_syncd/git_projects/surf/projects/extras/Aggregate_Police_Data"
 setwd(WORKING_DIR)
 
+# Define British National Grid and WGS projections
+BNG <- CRS('+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs')
+WGS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+
 library(GISTools)
+library(data.table) # better than data.frame
 #library(rgeos)    # For things like gIntersects
 #library(rgdal)     # For reading shapefiles
 #library(raster)    # For creating regular grids
@@ -62,30 +68,35 @@ library(GISTools)
 
 # Get and Read the Data
 
-Do this yourself! Go to https://data.police.uk/, download the data you want, and save them in the `police_data` directory. This file assumes they are 'zip' files and will read all the zip files in the directory.
+## Read Police Data
 
-```{r }
+Get the data yourself! Go to https://data.police.uk/, download the data you want, and save them in the `police_data` directory. This file assumes they are 'zip' files and will read all the zip files in the directory.
+
+The next chunk extracts the zip file(s) and reads all of the csv files inside them, creating a single data.table (this is like a normal data.frame, but better. When I did this using a data.frame it took hours to finish reading).
+
+```{r readData, message=FALSE}
 
 data.dir <- "./police_data/"
 file.names <- dir(data.dir, pattern =".zip")
 
-all.crime <- data.frame() # This will hold all of the crime data
+all.crime <- data.table() # This will hold all of the crime data
 
 for (i in 1:length(file.names)) {
   # The name of each zip file 
   f <- file.names[i] 
   
-  # Open the zip file and keep a link to all files inside it
-  zipfile <- unzip(paste0(data.dir,f))
+  # Open the zip file and keep a link to all files inside it into a directory called 'temp'
+  zipfile <- unzip(paste0(data.dir,f), exdir="temp")
   print(paste("Opened",f,"Found",length(zipfile),"files inside."))
   
   # Loop through every csv file contained within the zip file
   for (j in 1:length(zipfile)) {
     # Read the csv file
     csvfile <- zipfile[j] # get the name of the csv file
-    csv <- read.csv(csvfile) # read it
+    csv <- data.table::fread(csvfile) # read it
+    #csv <- read.csv(csvfile) # read it
     if (i==1 & j==1) { # If this is the first file to be opened, set up the dataframe
-      all.crime <- csv
+      all.crime <- as.data.table(csv)
     } else { # Otherwise append the new rows
       all.crime <- rbind(all.crime, csv)
     }
@@ -98,17 +109,29 @@ print(paste("Found",nrow(all.crime),"crimes in total "))
 
 # Delete the extracted csv files
 unlink(zipfile)
+unlink("temp", recursive = TRUE)
 
 ```
 
 
-# Write out a complete csv file
+**Write out a complete csv file**
 
-Now we could just write all the data out and do something else with it. To do this, uncomment the line below
+Now we will write all the data out (as a single csv file) in case we want to do something else with it. Also save it as an RData object as these are much quicker to read back in for next time. Use `load("/all_crime.RData")` to load the Rdata file.
 
 ```{r writeCSV }
-
 write.csv(all.crime, file="./all_crime.csv")
+save(all.crime, file="./all_crime.RData")
+```
+
+## Create Ppatial Police Data
+
+Turn the police data into a `SpatialPointsDataFrame` so that R recognises the spatial attributes
+
+```{r spatialisePoliceData}
+XXXX HERE 
+crime.sp <- SpatialPointsDataFrame(
+  coords=cbind(all.crime$Longitude,all.crime$Latitude), 
+  data = all.crime, proj4string = WGS)
 
 ```
 
