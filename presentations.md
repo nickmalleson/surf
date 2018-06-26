@@ -20,7 +20,7 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2017
 
-   - [Crime Analytics and the Role of Dynamic Simulation Models]({{site.baseurl}}/p/2017-11-20-NSCR-Crime_Analytics_ABM.html). Invited presentation to the [Netherlands Institute for the Study of Crime and Law Enforcement (NSRC)](https://www.nscr.nl/en/) - 21st November, 2017, Amsterdam.
+   - [Crime Analytics and the Role of Dynamic Simulation Models]({{site.baseurl}}/p/2017-11-20-NSCR-Crime_Analytics_ABM.html). Invited presentation to the [Netherlands Institute for the Study of Crime and Law Enforcement (NSCR)](https://www.nscr.nl/en/) - 21st November, 2017, Amsterdam.
 
    - [Forecasting Short-Term Urban Dynamics: Data Assimilation for Agent-Based Modelling]({{site.baseurl}}/p/2017-09-26-essa-da.html). Presentation to the [Social Simulation Conference](https://www.sim2017.com/about/) - the 13th Annual Conference of the European Social Simulation Association (ESSA). 25-29 September 2017, Dublin, Ireland.
 
