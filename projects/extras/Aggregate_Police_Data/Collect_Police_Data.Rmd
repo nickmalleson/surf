@@ -30,9 +30,6 @@ A script to read police data from [data.police.uk/](https://data.police.uk/), sa
 WORKING_DIR <- "/Users/nick/research_not_syncd/git_projects/surf/projects/extras/Aggregate_Police_Data"
 setwd(WORKING_DIR)
 
-# Define British National Grid and WGS projections
-BNG <- CRS('+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs')
-WGS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
 library(GISTools)
 library(data.table) # better than data.frame
@@ -64,6 +61,11 @@ library(data.table) # better than data.frame
 #library(gridExtra) # For arranging two grids side by side
 #library(feather)  # For reading data prepared by python
 #library(leaflet) # For doing interactive maps
+
+
+# Define British National Grid and WGS projections
+BNG <- CRS('+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs')
+WGS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 ```
 
 # Get and Read the Data
@@ -113,27 +115,59 @@ unlink("temp", recursive = TRUE)
 
 ```
 
+## Tidy up the police data
 
-**Write out a complete csv file**
+There are some crimes that don't have coordinates. Get rid of these
 
-Now we will write all the data out (as a single csv file) in case we want to do something else with it. Also save it as an RData object as these are much quicker to read back in for next time. Use `load("/all_crime.RData")` to load the Rdata file.
+```{r cleanPoliceData}
 
-```{r writeCSV }
-write.csv(all.crime, file="./all_crime.csv")
-save(all.crime, file="./all_crime.RData")
+print(paste0("There are ", nrow(all.crime[is.na(all.crime$Latitude) | is.na(all.crime$Longitude) , ]),
+                               " (out of ", nrow(all.crime), ") rows with NAs in coordinates") )
+
+# Make a new copy of the crime dataset without these NAs (notice the '!')
+all.crime.clean <- all.crime[!(is.na(all.crime$Latitude) | is.na(all.crime$Longitude)) , ]
 ```
 
-## Create Ppatial Police Data
+
+## Create Spatial Police Data
 
 Turn the police data into a `SpatialPointsDataFrame` so that R recognises the spatial attributes
 
 ```{r spatialisePoliceData}
-XXXX HERE 
 crime.sp <- SpatialPointsDataFrame(
-  coords=cbind(all.crime$Longitude,all.crime$Latitude), 
-  data = all.crime, proj4string = WGS)
+  coords=cbind(all.crime.clean$Longitude,all.crime.clean$Latitude), 
+  data = all.crime.clean, proj4string = WGS)
+
+# Reproject to British National Grid
+crime.sp <- spTransform(crime.sp,CRSobj = BNG)
+
+# Add BNG x and y columns
+
+crime.sp$X <- coordinates(crime.sp)[,"coords.x1"]
+crime.sp$Y <- coordinates(crime.sp)[,"coords.x2"]
 
 ```
 
 
+**Write out a complete csv file**
 
+Now we will write all the data out (as a single csv file) in case we want to do something else with it. Also save it as an RData object as these are much quicker to read back in for next time. Use `load("./all_crime.RData")` to load the Rdata file.
+
+```{r writeCSV }
+# Write the csv and compress it (otherwise it's probably huge)
+temp <- tempfile(fileext=".csv")
+write.csv(crime.sp@data, file=temp) # write temp csv
+zip("./crime.csv.zip",temp) # zip temp csv
+unlink(temp) # delete temp csv
+
+#write.csv(crime.sp@data, file="./crime.csv")
+save(all.crime, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
+
+# Also make a shapefile (not doing this because a 7M point shapefile is good for nothing!)
+# writeOGR(crime.sp, dsn="./", layer="crime", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+```
+
+## Get Region Boundaries
+
+XXXX can't remember what boundaries to get, have asked Reka
