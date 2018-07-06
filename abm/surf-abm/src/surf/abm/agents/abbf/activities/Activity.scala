@@ -4,6 +4,7 @@ import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 import surf.abm.main.{Clock, SurfABM}
+import surf.abm.main.SurfABM.conf
 
 
 /**
@@ -55,6 +56,10 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * @return
     */
   def intensity() = this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour())
+
+  // activityIncreaseRnd is used to strengthen or weaken activity increase for every agent by multiplying it to a random number in a range [1-R/2, 1+R/2]
+  val backgroundRndRange: Double = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BackgroundRndRange")
+  private val activityIncreaseRnd = scala.util.Random.nextDouble() * backgroundRndRange + 1.0 - (backgroundRndRange / 2.0)
 
 
   protected var _currentIntensityDecrease = 0d
@@ -113,7 +118,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     *
     */
   def ++() : Unit = {
-    this._backgroundIntensity += this.backgroundIncrease()
+    this._backgroundIntensity += this.backgroundIncrease() * this.activityIncreaseRnd
   }
 
   /**
