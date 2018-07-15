@@ -8,6 +8,10 @@ tagline: Presentations about, or relating to, the surf project
 
  - 2018
 
+   - Simulating Urban Flows of Daily Routines of Commuters. Presentation to the 3rd International Workshop on Agent-Based Modelling of Urban Systems ([ABMUS](http://modelling-urban-systems.com/abmus2018)), part of the International Conference on Autonomous Agents and Multiagent Systems ([AAMAS 2018](http://celweb.vuse.vanderbilt.edu/aamas18/home/)). 10-15 July, Stockholm. [Full abstract (pdf)]({{site.baseurl}}p/2018-07-15-commuters-abstract.pdf).
+   
+   - [Understanding Input Data Requirements and Quantifying Uncertainty for Successfully Modelling 'Smart' Cities](http://urban-analytics.github.io/dust/p/2018-07-15-abmus-da.html). Presentation to the 3rd International Workshop on Agent-Based Modelling of Urban Systems ([ABMUS](http://modelling-urban-systems.com/abmus2018)), part of the International Conference on Autonomous Agents and Multiagent Systems ([AAMAS 2018](http://celweb.vuse.vanderbilt.edu/aamas18/home/)). [Full abstract (pdf)](http://urban-analytics.github.io/dust/p/2018-07-15-abmus-da-abstract.pdf).
+
    - [Dynamic Simulation Models for Crime Analysis and Urban Flows]({{site.baseurl}}p/2018-05-14-Lancaster-Dynamic_Simulation.html). Invited presentation to the [Lancaster Environment Centre](http://www.lancaster.ac.uk/lec/), University of Lancaster.
 
    - [CDRC Research: Modelling Smart Cities]({{site.baseurl}}/p/2018-04-27-CDRC_Innovation_Fund_Workshop.html). Presentation to the _CDRC Innovation Forum_. 27th April 2017, [Leeds Institute for Data Analytics](http://lida.leeds.ac.uk/).
