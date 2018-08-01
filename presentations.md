@@ -66,6 +66,10 @@ tagline: Presentations about, or relating to, the surf project
 
 ### Conference sessions organised / chaired:
 
+ - 2018
+
+   - Organiser: Special Sessions on _[Innovations in Urban Analytics]({{site.baseurl}}/announce/2018/04/04/AAG2018-Innovations_in_Urban_Analytics-Sessions.html)_ at the _Association of American Geographers_ ([AAG](http://www.aag.org/cs/annualmeeting)) Annual Meeting, 10th – 15th April, New Orleans. Also Chair of the panel session.
+ 
  - 2017
 
    - Organiser: [Special Sessions on: Geographic Data Science](https://geographicdatascience.com/2016/10/12/special-sessions-on-geographic-data-science-aag-2017-boston/). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
