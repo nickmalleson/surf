@@ -76,7 +76,7 @@ tagline: Presentations about, or relating to, the surf project
 
    - Also Chair of [Geographic Data Science](https://geographicdatascience.com/2016/10/12/special-sessions-on-geographic-data-science-aag-2017-boston/) Panel Session. The panelists were: David O'Sullivan; Alex Singleton; Luc Anselin; Daniel Arribas-Bel; Mark Birkin; Cheng Zhong; Andrew Crooks; Ran Wei.
 
-   - Symposium on Human Dynamics in Smart and Connected Communities: [Agents - the 'atomic unit' of social systems?](http://nickmalleson.co.uk/2016/10/aag-2017-call-for-papers-agents-the-atomic-unit-of-social-systems/). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
+   - Symposium on Human Dynamics in Smart and Connected Communities: [Agents - the 'atomic unit' of social systems?](http://nickmalleson.co.uk/2016/10/aag-2017-call-for-papers-agents-the-atomic-unit-of-social-systems.html). Sessions organised as part of the _Association of American Geographers ([AAG](http://www.aag.org/cs/annualmeeting)), Tue 4th - Sun 9th April 2017, Boston._
 
 
  - 2016
