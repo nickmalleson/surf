@@ -34,7 +34,7 @@ setwd(WORKING_DIR)
 library(GISTools)
 library(data.table) # better than data.frame
 #library(rgeos)    # For things like gIntersects
-#library(rgdal)     # For reading shapefiles
+library(rgdal)     # For reading/writing shapefiles
 #library(raster)    # For creating regular grids
 #library(plyr)     # For counting and aggregating
 #library(tmap)     # For thematic maps
@@ -126,6 +126,8 @@ print(paste0("There are ", nrow(all.crime[is.na(all.crime$Latitude) | is.na(all.
 
 # Make a new copy of the crime dataset without these NAs (notice the '!')
 all.crime.clean <- all.crime[!(is.na(all.crime$Latitude) | is.na(all.crime$Longitude)) , ]
+
+rm(all.crime) # Delete the old one to free some memory
 ```
 
 
@@ -161,7 +163,7 @@ zip("./crime.csv.zip",temp) # zip temp csv
 unlink(temp) # delete temp csv
 
 #write.csv(crime.sp@data, file="./crime.csv")
-save(all.crime, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
+save(all.crime.clean, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
 
 # Also make a shapefile (not doing this because a 7M point shapefile is good for nothing!)
 # writeOGR(crime.sp, dsn="./", layer="crime", driver="ESRI Shapefile", overwrite_layer = TRUE)
@@ -170,4 +172,35 @@ save(all.crime, crime.sp, file="./all_crime.RData") # Save RData for easy loadin
 
 ## Get Region Boundaries
 
-XXXX can't remember what boundaries to get, have asked Reka
+(_Just do Leeds for now so that it doesn't take too long._)
+
+```{r loadBoundaries}
+
+areas <- readOGR(dsn = "./boundaries/", layer="leeds_lsoa_2011")
+plot(areas)
+```
+
+Aggregate crimes by month and year to the areas
+
+```{r aggregateCrimes}
+
+#sp <- crime.sp[sample(1:nrow(crime.sp), 1000),] # sample temporarily
+
+months <- unique(crime.sp$Month) # Find all unique months
+
+# A list wgere each item is a vector of crimes per area in a given month 
+l <- lapply(X = months, FUN=function(m) {
+  crimes <- crime.sp[which(sp$Month==m),]
+  return(poly.counts(crimes, areas.sp))
+})
+names(l) <- sapply(X = months, FUN = function(m) { 
+  return(gsub("-", "", paste0("Crime",m)))} # (note that gsub() removes the hyphen between year and month)
+  )
+
+# Finally append these vectors as columns in the dataframe
+areas.sp <- cbind(areas.sp, l)
+
+# Save again now with the aggregate data as well
+save(all.crime.clean, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
+```
+
