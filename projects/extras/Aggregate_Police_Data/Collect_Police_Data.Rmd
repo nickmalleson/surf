@@ -50,11 +50,11 @@ library(rgdal)     # For reading/writing shapefiles
 #library(rgl)       # For 3D space-time cube
 #library(plot3D)    # For 3D space-time cube
 #library(dplyr)     # To look up fields in tables (e.g. N rows higher --> lag)
-#library(parallel)
-#library(pbapply)  # For progress bar in parallel
-#no_cores <- detectCores() / 2  # Detect the number of cores that are available and use half (often CPUs simulate 2 threads per core)
-#Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
-#options("mc.cores"=no_cores) # is correct).
+library(parallel)
+library(pbapply)  # For progress bar in parallel
+no_cores <- detectCores() / 2  # Detect the number of cores that are available and use half (often CPUs simulate 2 threads per core)
+Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
+options("mc.cores"=no_cores) # is correct).
 #library(lubridate)
 #library(hexbin)   # For hex bins
 #library(ggplot2)  # ditto
@@ -189,16 +189,16 @@ Aggregate crimes by month and year to the areas
 months <- unique(crime.sp$Month) # Find all unique months
 
 # A list wgere each item is a vector of crimes per area in a given month 
-l <- lapply(X = months, FUN=function(m) {
-  crimes <- crime.sp[which(sp$Month==m),]
-  return(poly.counts(crimes, areas.sp))
+l <- mclapply(X = months, FUN=function(m) {
+  crimes <- crime.sp[which(crime.sp$Month==m),]
+  return(poly.counts(crimes, areas))
 })
 names(l) <- sapply(X = months, FUN = function(m) { 
   return(gsub("-", "", paste0("Crime",m)))} # (note that gsub() removes the hyphen between year and month)
   )
 
 # Finally append these vectors as columns in the dataframe
-areas.sp <- cbind(areas.sp, l)
+areas <- cbind(areas, l)
 
 # Save again now with the aggregate data as well
 save(all.crime.clean, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
