@@ -1,4 +1,4 @@
-# For visualising the model.
+u# For visualising the model.
 # https://mesa.readthedocs.io/en/latest/tutorials/adv_tutorial.html
 
 import model

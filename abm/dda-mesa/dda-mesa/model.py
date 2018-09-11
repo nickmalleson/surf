@@ -1,4 +1,4 @@
-from agent import DDAAgent
+ltfrom agent import DDAAgent
 from agent import AgentStates
 
 from mesa import Model
