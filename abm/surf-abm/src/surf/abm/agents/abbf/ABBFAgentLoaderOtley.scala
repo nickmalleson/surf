@@ -60,30 +60,50 @@ object ABBFAgentLoaderOtley {
       // (https://stackoverflow.com/questions/2817055/converting-mutable-to-immutable-map)
       b_map.map(kv => (kv._1, kv._2.toSet)).toMap
     }
-    LOG.debug("Fonnd the following OAs: ${oaBuildingIDMap.keys.toString()}")
+    LOG.debug("Found the following OAs: ${oaBuildingIDMap.keys.toString()}")
 
     LOG.info(s"\tFound ${oaBuildingIDMap.size} OAs and ${oaBuildingIDMap.values.map(x => x.size).sum} buildings")
 
 
     // Now read through the commuting data and create agents appropriately (live in one OA, commute to another)
+    // Also read a file of agents that don't commute (just live in one OA and have flexible activities)
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
-    val filename = "./data/" + dataDir + "/oa_flows-study_area.csv" // All output areas
-    //val filename = "./data/" + dataDir + "/oa_flows-burley_adel.csv" // Testing with commuters from Burley-i-W to Adel
-    //val filename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 output areas
-    //val filename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 output areas
+    val inputfilesVersion = SurfABM.conf.getInt(SurfABM.ModelConfig + ".InputFilesVersion")
+    val flowFilename = "./data/" + dataDir + "/oa_flows-study_area.csv" // Commuters between all output areas
+    //val flowFilename = "./data/" + dataDir + "/oa_flows-burley_adel.csv" // Testing with commuters from Burley-i-W to Adel (longest distance in study area)
+    //val flowFilename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 combinations of output areas
+    //val flowFilename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 combinations of output areas
     //LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
-    //val filename = "./data/" + dataDir + "/oa_flows-study_area.csv"
-    LOG.info(s"Reading agents from file: '$filename'")
+
+    if (inputfilesVersion == 2) {
+      val stayFilename = "./data/" + dataDir + "/oa_retired-study_area.csv" // Retired people in every output area
+    }
+
+
+    // Define the possible building types...
+    val small: String = "SMALL"
+    val large: String = "LARGE"
+    val cafeType: String = "CAFE"
+    val restType: String = "REST" // restaurant
+    val pubType: String = "PUB"
+    val ffType: String = "FF" // fastfood
+    val barType: String = "BAR"
+    val shopType: String = "SHOP" // shops not in a mall and not supermarkets or convenience stores
+    val supmType: String = "SUPM" // supermarkets and convenience stores
+    val mallType: String = "MALL"
+    val sportType: String = "SPORT"
+
+    LOG.info(s"Reading agents from file: '$flowFilename'")
     // Get line and line number as a tuple
-    for ((lineStr, i) <- Source.fromFile(filename).getLines().zipWithIndex) {
+    for ((lineStr, i) <- Source.fromFile(flowFilename).getLines().zipWithIndex) {
       val line: Array[String] = lineStr.split(",")
       //println(s"$i === ${lineStr.toString} === ${line.toString}")
       if (i == 0) {
         // Check the header is as expected. It should have four columns.
         if (line.size != 4) {
           // It should have four columns
-          throw new Exception(s"Problem reading the commuting file($filename) - should have four columns but found ${line.size}: '$line'")
+          throw new Exception(s"Problem reading the commuting file($flowFilename) - should have four columns but found ${line.size}: '$line'")
         }
       }
       else {
@@ -93,24 +113,15 @@ object ABBFAgentLoaderOtley {
         val flow: Int = line(3).toInt
         //val flow = 1
         //Array(orig, dest, flow).foreach( x => println("\t"+x) )
-
-        // Define the possible building types...
-        val small: String = "SMALL"
-        val large: String = "LARGE"
-        val shopType: String = "SHOP"
-        val cafeType: String = "CAFE"
-        val restType: String = "REST" // restaurant
-        val pubType: String = "PUB"
-        val ffType: String = "FF" // fastfood
-        val barType: String = "BAR"
-
         LOG.debug(s"Origin: '$orig', Destination: '$dest', Flow: '$flow'")
+
         // Now create 'flow' agents who live in 'orig' and work in 'dest'
         // It is helpful to have all the buildings in the origin and destinations as lists
         if (oaBuildingIDMap.contains(Set(orig, small))) {
           val homeList = oaBuildingIDMap(Set(orig, small)).toList
 
           // There might be a more efficient way to define the work buildings list.
+          // TO DO: Define that you can work in any building!! Otherwise add new categories!!
           val workListSmallBool = oaBuildingIDMap.contains(Set(dest, small))
           val workListLargeBool = oaBuildingIDMap.contains(Set(dest, large))
           val workListShopBool = oaBuildingIDMap.contains(Set(dest, shopType))
@@ -168,7 +179,7 @@ object ABBFAgentLoaderOtley {
     // Finally create the agent, initialised with their home
     val a: ABBFAgent = ABBFAgent(state, home)
 
-    // Work place is a building in town
+    // Work place is a building in the output area where the agent works
     val workPlace = Place(
       location = work,
       activityType = WORKING,
@@ -185,27 +196,10 @@ object ABBFAgentLoaderOtley {
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
 
     // SHOPPING
-    // Shopping place should be a supermarket or a convenience store of OpenStreetMap
-    /*val shoppingPlace = Place(
-      location = shop,
-      //location = null,
-      activityType = SHOPPING,
-      openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
-    )*/
-
-    //val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (15d + rnd, 0.3), (17d + rnd, 0.3), (22d, 0d)))
     val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11d + rnd, 1d), (17d + rnd, 0.3), (22d, 0d)))
     val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, state)
 
     // LUNCHING
-    //val lunchLocationRnd = state.random.nextDouble()
-    //val lunchLocation: SurfGeometry[Building] = GISFunctions.findRandomObject[Building](work, SurfABM.lunchGeoms)
-    /*val lunchPlace = Place(
-      location = lunchLocation,
-      activityType = LUNCHING,
-      openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
-      // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
-    )*/
     val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndLunchPreference), (12d + rnd/2, rndLunchPreference), (15d, 0d)))
     val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, state)
 
@@ -217,22 +211,9 @@ object ABBFAgentLoaderOtley {
     val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
     val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = a, state)
 
-
-    // School
-    /*val schoolPlace = Place(
-      location = null,
-      activityType = ATTENDING_CLASS,
-      openingTimes = null
-    )*/
-
-    // ATTENDING CLASS (activity at school)
-    //val classTimeProfile = TimeProfile(Array((6d, 0d), (8d+rnd, 1d), (15d+rnd,1d), (17d,0d)))
-
-
     // SLEEPING (high between 11pm and 6am)
     val atHomePlace = Place(home, SLEEPING, null)
     val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d, 1d), (12d, 0d), (23d, 1d))), agent = a)
-    //val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 0.5d))), agent=a)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
     for (i <- 1.until(72 +(rnd * 25).toInt) ) {
@@ -242,7 +223,6 @@ object ABBFAgentLoaderOtley {
 
     // Add these activities to the agent's activity list. At Home is the strongest initially.
     val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity, goingOutActivity )
-    //val activities = Set[Activity](workActivity, atHomeActivity)
 
     // Finally tell the agent about them
     a.activities = activities
