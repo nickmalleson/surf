@@ -50,6 +50,8 @@ case class ShopActivity(
 
       case INITIALISING => {
         Agent.LOG.debug(agent, "initialising ShopActivity")
+        //LOG.info(s"x coordinate is ${this.agent.location().getGeometry.getCentroid.getX}")
+        //LOG.info(s"y coordinate is ${this.agent.location().getGeometry.getCentroid.getY}")
         val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.shopGeoms, true, state)
         this.place.location = shoppingLocation
         // See if the agent is in the shop

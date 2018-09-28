@@ -195,10 +195,9 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
 
 
 object ABBFAgent {
-  /*
+
   def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent =
     new ABBFAgent(state, home )
-  */
   
   /**
     * The limit for an activity intensity being large enough to take control of the agent. Below this, the activity
