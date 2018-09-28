@@ -220,7 +220,7 @@ object SurfABM extends Serializable {
             // val s = new SurfGeometry[Building](g, building) // (Line above is the same as this)
             tempIDMap.put(buildingID, s)
             buildings.addGeometry(s)
-            if (buildingType == "SHOP") {
+            if (buildingType == "SUPM") {
               shops.addGeometry(s)
             }
             if (buildingType == "CAFE" || buildingType == "FF") {
