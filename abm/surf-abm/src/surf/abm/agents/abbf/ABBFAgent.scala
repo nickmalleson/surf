@@ -16,7 +16,7 @@ import surf.abm.main.{Clock, SurfABM, SurfGeometry}
   *             where (e.g.) they live, but not necessarily. The agent's initial
   *             location is set to be <code>home</code>
   */
-class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building])
+abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Building])
   extends UrbanAgent(state, home) {
 
   /**
@@ -72,7 +72,7 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     if (this.currentActivity.isDefined && ! this.currentActivity.get.--(simulate=true) ) {
       // The activity is almost zero and can't be reduced
       Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-      s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+      s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INTENSITY_DECREASE})")
     }
     else {
       if (! this.currentActivity.isDefined) {
@@ -94,10 +94,10 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
       }
 
       var msg = "" // Create a single log message to write out (limits nu
-      if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INSTENSITY_DECREASE) {
+      if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INTENSITY_DECREASE) {
         // The intensity has not gone down enough
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INSTENSITY_DECREASE})")
+        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INTENSITY_DECREASE})")
       } else {
         // Now find the most intense one, given the current time.
         val highestActivity: Activity = this.highestActivity()
@@ -139,66 +139,13 @@ class ABBFAgent(override val state:SurfABM, override val home:SurfGeometry[Build
     //Agent.LOG.debug(this, s"has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 
-  /**
-    * The rate that agents can move is heterogeneous. At the moment, this is calculated such that if the agent is going
-    * to or from work then journey will take about 30 mins. If they are doing anything else then the default rate is used
-    * See [[surf.abm.agents.Agent.moveRate()]]. (That default rates is set by the BaseMoveRate parameter which is
-    * defined in surf-abm.conf).
-    */
-  override def moveRate(): Double = {
 
-    val act  = this.currentActivity.getOrElse(
-      throw new Exception("Internal error - ABBFAgent.moveRate() has been called, but the agent doesn't have an activity")
-    )
-    // Is the agent travelling to work now? (If the agent has no activity then throw an exception this shouldn't have been called)
-    if (act.isInstanceOf[WorkActivity])
-      return _commuterMoveRate(act.asInstanceOf[WorkActivity])
-
-    // Alternatively, are they going home from work ?
-    // TODO poor assumption: if they are going home to sleep then they must be coming from work
-    if (act.isInstanceOf[SleepActivity])
-      return _commuterMoveRate(act.asInstanceOf[SleepActivity])
-    // Only set commuting rate if current activity is sleeping and previous is working. DOESN'T WORK BECAUSE SOMETIMES THEY HAVE A NONE ACTIVITY IN BETWEEN
-    //val prevAct  = this.currentActivity.getOrElse(None) // The previous activity
-    //if (act.isInstanceOf[SleepActivity] && prevAct.isInstanceOf[WorkActivity])
-     //    return _commuterMoveRate(prevAct.asInstanceOf[WorkActivity])
-
-    // If here then not commuting. Use the default move rate
-    return super.moveRate()
-  }
-
-  // Variable to remember the cached commuter move rate and a function to calculate it (once)
-  private var _cachedCommuterMoveRate: Double = -1d
-  private def _commuterMoveRate(act : FixedActivity) : Double = {
-    if (_cachedCommuterMoveRate == -1d) { // Need to work out what the commuting rate is for this agent
-      // Make a route from home to work
-      val path: List[GeomPlanarGraphDirectedEdge] = UrbanAgent.findNewPath(this.home, act.place.location)
-      // Calculate its length (at least between the junctions)
-      var length = 0d // The total length of their commute
-      path.foreach( length += _.getEdge.asInstanceOf[GeomPlanarGraphEdgeSurf[_]].getLine.getLength)
-      // Calculate new move rate. If it is less than the default move rate, then just use that
-      val iterPerMin = ( 1d / Clock.minsPerTick ) // Iterations per minute
-      val moveRate = length / ( iterPerMin * ABBFAgent.COMMUTE_TIME_MINS ) // distance to travel per iteration in order to move distance in X minutes
-      _cachedCommuterMoveRate = if (moveRate < super.moveRate()) super.moveRate() else moveRate
-      Agent.LOG.debug(this, s"commuterMoveRate: commute length is ${length} so move rate is ${_cachedCommuterMoveRate}")
-      /*println("*********")
-      println(length)
-      println(iterPer30Min)
-      println(super.moveRate())
-      println(_cachedCommuterMoveRate)*/
-    }
-
-    return _cachedCommuterMoveRate
-  }
 
 }
 
 
 object ABBFAgent {
 
-  def apply(state: SurfABM, home: SurfGeometry[Building]): ABBFAgent =
-    new ABBFAgent(state, home )
-  
   /**
     * The limit for an activity intensity being large enough to take control of the agent. Below this, the activity
     * is not deemed intense enough.
@@ -209,17 +156,9 @@ object ABBFAgent {
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INSTENSITY_DECREASE = 0.15
+  private val MINIMUM_INTENSITY_DECREASE = 0.15
 
-  assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INSTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
-
-  /**
-    * The number of minutes that agents should spend commuting (used temporarily to balance the requirements of agents
-    * who have to travel long distances. At some point commute will depend on the route and method of travel, and
-    * the activities will have to be balanced more intelligently so that
-    */
-  private val COMMUTE_TIME_MINS = 30d
-
+  assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 
 
 
