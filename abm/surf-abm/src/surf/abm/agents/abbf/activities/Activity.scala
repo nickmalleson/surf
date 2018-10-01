@@ -68,7 +68,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * started satisfying the activity.
     * <p>This is useful because it makes it possible the agent from chaining activity too rapidly.</p>
     */
-  def currentIntensityDecrease() = _currentIntensityDecrease
+  def currentIntensityDecrease() : Double = _currentIntensityDecrease
   // The following is a setter, but doesn't work (http://dustinmartin.net/getters-and-setters-in-scala/)
   //def currentIntensityDecrease_= (value:Int) : Unit = {
   //  _currentIntensityDecrease = value

@@ -71,14 +71,14 @@ object ABBFAgentLoaderOtley {
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
     val inputfilesVersion = SurfABM.conf.getInt(SurfABM.ModelConfig + ".InputFilesVersion")
-    //val flowFilename = "./data/" + dataDir + "/oa_flows-study_area.csv" // Commuters between all output areas
+    val flowFilename = "./data/" + dataDir + "/oa_flows-study_area.csv" // Commuters between all output areas
     //val flowFilename = "./data/" + dataDir + "/oa_flows-burley_adel.csv" // Testing with commuters from Burley-i-W to Adel (longest distance in study area)
-    val flowFilename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 combinations of output areas
+    //val flowFilename = "./data/" + dataDir + "/oa_flows-study_area_test10.csv" // Testing with 10 combinations of output areas
     //val flowFilename = "./data/" + dataDir + "/oa_flows-study_area_test1000.csv" // Testing with 1000 combinations of output areas
     //LOG.info("ABBFAGENTLOADEROTLEY is temporarily only creating a few agents")
 
-    //val stayFilename = if (inputfilesVersion == 2) "./data/" + dataDir + "/oa_retired-study_area.csv" else null // Retired people in every output area
-    val stayFilename = if (inputfilesVersion == 2) "./data/" + dataDir + "/oa_retired-study_area_test10.csv" else null // Retired people in 10 output areas
+    val stayFilename = if (inputfilesVersion == 2) "./data/" + dataDir + "/oa_retired-study_area.csv" else null // Retired people in every output area
+    //val stayFilename = if (inputfilesVersion == 2) "./data/" + dataDir + "/oa_retired-study_area_test10.csv" else null // Retired people in 10 output areas
 
 
     // Define the possible building types...
@@ -182,7 +182,7 @@ object ABBFAgentLoaderOtley {
     LOG.info(s"Have created ${SurfABM.agentGeoms.getGeometries.size()} commuter agents")
 
 
-    // READ RETIRED DATA
+    // READ RETIRED DATA (and other agent classes that only have one fixed activity (home) could be added)
     if (inputfilesVersion == 2) {
       LOG.info(s"Reading retired agents from file: '$stayFilename'")
       // Get line and line number as a tuple

@@ -5,6 +5,7 @@ import sim.engine.SimState
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
+import surf.abm.agents.abbf.occupancies.{CommuterAgent, RetiredAgent}
 import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 import surf.abm.environment.Building
 
@@ -103,7 +104,13 @@ case class ShopActivity(
     * @return
     */
   override def backgroundIncrease(): Double = {
-    return 1d / (5d * SurfABM.ticksPerDay)
+    if (this.agent.getClass == classOf[CommuterAgent]) {
+      return 1d / (5d * SurfABM.ticksPerDay)
+    } else if (this.agent.getClass == classOf[RetiredAgent]) {
+      return 2d / (5d * SurfABM.ticksPerDay)
+    } else {
+      return 1d / (5d * SurfABM.ticksPerDay)
+    }
   }
 
   /**
@@ -111,7 +118,13 @@ case class ShopActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 25d / (1d * SurfABM.ticksPerDay)
+    if (this.agent.getClass == classOf[CommuterAgent]) {
+      return 25d / (1d * SurfABM.ticksPerDay)
+    } else if (this.agent.getClass == classOf[RetiredAgent]) {
+      return 12d / (1d * SurfABM.ticksPerDay)
+    } else {
+      return 25d / (1d * SurfABM.ticksPerDay)
+    }
   }
 
 }
