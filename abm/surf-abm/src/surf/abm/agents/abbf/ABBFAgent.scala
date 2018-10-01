@@ -62,8 +62,9 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
     // which, in turn, calls the activity's backgroundIncrease() function, which can be overridden by subclasses.
     for (a <- this.activities){
-      a ++ // Increase this activity
-      // Remark Tomas: is this necessary for the current activity? Probably not...
+      if (this.currentActivity().isEmpty || a != this._currentActivity.get) {
+        a ++() // Increase this activity
+      }
     }
 
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
