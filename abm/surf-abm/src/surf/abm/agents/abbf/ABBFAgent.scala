@@ -70,12 +70,12 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
     // Check that the agent has increased the current activity by a sufficient amount before changing *and* it
     // is possible to decrease the amount further (if it is almost zero then don't keep going, even if the agent
     // has only been working on the activity for a short while!)
-    if (this.currentActivity.isDefined && ! this.currentActivity.get.--(simulate=true) ) {
+    /*if (this.currentActivity.isDefined && ! this.currentActivity.get.--(simulate=true) ) {
       // The activity is almost zero and can't be reduced
       Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
       s"cannot be reduced further (current intensity: ${this.currentActivity.get.intensity()} ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INTENSITY_DECREASE})")
     }
-    else {
+    else {*/
       if (! this.currentActivity.isDefined) {
         // There is no activity at the moment.
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) is undefined.")
@@ -125,7 +125,7 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
 
     }
 
-  }
+  //} // else of { check -- with (simulate=true) }
 
   /**
     * Perform the necessary things to make this agent change its activity.
