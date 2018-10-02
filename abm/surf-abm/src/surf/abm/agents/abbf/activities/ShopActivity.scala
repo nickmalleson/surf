@@ -2,7 +2,7 @@ package surf.abm.agents.abbf.activities
 
 import org.apache.log4j.Logger
 import sim.engine.SimState
-import surf.abm.agents.{Agent, UrbanAgent}
+import surf.abm.agents.Agent
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
 import surf.abm.agents.abbf.occupancies.{CommuterAgent, RetiredAgent}

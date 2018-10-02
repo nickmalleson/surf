@@ -25,6 +25,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     // Test with a random preference for eating and leisure activities. Should become activity specific.
     val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
     val rndGoingOutPreference = state.random.nextDouble() / 2d
+    val rndSportPreference = state.random.nextDouble()
 
     // WORKING
     val workPlace = Place(
@@ -55,6 +56,11 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
     val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
     tempActivities += goingOutActivity
+
+    // SPORTS
+    val sportTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndSportPreference), (22d, 0d)))
+    val sportActivity = SportActivity(timeProfile = sportTimeProfile, agent = this, state)
+    tempActivities += sportActivity
 
     // SLEEPING
     val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d, 1d), (12d, 0d), (23d, 1d))), agent = this)
