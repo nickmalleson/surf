@@ -101,7 +101,7 @@ case class SportActivity (
       */
     override def backgroundIncrease(): Double = {
     if (this.agent.getClass == classOf[CommuterAgent]) {
-      return 1d / (5d * SurfABM.ticksPerDay)
+      return 1d / (3d * SurfABM.ticksPerDay)
     } else if (this.agent.getClass == classOf[RetiredAgent]) {
       return 1d / (5d * SurfABM.ticksPerDay)
     } else {
@@ -115,11 +115,11 @@ case class SportActivity (
       */
     override def reduceActivityAmount(): Double = {
     if (this.agent.getClass == classOf[CommuterAgent]) {
-      return 12d / (1d * SurfABM.ticksPerDay)
+      return 18d / SurfABM.ticksPerDay
     } else if (this.agent.getClass == classOf[RetiredAgent]) {
-      return 15d / (1d * SurfABM.ticksPerDay)
+      return 24d / SurfABM.ticksPerDay
     } else {
-      return 12d / (1d * SurfABM.ticksPerDay)
+      return 12d / SurfABM.ticksPerDay
     }
   }
 
