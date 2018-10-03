@@ -95,8 +95,9 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
       }
 
       var msg = "" // Create a single log message to write out (limits nu
-      if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INTENSITY_DECREASE) {
-        // The intensity has not gone down enough
+      if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < ABBFAgent.MINIMUM_INTENSITY_DECREASE
+            && this.currentActivity().get.intensity() > ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+        // The intensity has not gone down enough and is still high enough to be in control
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
         s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${ABBFAgent.MINIMUM_INTENSITY_DECREASE})")
       } else {
@@ -151,15 +152,16 @@ object ABBFAgent {
     * The limit for an activity intensity being large enough to take control of the agent. Below this, the activity
     * is not deemed intense enough.
     */
-  private val HIGHEST_ACTIVITY_THRESHOLD = 0.2
+  private val HIGHEST_ACTIVITY_THRESHOLD = 0.1
 
   /**
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INTENSITY_DECREASE = 0.15
+  private val MINIMUM_INTENSITY_DECREASE = 0.5
 
-  assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
+  //assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
+                                                                    // not necessary anymore since activities shouldn't go below 0
 
 
 
