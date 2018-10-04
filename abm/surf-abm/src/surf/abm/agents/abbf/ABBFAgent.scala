@@ -105,17 +105,26 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
         msg += s"Highest activity: ${highestActivity.toString()}. "
         //println(s"HIGHEST: $highestActivity : ${highestActivity.intensity()}" )
 
-        // Is the highest activity high enough to take control?
-        if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
-          // If not, then make the current activity None
-          msg += s"Not high enough (${this.highestActivity().intensity()}, setting to None."
-          this._changeActivity(None)
-          //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
-          return // No point in continuing
-        }
-
         // See if the activity needs to change (taking into account that there might not be a current activity)
         if (highestActivity != this.currentActivity.getOrElse(None)) {
+
+          // Is the highest activity high enough to take control?
+          if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+            msg += s"Not high enough (${this.highestActivity().intensity()})."
+            /* // If not, then make the current activity None
+            msg += s"Not high enough (${this.highestActivity().intensity()}), setting to None."
+            this._changeActivity(None) */
+            //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
+            return // No point in continuing
+          }
+
+          // Check that TimeIntensity > 0 before changing
+          if (highestActivity.timeIntensity(Clock.currentHour()) <= 0d) {
+            // If not, don't change activity
+            msg += s"Time intensity of (${highestActivity.toString}) is 0. Not changing activity."
+            return // No point in continuing
+          }
+
           msg += s"Changing from ${this.currentActivity.getOrElse(None)} to ${Some(highestActivity)}. "
           this._changeActivity(Some(highestActivity))
           //Agent.LOG.debug(s"Agent ${this.id.toString()} has changed current activity to ${this.currentActivity.get.toString}")
@@ -151,13 +160,13 @@ object ABBFAgent {
     * The limit for an activity intensity being large enough to take control of the agent. Below this, the activity
     * is not deemed intense enough.
     */
-  private val HIGHEST_ACTIVITY_THRESHOLD = 0.2
+  private val HIGHEST_ACTIVITY_THRESHOLD = 0.75
 
   /**
     * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
     * This prevents the agents quickly switching from one activity to another
     */
-  private val MINIMUM_INTENSITY_DECREASE = 0.15
+  private val MINIMUM_INTENSITY_DECREASE = 0.3
 
   assert(HIGHEST_ACTIVITY_THRESHOLD > MINIMUM_INTENSITY_DECREASE ) // Otherwise background activity intensities could be reduced below 0
 

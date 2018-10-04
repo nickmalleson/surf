@@ -53,7 +53,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += dinnerActivity
 
     // GOING OUT
-    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
+    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (1d, 0d), (16d, 0d), (21d, rndGoingOutPreference)))
     val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
     tempActivities += goingOutActivity
 
