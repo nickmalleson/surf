@@ -54,7 +54,7 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (6d, 1d), (12d, 0.5), (20d, 1d))), agent = this)
       // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
       // (repeatedly call the ++ function to increase it)
-      for (i <- 1.until(72 +(rnd * 25).toInt) ) {
+      for (i <- 1.until( (36 + rnd).toInt) ) {
         atHomeActivity.++()
       }
       tempActivities += atHomeActivity
