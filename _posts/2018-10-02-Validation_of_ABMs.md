@@ -49,7 +49,7 @@ We could argue against the necessity for validation in this case. (_I should not
  - Validation (in the social sciences at least) is subjective anyway, so there is no single 'correct' way to validate.
  - Validation is less important when not trying to make forecasts (which would be difficult without validation because there would be too much speculation), but rather to shed some light on the present situation. 
 
-### Validate to different spatial levels
+### Calibrate to different spatial levels
 
 Some contributors suggested trying to model at a larger spatial level first. For example a spatial interaction model could be used to estimate commuting flows, and these could be compared to the ABM. 
 
