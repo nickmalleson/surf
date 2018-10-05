@@ -109,7 +109,7 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
         if (highestActivity != this.currentActivity.getOrElse(None)) {
 
           // Is the highest activity high enough to take control?
-          if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD) {
+          if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD && this.currentActivity().isDefined && this.currentActivity().get.intensity > 0) {
             msg += s"Not high enough (${this.highestActivity().intensity()})."
             /* // If not, then make the current activity None
             msg += s"Not high enough (${this.highestActivity().intensity()}), setting to None."
@@ -122,6 +122,18 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
           if (highestActivity.timeIntensity(Clock.currentHour()) <= 0d) {
             // If not, don't change activity
             msg += s"Time intensity of (${highestActivity.toString}) is 0. Not changing activity."
+            if (this.currentActivity().isDefined && this.currentActivity().get.intensity < 0) {
+              def sortedActivities: Seq[Activity] = this.activities.toSeq.sortBy(a => a.intensity()).reverse
+              for (a <- sortedActivities) {
+                if (a != sortedActivities.head) {
+                  if (a.timeIntensity(Clock.currentHour()) > 0d) {
+                    msg += s"Changing from ${this.currentActivity.getOrElse(None)} to ${Some(a)}. "
+                    this._changeActivity(Some(a))
+                    return // No point in continuing
+                  }
+                }
+              }
+            }
             return // No point in continuing
           }
 
