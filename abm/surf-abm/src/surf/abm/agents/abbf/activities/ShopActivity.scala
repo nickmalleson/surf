@@ -114,4 +114,5 @@ case class ShopActivity(
     return 25d / (1d * SurfABM.ticksPerDay)
   }
 
+  override val HIGHEST_ACTIVITY_THRESHOLD = 0.3
 }
