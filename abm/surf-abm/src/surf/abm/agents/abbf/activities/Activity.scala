@@ -61,7 +61,11 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
   val backgroundRndRange: Double = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BackgroundRndRange")
   private val activityIncreaseRnd = scala.util.Random.nextDouble() * backgroundRndRange + 1.0 - (backgroundRndRange / 2.0)
 
-  val HIGHEST_ACTIVITY_THRESHOLD: Double
+  /**
+    * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
+    * This prevents the agents quickly switching from one activity to another
+    */
+  val MINIMUM_INTENSITY_DECREASE: Double
 
 
   protected var _currentIntensityDecrease = 0d

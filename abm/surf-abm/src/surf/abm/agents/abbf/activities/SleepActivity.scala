@@ -159,4 +159,6 @@ case class SleepActivity(
     }
   }
 
+  override val MINIMUM_INTENSITY_DECREASE = 0.1
+
 }

@@ -127,5 +127,5 @@ case class ShopActivity(
     }
   }
 
-  override val HIGHEST_ACTIVITY_THRESHOLD = 0.3
+  override val MINIMUM_INTENSITY_DECREASE = 0.3
 }

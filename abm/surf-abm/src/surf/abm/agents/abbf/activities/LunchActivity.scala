@@ -116,4 +116,6 @@ case class LunchActivity(
       return 36d / SurfABM.ticksPerDay
     }
   }
+
+  override val MINIMUM_INTENSITY_DECREASE = 0.3
 }

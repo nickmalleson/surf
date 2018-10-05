@@ -41,7 +41,7 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       tempActivities += dinnerActivity
 
       // GOING OUT
-      val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4d), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
+      val goingOutTimeProfile = TimeProfile(Array((0d, 0d), (16d, 0d), (19d, rndGoingOutPreference)))
       val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
       tempActivities += goingOutActivity
 

@@ -97,4 +97,6 @@ case class WorkActivity(
     return 3d / SurfABM.ticksPerDay
   }
 
+  override val MINIMUM_INTENSITY_DECREASE = 0.45
+
 }

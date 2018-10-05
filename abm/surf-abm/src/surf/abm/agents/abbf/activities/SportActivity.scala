@@ -123,4 +123,6 @@ case class SportActivity (
     }
   }
 
+    override val MINIMUM_INTENSITY_DECREASE = 0.3
+
   }
