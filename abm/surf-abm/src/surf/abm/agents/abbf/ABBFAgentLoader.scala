@@ -4,6 +4,7 @@ import org.apache.log4j.Logger
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
+import surf.abm.agents.abbf.occupancies.SimpleABBFAgent
 import surf.abm.main.{SurfABM, SurfGeometry}
 import surf.abm.main.SurfGeometry
 
@@ -29,7 +30,7 @@ object ABBFAgentLoader {
       // Instantiate the agent.
 
       val home = SurfABM.getRandomBuilding(state)
-      val a: ABBFAgent = ABBFAgent(state, home)
+      val a: SimpleABBFAgent = SimpleABBFAgent(state, home)
 
       // Next the activities that this agent can do (later this will be done by reading data)
 

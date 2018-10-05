@@ -106,7 +106,7 @@ case class DinnerActivity (
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 12d / (3d * SurfABM.ticksPerDay)
+    return 16d / SurfABM.ticksPerDay
   }
 
 }

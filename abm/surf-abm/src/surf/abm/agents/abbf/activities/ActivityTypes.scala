@@ -25,7 +25,7 @@ object ActivityTypes extends Serializable {
 
   case object GOING_OUT extends ActivityType("GoingOut")
 
-  //case object ATTENDING_CLASS extends ActivityType("AttendingClass")
+  case object SPORTS extends ActivityType("DoingSports")
 
   case object SLEEPING extends ActivityType("Sleeping")
 

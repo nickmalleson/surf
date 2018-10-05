@@ -86,7 +86,7 @@ case class WorkActivity(
     * @return
     */
   override def backgroundIncrease(): Double = {
-    return 1d / SurfABM.ticksPerDay
+    return 1d / ((2d/3d) * SurfABM.ticksPerDay)
   }
 
   /**
@@ -94,7 +94,7 @@ case class WorkActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 5d / (2d * SurfABM.ticksPerDay)
+    return 3d / SurfABM.ticksPerDay
   }
 
 }

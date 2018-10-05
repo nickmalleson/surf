@@ -3,7 +3,8 @@ package surf.abm.agents.abbf.activities
 import org.apache.commons.collections.functors.NullIsFalsePredicate
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
-import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING}
+import surf.abm.agents.abbf.activities.ActivityTypes.SLEEPING
+import surf.abm.agents.abbf.occupancies.{CommuterAgent, RetiredAgent}
 import surf.abm.exceptions.RoutingException
 import surf.abm.main.SurfABM
 
@@ -134,7 +135,13 @@ case class SleepActivity(
     * @return
     */
   override def backgroundIncrease(): Double = {
-    return 1d / SurfABM.ticksPerDay
+    if (this.agent.getClass == classOf[CommuterAgent]) {
+      return 2d / SurfABM.ticksPerDay
+    } else if (this.agent.getClass == classOf[RetiredAgent]) {
+      return 6d / SurfABM.ticksPerDay
+    } else {
+      return 1d / SurfABM.ticksPerDay
+    }
   }
 
   /**
@@ -142,7 +149,14 @@ case class SleepActivity(
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 4d / (2d * SurfABM.ticksPerDay)
+
+    if (this.agent.getClass == classOf[CommuterAgent]) {
+      return 2d / SurfABM.ticksPerDay
+    } else if (this.agent.getClass == classOf[RetiredAgent]) {
+      return 6d / (5d * SurfABM.ticksPerDay)
+    } else {
+      return 4d / (2d * SurfABM.ticksPerDay)
+    }
   }
 
 }
