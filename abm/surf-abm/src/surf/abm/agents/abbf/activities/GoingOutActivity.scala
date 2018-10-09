@@ -105,5 +105,5 @@ case class GoingOutActivity (
     return 12d / SurfABM.ticksPerDay
   }
 
-  override val MINIMUM_INTENSITY_DECREASE = 0.3
+  override val MINIMUM_INTENSITY_DECREASE = 0.7
 }
