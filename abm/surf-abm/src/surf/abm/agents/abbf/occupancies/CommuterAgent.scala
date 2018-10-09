@@ -26,7 +26,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
     val rndGoingOutPreference = state.random.nextDouble() / 2d
     val rndSportPreference = state.random.nextDouble()
-    val rndLunchShoppingPreference = state.random.nextDouble() * 0.7
+    val rndLunchShoppingPreference = state.random.nextDouble() / 2d
 
     // WORKING
     val workPlace = Place(
