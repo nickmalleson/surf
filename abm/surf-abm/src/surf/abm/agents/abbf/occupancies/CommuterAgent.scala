@@ -21,12 +21,12 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     // Definition of random numbers
     val rnd = state.random.nextDouble() * 4d
     // A random number between 0 and 4
-    val rndLunchPreference = state.random.nextDouble()
+    val rndLunchPreference = state.random.nextDouble() / 2d
     // Test with a random preference for eating and leisure activities. Should become activity specific.
-    val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+    val rndDinnerPreference = state.random.nextDouble() / 2d // maybe not good because should mainly be at random day in week, not only done by random agents regularly
     val rndGoingOutPreference = state.random.nextDouble() / 2d
-    val rndSportPreference = state.random.nextDouble()
-    val rndLunchShoppingPreference = state.random.nextDouble() / 2d
+    val rndSportPreference = state.random.nextDouble() / 2d
+    val rndLunchShoppingPreference = state.random.nextDouble() * 0.4
 
     // WORKING
     val workPlace = Place(
