@@ -102,6 +102,8 @@ case class GoingOutActivity (
     * @return
     */
   override def reduceActivityAmount(): Double = {
-    return 7d / (3d * SurfABM.ticksPerDay)
+    return 12d / SurfABM.ticksPerDay
   }
+
+  override val MINIMUM_INTENSITY_DECREASE = 0.7
 }
