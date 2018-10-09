@@ -20,13 +20,14 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       // A random number between 0 and 4
       val rndLunchPreference = state.random.nextDouble() / 4d
       // Test with a random preference for eating and leisure activities. Should become activity specific.
-      val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+      val rndDinnerPreference = state.random.nextDouble() / 2d // maybe not good because should mainly be at random day in week, not only done by random agents regularly
       val rndGoingOutPreference = state.random.nextDouble() / 10d
-      val rndSportPreference = state.random.nextDouble() / 2d
+      val rndSportPreference = state.random.nextDouble() / 3d
+      val rndShoppingPreference = state.random.nextDouble()
 
 
       // SHOPPING
-      val shoppingTimeProfile = TimeProfile(Array((7d, 0d),(10d + rnd/4d, 1d),(14d + rnd, 0d)))
+      val shoppingTimeProfile = TimeProfile(Array((7d, 0d),(10d + rnd/4d, rndShoppingPreference),(14d + rnd, 0d)))
       val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = this, state)
       tempActivities += shoppingActivity
 
@@ -36,12 +37,12 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       tempActivities += lunchActivity
 
       // DINNER
-      val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2d, rndDinnerPreference), (19.5 + rnd/2d, rndDinnerPreference), (22.5, 0d)))
+      val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2d, rndDinnerPreference), (21d, 0d)))
       val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = this, state)
       tempActivities += dinnerActivity
 
       // GOING OUT
-      val goingOutTimeProfile = TimeProfile(Array((0d, 0d), (16d, 0d), (19d, rndGoingOutPreference)))
+      val goingOutTimeProfile = TimeProfile(Array((16d, 0d), (19d, rndGoingOutPreference), (22d, 0d)))
       val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
       tempActivities += goingOutActivity
 
