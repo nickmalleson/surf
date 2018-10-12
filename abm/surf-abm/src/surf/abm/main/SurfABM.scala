@@ -144,7 +144,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, goingOutGeoms, sportGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, supermarketGeoms, lunchGeoms, goingOutGeoms, sportGeoms, otherShopGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
   LOG.info("Finished initialising model environment")
 
@@ -171,11 +171,12 @@ object SurfABM extends Serializable {
         // Start with buildings
         val tempBuildings = new GeomVectorField(WIDTH, HEIGHT)
         val buildings = new GeomVectorField(WIDTH, HEIGHT)
-        val shops = new GeomVectorField(WIDTH, HEIGHT)
+        val supermarkets = new GeomVectorField(WIDTH, HEIGHT)
         val lunchPlaces = new GeomVectorField(WIDTH, HEIGHT)
-        val dinnerPlaces = new GeomVectorField(WIDTH, HEIGHT)
+        //val dinnerPlaces = new GeomVectorField(WIDTH, HEIGHT)
         val goingOutPlaces = new GeomVectorField(WIDTH, HEIGHT)
         val sportPlaces = new GeomVectorField(WIDTH, HEIGHT)
+        val otherShops = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
@@ -222,19 +223,22 @@ object SurfABM extends Serializable {
             tempIDMap.put(buildingID, s)
             buildings.addGeometry(s)
             if (buildingType == "SUPM") {
-              shops.addGeometry(s)
+              supermarkets.addGeometry(s)
             }
             if (buildingType == "CAFE" || buildingType == "FF") {
               lunchPlaces.addGeometry(s)
             }
-            if (buildingType == "REST" || buildingType == "FF" || buildingType == "PUB") {
+            /*if (buildingType == "REST" || buildingType == "FF" || buildingType == "PUB") {
               dinnerPlaces.addGeometry(s)
-            }
-            if (buildingType == "PUB" || buildingType == "BAR") {
+            }*/
+            if (buildingType == "REST" || buildingType == "FF" ||buildingType == "PUB" || buildingType == "BAR") {
               goingOutPlaces.addGeometry(s)
             }
             if (buildingType == "SPORT") {
               sportPlaces.addGeometry(s)
+            }
+            if (buildingType == "MALL" || buildingType == "SHOP") {
+              otherShops.addGeometry(s)
             }
           }
         }
@@ -246,7 +250,7 @@ object SurfABM extends Serializable {
 
 
         LOG.debug("Creating id -> buildings map")
-        println("Found "+b_ids.size+" buildings and "+shops.getGeometries.size()+" shops.")
+        println("Found "+b_ids.size+" buildings and "+supermarkets.getGeometries.size()+" shops.")
 
         assert(buildings.getGeometries.size() == b_ids.size )
 
@@ -299,11 +303,12 @@ object SurfABM extends Serializable {
         // Now synchronize the MBR for all GeomFields to ensure they cover the same area
         buildings.setMBR(MBR)
         roads.setMBR(MBR)
-        shops.setMBR(MBR)
+        supermarkets.setMBR(MBR)
         lunchPlaces.setMBR(MBR)
-        dinnerPlaces.setMBR(MBR)
+        //dinnerPlaces.setMBR(MBR)
         goingOutPlaces.setMBR(MBR)
         sportPlaces.setMBR(MBR)
+        otherShops.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
@@ -331,7 +336,7 @@ object SurfABM extends Serializable {
         SurfABM.LOG.info("Finished creating network and junctions")
 
         // Return the layers
-        (buildings, shops, lunchPlaces, dinnerPlaces, goingOutPlaces, sportPlaces, b_ids, roads, network, junctions, MBR)
+        (buildings, supermarkets, lunchPlaces, goingOutPlaces, sportPlaces, otherShops, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {

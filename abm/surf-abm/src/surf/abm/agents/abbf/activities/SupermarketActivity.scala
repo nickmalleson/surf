@@ -4,21 +4,21 @@ import org.apache.log4j.Logger
 import sim.engine.SimState
 import surf.abm.agents.Agent
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
-import surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING
+import surf.abm.agents.abbf.activities.ActivityTypes.SUPERMARKET
 import surf.abm.agents.abbf.occupations.{CommuterAgent, RetiredAgent}
 import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 import surf.abm.environment.Building
 
 
 /**
-  * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.SHOPPING]]) that causes the agent to
-  * travel to the shops. ShopActivity is NOT shopping for food in supermarkets, but all other shopping.
+  * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.SUPERMARKET]]) that causes the agent to
+  * travel to supermarkets and convenience stores.
   */
-case class ShopActivity(
-                     override val timeProfile: TimeProfile,
-                     override val agent: ABBFAgent,
-                     state: SimState)
-  extends FlexibleActivity(SHOPPING, timeProfile, agent)  with Serializable
+case class SupermarketActivity(
+                         override val timeProfile: TimeProfile,
+                         override val agent: ABBFAgent,
+                         state: SimState)
+  extends FlexibleActivity(SUPERMARKET, timeProfile, agent)  with Serializable
 {
 
   // These variables define the different things that the agent could be doing in order to satisfy the work activity
@@ -27,7 +27,7 @@ case class ShopActivity(
 
   private val LOG: Logger = Logger.getLogger(this.getClass)
 
-  private val IN_THE_SHOP = 1
+  private val IN_THE_SUPERMARKET = 1
   private val TRAVELLING = 2
   private val INITIALISING = 3
   private var currentAction = INITIALISING
@@ -35,7 +35,7 @@ case class ShopActivity(
 
   private val place = Place(
     location = null,
-    activityType = SHOPPING,
+    activityType = SUPERMARKET,
     openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
   )
 
@@ -50,19 +50,17 @@ case class ShopActivity(
     this.currentAction match {
 
       case INITIALISING => {
-        Agent.LOG.debug(agent, "initialising ShopActivity")
-        //LOG.info(s"x coordinate is ${this.agent.location().getGeometry.getCentroid.getX}")
-        //LOG.info(s"y coordinate is ${this.agent.location().getGeometry.getCentroid.getY}")
-        val shoppingLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.otherShopGeoms, true, state)
-        this.place.location = shoppingLocation
-        // See if the agent is in the shop
+        Agent.LOG.debug(agent, "initialising SupermarketActivity")
+        val supermarketLocation: SurfGeometry[Building] = GISFunctions.findNearestObject[Building](this.agent.location(), SurfABM.supermarketGeoms, true, state)
+        this.place.location = supermarketLocation
+        // See if the agent is in the supermarket
         if (this.place.location.equalLocation(
-            this.agent.location())) {
-          Agent.LOG.debug(agent, "is in the shop. Start shopping.")
-          currentAction = IN_THE_SHOP // Next iteration the agent will start to shop
+          this.agent.location())) {
+          Agent.LOG.debug(agent, "is in the supermarket. Start shopping.")
+          currentAction = IN_THE_SUPERMARKET // Next iteration the agent will start to shop
         }
         else {
-          Agent.LOG.debug(agent, "is not at the shop yet. Travelling there.")
+          Agent.LOG.debug(agent, "is not at the supermarket yet. Travelling there.")
           this.agent.newDestination(Option(this.place.location))
           currentAction = TRAVELLING
         }
@@ -71,17 +69,17 @@ case class ShopActivity(
 
       case TRAVELLING => {
         if (this.agent.atDestination()) {
-          Agent.LOG.debug(agent, "has reached the shop. Starting to shop")
-          currentAction = IN_THE_SHOP
+          Agent.LOG.debug(agent, "has reached the supermarket. Starting to shop")
+          currentAction = IN_THE_SUPERMARKET
         }
         else {
-          Agent.LOG.debug(agent, "is travelling to the shop.")
+          Agent.LOG.debug(agent, "is travelling to the supermarket.")
           agent.moveAlongPath()
         }
       }
 
-      case IN_THE_SHOP => {
-        Agent.LOG.debug(agent, "is shopping")
+      case IN_THE_SUPERMARKET => {
+        Agent.LOG.debug(agent, "is shopping in a supermarket")
         return true
       }
 
@@ -89,7 +87,7 @@ case class ShopActivity(
     // Only get here if the agent isn't shopping, so must return false.
     return false
 
-  //throw new NotImplementedError("Have not implemented Shopping activity yet")
+    //throw new NotImplementedError("Have not implemented Shopping activity yet")
   }
 
   override def activityChanged(): Unit = {
@@ -105,11 +103,11 @@ case class ShopActivity(
     */
   override def backgroundIncrease(): Double = {
     if (this.agent.getClass == classOf[CommuterAgent]) {
-      return 1d / (20d * SurfABM.ticksPerDay)
+      return 1d / (3d * SurfABM.ticksPerDay)
     } else if (this.agent.getClass == classOf[RetiredAgent]) {
-      return 1d / (5d * SurfABM.ticksPerDay)
+      return 1d / (2d * SurfABM.ticksPerDay)
     } else {
-      return 1d / (20d * SurfABM.ticksPerDay)
+      return 1d / (5d * SurfABM.ticksPerDay)
     }
   }
 
@@ -119,11 +117,11 @@ case class ShopActivity(
     */
   override def reduceActivityAmount(): Double = {
     if (this.agent.getClass == classOf[CommuterAgent]) {
-      return 10d / SurfABM.ticksPerDay
+      return 36d / SurfABM.ticksPerDay
     } else if (this.agent.getClass == classOf[RetiredAgent]) {
-      return 10d / SurfABM.ticksPerDay
+      return 20.5 / SurfABM.ticksPerDay
     } else {
-      return 10d / SurfABM.ticksPerDay
+      return 25d / SurfABM.ticksPerDay
     }
   }
 

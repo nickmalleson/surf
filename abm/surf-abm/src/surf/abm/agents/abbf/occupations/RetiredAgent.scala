@@ -1,4 +1,4 @@
-package surf.abm.agents.abbf.occupancies
+package surf.abm.agents.abbf.occupations
 
 import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities._
@@ -20,29 +20,32 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       // A random number between 0 and 4
       val rndLunchPreference = state.random.nextDouble() / 4d
       // Test with a random preference for eating and leisure activities. Should become activity specific.
-      val rndDinnerPreference = state.random.nextDouble() / 2d // maybe not good because should mainly be at random day in week, not only done by random agents regularly
-      val rndGoingOutPreference = state.random.nextDouble() / 10d
+      //val rndDinnerPreference = state.random.nextDouble() / 2d // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+      val rndGoingOutPreference = state.random.nextDouble() / 4d
       val rndSportPreference = state.random.nextDouble() / 3d
-      val rndShoppingPreference = state.random.nextDouble()
+      val rndSupermarketPreference = state.random.nextDouble()
+      val rndOtherShopPreference = state.random.nextDouble() / 2d
 
 
-      // SHOPPING
-      val shoppingTimeProfile = TimeProfile(Array((7d, 0d),(10d + rnd/4d, rndShoppingPreference),(14d + rnd, 0d)))
-      val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = this, state)
-      tempActivities += shoppingActivity
+      // SUPERMARKET
+      val supermarketTimeProfile = TimeProfile(Array((7d, 0d),(10d + rnd/4d, rndSupermarketPreference),(14d + rnd, 0d)))
+      val supermarketActivity = SupermarketActivity(timeProfile = supermarketTimeProfile, agent = this, state)
+      tempActivities += supermarketActivity
 
       // LUNCHING
       val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2d, rndLunchPreference), (12d + rnd/2d, rndLunchPreference), (15d, 0d)))
       val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = this, state)
       tempActivities += lunchActivity
 
+      /*
       // DINNER
       val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2d, rndDinnerPreference), (21d, 0d)))
       val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = this, state)
       tempActivities += dinnerActivity
+      */
 
       // GOING OUT
-      val goingOutTimeProfile = TimeProfile(Array((16d, 0d), (19d, rndGoingOutPreference), (22d, 0d)))
+      val goingOutTimeProfile = TimeProfile(Array((16d, 0d), (17d + rnd/2d, rndGoingOutPreference), (22d, 0d)))
       val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
       tempActivities += goingOutActivity
 
@@ -50,6 +53,11 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       val sportTimeProfile = TimeProfile(Array((7d, 0d), (10d + rnd, rndSportPreference), (18d, 0d)))
       val sportActivity = SportActivity(timeProfile = sportTimeProfile, agent = this, state)
       tempActivities += sportActivity
+
+      // NON-FOOD SHOPPING
+      val otherShoppingTimeProfile = TimeProfile(Array((9d, 0d),(10d + rnd, rndOtherShopPreference),(18d, 0d)))
+      val otherShoppingActivity = ShopActivity(timeProfile = otherShoppingTimeProfile, agent = this, state)
+      tempActivities += otherShoppingActivity
 
       // SLEEPING
       val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (6d, 1d), (12d, 0.5), (20d, 1d))), agent = this)

@@ -11,7 +11,12 @@ import surf.abm.environment.Building
 /**
   * An activity (of type [[surf.abm.agents.abbf.activities.ActivityTypes.DINNER]]) that causes the agent to
   * travel to restaurants, pubs or fast food places
+  *
+  * Currently NOT USED ANYMORE! Because of data reasons completely integrated into GoingOutActivity.
+  *
   */
+
+/*
 case class DinnerActivity (
                        override val timeProfile: TimeProfile,
                        override val agent: ABBFAgent,
@@ -112,3 +117,5 @@ case class DinnerActivity (
   override val MINIMUM_INTENSITY_DECREASE = 0.7
 
 }
+
+*/

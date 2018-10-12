@@ -1,4 +1,4 @@
-package surf.abm.agents.abbf.occupancies
+package surf.abm.agents.abbf.occupations
 
 import sim.util.geo.GeomPlanarGraphDirectedEdge
 import surf.abm.agents.{Agent, UrbanAgent}
@@ -16,14 +16,16 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
 
   def defineActivities(): Unit = {
 
+    // temporary mutable set of activities
     val tempActivities = scala.collection.mutable.Set[Activity]()
 
     // Definition of random numbers
+    // First pick a random number between 0 and 4.
+    // The lower the number, the earlier you do activities ("morning person").
     val rnd = state.random.nextDouble() * 4d
-    // A random number between 0 and 4
+    // Test with a random preference for eating and leisure activities.
     val rndLunchPreference = state.random.nextDouble() / 2d
-    // Test with a random preference for eating and leisure activities. Should become activity specific.
-    val rndDinnerPreference = state.random.nextDouble() / 2d // maybe not good because should mainly be at random day in week, not only done by random agents regularly
+    //val rndDinnerPreference = state.random.nextDouble() / 2d
     val rndGoingOutPreference = state.random.nextDouble() / 2d
     val rndSportPreference = state.random.nextDouble() / 2d
     val rndLunchShoppingPreference = state.random.nextDouble() * 0.4
@@ -38,10 +40,10 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     val workActivity = WorkActivity(timeProfile = workTimeProfile, agent = this, place = workPlace)
     tempActivities += workActivity
 
-    // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11.5 + rnd/2d, rndLunchShoppingPreference), (16d + 3d*rnd/4d, 1d - rndLunchShoppingPreference), (22d, 0d)))
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = this, state)
-    tempActivities += shoppingActivity
+    // SUPERMARKET
+    val supermarketTimeProfile = TimeProfile(Array((7d, 0d), (11.5 + rnd/2d, rndLunchShoppingPreference), (16d + 3d*rnd/4d, 1d - rndLunchShoppingPreference), (22d, 0d)))
+    val supermarketActivity = SupermarketActivity(timeProfile = supermarketTimeProfile, agent = this, state)
+    tempActivities += supermarketActivity
 
     // LUNCHING
     val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2d, rndLunchPreference), (12d + rnd/2d, rndLunchPreference), (15d, 0d)))
@@ -49,12 +51,14 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += lunchActivity
 
     // DINNER
+    /*
     val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2d, rndDinnerPreference), (19.5 + rnd/2d, rndDinnerPreference), (22.5, 0d)))
     val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = this, state)
     tempActivities += dinnerActivity
+    */
 
     // GOING OUT
-    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4d), (1d, 0d), (16d, 0d), (21d, rndGoingOutPreference)))
+    val goingOutTimeProfile = TimeProfile(Array((0d, 0d), (16d, 0d), (19d, rndGoingOutPreference)))
     val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = this, state)
     tempActivities += goingOutActivity
 
@@ -73,11 +77,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += atHomeActivity
 
 
-    // Add these activities to the agent's activity list. At Home is the strongest initially.
-    //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity, goingOutActivity )
-
-    // Finally tell the agent about them
-    //a.activities = activities
+    // Finally, tell the agent about them
     this.activities ++= tempActivities
 
   }
