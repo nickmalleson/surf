@@ -1,0 +1,1765 @@
+---
+title: "Analyse Traces 2 (TEMP)"
+author: "Nick Malleson"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+# Analyse Traces 2 (TEMP)
+
+An extension to the [map_traces.Rmd](./map_traces.Rmd) program. This has the facility to map traces, but focusses on analysing the difference between matched paths and their equivalent shortest path.
+
+The three different kinds of routes that the script reads are:
+
+ - original traces (the original GPX data)
+ - matched routes (the original data matched to OSM routes)
+ - shortest paths (the shortest paths the could be used to do the same route)
+
+```{r initialise, echo=TRUE, message=FALSE, warning=FALSE}
+# FOR COMPILING RMD ON THE SERVER:
+library(knitr)
+knitr::opts_knit$set(root.dir = "/home/geonsm/runkeeper/mapmatching-traces/")
+setwd("/home/geonsm/runkeeper/mapmatching-traces/")
+# The binary file that contains all the traces (exhaustively read in on the server)
+TRACES_FILE = "./traces-server-all.RData" # When running from the server
+
+
+
+# FOR COMPILING RMD ON NICK's LAPTOP (data on server):
+#library(knitr)
+#knitr::opts_knit$set(root.dir = "/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#setwd("/Users/nick/mapping/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/")
+#TRACES_FILE = "~/research_not_syncd/mapping_local/projects/runkeeper/mitmount/runkeeper/mapmatching-traces/traces-server-all.RData" # When running on laptop (all data on server)
+
+
+
+# FOR WORKING LOCALLY (e.g. testing stuff)
+#setwd('~/research_not_syncd/git_projects/surf/projects/BreezeRoutes/traces')
+#TRACES_FILE = "./traces-temp.RData"
+
+# Paths to the original files, shortest paths, and matched paths
+path.org =      "./gpx/"
+path.matched =  "./gpx-matched/"
+path.shortest = "./gpx-shortest/"
+
+library(GISTools)
+#library(rgeos)    # For things like gIntersects
+library(rgdal)     # For reading shapefiles
+library(raster)    # For creating regular grids or converting from SpatialPixelsDataFrame to raster
+#library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+#library(classInt) # Jenks natural breaks
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+#library(stats)     # For a-spatial aggregatiion (aggregate)
+#library(ggplot2)   # For density scatter plot
+#library(stplanr)   # For finding n,e,s,w part of a line
+library(nabor)     # Ditto, for k-nearest-neighbours (knn) function specifically
+
+#library(hexbin)    # For hexagonal density scatter plots in ggplot
+#library(gridExtra) # To put two graphs next to each other in ggplot
+library(plotKML)   # For reading GPX files
+#library(OpenStreetMap) # For plotting OSM basemaps
+library(parallel) # For ruonning things in parallel (e.g. mclapply())
+#no_cores <- detectCores() - 1 # Detect the number of cores that are available
+no_cores <- 8 # Set the number of cores to use directly (if too many cores then too much memory is consumed)
+options("mc.cores"=no_cores)
+
+library(plotKML)   # For reading GPX files
+library(data.table) # For adding up distances per user (data.table())
+```
+
+
+# Function to map a trace
+
+It is sometimes useful to visualise a particualr trace. This has come from [map_traces.Rmd](./map_traces.Rmd) - see that file for proper documentation.
+
+```{r map.trace.function }
+
+expanded.bb <- function(bounds) {
+  
+  bb <- bbox(bounds)
+  # Make the bounding box x % larger to make sure none of the map is clipped
+  width = bb[1,2] - bb[1,1]
+  height = bb[2,2] - bb[2,1]
+  x <- 0.10 # 20 % larger in total
+  bb[1,1] = bb[1,1] - (width*x)
+  bb[1,2] = bb[1,2] + (width*x)
+  bb[2,1] = bb[2,1] - (height*x)
+  bb[2,2] = bb[2,2] + (height*x)
+  return(bb)
+}
+
+# A convenience for plotting a trace given a filename relative to cwd
+map.file <- function(filename) {
+  print(paste("Mapping GPX file",filename))
+  # Create SpatialLinesDataFrames for the track
+  track <- readOGR(dsn=filename, layer="tracks", verbose=FALSE )  
+  # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
+  track.merc <- spTransform(track, CRS("+init=epsg:3857"))
+  
+  bb <- expanded.bb(track@bbox)
+
+  # Get an OSM basemap (coordinates are upper-left and lower-right)
+  basemap <- openmap(
+    upperLeft = c(bb[2,2],bb[1,1]), # Upper-left (lat,lon) (y,x)
+    lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
+    type='osm', zoom=17)
+  
+  par(mfrow=c(1,1))
+  plot(basemap)
+  plot(track.merc, col='blue', lwd=3)
+  title(paste("Track for\n",f), cex=0.5 )
+}
+
+# A convenience to call the plotting function defined below (just pass in the list index for the routes)
+map.index <- function(N, osm=TRUE) {
+  map.trace(orig[[N]], matched[[N]], shortest[[N]], osm=osm)
+}
+
+map.trace <- function(orig, matched, short, osm=TRUE) {
+  # Get a bounding box for the whole dataset to make sure plots are big enough
+  # Need to do this before projecting otherwise openmap() doesn't work (not sure why)
+  bb <- expanded.bb(orig@bbox)
+  
+  # Project to WGS 84 / Pseudo Mercator (epsg:3857) for OSM
+  matched.merc <- spTransform(matched, CRS("+init=epsg:3857"))
+  orig.merc    <-   spTransform(orig,    CRS("+init=epsg:3857"))
+  short.merc <- spTransform(short,    CRS("+init=epsg:3857"))
+  
+  # Get an OSM basemap (coordinates are upper-left and lower-right)
+  if (osm) {
+    basemap <- openmap(
+      upperLeft = c(bb[2,2],bb[1,1]), # Upper-left (lat,lon) (y,x)
+      lowerRight = c(bb[2,1], bb[1,2]), # Lower-right
+      type='osm', zoom=17)
+  }
+  
+  par(mfrow=c(1,1))
+  if (osm) {
+    plot(basemap)
+  }
+  else {
+    plot(orig.merc, col='blue', lwd=3)
+  }
+  #title(paste("Routes for route",N), cex=0.5 )
+  plot(orig.merc, col='blue', lwd=3, add=T)
+  plot(matched.merc, lwd=3, col='black', add=T)
+  plot(short.merc, col='green', lwd=3, add=T)
+  
+}
+
+# Get the USER ID from an original gpx file
+read.userid <- function(filename) {
+  text <- tryCatch( 
+    { readLines(filename) },
+    error=function(cond) {
+      message(paste("Could not read file for username: ", filename, '. Message is:', cond))
+      return(-1)
+    }
+  ) # tryCatch
+  if (text==-1) {
+    return(-1)
+  }
+  result <- grep('userId=[A-z0-9]+', text, value=TRUE) # Find the bit with the User ID
+  if (length(result)==0) {
+    warning(paste("No match for user im file",filename))
+    return (-1)
+  }
+  # Match looks ok, return the userid part.
+  uid <- substring(result,8)
+  #print(paste("Got UID: ",uid))
+  return(uid)
+}
+
+```
+
+# Read the Data
+
+Read all of the traces and store in memory. Only read 'matched' traces because those will definitely have an original trace and a shortest path. Not all original traces have been matched by the MapMatcher program.
+
+*NOTE: in practice this script wont ever read the data. It takes too long. Instead, use the `analyse-traces-server\*.R`scripts to read the data in simulataneously and then use the `collate_traces.R` script to bring the four separate .RData files together into a single TRACES_FILE that this script will read.*
+
+```{r readTraces}
+
+if (!file.exists(TRACES_FILE)) {
+  
+  stop("Error - the TRACES_FILE does not exist so I can't read the traces. You need to use the read-traces-server*.R scripts to read the data first and save an RData file with the traces in.")
+  
+} else {
+  print(paste("Loading traces from file", TRACES_FILE))
+  load(TRACES_FILE)
+}
+
+# No longer using the non-transformed versions for anything, so delete them
+# (I could delete them from the TRACES_FILE, but that would mean more changes to the code and re-running
+# the trace analysis on the server)
+# Note: 'matched' isn't deleted because this is used to create the 'all.routes' data later and getting rid of it now would mean redoing lots of the maps. It isn't used in the analysis though so doesn't really matter.
+rm(orig, shortest)
+
+```
+
+Read `r length(matched.ma)` matched traces, `r length(orig.ma)` original traces, and `r length(shortest.ma)` shortest paths.
+
+# Filter Bad Matches
+
+Earlier in the data anlysis process, clean traces were filtered out (see `2-breeze-analyse_data.Rmd`). This removed traces that, e.g. were too short to be useful. Now clean out traces that have not been matched to a given accuracy threshold (i.e. the shortest and matched traces are substantially different.)
+
+Need to decide what 'outliers' are. Try the mean+1sd (red lines) and Q3+1.5*IQR (blue lines).
+
+```{r findBadMatchedPaths, fig.height=20 }
+
+# Calculate the lenths of the paths
+orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
+matched.lengths  <- unlist(mclapply(matched.ma, FUN=gLength))
+shortest.lengths <- unlist(mclapply(shortest.ma, FUN=gLength))
+
+# Calclulate the path differences between shortest and matched
+abs.diff <- mcmapply( # Absolute distance
+  FUN=function(a,b) {return(abs(a-b))},
+  orig.lengths, matched.lengths
+)
+rel.diff <- mcmapply( # Absolute relative (percentage) difference
+  FUN=function(a,b) {return(abs(100*(a-b)/a))},
+  orig.lengths, matched.lengths
+)
+diff <- mcmapply( # Difference
+  FUN=function(a,b) {return(a-b)},
+  orig.lengths, matched.lengths
+)
+
+summary(diff)
+summary(abs.diff)
+summary(rel.diff)
+
+# Make margins smaller temporarily
+margins <- par("mar")
+par(mfrow=c(5,2), mar = rep(2, 4))
+boxplot(diff, main="Difference between matched\nand original paths) (m)")
+boxplot(diff, main="(short axis)", ylim = c(-500,400))
+boxplot(abs.diff, main="Abslute Difference (m)")
+boxplot(abs.diff, main="(short axis)", ylim = c(0,1000))
+boxplot(rel.diff, main="Abslute Relative (percentage) Difference (m)")
+boxplot(rel.diff, main="(short axis)", ylim = c(0,200))
+
+hist(abs.diff, breaks="Scott", main="Histogram of absolute difference", xlab="Difference (m)")
+abline(v=mean(abs.diff)+1*sd(abs.diff), col="red")
+abline(v=quantile(abs.diff)[4]+(1.5*IQR(abs.diff)), col="blue")
+
+hist(abs.diff, breaks="Scott", xlim=c(0,3000), main="(short axis)")
+abline(v=mean(abs.diff)+1*sd(abs.diff), col="red")
+abline(v=quantile(abs.diff)[4]+(1.5*IQR(abs.diff)), col="blue")
+
+hist(rel.diff, breaks="Scott", main="Histogram of relative difference", xlab="Percentage Difference (m)")
+abline(v=mean(rel.diff)+1*sd(rel.diff), col="red")
+abline(v=quantile(rel.diff)[4]+(1.5*IQR(rel.diff)), col="blue")
+
+hist(rel.diff, breaks="Scott", xlim=c(0,200), main="(short axis)", xlab="Percentage Difference (m)")
+abline(v=mean(rel.diff)+1*sd(rel.diff), col="red")
+abline(v=quantile(rel.diff)[4]+(1.5*IQR(rel.diff)), col="blue")
+
+par(mar=margins)
+
+```
+
+It looks like the mean is pulled a lot by very severe outliers in the top end -- one trace has a difference between the original and the matched of `r max(abs.diff)`m! There are only `r length(which( abs.diff>(mean(abs.diff)+2*sd(abs.diff)) | rel.diff>(mean(rel.diff)+2*sd(rel.diff))))` traces that would be removed using the mean as the definition as an outlier, but `r length(which(abs.diff>(quantile(abs.diff)[4]+(1.5*IQR(abs.diff)))|rel.diff>(quantile(rel.diff)[4]+(1.5*IQR(rel.diff)))))` that would be removed using the quartile definition. This is quite a lot (too many) but will do for now.
+
+
+```{r filterBadMatchedPaths}
+
+#bad.indices <- which( abs.diff>(mean(abs.diff)+2*sd(abs.diff)) | rel.diff>(mean(rel.diff)+2*sd(rel.diff)))
+bad.indices <- which( 
+  abs.diff>(quantile(abs.diff)[4]+(1.5*IQR(abs.diff))) | 
+  rel.diff>(quantile(rel.diff)[4]+(1.5*IQR(rel.diff)))
+  )
+
+#orig <- orig[-bad.indices]
+#shortest <- shortest[-bad.indices]
+matched <- matched[-bad.indices]
+orig.ma <- orig.ma[-bad.indices]
+matched.ma <- matched.ma[-bad.indices]
+shortest.ma <- shortest.ma[-bad.indices]
+userid <- userid[-bad.indices]
+starttime <- starttime[-bad.indices]
+endtime <- endtime[-bad.indices]
+
+# Delete old variables
+rm(abs.diff, bad.indices, diff, rel.diff)
+
+```
+
+After filtering, there are `r length(matched.ma)` matched traces, `r length(orig.ma)` original traces, and `r length(shortest.ma)` shortest paths.
+
+These were created by `r length(unique(unlist(userid)))` separate users.
+
+This is a god point to create a single SpatialLines object from the discrete Lines (traces).
+
+```{r createSingleLine}
+# Use a consistent projection. 
+# Note: could use Albers to be consistent throughout (and use 'matched.ma' below rather than 'matched') but this would mean redoing the maps. It doesn't affect the analysis.
+PROJ4STRING <- matched[[1]]@proj4string
+
+# Begin by creating a single SpatialLines object of all matched lines (https://stackoverflow.com/questions/18023462/how-to-unlist-spatial-objects-and-plot-altogether-in-r)
+
+#  Get the Lines objects which contain multiple 'lines'
+# Note: using the non-Albers (*.ma) projected routes. I sohould really be using the projected versions to be consistent, but this would mean re-doing all the maps. This doesn't actually affect the results though so I'm going to leave it as it is for now.
+lines.objects <- unlist( mclapply( matched , function(x) `@`(x , "lines") ) )
+# Give each an ID based on its index
+for (i in seq(1,length(matched))) { lines.objects[[i]]@ID <- as.character(i) }
+
+# Make a SpatialLines object from all of those lines
+all.routes <- SpatialLines(lines.objects, proj4string = PROJ4STRING)
+
+# Write it out (for mapping etc., not for anlaysis)
+writeOGR(SpatialLinesDataFrame(all.routes, data=data.frame(seq(1,length(all.routes)))), dsn="./routes-shp/", layer="all_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+#  Also make one bg SpatialLines object for mapping. Begin by extracting the individual 'lines'
+individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+#  Combine them into a single SpatialLines object. This is good for quick plotting etc.
+all.routes.oneline <- SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING )
+writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(c(1)) ), dsn="./result/", layer="all_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE)
+rm(individual.lines, lines.objects)
+
+par(mfrow=c(1,1))
+plot(all.routes.oneline, axes=T, main="All Traces")
+
+# Useful to analyse in a GIS
+#writeOGR(SpatialLinesDataFrame(all.routes.oneline, data=data.frame(1)), dsn=".", layer="all_routes.shp",driver="ESRI Shapefile", overwrite_layer=TRUE)
+
+```
+
+
+# Compare path distances
+
+## Aggregate comparisons
+
+### Actual paths v.s. shortest path
+
+Look at the differences in the lengths between actual (matched) paths and shortest paths. The matched and original are very similar, and the shortest are shorter :-).
+
+```{r compareLengthsHist1 }
+# Need to recalculate lengths after filtering
+orig.lengths    <-  unlist(mclapply(orig.ma, FUN=gLength))
+matched.lengths  <- unlist(mclapply(matched.ma, FUN=gLength))
+shortest.lengths <- unlist(mclapply(shortest.ma, FUN=gLength))
+
+par(mfrow=c(1,3))
+ylim <- c(0,10000)
+xlim <- c(0,8000)
+
+hist(orig.lengths,     breaks='Scott', xlim=xlim, ylim=ylim )
+hist(matched.lengths,  breaks='Scott', xlim=xlim, ylim=ylim )
+hist(shortest.lengths, breaks='Scott', xlim=xlim, ylim=ylim )
+```
+
+```{r compareLengthsHist2 }
+par(mfrow=c(1,1))
+d <- density(shortest.lengths, kernel="gaussian") # Remember first density plot so parameters can be reused
+plot(d, col="blue", main="Trip distance distribution")
+
+lines(density(orig.lengths, kernel="gaussian", bw=d$bw), col="grey")
+lines(density(matched.lengths, kernel="gaussian", bw=d$bw), col="black")
+legend("topright", c('Shortest', 'Original', 'Matched'), col=c('blue', 'grey', 'black'),lty=1)
+
+```
+
+```{r compareLengthsBoxPlot}
+par(mfrow=c(1,1))
+boxplot(list("Original"=orig.lengths,"Matched"=matched.lengths,"Shortest"=shortest.lengths),ylim=c(0,5000), main="Path distances (short y axis)", ylab="Path distance")
+```
+
+### Hausdorff distances
+
+Look at the Hausdorff distances between the paths. This quantifies how similar the paths are.
+
+```{r hausdorffDistancesHist1} 
+# Run using lapply as above. This is just slightly more complicated because the distance function requires two 
+# arguments as it compares two lines. mapply does this. The function comes first, followed by the arguments 
+haus.orig.matched <- unlist(
+  mcmapply(
+    FUN=gDistance, # Function to calcuate the distance
+    orig.ma, matched.ma, # First two arguments
+    MoreArgs=list(byid=FALSE, hausdorff=TRUE) # Some other named argments
+  )
+)
+haus.matched.shortest <- unlist(
+  mcmapply(
+    FUN=gDistance, # Function to calcuate the distance
+    matched.ma, shortest.ma, # First two arguments
+    MoreArgs=list(byid=FALSE, hausdorff=TRUE) # Some other named argments
+  )
+)
+par(mfrow=c(1,2))
+xlim=c(0,1000)
+ylim=c(0,10000)
+hist(haus.orig.matched, main="Hausdorff distance\nOriginal v.s. Matched", xlab="Distance", breaks="Scott",xlim=xlim,ylim=ylim)
+hist(haus.matched.shortest, main="Hausdorff distance\nMatched v.s. Shortest", xlab="Distance",  breaks="Scott",xlim=xlim,ylim=ylim)
+
+```
+
+```{r hausdorffDistancesHist2} 
+par(mfrow=c(1,1))
+d <- density(haus.orig.matched, kernel="gaussian")
+plot(d, main="Hausdorff distance distribution", col="grey", xlim=c(0,2000))
+lines(density(haus.matched.shortest, kernel="gaussian", bw=d$bw), col="black")
+legend("topright", c('Matched - Original','Matched - Shortest'), lty=1, col=c('grey','black'))
+
+```
+
+```{r hausdorffDistances2} 
+par(mfrow=c(1,1))
+boxplot(list("Matched<->Original"=haus.orig.matched, "Matched<->Shortest"=haus.matched.shortest), main="Hausdorff Distances (short y axis)",ylim=c(0,1000))
+
+```
+
+
+
+## Disaggregate (shortest-matched comparisons)
+
+### Difference between shortest and matched (normalised)
+
+Calculate the normalised difference between the shortest and matched paths. The plot the distribution of these differences.
+
+```{r compareDisaggDistsances, fig.width=10, fig.height=10 }
+
+absolute.diffs <- matched.lengths - shortest.lengths
+# Normalise to range 0->1
+absolute.diffs.n1 <- ( absolute.diffs - min(absolute.diffs) ) / (max(absolute.diffs) - min(absolute.diffs))
+# Normalise by dividing by the shortest path
+absolute.diffs.n2 <- absolute.diffs / shortest.lengths
+
+par(mfrow=c(2,2))
+hist(absolute.diffs.n1, breaks="Scott", xlab="Difference", main="Absolute trip distance differences.\nNormalised to range 0->1 ")
+hist(absolute.diffs.n1, breaks="Scott", xlab="Difference", xlim=c(0.05,0.15), main="(shorter x axis)" )
+
+hist(absolute.diffs.n2, breaks="Scott", xlab="Difference", main="Absolute trip distance differences.\nNormalised by dividing by shortest path")
+hist(absolute.diffs.n2, breaks="Scott", xlab="Difference", xlim=c(0,2), main="(shorter x axis)" )
+
+```
+
+Try plotting the most different matched routes - those that are Q3+1.5*IQR meters (`r quantile(absolute.diffs)[4] + ( 2 * IQR(absolute.diffs))`m) longer than their shortest counterparts)
+
+```{r visualiseDifferentPaths, fig.width=15}
+par(mfrow=c(1,2))
+
+plot(all.routes, xlim=c(-71.2,-71.0), ylim=c(42.2,42.45), 
+     main="Matched routes with very different \n shortest paths (absolute difference)")
+plot(all.routes[ which(absolute.diffs>quantile(absolute.diffs)[4]+(2*IQR(absolute.diffs)) ) ],
+    col="blue", add=T )
+
+plot(all.routes,  xlim=c(-71.2,-71.0), ylim=c(42.2,42.45), 
+     main="(Normalised by shortest path)")
+plot(all.routes[ which(absolute.diffs.n2>quantile(absolute.diffs.n2)[4]+(2*IQR(absolute.diffs.n2)) ) ],
+     col="blue", add=T )
+
+```
+
+_Nothing particularly interesting there so far .._
+
+### Hausdorff and actual difference in distances travelled
+
+Compare the Hausdorff and relative distances travelled in one plot (for the paper).
+
+```{r hausdorff.and.actual.difference, fig.height=15}
+
+par(mfrow=c(2,1))
+
+# Actual distance
+
+rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3300), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace)")
+
+# Hausdorff
+hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path differences", xlab="Hausdorff difference (matched - shortest)")
+
+# Both on same graph
+
+#d <- density(haus.matched.shortest, kernel="gaussian")
+#plot(d, col="blue", xlim=c(0,1500), ylim=c(0,0.006), main="")
+#lines(density(abs.diff.distance, kernel="gaussian", bw=d$bw), col="black")
+#legend("topright", c('Hausdorff Distance','Actual Difference'), lty=1, col=c('blue','black'))
+
+# Do a pdf for the paper
+pdf(file="hausdorff_and_actual_difference.pdf", width = 7, height = 11.69)
+par(mfrow=c(2,1))
+rel.diff.distance <- ( matched.lengths - shortest.lengths ) / matched.lengths
+hist(rel.diff.distance, breaks="Scott", xlim=c(0,1), ylim=c(0,3300), main="Relative (proportional) difference in\ndistances travelled", xlab="Relative difference (matched trace - shortest trace)")
+hist(haus.matched.shortest, breaks="Scott", xlim=c(0,1000), ylim=c(0,10000), main="Hausdorff path difference", xlab="Hausdorff difference")
+dev.off()
+
+
+```
+
+
+
+# Explore User distances
+
+Look at the range of distances travelled by individual users. Is there some regularity?
+
+First the number of traces per user.
+
+```{r userDistances}
+# Improved histogram for integers (https://mikelove.wordpress.com/2011/03/30/r-one-liner-histogram-for-integers/)
+int.hist = function(x,ylab="Frequency",...) {
+  barplot(table(factor(x,levels=min(x):max(x))),space=0,xaxt="n",ylab=ylab,...);axis(1)
+}
+
+# First find the frequency distribution of trips per user
+
+uid.freq = as.data.frame(table(as.factor(unlist(userid))))
+int.hist(uid.freq$Freq, main="Traces per user", xlab="Number of traces", ylab="Frequency (number of users)")
+```
+
+Now look at the distributions of mean and standard deviations
+
+```{r userDistancesDist}
+
+# A list of users and their total distances. Uses data.table. https://stackoverflow.com/questions/11782030/sum-by-distinct-column-value-in-r
+uid.total.dists <- data.table(
+  "userid"=unlist(userid), 
+  "orig.lengths"=unlist(orig.lengths), 
+  "matched.lengths"=unlist(matched.lengths), 
+  "shortest.lengths"=unlist(shortest.lengths), 
+  key="userid")
+# Now sum that data table
+uid.total.dists <- uid.total.dists[,list(sum(orig.lengths), sum(matched.lengths), sum(shortest.lengths), (.N) ), by=userid]
+names(uid.total.dists) <- c("userid", "orig", "matched", "shortest", "N")
+
+par(mfrow=c(1,2))
+boxplot(list(
+  "Orig"=uid.total.dists$orig/uid.total.dists$N, 
+  "Shortest"=uid.total.dists$matched/uid.total.dists$N,
+  "Matched"=uid.total.dists$matched/uid.total.dists$N),
+  main="Average distances\ntravelled per user (m)",
+  ylab="Mean distance travelled (m)")
+boxplot(list(
+  "Orig"=uid.total.dists$orig/uid.total.dists$N, 
+  "Shortest"=uid.total.dists$matched/uid.total.dists$N,
+  "Matched"=uid.total.dists$matched/uid.total.dists$N),
+  main="(short y axis)",
+  ylim=c(0,3000))
+
+```
+
+
+# Quantify Symmetry
+
+Replicate the work in Phithakkitnukoon and Ratti (2011):
+
+Phithakkitnukoon, Santi, and Carlo Ratti (2011). Inferring Asymmetry of Inhabitant Flow Using Call Detail Records. _Journal of Advances in Information Technology_ 2(4). http://ojs.academypublisher.com/index.php/jait/article/view/jait0204239249.
+
+## Process:
+
+  - Split area into grid cells
+  - Calculate transition matrix, M, (shows flows between cells)
+  - Calculate in- and out-flows for cells. Symmetrical?
+  - Calculate symmetry of M
+  - Look at places that are not symmetrical.
+  
+**For the similarity analysis only work with the matched traces**
+  
+## Define study area
+
+Need to define the  (the area that qualitatively contains most of the flows)
+
+```{r defineStudyArea}
+
+# Define the study area (the area that qualitatively contains most of the flows)
+study.area.bb <- all.routes.oneline@bbox
+study.area.bb[1,1] <- -71.2 # x min
+study.area.bb[1,2] <- -71.0 # x max
+study.area.bb[2,1] <-  42.26 # y min
+study.area.bb[2,2] <-  42.42  # y max
+#study.area.bb[1,1] <- -7920375 # x min
+#study.area.bb[1,2] <- -7908295 # x max
+#study.area.bb[2,1] <-  5206223 # y min
+#study.area.bb[2,2] <-  5221410 # y max
+
+# These could be used when projection is Albers (epsg:5070) (not tested)
+#study.area.bb[1,1] <-  2007000 # x min
+#study.area.bb[1,2] <-  2024700# x max
+#study.area.bb[2,1] <-  2406300# y min
+#study.area.bb[2,2] <-  2422000# y max
+
+study.area.coords <- rbind(
+  cbind(study.area.bb[1,1],study.area.bb[2,1]),
+  cbind(study.area.bb[1,1],study.area.bb[2,2]),
+  cbind(study.area.bb[1,2],study.area.bb[2,2]),
+  cbind(study.area.bb[1,2],study.area.bb[2,1])
+)
+
+# Make a polygon from the bounding box
+study.area <- SpatialPolygons(list(Polygons(list(Polygon(study.area.coords)), ID = 1)), proj4string = PROJ4STRING)
+
+#writeOGR(SpatialPolygonsDataFrame(study.area, data=data.frame(c(1))) , dsn = "./", layer="study_area", driver="ESRI Shapefile")
+
+par(mfrow=c(1,1))
+plot(all.routes.oneline, axes=T, main="All Traces and the Study Area")
+points(study.area.coords, col="red")
+plot(study.area, col=rgb(1, 0, 0,0.3), add=T)
+
+```
+
+## Make the grid (will become the transition matrix)
+
+Now create a regular grid that covers the study area. This will be used to create the transition matrix
+
+```{r makeGridForTransitionMatrix, fig.width=15}
+
+# The number of cells per row or column
+num.cells <- 20
+total.cells <- num.cells ** 2
+
+# Create the grids - adapted from Brunsdon & Comber (2015, p150)
+cell.width <-  (study.area.bb[1,2] - study.area.bb[1,1]) / num.cells
+cell.height <- (study.area.bb[2,2] - study.area.bb[2,1]) / num.cells
+
+#cell.areas <- c(cell.areas, (cell.width * cell.height) ) # Also remember the cell area for later
+
+centre.x <- study.area.bb[1,1] + ( cell.width / 2 )
+centre.y <- study.area.bb[2,1] + ( cell.height / 2 )
+
+# Make the grid
+grd <- GridTopology(
+  cellcentre.offset = c(centre.x, centre.y), # No offset, the grid will just cover all the points
+  cellsize = c(cell.width, cell.height),
+  cells.dim = c(num.cells, num.cells)
+  )
+
+# Convert it into a polygons data frame, and give each cell it's x and y locations in the matrix (-1 initially)
+grid <- SpatialPolygonsDataFrame(
+  as.SpatialPolygons.GridTopology(grd),
+  data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),
+  match.ID = FALSE
+  )
+proj4string(grid) <- PROJ4STRING
+rm(grd)
+# Set the ID properly and keep a record of the (x,y) coordinates and associated ID
+grid.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
+cellcount <- 1
+for (rowcount in seq(1,num.cells)) {
+  for (colcount in seq(1,num.cells)) {
+    grid@data[cellcount,]$CellX <- colcount
+    grid@data[cellcount,]$CellY <- rowcount
+    grid@data[cellcount,]$ID <- cellcount
+    grid.ids[rowcount,colcount] <- cellcount
+    cellcount <- cellcount + 1
+  }
+}
+
+par(mfrow=c(1,1))
+plot(grid, border='blue', main="Routes and the grid")
+plot(all.routes.oneline, add=T)
+
+#plot(grid, border='blue', main="Grid labels")
+#polygonsLabel(grid, paste('(',grid$CellX,',',grid$CellY,')', sep=""), cex=0.4 )
+
+```
+
+The grid consists of `r num.cells` cells, with a mean square area of `r mean(raster::area(grid))/(1000**2)` km^2^.
+
+
+
+
+## Calculate transition matrix, M
+
+Process:
+
+ 1. Iterate over each cell
+    1. Clip the traces within the cell
+    1. Iterate over each (sub) trace
+      - Identify one of three possible conditions
+
+      1. The line begins in the cell
+        - Increment the _departure_ count, for the appropriate direction (N,S,E,W)
+      1. The line passes through the cell
+         - Increment the _departure_ count for the appropriate direction (N,S,E,W)
+      1. The line ends in the cell
+         - Do nothing.
+      1. The line is wholly contained within the cell
+         - XXXX WHAT DO DO?! Check Ratti paper
+
+
+The following functions do the analysis. They're defined here and then executed in the next chunk.
+
+### Define matrix functions
+
+
+```{r defineTransitionMatrixFunctions}
+
+make.line <- function(x1, x2, y1, y2, p4s) {
+  # This does Line -> Lines -> SpatialLines (overkill right?!?)
+  return(
+    SpatialLines(
+      list(Lines(
+        list(Line( cbind(c(x1, x2), c(y1, y2)) )),
+        ID="a"
+      )),
+      proj4string = p4s
+    )
+  )
+}
+
+# The next functions are directly from the stplanr project: https://github.com/ropensci/stplanr/
+# I can't use the stplanr library directly because it has dependencies that aren't met on the server (e.g. rJava)
+crs_select_aeq <- function(shp){
+  cent <- rgeos::gCentroid(shp)
+  aeqd <- sprintf("+proj=aeqd +lat_0=%s +lon_0=%s +x_0=0 +y_0=0",
+          cent@coords[[2]], cent@coords[[1]])
+  CRS(aeqd)
+}
+reproject = function(shp, crs = crs_select_aeq(shp)){
+  if(is.na(raster::crs(shp))){
+    #message("Assuming a geographical (lat/lon) CRS (EPSG:4326)")
+    raster::crs(shp) = CRS("+init=epsg:4326")
+  }
+  if(is.numeric(crs)) # test if it's an epsg code
+    crs = CRS(paste0("+init=epsg:", crs))
+  #message(paste0("Transforming to CRS ", crs))
+  res = spTransform(shp, crs)
+  res
+}
+gprojected = function(shp, fun, crs = crs_select_aeq(shp), ...){
+  # assume it's not projected  (i.e. lat/lon) if there is no CRS
+  if(!is.na(is.projected(shp))){
+    if(is.projected(shp)){
+      res = fun(shp, ...)
+    } else {
+      shp_projected = reproject(shp, crs = crs)
+      #message(paste0("Running function on a temporary projected version of the Spatial object using the CRS: ", crs))
+      res = fun(shp_projected, ...)
+      if(is(res, "Spatial"))
+        res = spTransform(res, CRS("+init=epsg:4326"))
+    }
+  } else {
+    shp_projected = reproject(shp, crs = crs)
+    #message(paste0("Running function on a temporary projected version of the Spatial object using the CRS: ", crs))
+    res = fun(shp_projected, ...)
+    if(is(res, "Spatial"))
+      res = spTransform(res, CRS("+init=epsg:4326"))
+  }
+  res
+}
+bb2poly <- function(bb){
+  if(class(bb) == "matrix"){
+    b_poly <- as(raster::extent(as.vector(t(bb))), "SpatialPolygons")
+  } else {
+    b_poly <- as(raster::extent(bb), "SpatialPolygons")
+    proj4string(b_poly) <- proj4string(bb)
+  }
+  b_poly
+}
+
+
+
+
+#' DEPRICATED. This is the old version that doesn't work if cell isn't isothetic
+#' Takes a cell and a point and works out whether the point lies on the north, south, east or west
+#' corner of the cell (or none of those).
+#' Note: assumes tha the cell is perfectly aligned with a compass. There is a new version of this function that works #' properly
+#' 
+#' @param the.cell 
+#' @param the.point
+#' @return a vector of size four with TRUE/FALSE for whether the point lies on the north, east,
+#' south, or west edge of the cell.
+find.nsew.old <- function(the.cell,the.point) {
+  # Make lines for the four squares of the cell to calculate the intersect.
+  north <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','max'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  east <- make.line(
+    the.cell@bbox['x','max'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  south <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','max'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','min'],
+    the.point@proj4string)
+  west <- make.line(
+    the.cell@bbox['x','min'], the.cell@bbox['x','min'], 
+    the.cell@bbox['y','min'], the.cell@bbox['y','max'],
+    the.point@proj4string)
+  print(north)
+  print(east)
+  print(south)
+  print(west)
+  print(the.point)
+  save(the.cell, north, east, south, west, the.point, file = "temp.RData")
+  return( c(
+    gIntersects(north,the.point),
+    gIntersects(east,the.point),
+    gIntersects(south,the.point),
+    gIntersects(west,the.point)
+    #the.cell@bbox['y','max']==the.point@bbox['y','max'], #N
+    #the.cell@bbox['y','min']==the.point@bbox['y','min'], #S
+    #the.cell@bbox['x','max']==the.point@bbox['x','max'], #E
+    #the.cell@bbox['x','min']==the.point@bbox['y','min']  #W
+    ) )
+}
+
+
+#' Takes a cell (a SpatialPolygonsDataFrame), calculates whether it has lines passing through it,
+#' and returns the cell with this information in a list
+#' 
+#' @param cell The cell to analyse
+#' @param the.traces All of the traces that might pass through the cell
+#' @param run.gc Whether to run gc() before returning
+#' @return A list, with the following items
+#'   "cell": the cell object itself (a SpatialPolygonsDataFrame),
+#'   "departure.count": a vector of size four, showing the number of traces that left this cell from the 
+#'       north, east, south, west directions.
+#'   "starting.count": the number of traces that begin in this cell
+#'   "ending.count": the number of traces that end in this cell
+#'   "wholly.contained": the number of traces that are wholly contained in this cell
+calc.cell <- function(cell, the.traces, run.gc=FALSE, plot=TRUE) {
+  
+  # Remember the number of lines entering and leaving the cell, and their direction.
+  # Store for values for each one, representing whether the line has crossed the n,s,e, or w boundary
+  departure.count <- c(0,0,0,0) # The number of traces leaving this cell and their direction
+  
+  # Also useful to remember the number of lines starting and finishing here. Don't need direction with 
+  # these though as this is captured in the vectors above
+  starting.count <- 0
+  ending.count   <- 0
+  wholly.contained <- 0 # The line starts and ends in the cell without going through another cell.
+  total.intersection <- 0 # The total number of lines that intersect the cell
+  
+  # First find the traces that intersect the cell
+  intersecting <- gIntersects(the.traces, cell, byid = TRUE) 
+  
+  # For info, store the number of lines that intersect this cell
+  total.intersection <- length(which(intersecting))
+  
+  
+  # Only continue if some traces intersect
+  if (length(which(intersecting))>0) {
+    
+    # Clip the lines in this cell. For some reason gIntersection sometimes breaks whe the intersecting
+    # lines are passed directly (as below) so instead pass each line individually in a separate call
+    #lines.in.cell <- gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+    
+    list.of.cells <- lapply(seq(1,length(the.traces[which(intersecting)])), 
+                            FUN = function(i,g) { return(g[i,]) }, g=the.traces[which(intersecting)])
+    lines.in.cell <- lapply(list.of.cells, FUN=gIntersection, spgeom2=cell, byid=TRUE)
+    #print(paste("TYPE:",typeof(lines.in.cell),"HEAD:",head(lines.in.cell)))
+    
+    # There should be lines passing thorough the cell (would not get here if not)
+    stopifnot(length(lines.in.cell)>0)
+    
+      #tryCatch(
+      #{
+      #  gIntersection(the.traces[which(intersecting)], cell, byid=TRUE) # Creates a list of SpatialLines objects
+      #}, 
+      #error = function(e) {
+      #  # Not sure why this happens. By putting stop() here it means I can debug this environment, 
+      #  # not the ones lower-down (which aren't causing the problem)
+      #  warning(e)
+      #  stop()
+      #}
+      #) # tryCatch
+  
+    if (plot) {
+      plot(cell,border='gray', add=T) # for debug
+      #plot(lines.in.cell, add=T,col='red') # for debug
+    }
+    
+
+    #print(paste("Cell:",cellid,"lines:",length(lines.in.cell)))
+    #if (!is.null(lines.in.cell)) { # There are some lines in the cell - NOT NEEDED NOW, CHECKED EARLIER
+    for (lineno in seq(1,length(lines.in.cell))) {
+      # Check for things that aren't lines. Sometimes the intersection creates points, not lines. Not sure 
+      # why but this might mess up the counting later.
+      if ( class(lines.in.cell[[lineno]]) == "SpatialLines" ) { #
+        
+        # Note that if a line leaves and re-enters the cell then its SpatialLines object will have two discrete parts,
+        # although it is stored as a single feature. This is pretty unusual but needs to be managed.
+        # The next line handles this. It's horrible.
+        #the.lines <- lines.in.cell[lineno,]@lines[[1]]@Lines # (Needed ',' before having to mess around with gIntersection)
+  
+        the.lines <- lines.in.cell[[lineno]]@lines[[1]]@Lines
+
+        # Now go through each line and work out how it interacts with the cell 
+        for (line in the.lines) {
+          # Get the coords of the line https://stat.ethz.ch/pipermail/r-sig-geo/2009-July/006017.html
+          # (old way before I notices that lines can leave and re-enter the cell)
+          #line <- lines.in.cell[lineno]
+          #coords.list <- lapply(slot(line, "lines"), function(x) lapply(slot(x, "Lines"), function(y) slot(y, "coords")))
+          coords.list <- line@coords
+          #print(coords.list)
+          coords <- data.frame(coords.list)
+          #plot(lines.in.cell[lineno],add=T,col='green') # for debug
+          # Define start and end points and work out whether they're touching the cell boundary or not
+          start <- SpatialPoints(coords[1,], proj4string = PROJ4STRING)
+          end   <- SpatialPoints(coords[nrow(coords),], proj4string = PROJ4STRING)
+          start.within <- gContains(cell, start) # Is the start point *inside* the cell? Has to be wholly inside,
+          end.within   <- gContains(cell, end)   # not touching the border.
+          
+          # Work out which of the three conditions we have here (passing through, starting, ending)
+          
+          if (start.within & end.within) { # WHOLLY CONTAINED
+            # If both start and end points are within the cell then the line is wholly contained within the cell
+            wholly.contained <- wholly.contained + 1
+            if (plot) {plot(cell,col='red', add=T)}
+              
+          } else if (start.within) { # BEGINS 
+            # If the start point is within the cell then the line begins here
+            # Work out which compass direction the cell is going to
+            index.to <- find.nsew.old(cell,end) # This is a list with four booleans (N, S, E, W).
+            stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
+            
+            starting.count <- starting.count + 1 # For info (not used in making the transition matrix)
+            if (plot) {plot(cell, col=rgb(0,1,0,0.5), add=T) }
+            
+          } else if (!start.within & !end.within) { # PASES THROUGH
+            # If neither the start point nor end point are within the cell then the line passes through it.
+            # Work out which compass direction the cell has come from and where it is going to  (N, E, S, W).
+            index.to <- find.nsew.old(cell,end) # This is a list with four booleans (N, S, E, W).
+            #stopifnot( length(index.to[index.to==TRUE]) == 1 ) 
+            if(length(index.to[index.to==TRUE]) != 1) 
+              stop(paste("Error, it looks like the cell has entered from more than one direction! N,E,S,W: ",index.to))
+            
+            departure.count[c(index.to)]  <- departure.count[c(index.to)] + 1
+            
+            if (plot) { plot(cell,border='blue', add=T)}
+    
+          } else if (end.within) { # ENDS
+            # If the end point is within the cell then the line ends here
+            ending.count <- ending.count + 1 # For info
+            
+            if (plot) { plot(cell, col=rgb(1,0,0,0.5), add=T) }
+          }
+          
+          else {
+            stop("Internal error - should not have got here.")
+          }
+        
+        } # for linesegments
+      
+      } # if class(lines)==SpatialLines
+      
+    #}# for lines in cell
+
+  } # if !is.null (the cell has lines)
+  
+  } # if intersecting > 0
+  
+  # Run the garbage collector occasionally. This might (?) help with the memory explosion that mclapply
+  # causes (which is used to execute this function over all cells)
+  if (run.gc & runif(1) < 0.2) gc()
+ 
+  # Return the cell, and all the information about lines passing through it
+  return(list(
+    "cell"=cell,
+    "departure.count"=departure.count,
+    "starting.count"=starting.count,
+    "ending.count"=ending.count,
+    "wholly.contained"=wholly.contained,
+    "total.intersection"=total.intersection)
+  )
+}
+
+
+#' Iteratively call `calc.cell` to work out how many traces start, end, and pass through each cell
+#' 
+#' @param the.grid The grid to aggregate to 
+#' @param the.traces The traces to analyse
+#' @return A list with the information for each grid cell. See `calc.cell` for details about the 
+#' information returned for each cell
+#' @examples
+#' result <- make.transition.matrix(grid,all.routes)
+calc.flows <- function(the.grid, the.traces, plot=TRUE, multithread=TRUE) {
+  
+  if (plot) {
+    plot(the.grid, border='black')
+    polygonsLabel(the.grid, paste(the.grid$ID,'\n(',the.grid$CellX,',',the.grid$CellY,')', sep=""), cex=0.3 )
+    lines(the.traces)
+  }
+  
+  # First make a list of the individual cells 
+  cells <- lapply(seq(1,length(the.grid)), FUN = function(i,g) { return(g[i,]) }, g=the.grid)
+  
+  # Now have each cell find out about the lines passing through it. 
+  # This will return a list of cells and counts of relevant lines.
+  results.cells <- 
+    if (multithread) 
+      mclapply(cells, FUN=calc.cell, the.traces=the.traces, plot=plot, run.gc=TRUE)
+    else
+      lapply(cells, FUN=calc.cell, the.traces=the.traces, plot=plot)
+  
+  return(results.cells)
+  
+} # function make.transition.matrix
+
+#' Convert the output of calc.flows (a list) to a SpatialPolygonsDataFrame
+#' 
+#' @param result The results list from calc.flows
+#' @examples
+#' result.list <- calc.flows(grid,all.routes)
+#' result.spdf <- result.to.spdf(result.list)
+result.to.spdf <- function(result) {
+  # Extract the polygons and their data from the list of results
+  polys.polygons <- lapply(result, function(x){x$cell@polygons[[1]]}) #   https://gis.stackexchange.com/questions/180682/merge-a-list-of-spatial-polygon-objects-in-r
+
+  polys.data <- data.frame(
+    "ID" = unlist(lapply(result, function(x){x$cell$ID})),
+    "CellX" = unlist(lapply(result, function(x){x$cell$CellX})),
+    "CellY" = unlist(lapply(result, function(x){x$cell$CellY})),
+    "departure.count.N" = unlist(lapply(result, function(x){x$departure.count[[1]]})),
+    "departure.count.E" = unlist(lapply(result, function(x){x$departure.count[[2]]})),
+    "departure.count.S" = unlist(lapply(result, function(x){x$departure.count[[3]]})),
+    "departure.count.W" = unlist(lapply(result, function(x){x$departure.count[[4]]})),
+    "starting.count" = unlist(lapply(result, function(x){x$starting.count})),
+    "ending.count" = unlist(lapply(result, function(x){x$ending.count})),
+    "wholly.contained" = unlist(lapply(result, function(x){x$wholly.contained})),
+    "total.intersection"=unlist(lapply(result, function(x){x$total.intersection}))
+  )
+
+polys <- SpatialPolygonsDataFrame(
+  SpatialPolygons(polys.polygons, proj4string=PROJ4STRING), 
+  polys.data, match.ID = FALSE
+  )
+
+}
+
+#' Convert the output of results.to.spdf (a SpatialPolygonsDataFrame with counts of the number
+#' of traces departing from each cell) to a transition matrix.
+#' 
+#' @param spdf The SpatialPolygonsDataFrame (output from results.to.spdf)
+#' @param gridids The IDs of the transition matrix grid
+#' @examples
+#' result.list <- calc.flows(grid,all.routes)
+#' result.spdf <- result.to.spdf(result.list)
+#' result.matrix <- spdf.to.matrix(result.spdf, grid.ids)
+spdf.to.matrix <- function(spdf, gridids) {
+  # Define an empty matrix. Origins the columns and destinations are rows. This looks backwards because
+  # matricies are accessed by m[row,col]
+  trans.mat <- matrix(data=0, nrow=nrow(spdf), ncol=nrow(spdf))
+
+  # Iterate over each cell and increment the relevant values
+  for(i in seq(1,nrow(spdf))) {
+    cell <- spdf[i,]
+    x <- cell$CellX
+    y <- cell$CellY
+    oid <- cell$ID # origin id
+    
+    # Work out the destination ID (N, S, E, W) and then increment the appropriate cell matrix. Ignore the
+    # posibility of lines departing out of the grid (i.e. border cases)
+    
+    if ( y > 1 ) { # N
+      # (Can only have a line departing to the north if we're not in the first row)
+      did.N <- gridids[y-1,x] # Destination ID to the north
+      trans.mat[did.N,oid] <- trans.mat[did.N,oid] + cell$departure.count.N
+    }
+    if ( x < num.cells ) { # E
+      did.E <- gridids[y,x+1] # Destination ID to the east
+      trans.mat[did.E,oid] <- trans.mat[did.E,oid] + cell$departure.count.E
+    }
+    if ( y < num.cells ) { # S
+      did.S <- gridids[y+1,x] # Destination ID to the south
+      trans.mat[did.S,oid] <- trans.mat[did.S,oid] + cell$departure.count.S
+    }
+    if ( x > 1 ) { # W
+      did.W <- gridids[y,x-1] # Destination ID to the west
+      trans.mat[did.W,oid] <- trans.mat[did.W,oid] + cell$departure.count.W
+    }
+  }
+  # Finally transpose the matrix, so that the origins are rows not colums (as in the Ratti paper)
+  return(t(trans.mat))
+}
+
+```
+
+### Make the matrix
+
+Calculate the transition matrix! This will take some time, use loads of memory (especially if in multi-threaded mode) and heat up your computer. Good luck.
+
+```{r makeMatrix, cache=TRUE}
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1 <- calc.flows(grid, all.routes, plot=FALSE, multithread = TRUE)
+
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.spdf <- result.to.spdf(result1) 
+
+# Finally make a transition matrix 
+result1.matrix <- spdf.to.matrix(result1.spdf, grid.ids)
+
+# Write out the matrix
+#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
+writeOGR(result1.spdf, dsn = "result", layer="result1_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects - easy to read back in (now done later)
+#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, file="results.RData")
+
+```
+
+_The code below is for testing the algorithm, it defines a few test routes and makes a small grid_
+
+```{r makeTrasitionMatrixTest, eval=FALSE, echo=FALSE}
+
+# Make a tiny grid for testing
+num.cells <- 10
+total.cells <- num.cells ** 2
+cell.width <-  (71.07-71.05) / num.cells
+cell.height <- (42.37-42.344) / num.cells
+centre.x <- -71.07 + ( cell.width / 2 )
+centre.y <- 42.344 + ( cell.height / 2 )
+grd2 <- GridTopology(cellcentre.offset = c(centre.x, centre.y), cellsize = c(cell.width, cell.height), cells.dim = c(num.cells, num.cells) )
+grid2 <- SpatialPolygonsDataFrame( as.SpatialPolygons.GridTopology(grd2), data = data.frame("ID"=rep.int(-1,total.cells),"CellX"=rep.int(-1,total.cells),"CellY"=rep.int(-1,total.cells)),match.ID = FALSE  )
+rm(grd2)
+proj4string(grid2) <- PROJ4STRING
+# Set the ID properly
+grid2.ids <- matrix(data=0, nrow=num.cells, ncol=num.cells)
+cellcount <- 1
+for (rowcount in seq(1,num.cells)) {
+  for (colcount in seq(1,num.cells)) {
+    grid2@data[cellcount,]$CellX <- colcount
+    grid2@data[cellcount,]$CellY <- rowcount
+    grid2@data[cellcount,]$ID <- cellcount
+    grid2.ids[rowcount,colcount] <- cellcount
+    cellcount <- cellcount + 1
+  }
+}
+
+# Temporarily choose a few routes for testing
+par(mfrow=c(1,1))
+#plot(all.routes.oneline,axes=T,xlim=c(-71.07,-71.05), ylim=c(42.343,42.37), col='gray')
+#plot(grid2, border='blue', axes=T)
+#plot(all.routes.oneline,col='gray',add=T)
+#plot(all.routes[2,],col='blue',add=T)
+#plot(all.routes[4,],col='green',add=T)
+#plot(all.routes[5,],col='orange',add=T)
+#plot(grid2, border='blue', add=T)
+
+
+# Plot the test grids and routes
+plot(grid2, border='blue', main="Grid labels")
+polygonsLabel(grid2, paste('(',grid2$CellX,',',grid2$CellY,')', sep=""), cex=0.4 )
+test.routes <- rbind(all.routes[2,],all.routes[4,],all.routes[5,])
+plot(test.routes, add=T)
+
+
+# Test the algorithm
+test.result <- calc.flows(grid2, test.routes, plot=TRUE, multithread = FALSE)
+test.spdf <- result.to.spdf(test.result) 
+test.matrix <- spdf.to.matrix(test.spdf, grid2.ids)
+#write.csv(test.matrix, file="/Users/nick/Desktop/test_matrix.csv")
+
+```
+
+### Comparing in- and out-flows for symmetry
+
+As all flows in-to and out-of a cell involve an interaction with only one of the four possible von Neumann neighbours, we can test the symmetry of traces passing through each cell by calculating the flow in-to and out-of each cell as a 4-element vectors (_fin(i)_ and _fout(i)_ respectively). Then the _relative flow_ (_frel(i)_)can be defined as the magnitude difference between the _fin(i)_ and _fout(i)_ vectors. If all traces are symmetrical, then for all cells the number of traces entering the cell from each direction will be equal to the number of traces leaving from the same direction.
+
+```{r relativeFlowSymmetry}
+
+# Calculate the flows in-to and out-of each cell in each direction using the transition matrix
+
+rel.flow <- c() # Relative flow in each cell (absoulte difference between fin and fout vetors for each cell)
+total.flow <- c() # Useful for percentages
+
+calc.flow <- function(o,d) { # Calculate flow from o to d, checking for boundary errors
+    if ( o > total.cells || o < 1 || d > total.cells || d < 1) {
+      return (0)
+    } else {
+      return(result1.matrix[o,d])
+    }
+}
+
+# Iterate over all cells 
+for (cell in seq(1, total.cells)) {
+  
+  # Work out which cell IDs make up the von Neuman neighbours of the curent cell. These are used to index into the transition matrix
+  n <- cell - num.cells # (number of cells per row)
+  e <- cell +1
+  s <- cell + num.cells
+  w <- cell -1
+  
+  # Flows into the cell from N E S W. Note that matrix is accessed by mat[y,x] (not x,y)
+  fin <- c(
+    calc.flow(n,cell), # N
+    calc.flow(e,cell), # E
+    calc.flow(s,cell), # S
+    calc.flow(w,cell) # W
+  )
+  fout <- c(
+    calc.flow(cell, n), # N
+    calc.flow(cell, e), # E
+    calc.flow(cell, s), # S
+    calc.flow(cell, w) # W
+  )
+  # Relative flow is the Euclidean distance between inflows and outflows
+  frel <- dist(rbind(fin, fout))
+  rel.flow <- c(rel.flow, frel)
+  
+  # Also remember the total flow
+  total.flow <- c(total.flow, result1[[cell]]$total.intersection)
+  
+}
+
+
+```
+
+Lets see the distribution of total and relative flows
+
+```{r relativeFlowSymmetry-Distributions }
+
+
+par(mfrow=c(1,2))
+hist(rel.flow, breaks="Scott", main="Distribution of relative flows", xlab=expression("f"["rel"]*"()."))
+hist(rel.flow/total.flow, breaks="Scott", main="Relative flow proportions", xlab=expression("f"["rel"]*"()/total_flow."))
+
+# And one for the paper
+pdf(file="relative_flow_symmetry-distributions.pdf", width = 7, height = 7)
+par(mfrow=c(1,2))
+hist(rel.flow, breaks="Scott", main="Distribution of relative flows", xlab=expression("f"["rel"]*"()."))
+hist(rel.flow/total.flow, breaks="Scott", main="Relative flow proportions", xlab=expression("f"["rel"]*"()/total_flow."))
+dev.off()
+
+
+
+```
+
+Map those relative flows
+
+```{r relativeFlowSymmetry-Distributions2, fig.width=11, fig.height=7}
+
+# Attach the relative flows to the spatial data frame for mapping
+result1.spdf@data$rel.flow <- rel.flow # Relative flow
+result1.spdf@data$rel.flow.prop <- rel.flow/total.flow # proportion (catching zero division)
+result1.spdf$rel.flow.prop[is.nan(result1.spdf$rel.flow.prop)] <- 0
+
+par(mfrow=c(1,2))
+choropleth(result1.spdf, result1.spdf@data$rel.flow, main="Relative flow asymmetry, frel()")
+choropleth(result1.spdf, result1.spdf@data$rel.flow.prop,  main = "Proportions - frel()/total.flows")
+
+```
+
+_At this point write out the result1 data frame as a shapefile and make a map in ArcGIS_
+
+## Within-cell flow
+
+Compute incoming and outgoing flows for each cell and see if they're semetrical.
+
+```{r withinCellFlows}
+
+inflow <- colSums(result1.matrix)
+outflow <- rowSums(result1.matrix)
+
+# Make a linear model to quantify difference in flows (degree of symmetry)
+within.cell.model <- lm(inflow~outflow)
+
+par(mfrow=c(1,1))
+plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
+# abline(within.cell.model, col="red")
+abline(a=0,b=1,col="gray", lty=3)
+#legend("topright", legend=c("x=y","Model"), col=c("black","red"), lty=1 )
+legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
+
+# And one for the paper
+pdf(file="within_cell_flow_correlation.pdf", width = 7, height = 7)
+plot(inflow,outflow, main="Within-Cell Flows", xlab="In Flow", ylab="Out Flow")
+abline(a=0,b=1,col="gray", lty=3)
+legend("topright", legend=c("x=y"), col=c("gray"), lty=3 )
+dev.off()
+
+
+# The correlation
+cor(inflow,outflow)
+
+```
+
+Whilst they're not symmetrical, they are very similar. The correlation is `r cor(inflow,outflow)`
+
+The following shows the distribution of the flows:
+
+```{r withinCellDistribution}
+
+par(mfrow=c(2,2))
+hist(inflow,  breaks="Scott")
+hist(outflow, breaks="Scott")
+plot(density(inflow))
+plot(density(outflow))
+
+```
+
+## Pairwise flow
+
+Now look at the flows between cells. The aim is to see whether the matrix is symmetrical, i.e. M=M^T^. Following the Ratti paper, constuct absolute and relative _difference matrix_.
+
+```{r pairwiseFlows}
+
+result1.abs.diff.matrix <- matrix(NA,nrow=nrow(result1.matrix),ncol=ncol(result1.matrix))
+result1.rel.diff.matrix <- matrix(NA,nrow=nrow(result1.matrix),ncol=ncol(result1.matrix))
+
+
+for ( i in seq(1,nrow(result1.matrix))) {
+  for (j in seq(1, ncol(result1.matrix))) {
+    if (i <= j) { # Don't need bottom half of the matrix, it will be identical to top half ('triangular')
+      maximum <- max(result1.matrix[i,j],result1.matrix[j,i])
+      # Absolute and relative difference (ignoring cells with no flows, where max=0, which will stay as NA)
+      if (maximum > 0) {
+        result1.abs.diff.matrix[i,j] = abs(result1.matrix[i,j] - result1.matrix[j,i])
+        result1.rel.diff.matrix[i,j] = abs(result1.matrix[i,j] - result1.matrix[j,i]) / maximum
+      }
+    }
+  }
+}
+# Sanity check: the number of non-zero items in each matrix should be the same
+stopifnot(length(which(result1.abs.diff.matrix>0)) == length(which(result1.rel.diff.matrix>0)) )
+# Also all relative flows should be in range [0,1]
+stopifnot(length(result1.rel.diff.matrix[which(result1.rel.diff.matrix<0 | result1.rel.diff.matrix>1)]) == 0)
+
+#write.csv(result1.abs.diff.matrix, file="/Users/nick/Desktop/result1_abs_diff.csv")
+#write.csv(result1.rel.diff.matrix, file="/Users/nick/Desktop/result1_rel_diff.csv")
+
+```
+
+There are `r length(which(result1.abs.diff.matrix>0))` non-zero flows. Note: in the results matrices, NA indicates no flow between i,j, whereas 0 represents no _difference_ in the flow.
+
+Summary information: 
+
+ - Absolute flows: `r summary(result1.abs.diff.matrix[which(result1.abs.diff.matrix>0)])`
+ - Relative flows: `r summary(result1.rel.diff.matrix[which(result1.rel.diff.matrix>0)])`
+
+Now calculate the _percentage of of asymmetry_
+
+```{r pairwiseFlow-percentage_asymmetry}
+
+
+calculate.asymmetry <- function(the.matrix) {
+  sum.absolute.flow <- 0
+  sum.max.flow <- 0
+  for ( i in seq(1,nrow(the.matrix))) {
+    for (j in seq(1, ncol(the.matrix))) {
+      if (i < j) { # Discard bottom half of matrix *and* don't include where i==j
+        sum.absolute.flow <- sum.absolute.flow + abs(the.matrix[i,j] - the.matrix[j,i])
+        sum.max.flow <- sum.max.flow + max(the.matrix[i,j], the.matrix[j,i] )
+      }
+    }
+  }
+  percentage.asymmetry <- sum.absolute.flow / sum.max.flow
+  return(percentage.asymmetry)
+}
+result1.percentage.asymmetry <- calculate.asymmetry(result1.matrix)
+```
+
+The percentage asymmetry is `r round(result1.percentage.asymmetry,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry,2) * 100`% of the time.
+
+## Map(s) of Asymmetric Flows
+
+First map the number of traces that pass through each cell. For the final paper I atually do this in ArcMap.
+
+```{r mapTracesPerCell, fig.width=15}
+
+shades <- auto.shading(result1.spdf$total.intersection, n=9, cutter=quantileCuts)
+choropleth(result1.spdf, result1.spdf$total.intersection, shading = shades)
+choro.legend("topleft", sh=shades)
+plot(all.routes.oneline, add=T, col=rgb(0.5,0.5,0.5,0.5))
+
+```
+
+
+## Shortest path choice v.s. symmetry
+
+It will be interesting to see if there is some relationship between the choice to take the shortest path and the path symmetry. I.e. is the chioce to deviate from the shortest path related in some way to route asymmetry? Or are the chioces independent. Explore this as follows:
+
+ 1. Subset the **longest traces relative to their shortest path** (i.e. those which are at least 20% longer than their shortest). **There are `r length(which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.
+ 1. Remove them from the data set, leaving on only the shortest relative routes.
+ 1. Repeat the asymmetry analysis on the remaining (shortest-path like) traces.
+ 1. Calculate the aggregate asymmetry value:
+   - If it ramains similar (~15%) then the shortest-path and asymmetry choices are independent.
+   - If not, then there may be a correlation between the two choices.  
+ 1. **Repeat using the 'non-longest' relative path routes (i.e. thost that were not included in the above analysis).** **There are `r length(which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths))` / `r length(shortest.lengths)`** of these.. 
+
+
+```{r createSubsets, fig.width=15}
+
+# The longest routes are those where the matched length is at least 20% greater than the equivalent shortest path.
+relative.longest.indices <-  which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)
+# Also repeat with the remaining 'non-longest' routes (i.e. all other routes)
+relative.shortest.indices <- which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths)
+
+relative.shortest <- matched[relative.shortest.indices]
+relative.longest <-  matched[relative.longest.indices]
+
+# Sanity check - the number of elements in the two subsets should be the same as in the original data.
+stopifnot( (length(relative.longest)+length(relative.shortest)) == length(shortest.ma)   )
+
+# That gives lists of traces. Need to convert these into a single lines dataframe. See an explanation for how do do this in the chunk called 'createSingleLine'
+create.single.line <- function(list.of.traces, oneline=FALSE) {
+  #  Get the Lines objects which contain multiple 'lines'
+  lines.objects <- unlist( mclapply( list.of.traces , function(x) `@`(x , "lines") ) )
+  # Give each an ID based on its index
+  for (i in seq(1,length(list.of.traces))) { lines.objects[[i]]@ID <- as.character(i) }
+  
+  if (oneline) { # Make a single Lines object, for mapping
+    individual.lines <- mclapply( lines.objects , function(y) `@`(y,"Lines") )
+    return(SpatialLines( list( Lines( unlist( individual.lines ) , ID = 1 ) ), proj4string = PROJ4STRING ) )
+  } else { # Make a SpatialLines object from all of those lines
+    return(SpatialLines(lines.objects, proj4string = PROJ4STRING) )
+  }
+
+}
+  
+relative.shortest.routes <- create.single.line(relative.shortest)
+relative.longest.routes  <- create.single.line(relative.longest)
+
+# Also make a single SpatialLines object for mapping (and write it out)
+relative.shortest.routes.oneline <- create.single.line(relative.shortest, oneline = TRUE)
+relative.longest.routes.oneline <- create.single.line(relative.longest, oneline = TRUE)
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_shortest_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+writeOGR(SpatialLinesDataFrame(relative.longest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="relative_longest_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+
+
+# Also write out a shapefile with individual lines in it (again for mapping at MIT, not copied from server)
+writeOGR(SpatialLinesDataFrame(relative.shortest.routes, data=data.frame(seq(1,length(relative.shortest.routes)))), dsn="./routes-shp/", layer="relative_shortest_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(SpatialLinesDataFrame(relative.longest.routes, data=data.frame(seq(1,length(relative.longest.routes)))), dsn="./routes-shp/", layer="relative_longest_routes", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Make a plot now.
+
+par(mfrow=c(1,2))
+#plot(relative.longest, main="longest")
+#plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
+plot(relative.longest.routes, main="longest")
+plot(study.area, add=T, border="blue")
+#plot(relative.shortest, main="not longest")
+#plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
+plot(relative.shortest.routes, main="not longest")
+plot(study.area, add=T, border="blue")
+
+
+```
+
+This results in `r length(relative.longest)` longest paths and `r length(relative.shortest)` non-longest paths (_I don't want to say 'shortest' because a shortest path is the equivalent route that someone could have taken but might not have done_).
+
+As a sanity check, make sure that the 'longest' paths are actually longer!
+
+```{r longestPath-sanityCheck, fig.width=15}
+
+# First the longest:
+
+longest.lengths <- unlist(mclapply(relative.longest, gLength ))
+summary(longest.lengths)
+
+# Now the shortest:
+shortest.lengths <- unlist(mclapply(relative.shortest, gLength ))
+summary(shortest.lengths)
+
+# And a histogram
+par(mfrow=c(1,2))
+hist(longest.lengths, main="Longest path lengths", breaks="Scott", xlim=c(0,0.1), ylim=c(0,4000))
+hist(shortest.lengths, main="Non-longest path lengths", breaks="Scott", xlim=c(0,0.1), ylim=c(0,4000))
+
+# So as not to confuse things later:
+rm(longest.lengths, shortest.lengths)
+
+```
+
+Now re-do the asymmetry analysis but with these path subsets (see the chunk called `makeMatrix` for an explanation)
+
+```{r rerunAsymmetryAnalysis-longestPaths, cache=TRUE}
+# This repeasts the code in `make matrix` chunk
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1.longest  <- calc.flows(grid, relative.longest.routes,  plot=FALSE, multithread = TRUE)
+result1.shortest <- calc.flows(grid, relative.shortest.routes, plot=FALSE, multithread = TRUE)
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.longest.spdf  <- result.to.spdf(result1.longest) 
+result1.shortest.spdf <- result.to.spdf(result1.shortest)
+# Finally make a transition matrix 
+result1.matrix.longest  <- spdf.to.matrix(result1.longest.spdf, grid.ids)
+result1.matrix.shortest <- spdf.to.matrix(result1.shortest.spdf, grid.ids)
+
+# Write out the matrices
+#write.csv(result1.matrix, file="/Users/nick/Desktop/result1.csv")
+
+# Not re-writing out the shapefiles because I have done some analysis in ArcMap (see description below)
+
+#writeOGR(result1.longest.spdf,  dsn = "result", layer="result1_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+#writeOGR(result1.shortest.spdf, dsn = "result", layer="result1_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects (these as well as the original results) - easy to read back in (now done later)
+#save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+#     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+#     result1.matrix.longest, result1.matrix.shortest,
+#     file="results.RData")
+
+
+
+```
+
+**NOTE: after writing out the above shapefiles (`result1_longest_spdf` and `result1_shortest_spdf`) I load them into ArcMap and calculate the _proportions_ of flows passing through each cell to allow for comparisons on maps. I should do this here, but to do it properly (rather than added on at the end) it would mean re-running all of the analysis which will take ages.** 
+
+The ArcMap (python) formula to calculate the proportion of flows from the total per cell is:
+
+` 0 if !ttl_ntr! == 0 else !ttl_ntr! / x` 
+
+where `x` is the total number of traces in the data set. I couldn't work out how to get this total directly in the formula so had to hard code it, i.e. _`r sum(result1.longest.spdf@data$total.intersection)`_ for the longest and _`r sum(result1.shortest.spdf@data$total.intersection)`_ for the shortest. I made a new field called `prop_ntr` and used this to create the map '`result-shortest_vs_longest`'.
+
+Now recalculate the asymetry for the longest and shortest paths.
+
+```{r recalculateAsymmetry-longestPaths}
+
+result1.percentage.asymmetry.longest  <- calculate.asymmetry(result1.matrix.longest)
+result1.percentage.asymmetry.shortest <- calculate.asymmetry(result1.matrix.shortest)
+
+```
+
+The asymmetry values for longest and shortest paths are:
+
+ - For *Longest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.longest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.longest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.longest,2) * 100`% of the time.
+
+ - For *Shortest*: The percentage asymmetry is `r round(result1.percentage.asymmetry.shortest,5) * 100`%. Therefore asymmetric flows account for `r round(result1.percentage.asymmetry.shortest,2) * 100`% of all flows, or people change their routes `r round(result1.percentage.asymmetry.shortest,2) * 100`% of the time.
+
+
+
+## Weekday/weekend v.s. symmetry
+
+Repeat the previous analysis (comparing path symmetry for longest and shortest paths) but this time comparing paths on the weekend and weekday.
+
+*NOTE: the start and end times of the trips might be out by one hour, because I didn't know what the UTC offset should be for each trace (see notes in analyse_traces-server\*.R for an explanation). This wont adversely affect the weekday/weekend analysis, but the times should not be used for analysis of trip start/end times.*
+
+Begin by creating subsets for the weekend and weekday.
+
+```{r createWeekdayEndSubsets, fig.width=15}
+
+# Filter weekday and weekend traces. Use the starttime list, which is a separate list that has the time that each journey started
+# (this was extracted in the read_traces-server*.R file as it required interrogating the original GPX files)
+
+stopifnot( length(starttime) == length(matched) ) # (Sanity check - there should be a start time for each route)
+
+# Create a vector that, rather than the actual start time, just has the number of the day (0-6 starting on Sunday)
+day.of.week <- unlist(lapply(starttime, FUN= function(x) as.POSIXlt(x)$wday))
+stopifnot(max(day.of.week) == 6 & min(day.of.week) == 0 ) # Sanity check - days must be 0-6
+
+# For info, lets have a histogram of the days
+hist(day.of.week, main="Days of the week when trips started", xlab="Day (Sunday -> Monday)")
+
+# Subset weekdays v.s. weekends
+weekday.indices <- which(day.of.week==0 | day.of.week==6) # Sunday (0) or Saturday (6)
+weekend.indices <- which(day.of.week > 0 & day.of.week < 6) # Weekdays
+stopifnot( length(starttime) == ( length(weekday.indices) + length(weekend.indices)) )
+
+weekday.list <- matched[weekday.indices]
+weekend.list <- matched[weekend.indices]
+stopifnot( (length(weekday.list)+length(weekend.list)) == length(matched) )
+
+# That gives lists of traces. Need to convert these into a single lines dataframe. See 'create.single.line' defined earlier.
+weekday.routes <- create.single.line(weekday.list)
+weekend.routes <- create.single.line(weekend.list)
+
+# Also make a single SpatialLines object for mapping (and write it out)
+weekday.routes.oneline <-  create.single.line(weekday.list, oneline = TRUE)
+weekend.routes.oneline <- create.single.line(weekend.list, oneline = TRUE)
+writeOGR(SpatialLinesDataFrame(weekday.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekday_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+writeOGR(SpatialLinesDataFrame(weekend.routes.oneline, data=data.frame(c(1)) ), dsn="./result", layer="weekend_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+
+# Make a plot now.
+
+par(mfrow=c(1,2))
+#plot(relative.longest, main="longest")
+#plot(all.routes[ which( matched.lengths >= (shortest.lengths*0.2)+shortest.lengths)], main="longest")
+plot(study.area, border="blue")
+plot(weekend.routes, main="weekend routes", add=T)
+plot(study.area, add=T, border="blue")
+#plot(relative.shortest, main="not longest")
+#plot(all.routes[ which( matched.lengths < (shortest.lengths*0.2)+shortest.lengths) ], main="not longest")
+plot(study.area, border="blue")
+plot(weekday.routes, main="weekday routes", add=T)
+plot(study.area, add=T, border="blue")
+
+
+```
+
+There were `r length(weekday.indices)` trips during weekdays, and `r length(weekend.indices)` trips over the weekend (out of a total of `r length(starttime)` trips).
+
+
+Re-run the analysis for the weekday and weekend paths
+
+```{r rerunAsymmetryAnalysis-weekdayEnd, cache=TRUE }
+
+# This repeasts the code in `make matrix` chunk
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1.weekday <- calc.flows(grid, weekday.routes, plot=FALSE, multithread = TRUE)
+result1.weekend <- calc.flows(grid, weekend.routes, plot=FALSE, multithread = TRUE)
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.weekday.spdf <- result.to.spdf(result1.weekday) 
+result1.weekend.spdf <- result.to.spdf(result1.weekend)
+# Finally make a transition matrix 
+result1.matrix.weekday <- spdf.to.matrix(result1.weekday.spdf, grid.ids)
+result1.matrix.weekend <- spdf.to.matrix(result1.weekend.spdf, grid.ids)
+
+writeOGR(result1.weekday.spdf, dsn = "result", layer="result1_weekday_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(result1.weekend.spdf, dsn = "result", layer="result1_weekend_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects (these as well as the original results) - easy to read back in
+save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+     result1.matrix.longest, result1.matrix.shortest,
+     result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
+     result1.matrix.weekday, result1.matrix.weekend,
+     file="results.RData")
+
+```
+
+Re-calculate the asymmetry values for weekday and weekend trips.
+
+```{r recalculateAsymmetry-weekendDay, cache=TRUE}
+
+result1.percentage.asymmetry.weekday <- calculate.asymmetry(result1.matrix.weekday)
+result1.percentage.asymmetry.weekend <- calculate.asymmetry(result1.matrix.weekend)
+
+```
+
+Asymettry values:
+
+ - Weekday asymetry: `r result1.percentage.asymmetry.weekday`
+
+ - Weekend asymetry: `r result1.percentage.asymmetry.weekend`
+
+
+## Absolute Route Length
+
+Now the analysis moves on from comparing deviations from the shortest possible path, to comparing the asymmetry assocated with **absolute path length**. The hypothesis here is that route length might impact on pedestrian decisions.  The rationale is that we might know quite well our neighborhood, so that we take shortest path for short walks, while we might significantly deviate from shortest path for longer routes where we haven’t full knowledge of the environment.
+
+To do this the methodology remains unchanged: subset the traces into 'short' and 'long' by absolute length and then repeat the asymmetry analysis for those two subsets.
+
+Begin by creating subsets for the absolute longest and shortest trips.
+
+```{r createAbsoluteSubsets, fig.width=15}
+
+# Filter on absolute trip length
+
+# First need to decide what constitutes a 'long' and 'short' trip. The data are quite skewed, so use the median as it is less affected by extreme values.
+matched.lengths.mean <- mean(matched.lengths)
+matched.lengths.median <- median(matched.lengths)
+
+hist(matched.lengths, breaks="Scott", main="Distribution of absolute path lengths")
+abline(v=matched.lengths.mean, col='red')
+abline(v=matched.lengths.median, col='blue')
+legend("topright", legend = c('mean', 'median'), col=c('red','blue'), lty=c(1,1))
+
+absolute.longest.indices <-  which(matched.lengths >= matched.lengths.median)
+absolute.shortest.indices <- which(matched.lengths <  matched.lengths.median)
+# Sanity check
+stopifnot( length(absolute.shortest.indices) + length(absolute.longest.indices) == length(matched.lengths) )
+
+absolute.longest <-  matched[absolute.longest.indices]
+absolute.shortest <- matched[absolute.shortest.indices]
+# Sanity check
+stopifnot( length(absolute.shortest) + length(absolute.longest) == length(matched.lengths) )
+
+# That gives lists of traces. Need to convert these into a single lines dataframe. See 'create.single.line' defined earlier.
+absolute.longest.routes  <- create.single.line(absolute.longest)
+absolute.shortest.routes <- create.single.line(absolute.shortest)
+
+# Also make a single SpatialLines object for mapping (and write it out)
+absolute.longest.routes.oneline  <- create.single.line(absolute.longest,  oneline = TRUE)
+absolute.shortest.routes.oneline <- create.single.line(absolute.shortest, oneline = TRUE)
+
+writeOGR(SpatialLinesDataFrame(absolute.longest.routes.oneline,  data=data.frame(c(1)) ), dsn="./result", 
+         layer="absolute_longest_routes_oneline",  driver="ESRI Shapefile", overwrite_layer = TRUE )
+writeOGR(SpatialLinesDataFrame(absolute.shortest.routes.oneline, data=data.frame(c(1)) ), dsn="./result", 
+         layer="absolute_shortest_routes_oneline", driver="ESRI Shapefile", overwrite_layer = TRUE )
+
+# Make a plot.
+
+par(mfrow=c(1,2))
+plot(study.area, border="blue", main="Absolute Longest Routes")
+plot(absolute.longest.routes, add=T)
+plot(study.area, add=T, border="blue")
+plot(study.area, border="blue", main="Absolute Shortest Routes")
+plot(absolute.shortest.routes, add=T)
+plot(study.area, add=T, border="blue")
+
+```
+
+There were `r length(absolute.longest.indices)` long trips, and `r length(absolute.shortest.indices)` short trips.
+
+Re-run the analysis for the absolute long and short trips.
+
+```{r rerunAsymmetryAnalysis-absoluteLengths, cache=TRUE }
+# This repeasts the code in `make matrix` chunk
+
+# Calulate the flows into and out of cells. This makes a list with lots of information
+result1.absolute.longest  <- calc.flows(grid, absolute.longest.routes,  plot=FALSE, multithread = TRUE)
+result1.absolute.shortest <- calc.flows(grid, absolute.shortest.routes, plot=FALSE, multithread = TRUE)
+
+# Convert that list of results to a SpatialPolygonsDataFrame
+result1.absolute.longest.spdf  <- result.to.spdf(result1.absolute.longest ) 
+result1.absolute.shortest.spdf <- result.to.spdf(result1.absolute.shortest)
+
+# Finally make a transition matrix 
+result1.matrix.absolute.longest  <- spdf.to.matrix(result1.absolute.longest.spdf,  grid.ids)
+result1.matrix.absolute.shortest <- spdf.to.matrix(result1.absolute.shortest.spdf, grid.ids)
+
+writeOGR(result1.absolute.longest.spdf, dsn = "result", layer="result1_absolute_longest_spdf",  driver="ESRI Shapefile", overwrite_layer = TRUE)
+writeOGR(result1.absolute.shortest.spdf, dsn = "result", layer="result1_absolute_shortest_spdf", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+# Save the objects (these as well as the original results) - easy to read back in
+save(result1, result1.spdf, result1.matrix, num.cells, total.cells, 
+     result1.longest, result1.shortest, result1.longest.spdf, result1.shortest.spdf, 
+     result1.matrix.longest, result1.matrix.shortest,
+     result1.weekday, result1.weekend, result1.weekday.spdf, result1.weekend.spdf,
+     result1.matrix.weekday, result1.matrix.weekend,
+     result1.absolute.longest, result1.absolute.shortest, result1.absolute.longest.spdf, result1.absolute.shortest.spdf,
+     result1.matrix.absolute.longest, result1.matrix.absolute.shortest,
+     file="results.RData")
+
+```
+
+Re-calculate the asymmetry values for weekday and weekend trips.
+
+```{r recalculateAsymmetry-absoluteLengths, cache=TRUE}
+
+result1.percentage.asymmetry.absolute.longest  <- calculate.asymmetry(result1.matrix.absolute.longest )
+result1.percentage.asymmetry.absolute.shortest <- calculate.asymmetry(result1.matrix.absolute.shortest)
+
+```
+
+Asymettry values:
+
+ - Asymetry for absolute **longest** routes: `r result1.percentage.asymmetry.absolute.longest`
+
+ - Asymetry for absolute **shortest** routes: `r result1.percentage.asymmetry.absolute.shortest`
+
+
+
+
+
+# Anonymise and Save Workspace
+
+It is useful to save all these data so that it isn't necessary to re-run everything. There is aso a companion script that removes individual traces if necessary. 
+
+
+
+```{r saveWorkspace}
+
+save.image(file="analyse_traces.RData")
+
+```
+
+

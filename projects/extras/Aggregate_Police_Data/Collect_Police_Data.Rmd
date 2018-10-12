@@ -1,0 +1,206 @@
+---
+title: "Aggregaete UK Crime Data"
+author: "Nick Malleson"
+date: '`r format(Sys.time(), "%d %B, %Y (%H:%M)")`'
+output:
+  html_document: 
+    toc: yes
+    pandoc_args: [
+      "+RTS", "-K64m",
+      "-RTS"
+    ]
+  pdf_document:
+    fig_crop: no
+    highlight: kate
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+fontsize: 10pt
+---
+
+A script to read police data from [data.police.uk/](https://data.police.uk/), save it as a single file, and then aggregate it to a few different spatial boundaries:
+ 
+ - local authority districts
+ - countys
+ - regions
+ 
+
+```{r init}
+# Set the working directory
+WORKING_DIR <- "/Users/nick/research_not_syncd/git_projects/surf/projects/extras/Aggregate_Police_Data"
+setwd(WORKING_DIR)
+
+
+library(GISTools)
+library(data.table) # better than data.frame
+#library(rgeos)    # For things like gIntersects
+library(rgdal)     # For reading/writing shapefiles
+#library(raster)    # For creating regular grids
+#library(plyr)     # For counting and aggregating
+#library(tmap)     # For thematic maps
+#library(classInt) # Jenks natural breaks
+#library(png)      # For loading pngs after they have been written
+#library(grid)     # so that they can be embedded in knitted documents
+#library(spdep)    # For doing the spatial regression, contiguity matrices, etc.
+#library(GWmodel)  # For geographically weighted regression (GWR)
+#library(MASS)     # For stepwise regression (stepAIC())
+#library(pander)   # For printing tables nicely
+#library(MVN)      # For testing for multivariate normality (MVN)
+#library(RColorBrewer) # For making nice colour themes
+#library(rgl)       # For 3D space-time cube
+#library(plot3D)    # For 3D space-time cube
+#library(dplyr)     # To look up fields in tables (e.g. N rows higher --> lag)
+library(parallel)
+library(pbapply)  # For progress bar in parallel
+no_cores <- detectCores() / 2  # Detect the number of cores that are available and use half (often CPUs simulate 2 threads per core)
+Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
+options("mc.cores"=no_cores) # is correct).
+#library(lubridate)
+#library(hexbin)   # For hex bins
+#library(ggplot2)  # ditto
+#library(gridExtra) # For arranging two grids side by side
+#library(feather)  # For reading data prepared by python
+#library(leaflet) # For doing interactive maps
+
+
+# Define British National Grid and WGS projections
+BNG <- CRS('+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs')
+WGS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+```
+
+# Get and Read the Data
+
+## Read Police Data
+
+Get the data yourself! Go to https://data.police.uk/, download the data you want, and save them in the `police_data` directory. This file assumes they are 'zip' files and will read all the zip files in the directory.
+
+The next chunk extracts the zip file(s) and reads all of the csv files inside them, creating a single data.table (this is like a normal data.frame, but better. When I did this using a data.frame it took hours to finish reading).
+
+```{r readData, message=FALSE}
+
+data.dir <- "./police_data/"
+file.names <- dir(data.dir, pattern =".zip")
+
+all.crime <- data.table() # This will hold all of the crime data
+
+for (i in 1:length(file.names)) {
+  # The name of each zip file 
+  f <- file.names[i] 
+  
+  # Open the zip file and keep a link to all files inside it into a directory called 'temp'
+  zipfile <- unzip(paste0(data.dir,f), exdir="temp")
+  print(paste("Opened",f,"Found",length(zipfile),"files inside."))
+  
+  # Loop through every csv file contained within the zip file
+  for (j in 1:length(zipfile)) {
+    # Read the csv file
+    csvfile <- zipfile[j] # get the name of the csv file
+    csv <- data.table::fread(csvfile) # read it
+    #csv <- read.csv(csvfile) # read it
+    if (i==1 & j==1) { # If this is the first file to be opened, set up the dataframe
+      all.crime <- as.data.table(csv)
+    } else { # Otherwise append the new rows
+      all.crime <- rbind(all.crime, csv)
+    }
+    print(paste("\t Found",nrow(csv),"crimes in",csvfile))
+  }
+  
+}
+
+print(paste("Found",nrow(all.crime),"crimes in total "))
+
+# Delete the extracted csv files
+unlink(zipfile)
+unlink("temp", recursive = TRUE)
+
+```
+
+## Tidy up the police data
+
+There are some crimes that don't have coordinates. Get rid of these
+
+```{r cleanPoliceData}
+
+print(paste0("There are ", nrow(all.crime[is.na(all.crime$Latitude) | is.na(all.crime$Longitude) , ]),
+                               " (out of ", nrow(all.crime), ") rows with NAs in coordinates") )
+
+# Make a new copy of the crime dataset without these NAs (notice the '!')
+all.crime.clean <- all.crime[!(is.na(all.crime$Latitude) | is.na(all.crime$Longitude)) , ]
+
+rm(all.crime) # Delete the old one to free some memory
+```
+
+
+## Create Spatial Police Data
+
+Turn the police data into a `SpatialPointsDataFrame` so that R recognises the spatial attributes
+
+```{r spatialisePoliceData}
+crime.sp <- SpatialPointsDataFrame(
+  coords=cbind(all.crime.clean$Longitude,all.crime.clean$Latitude), 
+  data = all.crime.clean, proj4string = WGS)
+
+# Reproject to British National Grid
+crime.sp <- spTransform(crime.sp,CRSobj = BNG)
+
+# Add BNG x and y columns
+
+crime.sp$X <- coordinates(crime.sp)[,"coords.x1"]
+crime.sp$Y <- coordinates(crime.sp)[,"coords.x2"]
+
+```
+
+
+**Write out a complete csv file**
+
+Now we will write all the data out (as a single csv file) in case we want to do something else with it. Also save it as an RData object as these are much quicker to read back in for next time. Use `load("./all_crime.RData")` to load the Rdata file.
+
+```{r writeCSV }
+# Write the csv and compress it (otherwise it's probably huge)
+temp <- tempfile(fileext=".csv")
+write.csv(crime.sp@data, file=temp) # write temp csv
+zip("./crime.csv.zip",temp) # zip temp csv
+unlink(temp) # delete temp csv
+
+#write.csv(crime.sp@data, file="./crime.csv")
+save(all.crime.clean, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
+
+# Also make a shapefile (not doing this because a 7M point shapefile is good for nothing!)
+# writeOGR(crime.sp, dsn="./", layer="crime", driver="ESRI Shapefile", overwrite_layer = TRUE)
+
+```
+
+## Get Region Boundaries
+
+(_Just do Leeds for now so that it doesn't take too long._)
+
+```{r loadBoundaries}
+
+areas <- readOGR(dsn = "./boundaries/", layer="leeds_lsoa_2011")
+plot(areas)
+```
+
+Aggregate crimes by month and year to the areas
+
+```{r aggregateCrimes}
+
+#sp <- crime.sp[sample(1:nrow(crime.sp), 1000),] # sample temporarily
+
+months <- unique(crime.sp$Month) # Find all unique months
+
+# A list wgere each item is a vector of crimes per area in a given month 
+l <- mclapply(X = months, FUN=function(m) {
+  crimes <- crime.sp[which(crime.sp$Month==m),]
+  return(poly.counts(crimes, areas))
+})
+names(l) <- sapply(X = months, FUN = function(m) { 
+  return(gsub("-", "", paste0("Crime",m)))} # (note that gsub() removes the hyphen between year and month)
+  )
+
+# Finally append these vectors as columns in the dataframe
+areas <- cbind(areas, l)
+
+# Save again now with the aggregate data as well
+save(all.crime.clean, crime.sp, file="./all_crime.RData") # Save RData for easy loading back into R
+```
+
