@@ -28,7 +28,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     //val rndDinnerPreference = state.random.nextDouble() / 2d
     val rndGoingOutPreference = state.random.nextDouble() / 2d
     val rndSportPreference = state.random.nextDouble() / 2d
-    val rndLunchShoppingPreference = state.random.nextDouble() * 0.4
+    val rndLunchShoppingPreference = state.random.nextDouble() * 0.6
 
     // WORKING
     val workPlace = Place(
@@ -41,7 +41,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += workActivity
 
     // SUPERMARKET
-    val supermarketTimeProfile = TimeProfile(Array((7d, 0d), (11.5 + rnd/2d, rndLunchShoppingPreference), (16d + 3d*rnd/4d, 1d - rndLunchShoppingPreference), (22d, 0d)))
+    val supermarketTimeProfile = TimeProfile(Array((7d, 0d), (11.5 + rnd/2d, rndLunchShoppingPreference), (16.5 + 3d*rnd/4d, 1d - rndLunchShoppingPreference), (22d, 0d)))
     val supermarketActivity = SupermarketActivity(timeProfile = supermarketTimeProfile, agent = this, state)
     tempActivities += supermarketActivity
 
@@ -68,7 +68,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += sportActivity
 
     // SLEEPING
-    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d, 1d), (12d, 0d), (23d, 1d))), agent = this)
+    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d + rnd/2d, 1d), (12d + rnd/2d, 0d), (21d + rnd/2d, 1d))), agent = this)
     // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
     // (repeatedly call the ++ function to increase it)
     for (i <- 1.until( (90 + rnd * 7.5).toInt) ) {

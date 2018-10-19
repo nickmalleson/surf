@@ -28,7 +28,7 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
 
 
       // SUPERMARKET
-      val supermarketTimeProfile = TimeProfile(Array((7d, 0d),(10d + rnd/4d, rndSupermarketPreference),(14d + rnd, 0d)))
+      val supermarketTimeProfile = TimeProfile(Array((8d + rnd/2d, 0d),(11d + rnd, rndSupermarketPreference),(15d + rnd, 0d)))
       val supermarketActivity = SupermarketActivity(timeProfile = supermarketTimeProfile, agent = this, state)
       tempActivities += supermarketActivity
 
@@ -50,12 +50,12 @@ class RetiredAgent (override val state:SurfABM, override val home:SurfGeometry[B
       tempActivities += goingOutActivity
 
       // SPORTS
-      val sportTimeProfile = TimeProfile(Array((7d, 0d), (10d + rnd, rndSportPreference), (18d, 0d)))
+      val sportTimeProfile = TimeProfile(Array((7d + rnd/2d, 0d), (10d + rnd, rndSportPreference), (18d + rnd/2d, 0d)))
       val sportActivity = SportActivity(timeProfile = sportTimeProfile, agent = this, state)
       tempActivities += sportActivity
 
       // NON-FOOD SHOPPING
-      val otherShoppingTimeProfile = TimeProfile(Array((9d, 0d),(10d + rnd, rndOtherShopPreference),(18d, 0d)))
+      val otherShoppingTimeProfile = TimeProfile(Array((9d + rnd/2d, 0d),(11d + rnd, rndOtherShopPreference),(18d, 0d)))
       val otherShoppingActivity = ShopActivity(timeProfile = otherShoppingTimeProfile, agent = this, state)
       tempActivities += otherShoppingActivity
 
