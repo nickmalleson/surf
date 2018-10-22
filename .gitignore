@@ -112,6 +112,9 @@ temp_nltk_stuff/
 *.iws
 
 
+# Others that came up (added by Nick)
+**/.idea/**/hydra.xml
+
 
 
 # ********** Footfall stuff **********
