@@ -28,7 +28,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     //val rndDinnerPreference = state.random.nextDouble() / 2d
     val rndGoingOutPreference = state.random.nextDouble() / 2d
     val rndSportPreference = state.random.nextDouble() / 2d
-    val rndLunchShoppingPreference = state.random.nextDouble() * 0.6
+    val rndLunchShoppingPreference = state.random.nextDouble() * 0.75
 
     // WORKING
     val workPlace = Place(
@@ -63,7 +63,7 @@ class CommuterAgent(override val state:SurfABM, override val home:SurfGeometry[B
     tempActivities += goingOutActivity
 
     // SPORTS
-    val sportTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2d, rndSportPreference), (22d, 0d)))
+    val sportTimeProfile = TimeProfile(Array((7d, 0d), (10d + rnd, rndSportPreference / 5d), (18d + rnd/2d, rndSportPreference), (22d, 0d)))
     val sportActivity = SportActivity(timeProfile = sportTimeProfile, agent = this, state)
     tempActivities += sportActivity
 
