@@ -144,7 +144,7 @@ object SurfABM extends Serializable {
   ///var agentGeomMap : Map[SurfGeometry,Agent] = null
 
   // Spatial layers. One function to read them all
-  val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, goingOutGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
+  val (buildingGeoms, shopGeoms, lunchGeoms, dinnerGeoms, goingOutGeoms, sportGeoms, buildingIDGeomMap, roadGeoms, network, junctions, mbr) = _readEnvironmentData()
 
   LOG.info("Finished initialising model environment")
 
@@ -175,6 +175,7 @@ object SurfABM extends Serializable {
         val lunchPlaces = new GeomVectorField(WIDTH, HEIGHT)
         val dinnerPlaces = new GeomVectorField(WIDTH, HEIGHT)
         val goingOutPlaces = new GeomVectorField(WIDTH, HEIGHT)
+        val sportPlaces = new GeomVectorField(WIDTH, HEIGHT)
         // Declare the fields from the shapefile that should be read in with the geometries
         // GeoMason wants these to be a Bag
         val attributes: Bag = new Bag( for (v <- BUILDING_FIELDS.values) yield v.toString() ) // Add all of the fields
@@ -220,7 +221,7 @@ object SurfABM extends Serializable {
             // val s = new SurfGeometry[Building](g, building) // (Line above is the same as this)
             tempIDMap.put(buildingID, s)
             buildings.addGeometry(s)
-            if (buildingType == "SHOP") {
+            if (buildingType == "SUPM") {
               shops.addGeometry(s)
             }
             if (buildingType == "CAFE" || buildingType == "FF") {
@@ -231,6 +232,9 @@ object SurfABM extends Serializable {
             }
             if (buildingType == "PUB" || buildingType == "BAR") {
               goingOutPlaces.addGeometry(s)
+            }
+            if (buildingType == "SPORT") {
+              sportPlaces.addGeometry(s)
             }
           }
         }
@@ -299,6 +303,7 @@ object SurfABM extends Serializable {
         lunchPlaces.setMBR(MBR)
         dinnerPlaces.setMBR(MBR)
         goingOutPlaces.setMBR(MBR)
+        sportPlaces.setMBR(MBR)
 
         // Stores the network connections.  We represent the walkways as a PlanarGraph, which allows
         // easy selection of new waypoints for the agents.
@@ -326,7 +331,7 @@ object SurfABM extends Serializable {
         SurfABM.LOG.info("Finished creating network and junctions")
 
         // Return the layers
-        (buildings, shops, lunchPlaces, dinnerPlaces, goingOutPlaces, b_ids, roads, network, junctions, MBR)
+        (buildings, shops, lunchPlaces, dinnerPlaces, goingOutPlaces, sportPlaces, b_ids, roads, network, junctions, MBR)
       }
       catch {
         case e: Exception => {

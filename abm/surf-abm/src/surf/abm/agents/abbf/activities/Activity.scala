@@ -4,6 +4,7 @@ import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 import surf.abm.main.{Clock, SurfABM}
+import surf.abm.main.SurfABM.conf
 
 
 /**
@@ -56,6 +57,16 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     */
   def intensity() = this._backgroundIntensity + this.timeProfile.calcIntensity(Clock.currentHour())
 
+  // activityIncreaseRnd is used to strengthen or weaken activity increase for every agent by multiplying it to a random number in a range [1-R/2, 1+R/2]
+  val backgroundRndRange: Double = SurfABM.conf.getDouble(SurfABM.ModelConfig+".BackgroundRndRange")
+  private val activityIncreaseRnd = scala.util.Random.nextDouble() * backgroundRndRange + 1.0 - (backgroundRndRange / 2.0)
+
+  /**
+    * The minimum amount that the intensity of an activity must decrease before the agent stops trying to satisfy it.
+    * This prevents the agents quickly switching from one activity to another
+    */
+  val MINIMUM_INTENSITY_DECREASE: Double
+
 
   protected var _currentIntensityDecrease = 0d
   /**
@@ -63,7 +74,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * started satisfying the activity.
     * <p>This is useful because it makes it possible the agent from chaining activity too rapidly.</p>
     */
-  def currentIntensityDecrease() = _currentIntensityDecrease
+  def currentIntensityDecrease() : Double = _currentIntensityDecrease
   // The following is a setter, but doesn't work (http://dustinmartin.net/getters-and-setters-in-scala/)
   //def currentIntensityDecrease_= (value:Int) : Unit = {
   //  _currentIntensityDecrease = value
@@ -113,7 +124,7 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     *
     */
   def ++() : Unit = {
-    this._backgroundIntensity += this.backgroundIncrease()
+    this._backgroundIntensity += this.backgroundIncrease() * this.activityIncreaseRnd
   }
 
   /**
