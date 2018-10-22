@@ -4,7 +4,7 @@ import org.apache.log4j.Logger
 import sim.field.geo.GeomVectorField
 import surf.abm.agents.abbf.activities.ActivityTypes.{LUNCHING, DINNER, GOING_OUT, SHOPPING, SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
-import surf.abm.agents.abbf.occupancies._
+import surf.abm.agents.abbf.occupations._
 import surf.abm.environment.{Building, Junction}
 import surf.abm.main.{BUILDING_FIELDS, GISFunctions, SurfABM, SurfGeometry}
 
@@ -123,7 +123,7 @@ object ABBFAgentLoaderOtley {
           val homeList = oaBuildingIDMap(Set(orig, small)).toList
 
           // There might be a more efficient way to define the work buildings list.
-          // TO DO: Define that you can work in any building!! Otherwise add new categories!!
+          // TO DO: Define that you can work in any building!!
           val workListSmallBool = oaBuildingIDMap.contains(Set(dest, small))
           val workListLargeBool = oaBuildingIDMap.contains(Set(dest, large))
           val workListShopBool = oaBuildingIDMap.contains(Set(dest, shopType))
@@ -232,81 +232,5 @@ object ABBFAgentLoaderOtley {
 
   }
 
-  /* Convenience to make an agent, just makes the loops in createAgent() a bit nicer */
-  /*
-  def makeAgent(state: SurfABM, home: SurfGeometry[Building], work: SurfGeometry[Building] = null): Unit = {
-    // Finally create the agent, initialised with their home
-    val a: ABBFAgent = ABBFAgent(state, home)
-
-    val activities = scala.collection.mutable.Set[Activity]()
-
-    // Definition of random numbers
-    val rnd = state.random.nextDouble() * 4d
-    // A random number between 0 and 4
-    val rndLunchPreference = state.random.nextDouble()
-    // Test with a random preference for eating and leisure activities. Should become activity specific.
-    val rndDinnerPreference = state.random.nextDouble() // maybe not good because should mainly be at random day in week, not only done by random agents regularly
-    val rndGoingOutPreference = state.random.nextDouble() / 2d
-
-    // WORKING
-    val workPlace = Place(
-      location = work,
-      activityType = WORKING,
-      openingTimes = null // Assume it's open all the time
-    )
-    val workTimeProfile = TimeProfile(Array((6d, 0d), (7d + rnd, 1d), (14d + rnd, 1d), (22d, 0d)))
-    val workActivity = if (work != null) {
-      WorkActivity(timeProfile = workTimeProfile, agent = a, place = workPlace)
-    }
-      else null
-    if (workActivity != null) activities += workActivity
-
-    // SHOPPING
-    val shoppingTimeProfile = TimeProfile(Array((7d, 0d), (11d + rnd, 1d), (17d + rnd, 0.3), (22d, 0d)))
-    val shoppingActivity = ShopActivity(timeProfile = shoppingTimeProfile, agent = a, state)
-    activities += shoppingActivity
-
-    // LUNCHING
-    val lunchTimeProfile = TimeProfile(Array((11d, 0d), (11.5 + rnd/2, rndLunchPreference), (12d + rnd/2, rndLunchPreference), (15d, 0d)))
-    val lunchActivity = LunchActivity(timeProfile = lunchTimeProfile, agent = a, state)
-    activities += lunchActivity
-
-    // DINNER
-    val dinnerTimeProfile = TimeProfile(Array((17d, 0d), (18d + rnd/2, rndDinnerPreference), (19.5 + rnd/2, rndDinnerPreference), (22.5, 0d)))
-    val dinnerActivity = DinnerActivity(timeProfile = dinnerTimeProfile, agent = a, state)
-    activities += dinnerActivity
-
-    // GOING OUT
-    val goingOutTimeProfile = TimeProfile(Array((0d, rndGoingOutPreference / 4.0), (2d, 0d), (20d, 0d), (22d, rndGoingOutPreference)))
-    val goingOutActivity = GoingOutActivity(timeProfile = goingOutTimeProfile, agent = a, state)
-    activities += goingOutActivity
-
-    // SLEEPING
-    val atHomeActivity = SleepActivity(TimeProfile(Array((0d, 1d), (4d, 1d), (12d, 0d), (23d, 1d))), agent = a)
-    // Increase this activity to make it the most powerful activity to begin with, but with a bit of randomness
-    // (repeatedly call the ++ function to increase it)
-    for (i <- 1.until(72 +(rnd * 25).toInt) ) {
-      atHomeActivity.++()
-    }
-    activities += atHomeActivity
-
-
-    // Add these activities to the agent's activity list. At Home is the strongest initially.
-    //val activities = Set[Activity](workActivity , shoppingActivity , atHomeActivity , lunchActivity , dinnerActivity, goingOutActivity )
-
-    // Finally tell the agent about them
-    //a.activities = activities
-    a.activities ++= activities
-
-
-    // Last bits of admin required: add the geometry and schedule the agent and the spatial index updater
-
-    SurfABM.agentGeoms.addGeometry(SurfGeometry[ABBFAgent](a.location, a))
-    state.schedule.scheduleRepeating(a, SurfABM.AGENTS_STEP, 1)
-
-    SurfABM.agentGeoms.setMBR(SurfABM.mbr)
-    state.schedule.scheduleRepeating(SurfABM.agentGeoms.scheduleSpatialIndexUpdater, SurfABM.AGENTS_STEP, 1.0)
-  }
-  */
 
 }

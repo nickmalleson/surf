@@ -5,7 +5,7 @@ import sim.engine.SimState
 import surf.abm.agents.Agent
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SPORTS
-import surf.abm.agents.abbf.occupancies.{CommuterAgent, RetiredAgent}
+import surf.abm.agents.abbf.occupations.{CommuterAgent, RetiredAgent}
 import surf.abm.main.{GISFunctions, SurfABM, SurfGeometry}
 import surf.abm.environment.Building
 

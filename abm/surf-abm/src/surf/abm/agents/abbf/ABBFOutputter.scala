@@ -49,8 +49,8 @@ object ABBFOutputter extends Outputter with Serializable {
     LOG.info(s"ABBFOutputter will write information about the following agents: "+AgentsToOutput.toString())
 
 
-    val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Activity,x,y\n" // Main csv file; one line per agent
-    val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
+    val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Class,Activity,x,y\n" // Main csv file; one line per agent
+    val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,AgentClass,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
     val CAMERA_COUNTS_HEADER = "Camera,Date,Hour,Count\n" // Camera counts of agents passing by every hour
 
     // Make a new directory for this model
@@ -90,16 +90,17 @@ object ABBFOutputter extends Outputter with Serializable {
       val agent = agentGeom.theObject // The object that is represented by the SurfGeometry
       val coord = agent.location().geometry.getCoordinate // The agent's location
       val act = agent.currentActivity.getOrElse(None) // The current activity. An Option, so will either be Some[Activity] or None.
+      val agentClass = agent.getClass.getSimpleName // The agent's occupation class
 
       // Write the main agent file
-      this.agentMainBR.write(s"${ticks},${time},${agent.id()},${act.getClass.getSimpleName},${coord.x},${coord.y}\n")
+      this.agentMainBR.write(s"$ticks,$time,${agent.id()},$agentClass,${act.getClass.getSimpleName},${coord.x},${coord.y}\n")
 
       // Now write the intensities of each activity (one line per agent-activity)
       val hour = Clock.currentHour() // Need to know the time of day for the intensity
       agent.activities.foreach(a => {
         // Find the current activity, first checking that there is an activity (it can be empty)
         val current = if (agent.currentActivity == None) 0 else { if (agent.currentActivity.get.getClass == a.getClass) 1 else 0 }
-        this.agentActivitiesBR.write(s"${ticks},${time},${agent.id()},${a.getClass.getSimpleName},${a.intensity()},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
+        this.agentActivitiesBR.write(s"$ticks,$time,${agent.id()},$agentClass,${a.getClass.getSimpleName},${a.intensity()},${a.backgroundIntensity()},${a.timeIntensity(hour)},$current\n")
       }
       )
 

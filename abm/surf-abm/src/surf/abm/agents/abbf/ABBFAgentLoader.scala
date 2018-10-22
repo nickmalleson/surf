@@ -4,13 +4,15 @@ import org.apache.log4j.Logger
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.activities.ActivityTypes.{SLEEPING, WORKING}
 import surf.abm.agents.abbf.activities._
-import surf.abm.agents.abbf.occupancies.SimpleABBFAgent
+import surf.abm.agents.abbf.occupations.SimpleABBFAgent
 import surf.abm.main.{SurfABM, SurfGeometry}
 import surf.abm.main.SurfGeometry
 
 /**
+  * This loader is NOT UP TO DATE anymore and NOT USED. See [[ABBFAgentLoaderOtley]] for the more recent version.
+  *
   * The purpose of this loader is to create agents who behave according to the ABBF framework.
-  * Assuming that the model has been configured to use the framework (see [[surf.abm.surf-abm.conf]]), then once
+  * Assuming that the model has been configured to use the framework (see [[surf-abm.conf]]), then once
   * the model has been initialised, [[SurfABM]] will call the
   * [[surf.abm.agents.abbf.ABBFAgentLoader.createAgents()]] method.
   */
