@@ -80,6 +80,9 @@ acts <- read.csv(paste(wd,'/agent-activities.csv',sep=""))
 agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
 acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 
+
+# XXXX DROP FIRST X(2?) DAYS
+
 # Find all of the activities - useful throughout
 all.acts <- unique(agents$Activity)
 

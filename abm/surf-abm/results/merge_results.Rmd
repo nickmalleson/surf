@@ -57,10 +57,13 @@ Set up the directories. Note: The script needs the `noggin_data.feather` file to
 
 ```{r get.directories }
 
-SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
+#SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
+SCENARIO <- "CummutersRetired" # The name of the scenario to analyse
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
 AGENT_ID <- -1
 #AGENT_ID <- 1
+
+SKIP.ROWS <- 
 
 # When running this script directly in R(Studio) we need to specify the current working directory
 CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
@@ -94,7 +97,7 @@ Read the data on the agent locations and activities as well as the camera counts
 
 # Read the first result to make the tables. The add append the remaining results
 agents  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'))
-acts    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
+#acts    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
 cameras <- read.csv(paste0(scenarios.dirs[1],'/camera-counts.csv'))
 
 
@@ -103,10 +106,10 @@ for (i in 2:length(scenarios)) {
   s <- scenarios[i]
   dir <- scenarios.dirs[i]
   agents.temp  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'))
-  acts.temp    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
+  #acts.temp    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
   cameras.temp <- read.csv(paste0(scenarios.dirs[1],'/camera-counts.csv'))
   agents  <- rbind(agents, agents.temp)
-  acts    <- rbind(acts, acts.temp)
+  #acts    <- rbind(acts, acts.temp)
   cameras <- rbind(cameras, cameras.temp)
 #  print(paste("Read file",i))
 }
@@ -117,8 +120,8 @@ rm(agents.temp, acts.temp, cameras.temp, s, dir)
 # Text format for agents and activities is "2011-01-01T01:10"
 agents$date  <- do.call("c", pblapply( X = 1:nrow(agents), FUN = function(i) { strptime(as.character(agents[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=no_cores ) )
 gc()
-acts$date    <- do.call("c", pblapply( X = 1:nrow(acts),   FUN = function(i) { strptime(as.character(  acts[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=no_cores/2 ) )
-gc()
+#acts$date    <- do.call("c", pblapply( X = 1:nrow(acts),   FUN = function(i) { strptime(as.character(  #acts[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=no_cores/2 ) )
+#gc()
 
 # Camera dates need to have date plus number of hours as these are stored in different columns (don't bother with parallel)
 cameras$date <- as.POSIXct(as.Date(cameras$Date)) + ( 3600 * cameras$Hour )
@@ -162,15 +165,18 @@ Choose one day from which to do the remaining analysis.
 ```{r choose.day}
 print(table(date(cameras$date)))
 # Sanity check
-stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
+#stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
+stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))))
 
 analysis.day <- as.Date("2011-01-06")
 
 cameras <- cameras[date(cameras$date)==analysis.day,]
-acts    <-    acts[date(acts$date)   ==analysis.day,]
+#acts    <-    acts[date(acts$date)   ==analysis.day,]
 agents  <-  agents[date(agents$date) ==analysis.day,]
 
-stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
+stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))))
+#stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
+
 stopifnot(length(unique(date(cameras$date)))==1)
 ```
 
