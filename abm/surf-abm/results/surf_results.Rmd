@@ -89,7 +89,7 @@ all.acts <- unique(agents$Activity)
 # Remove any agents that we're not plotting the results for. Graphs easily become overcomplicated
 agent.ids <- c() # The agents to plot
 if (AGENT_ID == -1) { # Plot a selection of agents chosen at random
-  agent.ids <- sample(unique(acts$Agent), size=10, replace=FALSE) # sample from all ids
+  agent.ids <- sample(unique(acts$Agent), size=20, replace=FALSE) # sample from all ids
 } else {
   # Otherwise just plot the one agent
   agent.ids <- c(AGENT_ID)
@@ -112,31 +112,48 @@ Plot just the overall intensities of the different activities for some agents.
 # Plot
 for (id in agent.ids) {
   par(mfrow=c(1,1))
-  i <- 1 # For colours
+  i <- 0 # For colours
+  colvec <- c() # Store used colour numbers
   for (activity in active.acts) {
-    if (i==1) { # First plot
-      # Plot overall intensity
-      plot(x=acts[which(acts$Activity==activity & acts$Agent==id),]$Iterations,
-           y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, 
-           type='o', col=i, 
-           ylim=c(0,max(acts$Intensity)), # All charts have same y axis
-           #ylim=c(0,max(acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity)), # Y axis different for each agent
-           pch=1,
-           xlab = "Time", ylab="TotalIntensity", main=paste("Activities for agent",id))
-    } else { # Now for the remaining activities
-      points(
-        x=acts[which(acts$Activity==activity & acts$Agent==id),]$Iterations, 
-        y=acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity, type='o', col=i )
+    if (i != 6) {
+      i <- i + 1 # increment the colour counter (one colour per activity)
+    } else {
+      i <- i + 2 # don't use yellow
     }
-    # Add a vertical line when a new CurrentActivity starts (with the colour of that new activity)
-    abline(v=acts[which(
-      acts$Activity==activity & acts$CurrentActivity==1 & 
-        dplyr::lag(acts$CurrentActivity, length(active.acts)*length(agent.ids)) != 1 & 
-        acts$Agent==id)
-      ,]$Iterations, col=i, lwd=2)
-    
-    i <- i + 1 # increment the colour counter (one colour per activity)
-    j<- 1 # Reset the point type counter - same point type for each kind of intensity (total, background, time)
+    colvec <- c(colvec, i)
+    thisagent.acts <- unique(acts[which(acts$Agent==id),]$Activity)
+    #if (activity %in% c('SleepActivity','WorkActivity','ShopActivity')) {
+    if (activity %in% thisagent.acts) {
+      agent.act = acts %>%
+        dplyr::select(Activity, Agent, Iterations, Intensity, CurrentActivity, AgentClass) %>%
+        filter(Activity == activity & Agent == id)
+      agent.class = agent.act[1,]$AgentClass
+      agent.act = agent.act %>%
+        dplyr::select(Iterations, Intensity, CurrentActivity) %>%
+        arrange(Iterations)
+
+      if (i==1) { # First plot
+        # Plot overall intensity
+        plot(x=agent.act$Iterations,
+             y=agent.act$Intensity,
+             type='l', col=i, lwd = 0.15,
+             xlim=c(0,max(acts$Iterations)),
+             ylim=c(min(acts$Intensity),max(acts$Intensity)), # All charts have same y axis
+             #ylim=c(0,max(acts[which(acts$Activity==activity & acts$Agent==id),]$Intensity)), # Y axis different for each agent
+             pch=1,
+             xlab = "Time", ylab="TotalIntensity", main=paste("Activities for",agent.class,id))
+      } else { # Now for the remaining activities
+        points(
+          x=agent.act$Iterations,
+          y=agent.act$Intensity, type='l', col=i, lwd = 0.15 )
+      }
+      # Add a vertical line when a new CurrentActivity starts (with the colour of that new activity)
+      lagtable = agent.act %>%
+        mutate(CurrentLag = lag(CurrentActivity)) %>%
+        filter(CurrentActivity == 1 & CurrentLag != 1)
+      abline(v=lagtable$Iterations, col=i, lwd=1)
+    }
+    #}
   }
   
   legend("topleft", legend=active.acts, col=1:length(active.acts), lty=1, pch="o")
@@ -296,7 +313,41 @@ for (id in agent.ids) {
 
 ```
 
+Make graphs per agent class of how many agents are doing each activity for every hour of the day
 
+```{r hourlyActivityGraphs}
+
+timetable = bind_cols(agent = agents$Agent,
+                      activity = agents$Activity,
+                      class = agents$Class,
+                      days = as.integer(substr(agents$Time,9,10)),
+                      hours = as.integer(substr(agents$Time,12,13)),
+                      mins = as.integer(substr(agents$Time,15,16)))
+all.classes = unique(timetable$class) # all agent classes
+for (cl in all.classes) {
+  active.acts.class = unique(timetable[timetable$class == cl, ]$activity) # all activities of this class
+  for (act in active.acts.class) {
+    counttable = timetable %>%
+      filter(activity == act & class == cl) %>%
+      distinct(agent, days, hours) %>% # 1 row is enough to see if agent does that activity in that hour on a day
+      group_by(hours) %>%
+      mutate(count = n()) %>% # count number of agents and days
+      distinct(hours, count) %>%
+      arrange(hours)
+    mins <- counttable$hours * 0 # we need minutes to use hms, but just 0 since data are hourly
+    times <- hms::hms(min = mins, hours = counttable$hours)
+    plottime <- strptime(as.character(times), "%H:%M")
+    plot(x = plottime,
+         y = counttable$count, lwd=5,
+         type='h', col="blue", ylim=c(-2,max(counttable$count + 2)),
+         xlab = "Hour", ylab="Frequency", main=paste(cl,"doing",act)
+        )
+  }
+}
+
+
+
+```
 
 
 
