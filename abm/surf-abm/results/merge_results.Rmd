@@ -59,15 +59,16 @@ Set up the directories. Note: The script needs the `noggin_data.feather` file to
 
 #SCENARIO <- "ABBF-otley" # The name of the scenario to analyse
 SCENARIO <- "CummutersRetired" # The name of the scenario to analyse
+#SCENARIO <- "Commuters"
+
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
 AGENT_ID <- -1
 #AGENT_ID <- 1
 
-# Optionally skip the first 80% of the files. We only need one day anyway, and it is better to take this day
+# Optionally skip the first 10% of the files. We only need one day anyway, and it is better to take this day
 # from towards the end of the simulation period.
 # In a 14 day simulation (4032 iterations) we get 4032000 lines in the agent file (plust the header)
-# Make this 0 to read all
-SKIP.ROWS <- round(4032000*0.2)
+SKIP.ROWS <- round(4032000*0.9)
 
 # When running this script directly in R(Studio) we need to specify the current working directory
 CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
@@ -95,7 +96,7 @@ Will analyse the `r length(scenarios)` scenarios in `r SCENARIO`
 Read the data on the agent locations and activities as well as the camera counts and put into big tables
 
 
-```{r readData}
+```{r readData1}
 
 # TODO - include a unique id (the scenario) for each model
 
@@ -121,14 +122,35 @@ for (i in 2:length(scenarios)) {
   cameras <- rbind(cameras, cameras.temp)
 #  print(paste("Read file",i))
 }
-rm(agents.temp, acts.temp, cameras.temp, s, dir)
+rm(agents.temp, cameras.temp, s, dir) #,acts.temp)
+save.image(paste0('merge_results-temp-',SCENARIO,'.RData'))
+gc()
+```
 
+Now finish reading the data by creating proper date columns
+
+```{r readData-makedates }
+
+# Choose a day to do the analysis on so now to reduce the amount of data we need to deal with.
+
+analysis.day <- "2011-01-14" # This is towards the end of a 2-week simulation
+agents <-   agents[which(startsWith(as.character(agents$Time), analysis.day)),]
+cameras <- cameras[which(cameras$Date==analysis.day),]
+#acts    <-    acts[date(acts$date)   ==analysis.day,]
+
+#stopifnot(identical(unique(date(cameras$Time)), unique(date(agents$date))))
+#stopifnot(length(unique(date(cameras$date)))==1)
 
 # Make proper time columns (sorry, this looks complicated because it's in parallel, but simply uses 'strptime' to convert the dates) . 
 # The do.call is because unlist breaks lists of dates (https://stackoverflow.com/questions/15659783/why-does-unlist-kill-dates-in-r)
 # Text format for agents and activities is "2011-01-01T01:10"
-agents$date  <- do.call("c", pblapply( X = 1:nrow(agents), FUN = function(i) { strptime(as.character(agents[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=no_cores ) )
+cl <- makeCluster(no_cores)
+clusterExport(cl, "agents")
+agents$date <- do.call("c", pblapply( X = 1:nrow(agents), FUN = function(i) { 
+  strptime(as.character(agents[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=cl ) )
+stopCluster(cl)
 gc()
+
 #acts$date    <- do.call("c", pblapply( X = 1:nrow(acts),   FUN = function(i) { strptime(as.character(  #acts[i,"Time"]), "%Y-%m-%dT%H:%M") }, cl=no_cores/2 ) )
 #gc()
 
@@ -163,15 +185,15 @@ noggin[which(noggin$Location=="20"),]$Location = "17" # rename location 20 to lo
 #aggnoggin = aggregate(Count~Location + HourOfDay, data=noggin, FUN=sum)
 #aggnoggin$RelCount = aggnoggin$Count / sum(aggnoggin$Count)
 
-save.image("merge_results.RData")
+save.image(paste0('merge_results',SCENARIO,'.RData'))
 
 ```
 
 
-Choose one day from which to do the remaining analysis.
+Choose one day from which to do the remaining analysis (_this is done in previous chunk now_)
 
 
-```{r choose.day}
+```{r choose.day, exec=FALSE}
 print(table(date(cameras$date)))
 # Sanity check
 #stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
@@ -197,15 +219,15 @@ Plot the total average hourly footfall count and 99% confidence intervals. Note 
 #ggplot(cameras, aes(Hour, Count, color=Camera)) + # Colouring points by camera id (doesn't work)
 #ggplot(cameras[sample(1:nrow(cameras), 1000),], aes(Hour, Count)) + # Sampling N points from the cameras shows wider confidence interval (obviously)
 ggplot(cameras, aes(Hour, Count)) +
-  geom_hex(bins=15) +
-  #geom_point() + 
+  #geom_hex(bins=15) +
+  #geom_point(color="black", size=0.5) + 
   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
-  geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
-  ylab("Number of agents")
-  #ggtitle( "Total footfall count from all sensors over all model runs")
+  geom_smooth(se=TRUE, level=0.99, color="black") + #GAM
+  ylab("Number of agents")+
+  ggtitle( "Total footfall count from all sensors over all model runs")
 
-ggsave("model_hourly_total.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=4)
-ggsave("model_hourly_total.tiff", device="tiff", path="./merge_results-figs/", width=9, height=4)
+ggsave(paste0("model_hourly_total",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=4)
+ggsave(paste0("model_hourly_total",SCENARIO,".tiff"), path="./merge_results-figs/", width=9, height=4)
 
 ```
 
@@ -217,12 +239,12 @@ cols <- brewer.pal(length(unique(cameras$Camera)),'Set1')
 names(cols) <- unique(cameras$Camera)
 
 plot1 <- ggplot(cameras, aes(Hour, Count, colour=Camera)) +
-  geom_point(size=1) + 
+  #geom_point(size=1) + 
   guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   geom_smooth(se=TRUE, level=0.99) + 
   scale_colour_manual(values=cols)+
-  ylab("Number of agents")
-  #ggtitle( "Total footfall count from for each sensor over all model runs")
+  ylab("Number of agents")+
+  ggtitle( "Total footfall count from for each sensor over all model runs")
 plot1
 
 # Uncomment below to see loess as well
@@ -234,8 +256,8 @@ plot1
 
 #grid.arrange(plot1, plot2, ncol=2)
 
-ggsave("model_hourly_sensors.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=4)
-ggsave("model_hourly_sensors.tiff", device="tiff", path="./merge_results-figs/", width=9, height=4)
+ggsave(paste0("model_hourly_sensors",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=4)
+ggsave(paste0("model_hourly_sensors",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=4)
 
 ```
 
@@ -246,9 +268,9 @@ Compare these to the real data
 ```{r plot.real.data, fig.width=9, fig.height=9 }
 
 plot1 <- ggplot(noggin, aes(HourOfDay, Count)) +
-  geom_hex(bins=15) +
+  #geom_hex(bins=15) +
   #geom_smooth(method="loess", se=TRUE, level=0.99, color="green") + 
-  geom_smooth(se=TRUE, level=0.99, color="purple") + #GAM
+  geom_smooth(se=TRUE, level=0.99, color="black") + #GAM
   ylab("Number of people")+
   xlab("Hour")
   #ggtitle( "Average weekday footfall count from all sensors (real data)")
@@ -259,13 +281,13 @@ plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
   geom_smooth(se=TRUE, level=0.99)+
   scale_colour_manual(values=cols)+
   ylab("Number of people")+
-  xlab("Hour")
-  #ggtitle( "Average weekday footfall count per sensor (real data)")
+  xlab("Hour")+
+  ggtitle( "Average weekday footfall count per sensor (real data)")
 
 g <- grid.arrange(plot1, plot2, nrow=2)
 
-ggsave("plot_real_data.pdf",  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=9)
-ggsave("plot_real_data.tiff", plot=g, device="tiff", path="./merge_results-figs/", width=9, height=9)
+ggsave(paste0("plot_real_data",SCENARIO,".pdf"),  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=9)
+ggsave(paste0("plot_real_data",SCENARIO,".tiff"), plot=g, device="tiff", path="./merge_results-figs/", width=9, height=9)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -342,10 +364,28 @@ ggplot() +
   guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
   #scale_colour_manual("Set3")+
   scale_colour_manual(values=cols)+
-  #ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
+  ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
-ggsave("compare_plots2.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=5)
-ggsave("compare_plots2.tiff", device="tiff", path="./merge_results-figs/", width=9, height=5)
+ggsave(paste0("compare_plots2",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=5)
+ggsave(paste0("compare_plots2",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=5)
+
+```
+
+Just the average:
+
+```{r compare.plots3, fig.width=11, fig.height=5}
+
+ggplot() +
+  #geom_point() + 
+  geom_smooth(se=TRUE, level=0.99, data=cameras, aes(Hour, Count),      color="black", linetype="dotted" ) + 
+  geom_smooth(se=TRUE, level=0.99, data=noggin,  aes(HourOfDay, Count), color="black") + 
+  guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
+  #scale_colour_manual("Set3")+
+  scale_colour_manual(values=cols)+
+  ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
+
+ggsave(paste0("compare_plots3",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=5)
+ggsave(paste0("compare_plots3",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=5)
 
 ```
 
