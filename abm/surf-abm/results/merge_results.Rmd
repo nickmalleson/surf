@@ -41,8 +41,8 @@ library(dplyr)     # To look up fields in tables (e.g. N rows higher --> lag)
 library(parallel)
 library(pbapply)  # For progress bar in parallel
 no_cores <- detectCores() / 2  # Detect the number of cores that are available and use half (often CPUs simulate 2 threads per core)
-Sys.setenv(MC_CORES=no_cores) # Run on n cores (I'm not sure which of these
-options("mc.cores"=no_cores) # is correct).
+Sys.setenv(MC_CORES=no_cores) # Run on n cores
+options("mc.cores"=no_cores)
 library(lubridate)
 library(hexbin)   # For hex bins
 library(ggplot2)  # ditto
@@ -63,7 +63,11 @@ SCENARIO <- "CummutersRetired" # The name of the scenario to analyse
 AGENT_ID <- -1
 #AGENT_ID <- 1
 
-SKIP.ROWS <- 
+# Optionally skip the first 80% of the files. We only need one day anyway, and it is better to take this day
+# from towards the end of the simulation period.
+# In a 14 day simulation (4032 iterations) we get 4032000 lines in the agent file (plust the header)
+# Make this 0 to read all
+SKIP.ROWS <- round(4032000*0.2)
 
 # When running this script directly in R(Studio) we need to specify the current working directory
 CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
@@ -96,16 +100,20 @@ Read the data on the agent locations and activities as well as the camera counts
 # TODO - include a unique id (the scenario) for each model
 
 # Read the first result to make the tables. The add append the remaining results
-agents  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'))
+agents  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'), skip = SKIP.ROWS)
 #acts    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
 cameras <- read.csv(paste0(scenarios.dirs[1],'/camera-counts.csv'))
 
+# We might have skipped rows, so get the headers
+headers <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'),header = F, nrows = 1, as.is = T)
+colnames(agents) <- headers
 
 # Now append the remaining results
 for (i in 2:length(scenarios)) {
   s <- scenarios[i]
   dir <- scenarios.dirs[i]
-  agents.temp  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'))
+  agents.temp  <- read.csv(paste0(scenarios.dirs[1],'/agents.csv'), skip = SKIP.ROWS)
+  colnames(agents.temp) <- headers
   #acts.temp    <- read.csv(paste0(scenarios.dirs[1],'/agent-activities.csv'))
   cameras.temp <- read.csv(paste0(scenarios.dirs[1],'/camera-counts.csv'))
   agents  <- rbind(agents, agents.temp)
@@ -114,6 +122,7 @@ for (i in 2:length(scenarios)) {
 #  print(paste("Read file",i))
 }
 rm(agents.temp, acts.temp, cameras.temp, s, dir)
+
 
 # Make proper time columns (sorry, this looks complicated because it's in parallel, but simply uses 'strptime' to convert the dates) . 
 # The do.call is because unlist breaks lists of dates (https://stackoverflow.com/questions/15659783/why-does-unlist-kill-dates-in-r)
@@ -168,7 +177,7 @@ print(table(date(cameras$date)))
 #stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))) & identical(unique(date(cameras$date)), unique(date(acts$date))))
 stopifnot(identical(unique(date(cameras$date)), unique(date(agents$date))))
 
-analysis.day <- as.Date("2011-01-06")
+analysis.day <- as.Date("2011-01-14")
 
 cameras <- cameras[date(cameras$date)==analysis.day,]
 #acts    <-    acts[date(acts$date)   ==analysis.day,]
