@@ -239,6 +239,45 @@ ggsave(filename="footfall-graph-retired1.pdf",  plot=g, device="pdf",  path="./m
 A graph comparing the results of the commuting+retired model to the noggin data by each sensor.
 
 
+```{r footfall-individual-sensors, fig.width=9, fig.height=5}
+# Consistent colours for each sensor
+cols <- brewer.pal(length(unique(cameras2$Camera)),'Set1')
+
+ggplot() +
+  #geom_point() + 
+  geom_smooth(se=TRUE, level=0.99, data=cameras2, aes(Hour, CountScaled, col=Camera), linetype="dotted" ) + 
+  geom_smooth(se=TRUE, level=0.99, data=noggin,   aes(HourOfDay, CountScaled, col=Location)) + 
+  guides(colour=guide_legend(title="Sensor")) + # Change the title of the legend
+  #scale_colour_manual("Set3")+
+  scale_colour_manual(values=cols)+
+  ylab("Mean count (z score)")+
+  ggtitle( "Comparing simulated and real Footfall for individual sensors" ) 
+
+ggsave("footfall-individual-sensors.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=5)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Plot model results 
 
 Plot the total average hourly footfall count and 99% confidence intervals. Note that the confidence intervals are so small that they are not visible.
