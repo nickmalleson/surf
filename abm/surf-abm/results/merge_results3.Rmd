@@ -196,7 +196,7 @@ p3 <- make_footfall_plot(noggin, aes(HourOfDay, CountScaled), title="Footfall co
 g <- grid.arrange(p1, p3, nrow=2)
 g
 
-ggsave(filename="footfall-graph-commuters1.pdf",  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=6)
+ggsave(filename="footfall-graph-commuters1.pdf",  plot=g, device="pdf",  path="./figs_for_surf_paper/", width=9, height=6)
 
 ```
 
@@ -226,7 +226,7 @@ g <- ggplot() +
 
 g
 
-ggsave(filename="footfall-graph-retired1.pdf",  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=5)
+ggsave(filename="footfall-graph-retired1.pdf",  plot=g, device="pdf",  path="./figs_for_surf_paper/", width=9, height=5)
 
 ```
 
@@ -252,7 +252,7 @@ ggplot() +
   ylab("Mean count (z score)")+
   ggtitle( "Comparing simulated and real Footfall for individual sensors" ) 
 
-ggsave("footfall-individual-sensors.pdf",  device="pdf",  path="./merge_results-figs/", width=9, height=5)
+ggsave("footfall-individual-sensors.pdf",  device="pdf",  path="./figs_for_surf_paper/", width=9, height=5)
 
 
 ```
@@ -308,8 +308,8 @@ p2 <- ggplot(c, aes(Hour, Count, col=Camera)) +
 grid.arrange(p1, p2, ncol=2)
 
 
-#ggsave(paste0("model_hourly_total",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=4)
-#ggsave(paste0("model_hourly_total",SCENARIO,".tiff"), path="./merge_results-figs/", width=9, height=4)
+#ggsave(paste0("model_hourly_total",SCENARIO,".pdf"),  device="pdf",  path="./figs_for_surf_paper/", width=9, height=4)
+#ggsave(paste0("model_hourly_total",SCENARIO,".tiff"), path="./figs_for_surf_paper/", width=9, height=4)
 
 
 c <- cameras1[which(cameras1$DayNum==14),]
@@ -347,8 +347,8 @@ plot1
 
 #grid.arrange(plot1, plot2, ncol=2)
 
-ggsave(paste0("model_hourly_sensors",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=4)
-ggsave(paste0("model_hourly_sensors",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=4)
+ggsave(paste0("model_hourly_sensors",SCENARIO,".pdf"),  device="pdf",  path="./figs_for_surf_paper/", width=9, height=4)
+ggsave(paste0("model_hourly_sensors",SCENARIO,".tiff"), device="tiff", path="./figs_for_surf_paper/", width=9, height=4)
 
 ```
 
@@ -377,8 +377,8 @@ plot2 <- ggplot(noggin, aes(HourOfDay, Count, colour=Location)) +
 
 g <- grid.arrange(plot1, plot2, nrow=2)
 
-ggsave(paste0("plot_real_data",SCENARIO,".pdf"),  plot=g, device="pdf",  path="./merge_results-figs/", width=9, height=9)
-ggsave(paste0("plot_real_data",SCENARIO,".tiff"), plot=g, device="tiff", path="./merge_results-figs/", width=9, height=9)
+ggsave(paste0("plot_real_data",SCENARIO,".pdf"),  plot=g, device="pdf",  path="./figs_for_surf_paper/", width=9, height=9)
+ggsave(paste0("plot_real_data",SCENARIO,".tiff"), plot=g, device="tiff", path="./figs_for_surf_paper/", width=9, height=9)
 
 #ylab="Total Count"
 #plot(aggregate(Count~HourOfDay, data=aggnoggin, FUN=sum), 
@@ -463,8 +463,8 @@ ggplot() +
   scale_colour_manual(values=cols)+
   ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
-ggsave(paste0("compare_plots2",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=5)
-ggsave(paste0("compare_plots2",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=5)
+ggsave(paste0("compare_plots2",SCENARIO,".pdf"),  device="pdf",  path="./figs_for_surf_paper/", width=9, height=5)
+ggsave(paste0("compare_plots2",SCENARIO,".tiff"), device="tiff", path="./figs_for_surf_paper/", width=9, height=5)
 
 ```
 
@@ -481,8 +481,8 @@ ggplot() +
   scale_colour_manual(values=cols)+
   ggtitle( "Comparing Model Results and 'Simulated 'Real World' Data ")
 
-ggsave(paste0("compare_plots3",SCENARIO,".pdf"),  device="pdf",  path="./merge_results-figs/", width=9, height=5)
-ggsave(paste0("compare_plots3",SCENARIO,".tiff"), device="tiff", path="./merge_results-figs/", width=9, height=5)
+ggsave(paste0("compare_plots3",SCENARIO,".pdf"),  device="pdf",  path="./figs_for_surf_paper/", width=9, height=5)
+ggsave(paste0("compare_plots3",SCENARIO,".tiff"), device="tiff", path="./figs_for_surf_paper/", width=9, height=5)
 
 ```
 

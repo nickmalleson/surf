@@ -355,11 +355,65 @@ for (cl in all.classes) {
   }
 }
 
-
-
 ```
 
 Finish with graphs for the paper: most popular shopping times for commuters and retired
 
+
+```{r hourlyActivityGraphs-forpaper, fig.width=11, fig.height=6}
+
+timetable = bind_cols(agent = agents$Agent,
+                      activity = agents$Activity,
+                      class = agents$Class,
+                      days = as.integer(substr(agents$Time,9,10)),
+                      hours = as.integer(substr(agents$Time,12,13)),
+                      mins = as.integer(substr(agents$Time,15,16)))
+all.classes = unique(timetable$class) # all agent classes
+
+
+make_plot <- function() {
+  par(mfrow=c(1,2))
+  for (cl in all.classes) {
+    #active.acts.class = unique(timetable[timetable$class == cl, ]$activity) # all activities of this class
+    # Find the shopping or supermarket activity (depends on the agent type)
+    if (cl=="RetiredAgent") {
+      act <- "ShopActivity"
+    } else if(cl=="CommuterAgent") {
+      act <- "SupermarketActivity"
+    } else {
+      stop(paste("Unrecofnised class:",cl))
+    }
+    counttable = timetable %>%
+        filter(activity == act & class == cl) %>%
+        distinct(agent, days, hours) %>% # 1 row is enough to see if agent does that activity in that hour on a day
+        group_by(hours) %>%
+        mutate(count = n()) %>% # count number of agents and days
+        distinct(hours, count) %>%
+        arrange(hours)
+      mins <- counttable$hours * 0 # we need minutes to use hms, but just 0 since data are hourly
+      times <- hms::hms(min = mins, hours = counttable$hours)
+      plottime <- strptime(as.character(times), "%H:%M")
+      plot(x = plottime,
+           y = counttable$count, lwd=5,
+           type='h', col="blue", ylim=c(0,max(counttable$count + 2)),
+           xlim=as.POSIXct(c("2018-10-26 00:00:00","2018-10-26 23:00:00")),
+           xlab = "Hour", ylab="Frequency", main=paste("Favourite times for",cl,"\nto do",act)
+      )
+  } # for classes
+}
+make_plot()
+
+pdf(file = "./figs_for_surf_paper/shopping_activity-model.pdf", width=11, height=6)
+make_plot()
+dev.off()
+
+#ggplot(data=data.frame(time=plottime, count=counttable), aes(time,count.count)) +
+#    geom_smooth(se=TRUE, level=0.99, color="black") + #GAM
+#    geom_point(color="black", size=0.5)
+
+
+
+
+```
 
 
