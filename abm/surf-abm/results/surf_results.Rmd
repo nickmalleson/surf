@@ -29,15 +29,17 @@ AGENT_ID <- -1
 #AGENT_ID <- 1
 
 # When running this script directly in R(Studio) we need to specify the current working directory
-#CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
-CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
+CURRENT_DIRECTORY <- '/Users/nick/research_not_syncd/git_projects/surf/abm/surf-abm/results'
+#CURRENT_DIRECTORY <- "C:/Code/surf/abm/surf-abm/results"
 setwd(CURRENT_DIRECTORY) # This is only required when running directly in R(Studio)
 
 # Find the most recent run of that scenario
 #scenarios.dir <- paste("~/research_not_syncd/git_projects/surf/abm/surf-abm/results/out/",SCENARIO,"/",sep="")
 scenario.dir <- paste("./out/",SCENARIO,sep="") # This is the relative directory of the scenario 
-
 runs <- sort(list.files(scenario.dir)) # All the different runs (directories)
+if ("README.txt" %in% runs) {  # There muight be a readme file
+  runs <- runs[-which(runs=="README.txt")]  
+}
 run <- tail(runs, n=1) # Most recent run/scenario
 wd <- paste(scenario.dir, "/", run, sep="") # The new working directory
 print(paste("Using working directory of most recent model of type",SCENARIO,":",wd))
@@ -72,16 +74,19 @@ Read the data on the agent locations and the activities of the agents at each ti
 
 
 ```{r readData}
+
+# Read the CSV files
 agents <- read.csv(paste(wd,'/agents.csv',sep=""))
 acts <- read.csv(paste(wd,'/agent-activities.csv',sep=""))
 
+# Drop the first half of the simulation
+agents <- agents[round(nrow(agents)/2):nrow(agents),]
+acts   <-   acts[round(nrow(acts)/2)  :nrow(acts),  ]
 # Make proper time columns. Text format is "2011-01-01T01:10"
 
 agents$date <- strptime(as.character(agents$Time), "%Y-%m-%dT%H:%M")
 acts$date <- strptime(as.character(acts$Time), "%Y-%m-%dT%H:%M")
 
-
-# XXXX DROP FIRST X(2?) DAYS
 
 # Find all of the activities - useful throughout
 all.acts <- unique(agents$Activity)
@@ -313,6 +318,11 @@ for (id in agent.ids) {
 
 ```
 
+
+
+
+
+
 Make graphs per agent class of how many agents are doing each activity for every hour of the day
 
 ```{r hourlyActivityGraphs}
@@ -348,6 +358,8 @@ for (cl in all.classes) {
 
 
 ```
+
+Finish with graphs for the paper: most popular shopping times for commuters and retired
 
 
 

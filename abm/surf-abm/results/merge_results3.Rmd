@@ -59,8 +59,7 @@ library(gridExtra) # For arranging two grids side by side
 library(feather)  # For reading data prepared by python
 library(leaflet) # For doing interactive maps
 
-#SCENARIO1 <- "Commuters1"
-SCENARIO1 <- "ABBF-otley"
+SCENARIO1 <- "Commuters"
 SCENARIO2 <- "CummutersRetired"
 
 # The ID of the agent to analyse (graphs of all agents can be difficult to understand). If -1 then do a few at random
