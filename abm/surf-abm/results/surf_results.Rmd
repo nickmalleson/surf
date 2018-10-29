@@ -373,11 +373,14 @@ all.classes = unique(timetable$class) # all agent classes
 
 make_plot <- function() {
   par(mfrow=c(1,2))
+  # Used to limit the x axis (because there are no dates in the data, R assumes today's date)
+  x.lim <- as.POSIXct(c(paste0(Sys.Date()," 00:00:00"), paste0(Sys.Date(), " 23:00:00")))
   for (cl in all.classes) {
     #active.acts.class = unique(timetable[timetable$class == cl, ]$activity) # all activities of this class
     # Find the shopping or supermarket activity (depends on the agent type)
     if (cl=="RetiredAgent") {
-      act <- "ShopActivity"
+      #act <- "ShopActivity"
+      act <- "SupermarketActivity"
     } else if(cl=="CommuterAgent") {
       act <- "SupermarketActivity"
     } else {
@@ -396,7 +399,7 @@ make_plot <- function() {
       plot(x = plottime,
            y = counttable$count, lwd=5,
            type='h', col="blue", ylim=c(0,max(counttable$count + 2)),
-           xlim=as.POSIXct(c("2018-10-26 00:00:00","2018-10-26 23:00:00")),
+           xlim=x.lim,
            xlab = "Hour", ylab="Frequency", main=paste("Favourite times for",cl,"\nto do",act)
       )
   } # for classes
