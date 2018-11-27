@@ -5,7 +5,7 @@ category: announce
 tags : [abm, validation]
 ---
 
-<figure style="float:right; width:40%">
+<figure style="float:right; width:40%; padding:10px;">
   <img src="{{site.url}}/{{site.baseurl}}figures/attribution/people-time-square-small.jpg" alt="people on time square"/>
   <figcaption> Photo by <a href="https://unsplash.com/photos/slapbg2mejw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Meriç
 Dağlı</a> on <a href="https://unsplash.com/search/photos/people-crowd?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
