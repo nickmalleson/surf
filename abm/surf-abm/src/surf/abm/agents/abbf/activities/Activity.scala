@@ -1,7 +1,7 @@
 package surf.abm.agents.abbf.activities
 
 import surf.abm.agents.{Agent, UrbanAgent}
-import surf.abm.agents.abbf.{ABBFAgent, TimeProfile}
+import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.ActivityType
 import surf.abm.main.{Clock, SurfABM}
 import surf.abm.main.SurfABM.conf
@@ -117,6 +117,13 @@ abstract class Activity ( val activityType: ActivityType, val timeProfile: TimeP
     * itself to avoid having to check lots of criteria (is the agent at home? are the travelling? etc) at every iteration.
     */
   def activityChanged() : Unit
+
+  /**
+    * This stores where the activity is taking place, which will differ by the agent who is doing the activity
+    * (e.g. not all agents go to the same workplace, and for FlexibleActivities like shopping one particular
+    * agent might chose a new place each time.
+    */
+  def currentPlace() : Place
 
   /**
     * Increase the background intensity. This usually happens at every iteration. The amount to increase it by

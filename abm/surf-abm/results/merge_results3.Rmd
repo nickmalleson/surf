@@ -218,9 +218,14 @@ A graph comparing the footfall in sensors as per the commuting+retired model to 
 # As one graph
 
 g <- ggplot() +
-  geom_smooth(se=TRUE, level=0.99, data=cameras1, aes(Hour, CountScaled, ), color="black", linetype="dotted") +
+  geom_smooth(se=TRUE, level=0.99, data=cameras1, aes(Hour, CountScaled ), color="black", linetype="dotted") +
+  #geom_text( data=cameras1 %>%   filter(Hour==23,Camera=="14", DayNum==8) %>% View,   aes(x=Hour,y=CountScaled), hjust="left", label="Commuters model") +
+  geom_text( aes(x=23.5,y=-0.6), hjust="left", label="Commuters & retired") +
   geom_smooth(se=TRUE, level=0.99, data=cameras2, aes(Hour, CountScaled), color="black", linetype="dashed") +
+  geom_text( aes(x=23.5,y=-0.45), hjust="left", label="Commuters") +
   geom_smooth(se=TRUE, level=0.99, data=noggin,   aes(HourOfDay, CountScaled), color="black", linetype="solid") +
+  geom_text( aes(x=23.5,y=-0.75), hjust="left", label="Real data") +
+  scale_x_continuous(limits=c(0,29))+
   ylab("Mean count (z score)")+
   ggtitle("Footfall count from all sensors")
 

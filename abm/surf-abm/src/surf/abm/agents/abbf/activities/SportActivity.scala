@@ -32,10 +32,14 @@ case class SportActivity (
     private var currentAction = INITIALISING
 
     private val place = Place(
-    location = null,
-    activityType = SPORTS,
-    openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
-  )
+      location = null,
+      activityType = SPORTS,
+      openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
+    )
+    /**
+      * Report the place where this activity is taking place.
+      */
+    override def currentPlace(): Place = place
 
     /**
       * This makes the agent actually perform the activity.

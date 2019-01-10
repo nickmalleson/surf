@@ -1,5 +1,6 @@
 package surf.abm.agents.abbf
 
+import java.io
 import java.io.{BufferedWriter, File, FileWriter}
 import java.time.temporal.TemporalAmount
 
@@ -26,9 +27,10 @@ object ABBFOutputter extends Outputter with Serializable {
   private val LOG: Logger = Logger.getLogger(this.getClass);
 
   // BufferedWriters to write the output
-  private var agentMainBR : BufferedWriter = null
-  private var agentActivitiesBR : BufferedWriter = null
-  private var cameraCountsBR: BufferedWriter = null
+  private var agentMainBR : BufferedWriter = null // Locations etc. of agents at every iteration
+  private var agentActivitiesBR : BufferedWriter = null // Info about agent activities
+  private var cameraCountsBR: BufferedWriter = null // Camera counts
+  private var agentChangeActivity: BufferedWriter = null // Information written each time an agent changes activity
 
   // Might only write information for some agents. This will be populated shortly
   private var AgentsToOutput : List[Int] = null
@@ -52,6 +54,7 @@ object ABBFOutputter extends Outputter with Serializable {
     val AGENT_MAIN_HEADER = "Iterations,Time,Agent,Class,Activity,x,y\n" // Main csv file; one line per agent
     val AGENT_ACTIVITY_HEADER = "Iterations,Time,Agent,AgentClass,Activity,Intensity,BackgroundIntensity,TimeIntensity,CurrentActivity\n" // More detailed information about all activities (multiple lines per agent)
     val CAMERA_COUNTS_HEADER = "Camera,Date,Hour,Count\n" // Camera counts of agents passing by every hour
+    val CHANGE_ACTIVITY_HEADER = "Iteration,Time,Agent,AgentClass,PreviousActivity,Px,Py,NextActivity,Nx,Ny\n" // Info about previous and next activities each time an agent changes
 
     // Make a new directory for this model
     val dir = new File("./results/out/"+SurfABM.ModelConfig+"/"+System.currentTimeMillis()+"/")
@@ -63,12 +66,14 @@ object ABBFOutputter extends Outputter with Serializable {
     this.agentMainBR = new BufferedWriter( new FileWriter ( new File(dir.getAbsolutePath+"/agents.csv")))
     this.agentActivitiesBR = new BufferedWriter( new FileWriter ( new File(dir.getAbsolutePath+"/agent-activities.csv")))
     this.cameraCountsBR = new BufferedWriter( new FileWriter( new File(dir.getAbsolutePath+"/camera-counts.csv")))
+    this.agentChangeActivity = new BufferedWriter( new FileWriter( new File(dir.getAbsolutePath+"/agent-change-activity.csv")))
 
 
     // Write the headers
-    agentMainBR.write(AGENT_MAIN_HEADER)
-    agentActivitiesBR.write(AGENT_ACTIVITY_HEADER)
-    cameraCountsBR.write(CAMERA_COUNTS_HEADER)
+    this.agentMainBR.write(AGENT_MAIN_HEADER)
+    this.agentActivitiesBR.write(AGENT_ACTIVITY_HEADER)
+    this.cameraCountsBR.write(CAMERA_COUNTS_HEADER)
+    this.agentChangeActivity.write(CHANGE_ACTIVITY_HEADER)
 
     return this
 
@@ -90,6 +95,7 @@ object ABBFOutputter extends Outputter with Serializable {
       val agent = agentGeom.theObject // The object that is represented by the SurfGeometry
       val coord = agent.location().geometry.getCoordinate // The agent's location
       val act = agent.currentActivity.getOrElse(None) // The current activity. An Option, so will either be Some[Activity] or None.
+
       val agentClass = agent.getClass.getSimpleName // The agent's occupation class
 
       // Write the main agent file
@@ -104,20 +110,26 @@ object ABBFOutputter extends Outputter with Serializable {
       }
       )
 
-      // Sanity check that each activity has been written (can get rid of this code later)
-      /*
-      var work, sleep, shop = false // Check that each activity is set
-      // Iterate over all Activitiesdnd match them to the appropriate variable,
-      agent.activities.foreach ( a => {
-        a match {
-          case x:WorkActivity   => work  = true
-          case x:SleepActivity  => sleep = true
-          case x:ShopActivity   => shop  = true
-        } // match
-      } ) // foreach
-      // Each variable should have been set, or a MatchError should be thrown
-      assert( ! Array(work,sleep,shop).contains(false) )
-      */
+     // Write information about new and previous activities each time an agent's activity changes.
+      if (agent.changedActivity()) { // This agent has changed their activity. Write information about the old and new activities
+
+        // Get the next and previous activity, checking that it not none
+        val prevAct = if (agent.previousActivity() == None) None else agent.previousActivity()
+        val nextAct = if (agent.currentActivity() == None)  None else agent.currentActivity()
+
+        // Now get the coordinates
+        val px = if (prevAct==None) -1 else prevAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x
+        val py = if (prevAct==None) -1 else prevAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.y
+        val nx = if (nextAct==None) -1 else nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x
+        val ny = if (nextAct==None) -1 else nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.y
+
+        // Write out the info:
+        // Iteration,Time,Agent,AgentClass,PreviousActivity,Px,Py,NextActivity,Nx,Ny
+        this.agentChangeActivity.write(s"$ticks,$time,${agent.id()},$agentClass,"+
+          s"${prevAct.getOrElse(None).getClass.getSimpleName},${px},${py},"+
+          s"${nextAct.getOrElse(None).getClass.getSimpleName},${nx},${ny},\n")
+
+      }
 
     } // for geometries (agents)
 
@@ -148,6 +160,7 @@ object ABBFOutputter extends Outputter with Serializable {
     this.agentActivitiesBR.close()
     this.agentMainBR.close()
     this.cameraCountsBR.close()
+    this.agentChangeActivity.close()
     // Start knitr and generate the output file
     // TODO this should generate outputs in the same directory as the results, not the same directory as the script
     /*try {

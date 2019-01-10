@@ -34,6 +34,10 @@ case class GoingOutActivity (
     activityType = GOING_OUT,
     openingTimes = null // Assume it's open all the time
   )
+  /**
+    * Report the place where this activity is taking place.
+    */
+  override def currentPlace(): Place = place
 
   /**
     * This makes the agent actually perform the activity.
