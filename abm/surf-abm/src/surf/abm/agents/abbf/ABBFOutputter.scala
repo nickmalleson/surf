@@ -119,19 +119,8 @@ object ABBFOutputter extends Outputter with Serializable {
         val prevAct = if (agent.previousActivity() == None) None else agent.previousActivity()
         val nextAct = if (agent.currentActivity() == None)  None else agent.currentActivity()
 
-        /*println()
-        print(prevAct)
-        print(nextAct)
-        print(nextAct.get)
-        print(nextAct.get.currentPlace())
-        print(nextAct.get.currentPlace().location)
-        print(nextAct.get.currentPlace().location.getGeometry)
-        print(nextAct.get.currentPlace().location.getGeometry.getCentroid)
-        print(nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x)
-        */
-
         // Now get the coordinates. Note that some places don't have their location set until the next iteration
-        // (sometimes places are only set once the activity is 'initialised', which happens on the iteration after
+        // (sometimes places are only set once the activity is 'initialised', which happens on the iteration *after*
         // the activity changes.
         // IF THIS CAUSES PROBLEMS FOR STELIOS I'LL HAVE TO FIGURE OUT HOW TO EITHER GET THE LOCAITON NOW, OR DELAY
         // SETTING agent.activity_changed UNTIL THE NEXT ITERATION.
@@ -156,7 +145,7 @@ object ABBFOutputter extends Outputter with Serializable {
   /**
     * Get the x,y coordinate of an activity.
     * @param activity
-    * @return The Coordinate, or Coordinate(-1,-1) if the activity doesn't have a location yet
+    * @return Returns the Coordinate, or Coordinate(-1,-1) if the activity is None, or doesn't have a location yet
     */
   def get_coord_from_activity(activity: Option[_ <: Activity]) : Coordinate = {
     if (activity==None || activity.get.currentPlace().location==null)
