@@ -43,7 +43,7 @@ object ABBFAgentLoaderOtleyPRIME {
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
     val flowFilename = "./data/" + dataDir + "/oa_flows-study_area-PRIME.csv" // Contains commuters and retired
-    val sample = SurfABM.conf.getDouble("SampleAgents") // A proportion of agents to create (runs too slowly if creating all)
+    val sample = SurfABM.conf.getDouble(SurfABM.ModelConfig+".SampleAgents") // A proportion of agents to create (runs too slowly if creating all)
 
 
     // Define the possible building types...
