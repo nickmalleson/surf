@@ -43,6 +43,7 @@ object ABBFAgentLoaderOtleyPRIME {
 
     val dataDir = SurfABM.conf.getString(SurfABM.ModelConfig + ".DataDir")
     val flowFilename = "./data/" + dataDir + "/oa_flows-study_area-PRIME.csv" // Contains commuters and retired
+    val sample = SurfABM.conf.getDouble("SampleAgents") // A proportion of agents to create (runs too slowly if creating all)
 
 
     // Define the possible building types...
@@ -76,9 +77,14 @@ object ABBFAgentLoaderOtleyPRIME {
         // Get the origin, destination and the number of commuters and retired. Columns start counting at 0
         val orig: String = line(2).replace("\"", "") // (get rid of quotes)
         val dest: String = line(3).replace("\"", "")
-        val commuters: Int = line(6).toInt
-        val noncommuters: Int = line(7).toInt
-        LOG.debug(s"Origin: '$orig', Destination: '$dest', Commuters: '$commuters', Non-Commuters: '$noncommuters'")
+        // Might take a sample of commuters and non-commuters to speed up runtime
+        val commuters: Int = math.ceil(line(6).toInt * sample).toInt
+        val noncommuters: Int = math.ceil(line(7).toInt * sample).toInt
+        LOG.debug(s"Origin: '$orig', Destination: '$dest', Commuters: '${line(6).toInt}', Non-Commuters: '${line(7).toInt}'")
+        LOG.debug(s"\tHave sampled $sample agents: Commuters: '$commuters', Non-Commuters: '$noncommuters'")
+
+
+
 
         // Now create 'commuters' agents who live in 'orig' and work in 'dest'
         // It is helpful to have all the buildings in the origin and destinations as lists
