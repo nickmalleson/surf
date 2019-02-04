@@ -20,7 +20,6 @@
     <orderEntry type="library" name="mason" level="project" />
     <orderEntry type="library" name="geomason" level="project" />
     <orderEntry type="library" name="mason_resources" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.12.2" level="application" />
-    <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
+    <orderEntry type="library" name="scala-sdk-2.12.5" level="application" />
   </component>
 </module>
