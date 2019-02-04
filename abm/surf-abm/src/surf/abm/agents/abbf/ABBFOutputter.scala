@@ -4,6 +4,8 @@ import java.io
 import java.io.{BufferedWriter, File, FileWriter}
 import java.time.temporal.TemporalAmount
 
+import com.vividsolutions.jts.geom
+import com.vividsolutions.jts.geom.Coordinate
 import org.apache.log4j.Logger
 import org.scalatest.time.Days
 import sim.engine.{SimState, Steppable}
@@ -117,11 +119,26 @@ object ABBFOutputter extends Outputter with Serializable {
         val prevAct = if (agent.previousActivity() == None) None else agent.previousActivity()
         val nextAct = if (agent.currentActivity() == None)  None else agent.currentActivity()
 
-        // Now get the coordinates
-        val px = if (prevAct==None) -1 else prevAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x
-        val py = if (prevAct==None) -1 else prevAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.y
-        val nx = if (nextAct==None) -1 else nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x
-        val ny = if (nextAct==None) -1 else nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.y
+        /*println()
+        print(prevAct)
+        print(nextAct)
+        print(nextAct.get)
+        print(nextAct.get.currentPlace())
+        print(nextAct.get.currentPlace().location)
+        print(nextAct.get.currentPlace().location.getGeometry)
+        print(nextAct.get.currentPlace().location.getGeometry.getCentroid)
+        print(nextAct.get.currentPlace().location.getGeometry.getCentroid.getCoordinate.x)
+        */
+
+        // Now get the coordinates. Note that some places don't have their location set until the next iteration
+        // (sometimes places are only set once the activity is 'initialised', which happens on the iteration after
+        // the activity changes.
+        // IF THIS CAUSES PROBLEMS FOR STELIOS I'LL HAVE TO FIGURE OUT HOW TO EITHER GET THE LOCAITON NOW, OR DELAY
+        // SETTING agent.activity_changed UNTIL THE NEXT ITERATION.
+        val px = get_coord_from_activity(prevAct).x
+        val py = get_coord_from_activity(prevAct).y
+        val nx = get_coord_from_activity(nextAct).x
+        val ny = get_coord_from_activity(nextAct).y
 
         // Write out the info:
         // Iteration,Time,Agent,AgentClass,PreviousActivity,Px,Py,NextActivity,Nx,Ny
@@ -135,6 +152,18 @@ object ABBFOutputter extends Outputter with Serializable {
 
 
   } // step()
+
+  /**
+    * Get the x,y coordinate of an activity.
+    * @param activity
+    * @return The Coordinate, or Coordinate(-1,-1) if the activity doesn't have a location yet
+    */
+  def get_coord_from_activity(activity: Option[_ <: Activity]) : Coordinate = {
+    if (activity==None || activity.get.currentPlace().location==null)
+      return new geom.Coordinate(-1.0,-1.0)
+
+    return activity.get.currentPlace().location.getGeometry.getCentroid.getCoordinate
+  }
 
   /**
     * This should be scheduled to be called at the end of the model to write the output files and (maybe) spawn a

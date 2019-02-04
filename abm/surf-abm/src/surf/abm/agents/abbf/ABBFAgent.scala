@@ -94,7 +94,8 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
       if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < this.currentActivity().get.MINIMUM_INTENSITY_DECREASE) {
         // The intensity has not gone down enough
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${this.currentActivity().get.MINIMUM_INTENSITY_DECREASE})")
+          s"has not reduced sufficiently yet (current intensity decrease so far: " +
+          s"${this.currentActivity.get.currentIntensityDecrease()} < ${this.currentActivity().get.MINIMUM_INTENSITY_DECREASE})")
       } else {
         // Now find the most intense one, given the current time.
         val highestActivity: Activity = this.highestActivity()
