@@ -24,8 +24,6 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
     */
   var activities: Set[_ <: Activity] = Set.empty
 
-
-
   /**
     * The current activity that the agent is doing. Can be None.
     */
@@ -45,19 +43,17 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
     */
   def highestActivity(): Activity = this.activities.maxBy(a => a.intensity())
 
+  /**
+    * Keep track of whether the activity changes, as this is useful for writing out information
+    */
+  private var _changedActivity = false
+  def changedActivity() = _changedActivity // public accessor to private member
+
 
   override def step(state: SimState): Unit = {
 
-    // A break point for a particular agent
-    //if (this.id()==1 && this.state.schedule.getSteps > 163) {
-    //  print("BREAK POINT")
-    //}
-
-    // A break point for all agents
-    //print("BREAK POINT for AGENT %s".format(this.toString()))
-
-    //println(s"\n******  ${Clock.getTime.toString} ********* \n")
-    //this.activities.foreach( {case (a,i) => println(s"$a : $i" )}); println("\n") // print activities
+    // Keep track of whether the agent changes activity in this iteration. This is made true in _changeActivity()
+    _changedActivity = false
 
     // Update all activity intensities. The amount that they go up by is unique to each activity. Call the '++' function
     // which, in turn, calls the activity's backgroundIncrease() function, which can be overridden by subclasses.
@@ -98,7 +94,8 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
       if (this.currentActivity.isDefined && this.currentActivity.get.currentIntensityDecrease() < this.currentActivity().get.MINIMUM_INTENSITY_DECREASE) {
         // The intensity has not gone down enough
         Agent.LOG.debug(this, s"Activity (${this.currentActivity.toString}) " +
-        s"has not reduced sufficiently yet (current intensity decrease so far: ${this.currentActivity.get.currentIntensityDecrease()} < ${this.currentActivity().get.MINIMUM_INTENSITY_DECREASE})")
+          s"has not reduced sufficiently yet (current intensity decrease so far: " +
+          s"${this.currentActivity.get.currentIntensityDecrease()} < ${this.currentActivity().get.MINIMUM_INTENSITY_DECREASE})")
       } else {
         // Now find the most intense one, given the current time.
         val highestActivity: Activity = this.highestActivity()
@@ -111,10 +108,6 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
           // Is the highest activity high enough to take control?
           if (highestActivity.intensity() < ABBFAgent.HIGHEST_ACTIVITY_THRESHOLD && this.currentActivity().isDefined && this.currentActivity().get.intensity > 0) {
             msg += s"Not high enough (${this.highestActivity().intensity()})."
-            /* // If not, then make the current activity None
-            msg += s"Not high enough (${this.highestActivity().intensity()}), setting to None."
-            this._changeActivity(None) */
-            //Agent.LOG.debug(s"Agent ${this.id.toString()} is not doing any activity")
             return // No point in continuing
           }
 
@@ -158,6 +151,7 @@ abstract class ABBFAgent(override val state:SurfABM, override val home:SurfGeome
     this.currentActivity.foreach(a => a.activityChanged()) // Note: the for loop only iterates if an Activity has been defined (nice!)
     this._previousActivity = this.currentActivity // Remember what the current activity was
     this._currentActivity = newActivity
+    this._changedActivity = true // Indicate that the agent has changed their activity in this iteration (will be set back to false next time this.step() is called).
     //Agent.LOG.debug(this, s"has changed activity from ${this.previousActivity.getOrElse("[None]")} to ${this.currentActivity.getOrElse("[None]")}")
   }
 

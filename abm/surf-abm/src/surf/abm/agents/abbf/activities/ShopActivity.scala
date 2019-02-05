@@ -38,6 +38,10 @@ case class ShopActivity(
     activityType = SHOPPING,
     openingTimes = Array(Place.makeOpeningTimes(7.0, 22.0))
   )
+  /**
+    * Report the place where this activity is taking place.
+    */
+  override def currentPlace(): Place = place
 
   /**
     * This makes the agent actually perform the activity.

@@ -24,6 +24,11 @@ abstract class FixedActivity(
 {
 
 
+  /**
+    * Return the place that this FixedActivity will take place in.
+    * The place of fixed activities is set when they are created by the agent.
+    */
+  override def currentPlace() = place
 
 }
 

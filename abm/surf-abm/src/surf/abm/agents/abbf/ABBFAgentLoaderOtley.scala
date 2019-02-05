@@ -37,30 +37,8 @@ object ABBFAgentLoaderOtley {
     // created that contain the OA code and the type (small, large or shop). People only live in small buildings in the Otley area,
     // they only shop in shops, and they can work in any type of building.
     LOG.info("Creating map of output areas and their constituent buildings")
-    val oaBuildingIDMap: Map[Set[String], Set[Int]] = {
-      // Create mutable objects but, when they're ready, return them as immutable
-      val b_map = scala.collection.mutable.Map[Set[String], scala.collection.mutable.Set[Int]]() // Temporary map (to return)
-      // Iterate over all buildings (their ID and SurfGeometry)
-      for ((id: Int, b: SurfGeometry[Building@unchecked]) <- SurfABM.buildingIDGeomMap) {
-        val oaCode = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString) // OA code for this building
-        val buildingType = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
-        if (b_map.contains(Set(oaCode, buildingType))) {
-          // Have already come across this OA and building type; add the new building id
-          // Add the building to the set
-          b_map(Set(oaCode, buildingType)) = b_map(Set(oaCode, buildingType)) + id
-        }
-        else {
-          // Not found this combination of OA and type yet. Add it to the map and associate it with a new Set of building ids
-          var s = scala.collection.mutable.Set.empty[Int]
-          s += id
-          b_map(Set(oaCode, buildingType)) = s
-        }
-        //println(i+" : "+b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString))
-      }
-      // Return the map and all sets as immutatable (that's what toMap and toSet do)
-      // (https://stackoverflow.com/questions/2817055/converting-mutable-to-immutable-map)
-      b_map.map(kv => (kv._1, kv._2.toSet)).toMap
-    }
+    val oaBuildingIDMap : Map[Set[String], Set[Int]] = ABBFAgentLoaderOtley.createOABuildingIDMap
+
     LOG.debug("Found the following OAs: ${oaBuildingIDMap.keys.toString()}")
 
     LOG.info(s"\tFound ${oaBuildingIDMap.size} OAs and ${oaBuildingIDMap.values.map(x => x.size).sum} buildings")
@@ -230,6 +208,34 @@ object ABBFAgentLoaderOtley {
       LOG.info(s"Have created ${SurfABM.agentGeoms.getGeometries.size()} retired agents")
     }
 
+  }
+
+  /**
+    * Work out which buildings of each type are contained within each output area.
+    */
+  def createOABuildingIDMap : Map[Set[String], Set[Int]]  = {
+      // Create mutable objects but, when they're ready, return them as immutable
+      val b_map = scala.collection.mutable.Map[Set[String], scala.collection.mutable.Set[Int]]() // Temporary map (to return)
+      // Iterate over all buildings (their ID and SurfGeometry)
+      for ((id: Int, b: SurfGeometry[Building@unchecked]) <- SurfABM.buildingIDGeomMap) {
+        val oaCode = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString) // OA code for this building
+        val buildingType = b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_TYPE.toString)
+        if (b_map.contains(Set(oaCode, buildingType))) {
+          // Have already come across this OA and building type; add the new building id
+          // Add the building to the set
+          b_map(Set(oaCode, buildingType)) = b_map(Set(oaCode, buildingType)) + id
+        }
+        else {
+          // Not found this combination of OA and type yet. Add it to the map and associate it with a new Set of building ids
+          var s = scala.collection.mutable.Set.empty[Int]
+          s += id
+          b_map(Set(oaCode, buildingType)) = s
+        }
+        //println(i+" : "+b.getStringAttribute(BUILDING_FIELDS.BUILDINGS_OA.toString))
+      }
+      // Return the map and all sets as immutatable (that's what toMap and toSet do)
+      // (https://stackoverflow.com/questions/2817055/converting-mutable-to-immutable-map)
+      return b_map.map(kv => (kv._1, kv._2.toSet)).toMap
   }
 
 

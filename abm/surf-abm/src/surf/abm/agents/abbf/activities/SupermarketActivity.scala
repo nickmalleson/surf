@@ -40,6 +40,11 @@ case class SupermarketActivity(
   )
 
   /**
+    * Report the place where this activity is taking place.
+    */
+  override def currentPlace(): Place = place
+
+  /**
     * This makes the agent actually perform the activity.
     *
     * @return True if the agent has performed this activity, false if they have not (e.g. if they are still travelling

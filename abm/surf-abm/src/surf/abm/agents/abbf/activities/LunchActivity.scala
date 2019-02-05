@@ -32,6 +32,10 @@ case class LunchActivity(
     openingTimes = Array(Place.makeOpeningTimes(11.0, 16.0))
     // TimeIntensity of lunch is 0 outside lunch hours, but not BackgroundIntensity, so might be necessary anyway
   )
+  /**
+    * Report the place where this activity is taking place.
+    */
+  override def currentPlace(): Place = place
 
   /**
     * This makes the agent actually perform the activity.
