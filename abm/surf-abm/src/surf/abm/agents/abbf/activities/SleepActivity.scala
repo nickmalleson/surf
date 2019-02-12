@@ -1,11 +1,9 @@
 package surf.abm.agents.abbf.activities
 
-import org.apache.commons.collections.functors.NullIsFalsePredicate
 import surf.abm.agents.{Agent, UrbanAgent}
 import surf.abm.agents.abbf.{ABBFAgent, Place, TimeProfile}
 import surf.abm.agents.abbf.activities.ActivityTypes.SLEEPING
 import surf.abm.agents.abbf.occupations.{CommuterAgent, RetiredAgent}
-import surf.abm.exceptions.RoutingException
 import surf.abm.main.SurfABM
 
 /**
