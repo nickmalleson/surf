@@ -34,7 +34,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-     <orderEntry type="module-library">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/log4j-1.2.17.jar!/" />
@@ -55,5 +55,6 @@
     <orderEntry type="library" name="scala-sdk-2.12.5" level="application" />
     <orderEntry type="module" module-name="geomason" />
     <orderEntry type="module" module-name="mason" />
+    <orderEntry type="library" name="scala-sdk-2.12.8" level="application" />
   </component>
 </module>
