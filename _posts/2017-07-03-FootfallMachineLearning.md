@@ -17,7 +17,7 @@ Molly Asher ([Leeds Institute for Data Analytics](http://lida.leeds.ac.uk/)), Si
  - If it is going to rain next Tuesday, how busy will the city be?
  - Last Wednesday we organised _x_, how successful was our event, taking into account that it was cold and rainy?
 
-We've yet to compile the final report, but if you'd like any more information about the project (including the data we used and the code that Molly wrote), you can find more details on the main [github page](https://github.com/nickmalleson/surf/blob/master/projects/footfall/lcc-machine-learning/LCC_Footfall.ipynb). This post will briefly summarise some of the more interesting findings.
+We've yet to compile the final report, but if you'd like any more information about the project (including the data we used and the code that Molly wrote), you can find more details on the main [github page](https://github.com/nickmalleson/lcc-footfall/blob/master/LCC_Footfall.ipynb). This post will briefly summarise some of the more interesting findings.
 
 ## Initial Data Analysis
 
@@ -88,7 +88,8 @@ At the other end of the scale, the model can also help to explain why some days 
 
 ## Conclusions
 
-The model discussed here is in early stages, and still needs some work to make it more rigorous, but it is clearly a useful tool and one that could provide valuable insight into the drivers of footfall into city centres.
+The model discussed here is in early stages, and still needs some work to make it more rigorous, but it is clearly a useful tool and one that could provide valuable insight into the drivers of footfall into city centres.
+
 
 
 
